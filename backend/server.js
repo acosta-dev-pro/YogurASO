@@ -1,0 +1,16 @@
+﻿const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.use(cors({ origin: 'http://localhost:5500', credentials: true }));
+app.use(express.json());
+app.use('/api/auth', require('./src/routes/authRoutes'));
+app.use('/api/products', require('./src/routes/productRoutes'));
+app.use('/api/orders', require('./src/routes/orderRoutes'));
+app.use('/api/users', require('./src/routes/userRoutes'));
+app.get('/', (req, res) => res.json({ success: true, message: '🍦 API YogurASO funcionando', version: '1.0.0' }));
+app.use((req, res) => res.status(404).json({ success: false, message: 'Ruta no encontrada' }));
+app.use((err, req, res, next) => res.status(500).json({ success: false, message: 'Error interno' }));
+app.listen(PORT, () => console.log(`✅ Servidor en http://localhost:${PORT}`));

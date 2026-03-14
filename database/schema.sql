@@ -1,0 +1,14 @@
+﻿DROP TABLE IF EXISTS detalle_pedido CASCADE;
+DROP TABLE IF EXISTS pedidos CASCADE;
+DROP TABLE IF EXISTS carrito CASCADE;
+DROP TABLE IF EXISTS productos CASCADE;
+DROP TABLE IF EXISTS categorias CASCADE;
+DROP TABLE IF EXISTS usuarios CASCADE;
+CREATE TABLE usuarios (id SERIAL PRIMARY KEY, nombre VARCHAR(100) NOT NULL, email VARCHAR(100) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, telefono VARCHAR(20), direccion TEXT, rol VARCHAR(20) DEFAULT 'cliente', activo BOOLEAN DEFAULT true, fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE categorias (id SERIAL PRIMARY KEY, nombre VARCHAR(50) NOT NULL UNIQUE, descripcion TEXT, activa BOOLEAN DEFAULT true);
+CREATE TABLE productos (id SERIAL PRIMARY KEY, nombre VARCHAR(100) NOT NULL, descripcion TEXT, precio DECIMAL(10,2) NOT NULL, stock INTEGER NOT NULL DEFAULT 0, categoria_id INTEGER REFERENCES categorias(id), imagen_url TEXT, activo BOOLEAN DEFAULT true, fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE carrito (id SERIAL PRIMARY KEY, usuario_id INTEGER REFERENCES usuarios(id) ON DELETE CASCADE, producto_id INTEGER REFERENCES productos(id) ON DELETE CASCADE, cantidad INTEGER NOT NULL, fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP, UNIQUE(usuario_id, producto_id));
+CREATE TABLE pedidos (id SERIAL PRIMARY KEY, usuario_id INTEGER REFERENCES usuarios(id), fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP, total DECIMAL(10,2) NOT NULL, estado VARCHAR(50) DEFAULT 'pendiente', direccion_envio TEXT NOT NULL, metodo_pago VARCHAR(50));
+CREATE TABLE detalle_pedido (id SERIAL PRIMARY KEY, pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE, producto_id INTEGER REFERENCES productos(id), cantidad INTEGER NOT NULL, precio_unitario DECIMAL(10,2) NOT NULL, subtotal DECIMAL(10,2) GENERATED ALWAYS AS (cantidad * precio_unitario) STORED);
+INSERT INTO categorias (nombre, descripcion) VALUES ('Natural', 'Yogures sin sabor'), ('Con Frutas', 'Con trozos de fruta'), ('Griego', 'Alto en proteína'), ('Sin Lactosa', 'Apto para intolerantes');
+INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id) VALUES ('Yogur Natural', 'Cremoso 100% natural', 2500, 50, 1), ('Yogur de Fresa', 'Con trozos de fresa', 2800, 40, 2), ('Yogur Griego', 'Alto en proteína', 3500, 30, 3), ('Yogur Sin Lactosa', 'Apto para intolerantes', 3200, 25, 4), ('Yogur de Vainilla', 'Suave sabor', 2700, 35, 1), ('Yogur de Mango', 'Con mango', 2900, 28, 2);
