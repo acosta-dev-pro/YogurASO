@@ -1,0 +1,53 @@
+# Environment files
+*.env
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Uploads
+backend/uploads/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Backups
+*.bak
+backup/
+
+# Temporary Git files
+.git_tmp_node_files.txt
+
+# Carpetas temporales de los generadores de documentos
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Local tools, scratch and test snapshots
+_local-backups/
+_handoff-faq/
+_handoff-faq.tar
+_patch-cart.js
+_shots/
+~$*.docx
+
+tools/output/
+
+# Capturas y scripts temporales de depuracion
+tools/*.png
+tools/_tmp_*
+test-*.png
+_site/
