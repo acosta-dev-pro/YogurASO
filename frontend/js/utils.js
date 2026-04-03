@@ -1,0 +1,220 @@
+/**
+ * utils.js — Utilidades compartidas
+ * escapeHtml, formatCOP, toasts, confirmaciones y applySiteConfig (logo/footer/WA).
+ */
+(function () {
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function formatCOP(amount) {
+        return `$${Number(amount || 0).toLocaleString('es-CO')}`;
+    }
+
+    function getConfig() {
+        return window.YOGUR_CONFIG || {};
+    }
+
+    const TOAST_ICONS = {
+        success: 'fa-check',
+        error: 'fa-exclamation',
+        info: 'fa-info',
+        warning: 'fa-exclamation-triangle'
+    };
+
+    function showToast(message, type = 'success') {
+        const existing = document.querySelectorAll('.toast-notification');
+        existing.forEach((el) => el.remove());
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type} show`;
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        toast.innerHTML = `
+            <div class="toast-icon"><i class="fas ${TOAST_ICONS[type] || TOAST_ICONS.info}"></i></div>
+            <div class="toast-message"><strong>${escapeHtml(message)}</strong></div>
+        `;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 280);
+        }, type === 'error' ? 2800 : 1800);
+    }
+
+    function confirmAction({
+        title = 'Confirmar',
+        message = '¿Estás seguro?',
+        confirmText = 'Confirmar',
+        cancelText = 'Cancelar',
+        danger = false,
+        type = 'question'
+    } = {}) {
+        return new Promise((resolve) => {
+            const icons = {
+                question: 'fa-circle-question',
+                warning: 'fa-triangle-exclamation',
+                danger: 'fa-shield-halved',
+                success: 'fa-circle-check',
+                info: 'fa-circle-info'
+            };
+            const iconClass = icons[danger ? 'danger' : type] || icons.question;
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-labelledby', 'confirm-title');
+            overlay.innerHTML = `
+                <div class="confirm-dialog confirm-${danger ? 'danger' : type}">
+                    <div class="confirm-icon" aria-hidden="true"><i class="fas ${iconClass}"></i></div>
+                    <h3 id="confirm-title">${escapeHtml(title)}</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <div class="confirm-actions">
+                        <button type="button" class="confirm-cancel">${escapeHtml(cancelText)}</button>
+                        <button type="button" class="confirm-ok ${danger ? 'is-danger' : ''}">${escapeHtml(confirmText)}</button>
+                    </div>
+                </div>
+            `;
+
+            const close = (value) => {
+                overlay.remove();
+                document.removeEventListener('keydown', onKey);
+                resolve(value);
+            };
+
+            const onKey = (e) => {
+                if (e.key === 'Escape') close(false);
+            };
+
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) close(false);
+            });
+            overlay.querySelector('.confirm-cancel').addEventListener('click', () => close(false));
+            overlay.querySelector('.confirm-ok').addEventListener('click', () => close(true));
+            document.addEventListener('keydown', onKey);
+            document.body.appendChild(overlay);
+            overlay.querySelector('.confirm-ok').focus();
+        });
+    }
+
+    function alertAction({
+        title = 'Aviso',
+        message = '',
+        confirmText = 'Entendido',
+        type = 'info'
+    } = {}) {
+        return new Promise((resolve) => {
+            const icons = {
+                warning: 'fa-triangle-exclamation',
+                danger: 'fa-shield-halved',
+                success: 'fa-circle-check',
+                info: 'fa-circle-info'
+            };
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+            overlay.setAttribute('role', 'alertdialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.innerHTML = `
+                <div class="confirm-dialog confirm-${type}">
+                    <div class="confirm-icon" aria-hidden="true"><i class="fas ${icons[type] || icons.info}"></i></div>
+                    <h3>${escapeHtml(title)}</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <div class="confirm-actions confirm-actions-single">
+                        <button type="button" class="confirm-ok">${escapeHtml(confirmText)}</button>
+                    </div>
+                </div>
+            `;
+            const close = () => {
+                overlay.remove();
+                document.removeEventListener('keydown', onKey);
+                resolve(true);
+            };
+            const onKey = (e) => {
+                if (e.key === 'Escape' || e.key === 'Enter') close();
+            };
+            overlay.querySelector('.confirm-ok').addEventListener('click', close);
+            document.addEventListener('keydown', onKey);
+            document.body.appendChild(overlay);
+            overlay.querySelector('.confirm-ok').focus();
+        });
+    }
+
+    function applySiteConfig() {
+        const cfg = getConfig();
+        const name = cfg.COMPANY_NAME || 'YogurASO';
+        const waNumber = cfg.WHATSAPP_NUMBER || '573103279958';
+        const waDisplay = cfg.WHATSAPP_DISPLAY || waNumber;
+        const email = cfg.COMPANY_EMAIL || 'yogurasoweb@gmail.com';
+        const location = cfg.COMPANY_LOCATION || 'Colombia';
+        const tagline = cfg.COMPANY_TAGLINE || '';
+        const ig = cfg.INSTAGRAM || '#';
+        const fb = cfg.FACEBOOK || '#';
+
+        document.querySelectorAll('[data-config="company-name"]').forEach((el) => {
+            el.textContent = name;
+        });
+        document.querySelectorAll('[data-config="company-tagline"]').forEach((el) => {
+            el.innerHTML = tagline.replace(/\n/g, '<br>');
+        });
+        document.querySelectorAll('[data-config="company-email"]').forEach((el) => {
+            el.textContent = email;
+            if (el.tagName === 'A') el.href = `mailto:${email}`;
+        });
+        document.querySelectorAll('[data-config="company-location"]').forEach((el) => {
+            el.textContent = location;
+        });
+        document.querySelectorAll('[data-config="whatsapp-display"]').forEach((el) => {
+            el.textContent = waDisplay;
+        });
+        document.querySelectorAll('a[data-config="instagram"]').forEach((el) => {
+            el.href = ig;
+        });
+        document.querySelectorAll('a[data-config="facebook"]').forEach((el) => {
+            el.href = fb;
+        });
+        document.querySelectorAll('a[data-config="whatsapp"]').forEach((el) => {
+            const text = el.dataset.waText || `Hola ${name}`;
+            el.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+        });
+    }
+
+    window.YogurUtils = {
+        escapeHtml,
+        formatCOP,
+        getConfig,
+        showToast,
+        confirmAction,
+        alertAction,
+        applySiteConfig
+    };
+
+    // Prevención universal contra iconos de imagen rota en navegadores
+    window.addEventListener('error', function (e) {
+        var el = e.target;
+        if (!el || el.tagName !== 'IMG') return;
+        if (el.dataset.fallbackTried) {
+            el.classList.add('is-broken');
+            el.style.opacity = '0';
+            el.style.visibility = 'hidden';
+            return;
+        }
+        el.dataset.fallbackTried = '1';
+        var src = String(el.src || '');
+        if (src.indexOf('/products/') !== -1 || el.classList.contains('bottle-img') || el.classList.contains('ytrio__bottle') || el.classList.contains('cart-flavor-shot') || el.classList.contains('producto-img')) {
+            var isSm = src.indexOf('-sm') !== -1 || el.classList.contains('cart-flavor-shot') || (el.width && el.width < 200);
+            var prefix = String(location.pathname || '').includes('/pages/') ? '../' : '';
+            el.src = prefix + 'assets/products/yoguraso-fresa-500ml' + (isSm ? '-sm' : '') + '.webp';
+        } else {
+            el.classList.add('is-broken');
+            el.style.opacity = '0';
+            el.style.visibility = 'hidden';
+        }
+    }, true);
+
+    document.addEventListener('DOMContentLoaded', applySiteConfig);
+})();
