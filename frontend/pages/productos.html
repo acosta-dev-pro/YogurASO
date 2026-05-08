@@ -1,1 +1,129 @@
-﻿<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Productos</title><link rel='stylesheet' href='../css/styles.css'></head><body><header><nav class='container navbar'><div class='logo'>Yogur<span>ASO</span></div><ul class='nav-links'><li><a href='../index.html'>Inicio</a></li><li><a href='productos.html'>Productos</a></li><li><a href='login.html'>Mi Cuenta</a></li><li><a href='carrito.html' class='cart-icon'>🛒 <span id='cart-count'>0</span></a></li></ul></nav></header><main class='container productos-catalogo'><div class='section-title'><span>Nuestra Selección</span><h2>Nuestros Yogures</h2></div><div id='productos-container' class='productos-grid'><p class='cargando'>Cargando productos...</p></div></main><script type='module' src='../js/main.js'></script></body></html>
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - YogurASO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h2>YogurASO</h2>
+        </div>
+        <div class="nav">
+            <ul id="nav-items">
+                <li><a href="../index.html">inicio</a></li>
+                <li><a href="../index.html#nosotros">nosotros</a></li>
+                <li class="active"><a href="productos.html">productos</a></li>
+                <li><a href="../index.html#contact">contacto</a></li>
+            </ul>
+            
+            <!-- BOTÓN DEL CARRITO -->
+            <div class="icon-buttons">
+                <button class="icon-btn" id="cartBtn" aria-label="Carrito">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </button>
+            </div>
+            
+            <!-- MENÚ DE USUARIO -->
+            <div class="user-menu">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="login.html" class="dropdown-item">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </a>
+                    <a href="registro.html" class="dropdown-item">
+                        <i class="fas fa-user-plus"></i>
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container productos-catalogo">
+        <div class="productos-header productos-header-compact">
+            <h2>Todos los Yogures</h2>
+            <p class="productos-subtitle">Explora toda nuestra variedad de sabores artesanales disponibles.</p>
+        </div>
+        <div class="productos-kicker-section">
+            <span class="productos-kicker"><i class="fas fa-jar"></i> Catálogo completo</span>
+        </div>
+        <div class="container">
+            <div id="productos-container" class="productos-grid">
+                <p class="cargando">Cargando productos...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- CART SIDEBAR -->
+    <div class="overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <span>Tu carrito</span>
+            <i class="fas fa-times" id="closeCart"></i>
+        </div>
+        <div class="cart-items" id="cart-items-container">
+            <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalAmount">$0</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">YogurASO</span>
+                <p>Yogurt artesanal elaborado a diario<br>con ingredientes frescos y cultivos vivos.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://wa.me/573001234567" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#nosotros">Nosotros</a></li>
+                    <li><a href="../index.html#beneficios">Beneficios</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Cuenta</h4>
+                <ul>
+                    <li><a href="login.html">Iniciar sesión</a></li>
+                    <li><a href="registro.html">Registrarse</a></li>
+                    <li><a href="carrito.html">Mi carrito</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Colombia</li>
+                    <li><i class="fas fa-envelope"></i> hola@yoguraso.co</li>
+                    <li><i class="fab fa-whatsapp"></i> +57 300 123 4567</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 YogurASO &mdash; Todos los derechos reservados.</span>
+        </div>
+    </footer>
+
+    <script src="../js/cart.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>
