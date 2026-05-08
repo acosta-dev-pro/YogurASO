@@ -1,1 +1,163 @@
-﻿<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>Admin</title><link rel='stylesheet' href='../css/styles.css'></head><body><header><nav class='container navbar'><div class='logo'>Yogur<span>ASO</span> Admin</div><ul class='nav-links'><li><a href='../index.html'>Ver Tienda</a></li><li><button id='btn-logout' class='btn-link'>Cerrar Sesión</button></li></ul></nav></header><main class='container admin-panel'><div class='admin-header'><h1>Gestión de Inventario</h1><button class='btn btn-primary' id='btn-nuevo-producto'>+ Nuevo Yogur</button></div><div class='admin-table-container'><table class='admin-table'><thead><tr><th>ID</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead><tbody id='admin-productos-lista'></tbody></table></div></main><div id='modal-producto' class='modal'><div class='modal-content'><div class='modal-header'><h2>Añadir Producto</h2><span class='close-modal'>&times;</span></div><form id='form-producto'><div class='form-group'><label>Nombre</label><input type='text' id='p-nombre' required></div><div class='form-row'><div class='form-group'><label>Precio</label><input type='number' id='p-precio' required></div><div class='form-group'><label>Stock</label><input type='number' id='p-stock' required></div></div><div class='form-group'><label>Categoría</label><select id='p-categoria'><option value='1'>Natural</option><option value='2'>Con Frutas</option><option value='3'>Griego</option><option value='4'>Sin Lactosa</option></select></div><div class='form-group'><label>Descripción</label><textarea id='p-descripcion' rows='3'></textarea></div><button type='submit' class='btn btn-primary btn-block'>Guardar</button></form></div></div><script type='module' src='../js/admin.js'></script></body></html>
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - YogurASO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h2>YogurASO <span>Admin</span></h2>
+        </div>
+        <div class="nav">
+            <ul id="nav-items">
+                <li><a href="../index.html">Inicio</a></li>
+                <li class="active"><a href="#productos">Productos</a></li>
+                <li><a href="#pedidos">Pedidos</a></li>
+            </ul>
+            
+            <!-- BOTÓN DEL CARRITO -->
+            <div class="icon-buttons">
+                <button class="icon-btn" id="cartBtn" aria-label="Carrito">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </button>
+            </div>
+            
+            <!-- MENÚ DE USUARIO -->
+            <div class="user-menu">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <i class="fas fa-user-shield"></i>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="../index.html" class="dropdown-item">
+                        <i class="fas fa-store"></i>
+                        Ver Tienda
+                    </a>
+                    <a href="#" class="dropdown-item" id="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+  <main class='container admin-panel'>
+    <div class='admin-header'>
+      <h1>Gestión de Inventario</h1>
+      <button class='btn btn-primary' id='btn-nuevo-producto'>+ Nuevo Yogur</button>
+    </div>
+
+    <div class='admin-table-container'>
+      <table class='admin-table'>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id='admin-productos-lista'></tbody>
+      </table>
+    </div>
+  </main>
+
+  <div id='modal-producto' class='modal' aria-hidden='true'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h2 id='modal-title'>Añadir Producto</h2>
+        <span class='close-modal'>&times;</span>
+      </div>
+
+      <form id='form-producto'>
+        <input type='hidden' id='p-id'>
+        <div class='form-group'>
+          <label>Nombre</label>
+          <input type='text' id='p-nombre' required>
+        </div>
+
+        <div class='form-row'>
+          <div class='form-group'>
+            <label>Precio</label>
+            <input type='number' id='p-precio' required>
+          </div>
+          <div class='form-group'>
+            <label>Stock</label>
+            <input type='number' id='p-stock' required>
+          </div>
+        </div>
+
+        <div class='form-group'>
+          <label>Categoría</label>
+          <select id='p-categoria'>
+            <option value='natural'>Natural</option>
+            <option value='frutas'>Con Frutas</option>
+            <option value='griego'>Griego</option>
+            <option value='sin_lactosa'>Sin Lactosa</option>
+          </select>
+        </div>
+
+        <div class='form-group'>
+          <label>Imagen del Producto</label>
+          <div class='image-upload-area' id='image-upload-area'>
+            <div class='image-upload-placeholder' id='image-upload-placeholder'>
+              <i class='fas fa-cloud-upload-alt'></i>
+              <p>Arrastra una imagen o <span>haz clic para seleccionar</span></p>
+              <small>JPG, PNG, WebP — máx. 5 MB</small>
+            </div>
+            <img id='image-preview' class='image-preview' src='' alt='Vista previa' style='display:none'>
+            <button type='button' class='image-remove-btn' id='image-remove-btn' style='display:none'>
+              <i class='fas fa-times'></i> Quitar imagen
+            </button>
+          </div>
+          <input type='file' id='p-imagen-file' accept='image/*' style='display:none'>
+          <input type='hidden' id='p-imagen'>
+        </div>
+
+        <div class='form-group'>
+          <label>Descripción</label>
+          <textarea id='p-descripcion' rows='3'></textarea>
+        </div>
+
+        <div class='form-group form-checkbox'>
+          <label>
+            <input type='checkbox' id='p-activo' checked>
+            Producto activo
+          </label>
+        </div>
+
+        <button type='submit' class='btn btn-primary btn-block'>Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CART SIDEBAR -->
+  <div class="overlay" id="cartOverlay"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <span>Tu carrito</span>
+      <i class="fas fa-times" id="closeCart"></i>
+    </div>
+    <div class="cart-items" id="cart-items-container">
+      <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
+    </div>
+    <div class="cart-total">
+      <span>Total:</span>
+      <span id="cartTotalAmount">$0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
+  </div>
+
+  <script src='../js/cart.js'></script>
+  <script type='module' src='../js/auth.js'></script>
+  <script type='module' src='../js/admin.js'></script>
+</body>
+</html>
