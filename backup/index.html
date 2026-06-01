@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YogurASO - Inicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- FONDOS DINÁMICOS -->
+    <div class="fondo-dinamico">
+        <div class="fondo-imagen fondo1 activa" id="fondo1"></div>
+        <div class="fondo-imagen fondo2" id="fondo2"></div>
+    </div>
+
+    <!-- HEADER UNIFICADO -->
+    <header>
+        <nav class="container navbar">
+            <div class="logo">
+                <i class="fas fa-ice-cream"></i> Yogur<span>ASO</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link active">Inicio</a></li>
+                <li><a href="pages/productos.html" class="nav-link">Productos</a></li>
+                <li><a href="pages/login.html" class="nav-link">Mi Cuenta</a></li>
+                <li><a href="pages/carrito.html" class="cart-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cart-count">0</span>
+                </a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="container hero-content">
+                <h1>Yogures <br> Artesanales con <br> <span>Sabor Real</span></h1>
+                <p>Descubre la cremosidad de nuestros lácteos elaborados con fruta 100% natural, sin conservantes ni colorantes artificiales.</p>
+                <div class="hero-actions">
+                    <a href="pages/productos.html" class="btn btn-primary">Ver Catálogo</a>
+                    <a href="#beneficios" class="btn btn-secondary">Conoce más</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- BENEFICIOS -->
+        <section id="beneficios" class="features">
+            <div class="container">
+                <div class="section-title">
+                    <span>¿Por qué elegirnos?</span>
+                    <h2>La pureza de lo natural en tu mesa</h2>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌿</div>
+                        <h3>100% Natural</h3>
+                        <p>Sin colorantes ni conservantes artificiales. Solo fruta fresca seleccionada.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🍯</div>
+                        <h3>Proceso Artesanal</h3>
+                        <p>Respetamos los tiempos de fermentación natural para lograr esa cremosidad única.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💪</div>
+                        <h3>Alto en Proteína</h3>
+                        <p>Un alimento real que nutre tu cuerpo y te da la energía necesaria.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTOS DESTACADOS -->
+        <section class="productos-catalogo container">
+            <div class="section-title">
+                <span>Nuestra Selección</span>
+                <h2>Nuestros Yogures</h2>
+            </div>
+            
+            <div id="productos-container" class="productos-grid">
+                <p class="cargando">Cargando la frescura del campo...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 YogurASO - Proyecto Académico SENA</p>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fondos = [
+                document.getElementById('fondo1'),
+                document.getElementById('fondo2')
+            ];
+            let indiceActual = 0;
+            fondos[0].classList.add('activa');
+            setInterval(function() {
+                fondos.forEach(f => f.classList.remove('activa'));
+                indiceActual = (indiceActual + 1) % fondos.length;
+                fondos[indiceActual].classList.add('activa');
+            }, 8000);
+        });
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-/* =============================================
+ï»¿/* =============================================
    VARIABLES DE COLOR
    ============================================= */
 :root {
@@ -149,7 +149,7 @@ header {
 }
 
 /* =============================================
-   BOTONES DE NAVEGACIÓN UNIFORMES
+   BOTONES DE NAVEGACIÃ“N UNIFORMES
    ============================================= */
 .btn-back, .btn-continue {
     display: inline-flex;
@@ -586,7 +586,7 @@ hr {
 }
 
 /* =============================================
-   NOTIFICACIÓN ELEGANTE
+   NOTIFICACIÃ“N ELEGANTE
    ============================================= */
 .notificacion {
     position: fixed;

@@ -1,0 +1,12 @@
+{
+  "name": "yoguraso-web",
+  "version": "1.0.0",
+  "description": "Proyecto YogurASO - Frontend y Backend",
+  "scripts": {
+    "dev": "cd backend && npm run dev",
+    "start": "cd backend && npm start",
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "echo 'Frontend no requiere instalación específica'",
+    "install-all": "npm run install-backend && npm run install-frontend"
+  }
+}

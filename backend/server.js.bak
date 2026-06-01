@@ -1,0 +1,80 @@
+﻿const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const db = require('./src/config/db');
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors({ 
+    origin: ['http://localhost:5500', 'http://127.0.0.1:5500'],
+    credentials: true 
+}));
+app.use(express.json());
+
+// ========== RUTAS DIRECTAS (SIN ARCHIVOS EXTERNOS) ==========
+
+// Ruta de prueba directa
+app.get('/api/test', (req, res) => {
+    res.json({ 
+        mensaje: 'Ruta de prueba funcionando',
+        productos: [
+            { id: 1, nombre: 'Test 1' },
+            { id: 2, nombre: 'Test 2' }
+        ]
+    });
+});
+
+// Ruta de productos DIRECTA
+app.get('/api/products', async (req, res) => {
+    try {
+        const result = await db.query('SELECT id, nombre, descripcion, precio, stock FROM productos');
+        console.log('✅ Productos enviados:', result.rows.length);
+        res.json({ 
+            success: true, 
+            count: result.rows.length,
+            products: result.rows 
+        });
+    } catch (error) {
+        console.error('❌ Error:', error);
+        res.json({ products: [] });
+    }
+});
+
+// Ruta de autenticación directa (básica)
+app.post('/api/auth/login', (req, res) => {
+    res.json({ success: true, message: 'Login endpoint' });
+});
+
+// Ruta raíz
+app.get('/', (req, res) => {
+    res.json({ success: true, message: '🍦 API YogurASO funcionando' });
+});
+
+// ========== FIN RUTAS DIRECTAS ==========
+
+// Manejo de errores 404
+app.use((req, res) => {
+    res.status(404).json({ success: false, message: 'Ruta no encontrada' });
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+    console.log(`✅ Servidor en http://localhost:${PORT}`);
+});
+
+// Prueba de conexión a BD
+(async () => {
+    try {
+        const test = await db.query('SELECT NOW()');
+        console.log('✅ HORA DEL SERVIDOR:', test.rows[0].now);
+        
+        const productos = await db.query('SELECT COUNT(*) FROM productos');
+        console.log('📦 TOTAL PRODUCTOS EN BD:', productos.rows[0].count);
+    } catch (error) {
+        console.error('❌ ERROR DE CONEXIÓN:', error);
+    }
+})();
