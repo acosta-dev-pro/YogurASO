@@ -1,0 +1,256 @@
+/* brand.css — tokens YoguraSo v3 (mockups definitivos)
+   Soft reds/pinks, cream surfaces, pill UI, Emil ease-out. */
+
+:root {
+    /* ROJO ÚNICO DE MARCA = rojo de fondo de fresa (--bg-fresa): más opaco y clarito,
+       pero fuerte. Todo acento rojo del sitio sale de aquí; hover/pressed/deep se
+       derivan oscureciéndolo (no es otra familia de rojo). */
+    --rojo-marca: #C3343E;
+    --rojo-marca-hover: color-mix(in srgb, var(--rojo-marca) 86%, #000);
+    --rojo-marca-deep: color-mix(in srgb, var(--rojo-marca) 82%, #000);
+    --rojo-marca-soft: color-mix(in srgb, var(--rojo-marca) 84%, #fff);
+    --brand-red: var(--rojo-marca);
+    --brand-red-dark: var(--rojo-marca-hover);
+    --brand-red-deep: var(--rojo-marca-deep);
+    --brand-pink: #FFE4E8;
+    --brand-pink-soft: #FFF1F3;
+    --brand-blush: #FDF5F5;
+    --brand-green: #4FAE45;
+    --cream: #FFF8F4;
+    --ink: #171717;
+
+    --brand-main: var(--brand-red);
+    --brand-deep: var(--brand-red-dark);
+    --surface: var(--cream);
+    --surface-soft: var(--brand-blush);
+    --text-main: var(--ink);
+    --text-muted: #6B635C;
+    --border: rgba(23, 23, 23, 0.08);
+
+    /* Soft elevation (mockup shadows) */
+
+    --radius: 18px;
+    --radius-pill: 999px;
+
+    --font-display: 'Fredoka', sans-serif;
+    --font-brand: 'Fredoka', sans-serif;
+    --font-body: 'Nunito Sans', sans-serif;
+    --font-ui: 'Nunito Sans', sans-serif;
+
+    /* Emil Kowalski motion */
+
+    /* Flavor panel backgrounds: strong brand hues, ~10% lighter
+       (piña/mango ~3% so white text still works). Surfaces behind
+       product images / flavor panels. Accents keep separate strong dots. */
+    --bg-fresa: #C3343E;
+    --bg-pina: #E4A30F;
+    --bg-mora: #82366B;
+    --bg-melocoton: #DD6827;
+    --bg-frutos-rojos: #B12C4E;
+    --bg-cafe: #663E31;
+    --bg-guanabana: #488738;
+    --bg-mango: #ED8311;
+
+    /* Pastel de tarjetas de producto (no el hero). --bg-* sigue fuerte. */
+    --fondo-claro-fresa: #F4CBCF;
+    --fondo-claro-pina: #F5E6A6;
+    --fondo-claro-mora: #E6CEE3;
+    --fondo-claro-melocoton: #F7D4B4;
+    --fondo-claro-frutos-rojos: #F2CBD4;
+    --fondo-claro-cafe: #E5D3C4;
+    --fondo-claro-guanabana: #D4E8C9;
+    --fondo-claro-mango: #F5DDB0;
+
+    /* Legacy washes → same flavor panel tokens */
+
+    --s: min(1vw, 1.78svh);
+    --page-max: 1120px;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-main);
+    background: var(--surface);
+    background-image: none;
+}
+
+h1,
+h2,
+h3,
+.display {
+    font-family: var(--font-display);
+}
+
+button,
+input,
+select,
+textarea { font-family: inherit; }
+
+[id] { scroll-margin-top: 96px; }
+
+:focus-visible {
+    outline: 3px solid var(--brand-red);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* Pill CTA system */
+.ys-pill,
+.cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 8px 0 22px;
+    border: none;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #fff;
+    background: var(--brand-red);
+}
+.ys-pill:hover { background: var(--brand-red-dark); transform: translateY(-2px); }
+.ys-pill:active { transform: scale(0.97); }
+.ys-pill:hover .ys-pill__arrow { transform: translateX(4px); }
+.ys-pill__arrow {
+    display: grid; place-items: center;
+    width: 34px; height: 34px; margin-left: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+}
+.ys-pill--light {
+    color: var(--brand-red);
+    background: #fff;
+}
+.ys-pill--light .ys-pill__arrow { background: var(--brand-pink); color: var(--brand-red); }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .ys-pill:active { transform: none; }
+}
+
+/* ==========================================================================
+   VARIABLES DE COLORIMETRÍA DINÁMICAS POR SABOR (DOS TONOS FUNDAMENTALES)
+   --flavor-dark: Color fuerte/oscuro del sabor (fondos de bloque, títulos, botones)
+   --flavor-light: Color pastel/claro del sabor (tarjeta cremoso, kickers, tintes suaves)
+   ========================================================================== */
+:root {
+    --flavor-dark: #C3343E;
+    --flavor-light: #F4CBCF;
+    --flavor-accent: var(--flavor-dark);
+    --flavor-wash: #FFF5F6;
+}
+
+/* 1. Proceso responsable (Así lo hacemos) */
+.p3d {
+    background: var(--flavor-wash, #FFF5F6) !important;
+}
+.p3d__eyebrow {
+    color: var(--flavor-dark, #C3343E) !important;
+}
+.p3d__more {
+    color: var(--flavor-dark, #C3343E) !important;
+}
+
+/* Tarjetas y bloques centrales sincronizados con el color oscuro del sabor */
+.p3d__card {
+    background: var(--flavor-dark, var(--hero-bg, #C3343E)) !important;
+}
+
+/* 2. Paisaje / Fruta Real / Neiva Tello */
+.fcol {
+    background: var(--flavor-wash, #FFF5F6) !important;
+}
+
+/* 3. Trío (Llévalo contigo, Cremoso, Propósito) */
+.ytrio {
+    background: var(--flavor-wash, #FFF5F6) !important;
+}
+
+/* 4. Empaque: fondo crema cálido idéntico al video de la botella para máxima compatibilidad sin recuadros */
+.emp {
+    --emp-red: var(--flavor-dark, #C3343E);
+    --emp-line: var(--flavor-dark, #C3343E);
+    background: #FFF8F4 !important;
+}
+.emp__video {
+    background: transparent !important;
+    border: none !important;
+    mix-blend-mode: multiply !important;
+}
+
+/* 5. Nuestros yogures (Sección y Tarjetas SIN marcos) */
+#productos.hp-section,
+.hp-section {
+    background: var(--flavor-wash, #FFF5F6) !important;
+}
+/* Tarjetas de productos: NUNCA tienen marco, ni activas ni inactivas ni al enfocar o cerrar ficha */
+.hp-card,
+.hp-card *,
+.producto-card,
+.producto-card *,
+.hp-card .hp-card__panel,
+.hp-card.is-active .hp-card__panel,
+[data-hp-open]{
+    border: none !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+.hp-card:focus,
+.hp-card:focus-visible,
+.hp-card:focus-within,
+.hp-card *:focus,
+.hp-card *:focus-visible,
+.producto-card:focus,
+.producto-card:focus-visible,
+.producto-card:focus-within,
+.producto-card *:focus,
+.producto-card *:focus-visible,
+[data-hp-open]:focus,
+[data-hp-open]:focus-visible {
+    border: none !important;
+    outline: none !important;
+}
+
+/* 6. Distribuidores (¿Quieres distribuir YogurASO?) — estilos en css/distribuidores.css */
+
+/* ==========================================================================
+   POLÍTICA DEL SISTEMA: NINGÚN BOTÓN DEBE BRILLAR, PULSAR O EMITIR RESPLANDOR
+   ========================================================================== */
+button,
+.btn,
+.ys-pill,
+.cta,
+.checkout-btn,
+.ysc-submit,
+.hp-add,
+.ys-uiverse-btn,
+[role="button"] {
+}
+button:hover,
+.btn:hover,
+.ys-pill:hover,
+.cta:hover,
+.checkout-btn:hover,
+.ysc-submit:hover,
+.hp-add:hover,
+.ys-uiverse-btn:hover,
+[role="button"]:hover {
+}
+button::before,
+button::after,
+.btn::before,
+.btn::after,
+.ys-pill::before,
+.ys-pill::after,
+.checkout-btn::before,
+.checkout-btn::after {
+}
