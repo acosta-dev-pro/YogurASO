@@ -1,0 +1,373 @@
+/* hero.css — portada YoguraSo.
+   Reglas del diseño:
+   - Fondo de escenario por sabor (fuertes un poco más claros; --bg-* de brand.css).
+   - Arriba: etiqueta de marca y nombre del sabor en grande; abajo: datos de la marca y botón.
+   - Centro: 5 botellas fijas; solo cambia su data-pos y CSS las mueve (sin saltos al terminar).
+   - Mesa de estudio con horizonte suave y onda inferior del mismo color. */
+
+:root {
+    --hero-gutter: clamp(32px, 5.5vw, 84px);
+    --s: clamp(10px, 1.1vw, 16px);
+}
+
+/* ---------- Tokens por sabor (fuertes un poco más claros via --bg-* de brand.css) ----------
+   --hero-bg    pared de fondo del sabor (var(--bg-<sabor>))
+   --hero-floor mesa un tono más profundo (hex fijo)
+   --hero-ink   acento oscuro del botón ticket
+   --hero-fg    texto del hero = blanco */
+body[data-flavor] {
+    --hero-fg: #fff;
+}
+body { /* toda la web usa los tonos de la fresa; solo la portada cambia (reglas .hero[data-flavor] de abajo) */
+    --hero-bg: var(--bg-fresa);
+    --hero-floor: #A82D35;
+    --hero-ink: var(--rojo-marca-deep);
+}
+.hero[data-flavor="pina"] {
+    --hero-bg: var(--bg-pina);
+    --hero-floor: #D2960E;
+    --hero-ink: #754B00;
+}
+.hero[data-flavor="mora"] {
+    --hero-bg: var(--bg-mora);
+    --hero-floor: #783262;
+    --hero-ink: #3F092E;
+}
+.hero[data-flavor="melocoton"] {
+    --hero-bg: var(--bg-melocoton);
+    --hero-floor: #CB6024;
+    --hero-ink: #8A2D00;
+}
+.hero[data-flavor="frutos-rojos"] {
+    --hero-bg: var(--bg-frutos-rojos);
+    --hero-floor: #A32848;
+    --hero-ink: #65051E;
+}
+.hero[data-flavor="cafe"] {
+    --hero-bg: var(--bg-cafe);
+    --hero-floor: #5E392D;
+    --hero-ink: #2C1008;
+}
+.hero[data-flavor="guanabana"] {
+    --hero-bg: var(--bg-guanabana);
+    --hero-floor: #427C34;
+    --hero-ink: #144009;
+}
+.hero[data-flavor="mango"] {
+    --hero-bg: var(--bg-mango);
+    --hero-floor: #DA7910;
+    --hero-ink: #7A3700;
+}
+
+/* ---------- Estructura del Hero ---------- */
+.hero {
+    position: relative;
+    isolation: isolate;
+    height: 100svh;
+    min-height: 580px;
+    max-height: 1080px;
+    overflow: hidden;
+    color: var(--hero-fg);
+    background-color: var(--hero-bg);
+}
+.hero-box {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Malla de degradados: iluminación suave de estudio (acotada a la pared superior para no manchar la mesa) */
+.hero-mesh { display: none; position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.hero-mesh i {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    opacity: 0.45;
+    -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+}
+.hero-mesh i:nth-child(1) {   /* luz detrás de la botella */
+    width: 52vw; height: 52vw;
+    left: 45%; top: 15%;
+    background-color: color-mix(in srgb, var(--hero-bg) 60%, #fff);
+}
+.hero-mesh i:nth-child(2) {   /* sombra profunda arriba a la izquierda */
+    width: 45vw; height: 45vw;
+    left: -10%; top: -10%;
+    background-color: color-mix(in srgb, var(--hero-bg) 80%, #000);
+}
+.hero-mesh i:nth-child(3) {   /* tono vecino a la derecha */
+    width: 38vw; height: 38vw;
+    right: -8%; top: 25%;
+    background-color: color-mix(in srgb, var(--hero-bg) 55%, var(--hero-ink));
+}
+.hero-mesh i:nth-child(4) {   /* oculto para que la mesa quede 100% uniforme con la ola */
+    display: none !important;
+}
+
+/* Mesa de estudio fotográfico: 100% sólida y sincronizada en curva 0.22s ease con la ola inferior */
+.hero-floor {
+    display: none;
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 73%;
+    z-index: 0;
+    background-color: var(--hero-floor);
+    pointer-events: none;
+}
+.hero-floor::before,
+.hero-floor::after {
+    display: none !important;
+}
+
+/* ---------- Medidas del escenario (todo el carrusel sale de estas variables) ---------- */
+.hero {
+    --hero-h: min(1080px, max(580px, 100svh));        /* mismo alto que el hero (ver .hero más arriba) */
+    --zk: 0.88;                                      /* escala global de la página en escritorio (ver scale.css) */
+    --hero-pad-top: clamp(76px, 10svh, 110px);
+    --hero-chrome: 14px;                              /* aire entre el nombre y la botella */
+    --name-fs: clamp(2.6rem, min(6.2vw, 11svh), 6.4rem);
+    --stage-bottom: clamp(84px, 12.5svh, 132px);      /* distancia de la base de la botella al borde inferior */
+    /* Alto de la botella central: todo el espacio libre bajo el nombre, sin invadirlo */
+    --stage-h: clamp(130px, min(70svh, calc(var(--hero-h) - var(--zk) * (var(--hero-pad-top) + var(--hero-chrome) + var(--name-fs) * 1.24) - var(--stage-bottom))), 780px);
+    --x-side: min(17.5vw, 280px);                     /* separación de la primera botella lateral (las siguientes van más pegadas) */
+    --carousel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --carousel-dur: 0.7s;
+}
+
+/* ---------- Parte de arriba: nombre del sabor ---------- */
+.hero-top {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: var(--hero-pad-top);
+    text-align: center;
+    pointer-events: none;
+}
+.hero-title {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(8px, 1.4svh, 14px);
+    max-width: 100%;
+}
+/* Cada sabor es una "palabra" hecha de letras; entran y salen escalonadas (ver @keyframes charIn/charOut).
+   Las palabras viven en la misma celda de la rejilla, así la que sale y la que entra se cruzan sin saltos. */
+.hero-flavor {
+    display: grid;
+    justify-items: center;
+    overflow: hidden;                 /* las letras suben desde "detrás" de la línea base */
+    padding: 0.04em 0.12em 0.2em;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 600;
+    font-size: var(--name-fs);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: #fff;
+}
+.hero-word { grid-area: 1 / 1; display: flex; }
+.hero-char { display: inline-block; white-space: pre; }
+.hero-word.is-exit { pointer-events: none; }
+
+/* ---------- Botón "Conoce nuestros sabores": un contenedor simple ---------- */
+.hero-cta {
+    display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;
+    padding: 8px 22px; border-radius: 999px; background: #fff; color: #111;
+    font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; line-height: 1.2; text-decoration: none;
+}
+.hero-cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+/* ---------- Lo único que se mueve: el giro de las botellas y el cambio de fondo ---------- */
+.hero { transition: background-color 0.22s ease; }
+.hero-floor { transition: background-color 0.22s ease; }
+.bottle { transition: transform var(--carousel-dur) var(--carousel-ease), opacity var(--carousel-dur) var(--carousel-ease); }
+.bottle.is-jump, .is-loading .bottle { transition: none; }
+.hero-word:not(.is-current) { display: none; }
+
+/* ---------- Escenario: 5 botellas fijas; solo cambia su posición (data-pos) ---------- */
+.hero-stage {
+    position: absolute; inset: 0;
+    z-index: 2;
+    touch-action: pan-y;
+    user-select: none; -webkit-user-select: none;
+    cursor: pointer;
+}
+.hero-stage:focus,
+.hero-stage:focus-visible { outline: none; }
+.hero-stage img { pointer-events: none; -webkit-user-drag: none; user-select: none; }
+
+.hero-anchor,
+.bottle {
+    position: absolute;
+    left: 50%;
+    bottom: var(--stage-bottom);
+    height: var(--stage-h);
+    aspect-ratio: 640 / 1110;
+}
+.hero-anchor { transform: translateX(-50%); visibility: hidden; pointer-events: none; }
+
+.bottle {
+    --x: 0px; --y: 0px; --s: 1; --r: 0deg;
+    transform: translate3d(calc(-50% + var(--x)), var(--y), 0) scale(var(--s)) rotate(var(--r));
+    transform-origin: 50% 100%;
+}
+
+/* Posiciones. Para cambiar la coreografía basta con tocar estos valores. */
+.bottle[data-pos="0"]  { z-index: 5; opacity: 1; }
+.bottle[data-pos="-1"] { --x: calc(var(--x-side) * -1); --y: -2svh; --s: 0.76; --r: -5deg; z-index: 4; opacity: 0.8; }
+.bottle[data-pos="1"]  { --x: var(--x-side);            --y: -2svh; --s: 0.76; --r: 5deg;  z-index: 4; opacity: 0.8; }
+/* Segunda fila: en escritorio se ven; en móvil quedan ocultas (ver el bloque móvil) */
+.bottle[data-pos="-2"] { --x: calc(var(--x-side) * -1.65); --y: -4svh; --s: 0.56; --r: -9deg; z-index: 2; opacity: 0.55; }
+.bottle[data-pos="2"]  { --x: calc(var(--x-side) * 1.65);  --y: -4svh; --s: 0.56; --r: 9deg;  z-index: 2; opacity: 0.55; }
+/* Botellas de reserva: esperan ocultas para entrar por los lados */
+.bottle[data-pos="-3"] { --x: calc(var(--x-side) * -2.4); --y: -5svh; --s: 0.42; --r: -12deg; z-index: 1; opacity: 0; pointer-events: none; }
+.bottle[data-pos="3"]  { --x: calc(var(--x-side) * 2.4);  --y: -5svh; --s: 0.42; --r: 12deg;  z-index: 1; opacity: 0; pointer-events: none; }
+
+/* Sombra de apoyo sobre la mesa: sigue a la botella en escala y posición */
+.bottle[data-pos="0"]::before {
+    content: '';
+    position: absolute;
+    left: 4%; right: 4%;
+    bottom: -2.4%;
+    height: 5%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+}
+.bottle-art { position: absolute; inset: 0; }
+.bottle-img {
+    position: absolute; inset: 0;
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    backface-visibility: hidden;
+}
+
+/* ---------- Barra inferior: una frase de la marca a la izquierda y el botón a la derecha ---------- */
+.hero-bar {
+    position: absolute;
+    left: var(--hero-gutter);
+    right: max(var(--hero-gutter), 140px);          /* deja libre el botón flotante de WhatsApp */
+    bottom: clamp(14px, 3.4svh, 34px);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(20px, 4vw, 64px);
+}
+.hero-note {
+    max-width: 30em;
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+}
+.hero-note strong {
+    display: block;
+    margin: 0;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    line-height: 1.15;
+    color: #fff;
+}
+
+/* ---------- Accesibilidad y movimiento reducido ---------- */
+.is-loading .hero-mesh,
+.is-loading .hero-floor,
+@media (prefers-reduced-motion: reduce) {
+    .hero-char { }
+}
+
+/* ---------- Móvil ---------- */
+@media screen and (max-width: 860px) {
+    .hero {
+        --zk: 1;
+        --hero-pad-top: clamp(66px, 10svh, 84px);
+        --hero-chrome: 12px;
+        --name-fs: clamp(2.2rem, min(15vw, 10svh), 4.4rem);
+        --stage-bottom: clamp(130px, 27svh, 250px);
+    }
+    .bottle[data-pos="-1"] { --y: -1.5svh; --s: 0.6; --r: -5deg; }
+    .bottle[data-pos="1"]  { --y: -1.5svh; --s: 0.6; --r: 5deg; }
+    .hero { --x-side: 34vw; }
+    .bottle[data-pos="-2"],
+    .bottle[data-pos="2"]  { opacity: 0; pointer-events: none; }
+    .hero-bar {
+        left: 20px; right: 20px;
+        bottom: 16px;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        text-align: center;
+    }
+    .hero-note { font-size: 0.84rem; line-height: 1.42; }
+    .hero-note strong { font-size: 1.05rem; }
+    .hero-note span { display: none; }
+}
+    .hero-cta { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
+
+/* Contenedor en gris sólido plano sin marco */
+.showcase-gray-box {
+    background: #F3F4F6;
+    border: none !important;
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.showcase-gray-box .showcase-sublead {
+    margin: 0;
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(0.8rem, 0.86vw, 0.86rem);
+    line-height: 1.45;
+    color: #4B5563;
+    font-weight: 400;
+}
+
+/* Onda inferior del Hero: 100% sólida mirando hacia abajo, del color exacto de la mesa */
+.hero-wave-bottom {
+    position: relative;
+    width: 100%;
+    height: clamp(65px, 7.5vw, 120px);
+    margin-top: -2px;
+    margin-bottom: -2px;
+    pointer-events: none;
+    overflow: hidden;
+    line-height: 0;
+    z-index: 2;
+    background-color: var(--flavor-wash, #FFF5F6);
+}
+.hero-wave-bottom svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.hero-wave-path {
+    transition: fill 0.22s ease;   /* sigue el cambio de fondo del hero */
+    fill: var(--hero-bg, #A82D35);
+    opacity: 1 !important;
+}
+
+/* Botones de Sobre Nosotros: "Ver sabores" pastel sólido y "Mayoristas" solo texto, sin marco ni raya */
+#nosotros .showcase-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 22px; }
+#nosotros .ys-uiverse-btn, #nosotros .ys-text-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 22px;
+    border: 0; border-radius: 99px; font-weight: 800; font-size: 0.92rem; text-decoration: none; white-space: nowrap;
+}
+#nosotros .ys-uiverse-btn { background: var(--flavor-light, #FCE8E8); color: var(--flavor-dark, #C3343E); }
+#nosotros .ys-text-btn { background: none; color: #fff; padding: 0 6px; }
+#nosotros .ys-text-btn:hover { text-decoration: underline; }
+
