@@ -1,0 +1,38 @@
+/* YogurASO — escala global del contenido (~12% menos en escritorio).
+   Casi todo el CSS está en px y clamp(), no en rem, así que bajar
+   el font-size de html no encoge la página. zoom escala tipo, paddings,
+   tarjetas e imágenes juntos, sin transform (no rompe position:fixed).
+   El header queda en su tamaño (es la referencia).
+   El hero conserva alto y ancho de pantalla (100svh, fondo y escenario);
+   solo se achican el texto, el botón y las botellas.
+   En dispositivos móviles (<= 860px) se restaura zoom: 1 para que
+   los modales de 100dvh/100svh (como la ficha de producto) no se
+   desborden por debajo de la pantalla del teléfono. */
+html { zoom: 0.88; }
+#siteHeader,
+#hero { zoom: calc(1 / 0.88); }
+#hero .hero-top,
+#hero .hero-bar { zoom: 0.88; }
+
+/* 404: el marco es min-height 100vh y el zoom lo dejaba corto.
+   Se devuelve el marco y solo se achica la tarjeta interior. */
+.page-404 { zoom: calc(1 / 0.88); }
+.page-404-inner { zoom: 0.88; }
+
+@media screen and (max-width: 860px) {
+    html,
+    #siteHeader,
+    #hero,
+    #hero .hero-top,
+    #hero .hero-bar,
+    .page-404,
+    .page-404-inner {
+        zoom: 1 !important;
+    }
+}
+
+/* El margen superior del footer dejaba ver el fondo crema del body (#FFF8F4).
+   Sin ese hueco, el contenido llega al pie. */
+footer.ysf {
+    margin-top: 0;
+}
