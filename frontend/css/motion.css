@@ -1,0 +1,38 @@
+
+
+/* Tarjetas de producto del catálogo: entrada escalonada (máx. 8 pasos) */
+/* El retraso de cada tarjeta lo pone main.js (90 ms por tarjeta, máx. 0,63 s) */
+
+/* Tarjetas: sube 4 px, el borde de 1 px se ilumina, sin sombra grande */
+.producto-card{
+}
+.producto-card:hover { transform: translateY(-4px); }
+.producto-card:hover .producto-img { transform: scale(1.02); }
+
+/* Botones: suben 4 px */
+.btn-primary,
+.btn-add,
+.checkout-btn{
+}
+.btn-primary:hover,
+.btn-add:hover{ transform: translateY(-4px); }
+.btn-primary:active,
+.btn-add:active,
+.checkout-btn:active{ transform: scale(0.97); }
+
+/* Paneles con vidrio ligero */
+.cart-sidebar {
+    background: rgba(255, 250, 241, 0.92);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-left: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Contador del carrito: el cambio de número entra desde abajo */
+
+@media (prefers-reduced-motion: reduce) {
+    .producto-card:hover,
+.btn-primary:hover,
+.btn-add:hover{ transform: none; }
+    .producto-card:hover .producto-img { transform: none; }
+}
