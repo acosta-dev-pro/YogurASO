@@ -1,0 +1,229 @@
+/* FAQ — encabezado como #empaque; cada respuesta en el
+   contenedor gris de #nosotros (.showcase-gray-box / .showcase-sublead).
+   Reglas nuevas solo bajo #preguntas, prefijo faq-. */
+
+/* styles.css pone TODO header { position:fixed; display:flex } (el navbar).
+   El encabezado del FAQ es un div para no caer en esa regla. */
+#preguntas .emp__head {
+    position: static;
+    display: block;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    z-index: auto;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+#preguntas.emp {
+    /* ancho del contenido de la sección: lista, pie y formulario de pregunta */
+    --faq-content-w: 640px;
+    padding: clamp(48px, 7vh, 84px) 0 clamp(40px, 6vh, 72px);
+}
+
+#preguntas .faq-list {
+    width: min(var(--faq-content-w, 640px), 100%);
+    margin: clamp(22px, 3.2vh, 36px) auto 0;
+}
+
+#preguntas .faq-item {
+    border-top: 1px solid rgba(23, 23, 23, 0.1);
+    background: transparent;
+}
+
+#preguntas .faq-item:last-child {
+    border-bottom: 1px solid rgba(23, 23, 23, 0.1);
+}
+
+#preguntas .faq-q {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+#preguntas .faq-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 15px 2px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--emp-ink, #171717);
+    font-family: var(--font-ui, "Nunito Sans", sans-serif);
+    font-weight: 800;
+    font-size: 15px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-align: left;
+    cursor: pointer;
+}
+
+#preguntas .faq-q-text {
+    flex: 1;
+    min-width: 0;
+}
+
+#preguntas .faq-trigger:focus {
+    outline: none;
+}
+
+#preguntas .faq-trigger:focus-visible {
+    outline: 2px solid #6B7280;
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+#preguntas .faq-icon {
+    position: relative;
+    flex: none;
+    width: 12px;
+    height: 12px;
+    color: var(--emp-muted, #6A6259);
+}
+
+#preguntas .faq-icon::before,
+#preguntas .faq-icon::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+}
+
+#preguntas .faq-icon::before {
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    margin-top: -0.5px;
+}
+
+#preguntas .faq-icon::after {
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 12px;
+    margin-left: -0.5px;
+    transform: scaleY(1);
+    transform-origin: center;
+}
+
+#preguntas .faq-item.is-open .faq-icon::after {
+    transform: scaleY(0);
+    opacity: 0;
+}
+
+#preguntas .faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+}
+
+#preguntas .faq-item.is-open .faq-answer {
+    grid-template-rows: 1fr;
+}
+
+#preguntas .faq-answer-inner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* El gris, el radio y el padding salen de .showcase-gray-box.
+   La tipografía sale de .showcase-sublead. Aquí solo la entrada. */
+#preguntas .faq-answer-box {
+    margin: 0;
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+}
+
+#preguntas .faq-item.is-open .faq-answer-box {
+    margin: 0 0 14px;
+    opacity: 1;
+    transform: none;
+}
+
+#preguntas .faq-foot {
+    width: min(var(--faq-content-w, 640px), 100%);
+    margin: 16px auto 0;
+    text-align: center;
+    font-family: var(--font-ui, "Nunito Sans", sans-serif);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--emp-muted, #6A6259);
+}
+
+#preguntas.is-js .faq-item {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+}
+
+#preguntas.is-js.is-in .faq-item {
+    opacity: 1;
+    transform: none;
+}
+
+/* Onda superior de #preguntas: 100% sólida mirando hacia abajo desde #distribuidores */
+#preguntas.emp {
+    padding-top: 0 !important;
+}
+#preguntas .emp__wrap {
+    padding-top: clamp(28px, 4.5vh, 52px);
+}
+.faq-wave-top {
+    position: relative;
+    width: 100%;
+    height: clamp(50px, 5.5vw, 84px);
+    margin-top: -1px;
+    margin-bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    line-height: 0;
+    z-index: 2;
+    background-color: var(--flavor-wash, #FFF5F6);
+}
+.faq-wave-top svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.faq-wave-path {
+    fill: var(--flavor-light, #F4CBCF);
+    opacity: 1 !important;
+}
+
+@media (max-width: 760px) {
+    #preguntas.emp {
+        padding: 36px 0 44px;
+    }
+
+    #preguntas .faq-trigger {
+        font-size: 14px;
+        padding: 14px 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #preguntas .faq-item,
+    #preguntas .faq-answer,
+    #preguntas .faq-icon::after,
+    #preguntas .faq-answer-box,
+    #preguntas .faq-trigger {
+    }
+
+    #preguntas.is-js .faq-item,
+    #preguntas.is-js.is-in .faq-item {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    #preguntas .faq-answer-box,
+    #preguntas .faq-item.is-open .faq-answer-box {
+        opacity: 1;
+        transform: none;
+    }
+}
