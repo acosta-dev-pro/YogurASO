@@ -1,0 +1,176 @@
+﻿/* home-v3.css — secciones home según mockups 03/04/05 + footer nuevo + ficha mockup 01 */
+
+/* Soft concave separator (discreto, no franja gruesa) */
+.yd {
+  height: clamp(18px, 2.4vw, 28px) !important;
+  margin: -1px 0 !important;
+  overflow: hidden !important;
+}
+.yd svg { filter: none !important; }
+
+.v3-wrap {
+  width: min(100% - 40px, var(--page-max));
+  margin-inline: auto;
+}
+.v3-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 28px; padding: 0 12px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-pink);
+  color: var(--brand-red);
+  font-size: 12px; font-weight: 800; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.v3-title {
+  margin: 12px 0 8px;
+  font-size: clamp(1.7rem, 3.2vw, 2.35rem);
+  line-height: 1.1; color: var(--brand-red-deep);
+  letter-spacing: -0.02em;
+}
+.v3-title em { font-style: normal; color: var(--brand-red); }
+.v3-lead {
+  margin: 0; max-width: 46ch;
+  color: var(--text-muted); font-size: 1rem; line-height: 1.55;
+}
+
+/* ========== DISTRIBUIDORES BAR (mockup 03) ========== */
+
+/* ========== PRODUCTOS HOME TEASER ========== */
+.v3-catalog {
+  padding: clamp(36px, 5vw, 60px) 0;
+  background: #fff;
+}
+
+/* ========== FICHA MODAL mockup 01 ========== */
+.fc {
+  border: none; padding: 0; background: transparent;
+  max-width: min(920px, calc(100vw - 32px));
+}
+.fc::backdrop { background: rgba(23, 12, 14, 0.45); backdrop-filter: blur(6px); }
+.productos-page-v3 .catalog-toolbar-v3 {
+  width: min(100% - 40px, var(--page-max));
+  margin: -22px auto 0; position: relative; z-index: 2;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 16px; border-radius: 18px;
+  background: #fff;
+}
+.productos-page-v3 .catalog-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.productos-page-v3 .chip {
+  min-height: 36px; padding: 0 14px; border: none; border-radius: 999px;
+  background: var(--brand-pink-soft); color: var(--brand-red);
+  font-weight: 700; font-size: 13px; cursor: pointer;
+}
+.productos-page-v3 .chip.is-on { background: var(--brand-red); color: #fff; }
+.productos-page-v3 .chip:active { transform: scale(0.97); }
+.productos-page-v3 #filtro-orden {
+  min-height: 36px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: #fff; color: var(--ink);
+  font-weight: 600; font-size: 13px;
+}
+.productos-page-v3 .productos-catalogo {
+  padding-top: 28px; padding-bottom: 48px; background: var(--cream);
+}
+.productos-page-v3 .productos-grid {
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 18px !important; max-width: var(--page-max) !important;
+}
+
+/* Floating cart sidebar polish */
+.cart-sidebar {
+  border-radius: 24px 0 0 24px !important;
+}
+.cart-sidebar .checkout-btn {
+  border-radius: 999px !important;
+}
+.cart-sidebar .checkout-btn:active { transform: scale(0.97); }
+
+/* Auth / admin / perfil / carrito page cream system */
+.auth-container,
+.cart-body,
+.profile-page{
+  background: var(--cream) !important;
+}
+.auth-card,
+.shop-auth-wrap .auth-card {
+  border-radius: 24px !important;
+  border: 1px solid color-mix(in srgb, var(--rojo-marca) 6%, transparent) !important;
+}
+.shop-auth-promo {
+  border-radius: 24px !important;
+  background: linear-gradient(155deg, var(--rojo-marca), var(--rojo-marca-deep)) !important;
+}
+
+@media (max-width: 1020px) {
+  .productos-page-v3 .productos-grid{ grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  .productos-page-v3 .productos-grid{ grid-template-columns: 1fr !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ys-pill{ }
+}
+
+/* FIX: never stretch bottle assets (HTML width/height attrs otherwise force tall height) */
+.producto-card .producto-img{
+  height: auto !important;
+  max-height: 100%;
+  object-fit: contain !important;
+  object-position: center bottom;
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img{
+  width: min(86%, 210px) !important;
+  max-width: 210px !important;
+  max-height: 280px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+/* FIX larger bottles in catalog cards */
+.productos-page-v3 .productos-grid:not(.productos-grid-horizontal) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)) !important;
+  gap: 22px !important;
+  max-width: 1180px !important;
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img{
+  width: min(70%, 140px) !important;
+  max-width: 140px !important;
+  max-height: 168px !important;
+  height: auto !important;
+  aspect-ratio: 320 / 555 !important;
+  object-fit: contain !important;
+  transform: none !important;
+  padding: 0 !important;
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card{
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.productos-page-v3 .productos-grid:not(.productos-grid-horizontal) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)) !important;
+  gap: 16px !important;
+}
+
+/* HARD SHORT STAGE */
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-container,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-wrap{
+  height: 150px !important;
+  min-height: 150px !important;
+  max-height: 150px !important;
+  aspect-ratio: auto !important;
+  padding: 8px 8px 0 !important;
+}
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img{
+  width: auto !important;
+  max-width: 112px !important;
+  max-height: 138px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
