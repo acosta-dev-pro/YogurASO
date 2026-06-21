@@ -1,0 +1,39 @@
+/* premium-home.css — Nosotros denso, masonry Pinterest, botones Emil.
+   Escala contenida (máx. 1080 px). No toca hero ni header. */
+
+:root {
+}
+.nosotros-title {
+  margin: 0 !important;
+  font: 600 clamp(24px, 2.8vw, 34px)/1.12 var(--font-display) !important;
+  letter-spacing: -0.015em !important;
+  color: #171717 !important;
+  background: none !important;
+  -webkit-text-fill-color: #171717 !important;
+}
+.nosotros-title span {
+  color: var(--rojo-marca) !important;
+  -webkit-text-fill-color: var(--rojo-marca) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .producto-card,
+.btn-ficha,
+.btn-add{
+  }
+}
+
+/* ---------- FOOTER WHITE / CREAM (no black sides) ---------- */
+.site-footer {
+  background: #FFFDF8 !important;
+  color: #171717 !important;
+}
+.site-footer {
+  border-top: 1px solid rgba(23, 23, 23, 0.08);
+}
+.footer-logo,
+.footer-col h4 { color: #171717 !important; }
+.footer-col ul li,
+.footer-col ul li a{ color: #5C554C !important; }
+.footer-col ul li a:hover { color: var(--rojo-marca) !important; }
+.footer-col ul li i { color: var(--rojo-marca) !important; }
