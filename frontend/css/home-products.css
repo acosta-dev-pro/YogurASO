@@ -1,0 +1,629 @@
+/* Carrusel de "Nuestros yogures" en el inicio. Lógica en js/home-products-carousel.js */
+
+#productos.hp-section,
+#main-content.hp-section {
+    --hp-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --hp-w: clamp(234px, 19.5vw, 272px);
+    --hp-gap: clamp(12px, 1.6vw, 22px);
+    --hp-media-h: calc(var(--hp-w) * 0.90);
+    --hp-panel-top: calc(var(--hp-media-h) * 0.46);
+    padding: 0 0 clamp(24px, 3.5vw, 42px);
+    background: var(--flavor-wash, #FFF8F4) !important;
+    overflow: hidden;
+}
+
+/* ---------- encabezado ---------- */
+.hp-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.hp-head .v3-title { margin: 10px 0 6px; }
+.hp-head .v3-lead { font-size: 0.94rem; margin-inline: auto; }
+
+/* Banda detrás del título: sección con el color claro (pastel) y kicker con el color oscuro sincronizados */
+#productos.hp-section > .hp-head,
+#main-content.hp-section > .hp-head {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: clamp(18px, 2.4vw, 28px) 20px clamp(8px, 1.2vw, 14px);
+    background: var(--flavor-light, #F4CBCF) !important;
+    color: var(--ink, #171717) !important;
+}
+#productos.hp-section > .hp-head .v3-kicker,
+#main-content.hp-section > .hp-head .v3-kicker {
+    background: var(--flavor-dark, #C3343E) !important;
+    color: #FFFFFF !important;
+    font-weight: 700;
+}
+#productos.hp-section > .hp-head .v3-title,
+#main-content.hp-section > .hp-head .v3-title {
+    color: var(--flavor-dark, #C3343E) !important;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+}
+#productos.hp-section > .hp-head .v3-lead,
+#main-content.hp-section > .hp-head .v3-lead {
+    color: #4A423A !important;
+    opacity: 0.95;
+}
+
+/* ---------- Onda inferior del encabezado de productos (hacia abajo estilo Paranais) ---------- */
+.hp-head-wave {
+    width: 100%;
+    height: clamp(34px, 4.6vw, 64px);
+    line-height: 0;
+    pointer-events: none;
+    overflow: hidden;
+    margin-top: -1px;
+    z-index: 2;
+    position: relative;
+    background-color: var(--flavor-wash, #FFF5F6);
+}
+.hp-head-wave svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.hp-head-wave-path {
+    fill: var(--flavor-light, #F4CBCF);
+}
+
+/* ---------- carrusel subido para visualizar títulos al mismo tiempo ---------- */
+.hp-carousel {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
+}
+
+/* Botón Ver todos los productos: rojo de marca oficial */
+.hp-more {
+    text-align: center;
+    margin-top: clamp(16px, 2.5vw, 30px);
+}
+.hp-more a.ys-pill {
+    background: var(--rojo-marca, #C3343E) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+}
+.hp-more a.ys-pill .ys-pill__arrow {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #FFFFFF !important;
+}
+.hp-more a.ys-pill:hover { background: var(--rojo-marca, #C3343E) !important; transform: none !important; }   /* sin efecto al pasar el cursor */
+.hp-more a.ys-pill:hover .ys-pill__arrow { transform: none !important; background: rgba(255, 255, 255, 0.22) !important; }
+
+.hp-track {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--hp-gap);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: auto;
+    scrollbar-width: none;
+    padding: 56px calc(50% - var(--hp-w) / 2) 36px;
+    min-height: calc(var(--hp-media-h) + 186px);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+    outline: none;
+    cursor: grab;
+    -webkit-tap-highlight-color: transparent;
+}
+.hp-track::-webkit-scrollbar { display: none; }
+.hp-track.is-dragging {
+    scroll-snap-type: none;
+    cursor: grabbing;
+    user-select: none;
+}
+.hp-track.is-dragging a,
+.hp-track.is-dragging button { pointer-events: none; }
+
+.hp-status {
+    flex: 0 0 var(--hp-w);
+    align-self: center;
+    margin: 0;
+    text-align: center;
+    color: var(--text-muted, #6B635C);
+    font-size: 0.9rem;
+}
+
+/* ---------- tarjeta sólida pastel con fragmento blanco visible en todos los yogures ---------- */
+.hp-card, .hp-card__panel { transition: transform 420ms var(--hp-ease); }  /* la única animación: la tarjeta del centro */
+.hp-card {
+    position: relative;
+    flex: 0 0 var(--hp-w);
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: var(--ink, #171717);
+    isolation: isolate;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* 1. Panel exterior: totalmente sólido de un solo color pastel con su sombra suave para TODOS los yogures */
+.hp-card__panel {
+    position: absolute;
+    inset: var(--hp-panel-top) 0 0 0;
+    z-index: -1;
+    border-radius: 26px;
+    background: var(--hp-c); /* SÓLIDO de un solo color pastel */
+    opacity: 0.95;
+    transform: scale(0.96);
+}
+.hp-card.is-active .hp-card__panel {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+/* 2. Botella con espacio superior suficiente: la tapa queda 100% visible sin ningún recorte */
+.hp-card__media {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: var(--hp-media-h);
+    text-decoration: none;
+    z-index: 3;
+    overflow: visible;
+}
+.hp-card__media img {
+    position: relative;
+    display: block;
+    height: 100%;
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    transform: scale(0.92);
+    transform-origin: 50% 100%;
+    -webkit-user-drag: none;
+    user-select: none;
+    z-index: 2;
+    
+}
+.hp-card.is-active .hp-card__media img {
+    transform: translateY(-8px) scale(1.05); /* Salida elegante hacia arriba */
+    
+}
+
+/* Sombra única y degradada pegada al producto: sin capa de óvalo inferior */
+.hp-card__floor {
+    display: none !important;
+}
+
+/* Chips / Badges en la esquina superior */
+.hp-card__chips {
+    position: absolute;
+    top: calc(var(--hp-panel-top) + 12px);
+    left: 12px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    pointer-events: none;
+}
+.hp-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 25px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: var(--chip-bg, rgba(255, 255, 255, 0.94));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--chip-fg, #151515);
+    font: 700 11px/1 var(--font-ui, 'Nunito Sans', sans-serif);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+}
+.hp-chip--out {
+    background: #726C65 !important;
+    color: #FFFFFF !important;
+    border: none;
+}
+
+/* Botón de favorito: en la esquina superior de la tarjeta blanca al lado de la categoría */
+.hp-fav {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--brand-red, #E51D2A);
+    cursor: pointer;
+}
+.hp-fav:hover {
+    background: rgba(229, 29, 42, 0.1);
+    transform: scale(1.08);
+}
+.hp-card.is-active .hp-fav {
+    opacity: 1;
+}
+.hp-card:not(.is-active) .hp-fav {
+    opacity: 0.85;
+}
+.hp-fav svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+.hp-fav.is-on svg { fill: currentColor; }
+.hp-fav:active { transform: scale(0.92); }
+
+/* 3. Fragmento blanco interior rediseñado: Nombre, Presentación compacta arriba, Precio centrado y Añadir */
+.hp-card__body {
+    width: calc(100% - 20px);
+    margin: 2px 10px 10px 10px;
+    padding: 13px 12px 12px;
+    background: #FFFFFF !important;
+    border-radius: 20px !important;
+    border: none !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    opacity: 0.96;
+    transform: scale(0.985);
+    pointer-events: auto;
+}
+.hp-card.is-active .hp-card__body {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Cabecera de la ficha: categoría, nombre y selector de presentación compacto arriba */
+.hp-card__header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 3px;
+}
+.hp-card__cat {
+    font: 800 9.5px/1 var(--font-ui, 'Nunito Sans', sans-serif);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8C8278;
+    display: block;
+}
+.hp-card__name {
+    margin: 0;
+    font: 600 1.22rem/1.12 var(--font-display, 'Fredoka', sans-serif) !important;
+    letter-spacing: -0.015em;
+    color: var(--hp-ink, #17171A);
+}
+.hp-card__name a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: inherit;
+}
+.hp-card__name a:focus,
+.hp-card__name a:focus-visible,
+.hp-card button:focus,
+.hp-card button:focus-visible,
+.hp-card:focus,
+.hp-card:focus-visible {
+    outline: none !important;
+}
+
+/* Selector compacto de presentación (500 ml / 1 L) justo debajo del nombre */
+.yg-size-selector {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin-top: 4px;
+    background: #F3EFEA;
+    padding: 2px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+.yg-size-btn {
+    border: 0;
+    background: transparent;
+    padding: 6px 12px;
+    font-family: var(--font-ui, 'Nunito Sans', sans-serif);
+    font-size: 0.74rem;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+    color: #6B635B;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.yg-size-btn.is-active {
+    background: var(--hp-ink, var(--flavor-dark, #17171A));
+    color: #FFFFFF;
+}
+.yg-size-btn:active {
+    transform: scale(0.95);
+}
+
+/* Fila central exclusiva para el precio */
+.hp-card__meta {
+    margin: 6px 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+.hp-card__price {
+    margin: 0 !important;
+    font-family: var(--font-display, 'Fredoka', sans-serif) !important;
+    font-size: 1.32rem;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #17171A;
+    font-variant-numeric: tabular-nums;
+}
+.hp-price s {
+    margin-right: 4px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    opacity: 0.55;
+}
+.hp-price.is-ask { font-size: 1.02rem; }
+
+/* Fila de acciones: stepper compacto + botón Añadir sólido */
+.hp-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+.hp-qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    height: 34px;
+    font: 800 0.82rem/1 var(--font-ui, 'Nunito Sans', sans-serif);
+    background: #F3EFEA;
+    border-radius: 999px;
+    padding: 0 5px;
+    flex-shrink: 0;
+}
+.hp-qty button {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #17171A;
+    font-weight: 800;
+    font-size: 0.92rem;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.hp-qty button:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+.hp-qty button:active {
+    transform: scale(0.92);
+}
+.hp-qty span {
+    min-width: 16px;
+    text-align: center;
+}
+.hp-add {
+    flex: 1 1 96px;
+    min-height: 38px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 999px;
+    background: #111111 !important;
+    color: #FFFFFF !important;
+    font: 800 0.80rem/1 var(--font-ui, 'Nunito Sans', sans-serif);
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.hp-add__ico {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    stroke-width: 2.3;
+    fill: none;
+    stroke-linecap: round;
+    flex-shrink: 0;
+}
+.hp-add:hover {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+}
+.hp-add:active {
+    transform: scale(0.97);
+}
+.hp-add:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #726C65;
+}
+
+/* ---------- móvil ---------- */
+@media (max-width: 640px) {
+    #main-content.hp-section,
+    #productos.hp-section {
+        --hp-w: clamp(230px, 68vw, 290px);
+        --hp-media-h: calc(var(--hp-w) * 0.95);
+        --hp-panel-top: calc(var(--hp-media-h) * 0.42);
+        --hp-gap: 10px;
+    }
+    #productos .hp-track {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 10px;
+        overflow: visible;
+        -webkit-mask-image: none;
+        mask-image: none;
+        padding: 8px 12px 20px;
+        scroll-snap-type: none;
+        min-height: 0;
+        cursor: default;
+    }
+    #productos .hp-card[data-clone] { display: none; }
+    #productos .hp-card { width: auto; scroll-snap-align: unset; }
+    #productos .hp-card__panel { opacity: 1; transform: none; }
+    #productos .hp-card__media img,
+    #productos .hp-card.is-active .hp-card__media img {
+        height: 100%;
+        width: auto;
+        transform: translateY(-14px) scale(1);
+    }
+    #productos .hp-card__floor { opacity: 0; }
+    #productos .hp-card__body {
+        width: calc(100% - 12px);
+        margin: 2px 6px 8px;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        padding: 10px 8px 10px;
+    }
+    .hp-nav { display: none; }
+    .hp-card__cat { font-size: 8.5px; }
+    .hp-card__name { font-size: 1.02rem !important; }
+    .yg-size-btn { font-size: 0.7rem; padding: 6px 10px; }
+    .hp-card__meta { margin: 4px 0 6px; }
+    .hp-card__price {
+        margin: 0 !important;
+        font-size: 1.16rem;
+    }
+    .hp-card__actions { gap: 4px; }
+    .hp-qty { height: 30px; padding: 0 4px; font-size: 0.76rem; }
+    .hp-qty button { width: 20px; height: 20px; font-size: 0.85rem; }
+    .hp-qty span { min-width: 14px; }
+    .hp-add { height: 30px; padding: 0 8px; font-size: 0.74rem; gap: 4px; }
+    .hp-add__ico { width: 11px; height: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hp-card__panel,
+    .hp-card__media img,
+    .hp-card__floor,
+    .hp-fav,
+    .hp-add,
+    .hp-qty button,
+    .hp-card__panel { transform: none; }
+    .hp-card:not(.is-active):hover .hp-card__media img { transform: translateY(10px) scale(0.84); }
+}
+
+/* ---------- catálogo (misma tarjeta que el home, en grilla) ---------- */
+.hp-grid {
+    --hp-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --hp-w: 100%;
+    --hp-media-h: clamp(176px, 22vw, 210px);
+    --hp-panel-top: calc(var(--hp-media-h) * 0.42);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+    gap: 26px 16px;
+    padding: 36px 0 8px;
+    overflow: visible;
+}
+.hp-grid .hp-card {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    scroll-snap-align: unset;
+}
+.hp-grid .hp-card__panel {
+    opacity: 1;
+    transform: none;
+}
+.hp-grid .hp-card__body {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+}
+.hp-grid .hp-card__media img,
+.hp-grid .hp-card.is-active .hp-card__media img {
+    transform: translateY(0) scale(1);
+}
+.hp-grid .hp-card.is-active {
+    z-index: 1;
+}
+.hp-grid .hp-card.is-active .hp-card__media img {
+    transform: translateY(-10px) scale(1.08);
+}
+@media (hover: hover) and (pointer: fine) {
+    .hp-grid .hp-card:not(.is-active):hover .hp-card__media img {
+        transform: translateY(-4px) scale(1.03);
+    }
+}
+@media (max-width: 640px) {
+    .hp-grid {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 340px;
+        margin-inline: auto;
+        --hp-media-h: 200px;
+    }
+}
+
+/* Onda inferior de #productos hacia #distribuidores: 100% sólida */
+.dist-wave-top{
+    position: relative;
+    width: 100%;
+    height: clamp(55px, 6vw, 95px);
+    margin-top: 28px;
+    margin-bottom: -2px;
+    pointer-events: none;
+    overflow: hidden;
+    line-height: 0;
+    z-index: 2;
+    background-color: var(--flavor-wash, #FFF5F6);
+}
+.dist-wave-top svg{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.dist-wave-path{
+    fill: var(--flavor-light, #F4CBCF);
+    opacity: 1 !important;
+}
+#productos.hp-section {
+    padding-bottom: 0 !important;
+}
+
+/* Logo sobre el título de la sección */
+.hp-logo {
+    display: block;
+    width: clamp(120px, 14vw, 170px);
+    height: auto;
+    margin: 0 auto 12px;
+}
