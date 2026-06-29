@@ -1,0 +1,50 @@
+/* Catálogo: la misma tarjeta que el carrusel del home pero más amplia y generosa.
+   4 por fila en escritorio amplio, 2 en tablet, 2 en móvil cómodo. */
+body.productos-page-v3 .productos-grid.hp-grid {
+    --hp-w: clamp(236px, 19.5vw, 272px);
+    --hp-media-h: calc(var(--hp-w) * 0.90);
+    --hp-panel-top: calc(var(--hp-media-h) * 0.44);
+    display: grid !important;
+    grid-template-columns: repeat(4, var(--hp-w)) !important;
+    justify-content: center !important;
+    justify-items: center !important;
+    gap: 56px clamp(28px, 2.6vw, 44px) !important;
+    width: 100%;
+    max-width: none !important;
+    margin-inline: auto;
+    padding: 50px 12px 64px;
+}
+body.productos-page-v3 .productos-grid.hp-grid .hp-card {
+    width: var(--hp-w);
+    max-width: var(--hp-w);
+}
+body.productos-page-v3 .hp-grid .hp-card__media img,
+body.productos-page-v3 .hp-grid .hp-card.is-active .hp-card__media img {
+    transform: translateY(0) scale(1);
+}
+body.productos-page-v3 .hp-card__price {
+    font-family: Fredoka, sans-serif !important;
+}
+
+@media (max-width: 1140px) {
+    body.productos-page-v3 .productos-grid.hp-grid {
+        --hp-w: clamp(228px, 38vw, 268px);
+        grid-template-columns: repeat(2, var(--hp-w)) !important;
+        gap: 52px 36px !important;
+    }
+}
+@media (max-width: 640px) {
+    body.productos-page-v3 .productos-grid.hp-grid {
+        --hp-w: 100%;
+        --hp-media-h: 185px;
+        --hp-panel-top: 80px;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        justify-content: stretch !important;
+        gap: 22px 12px !important;
+        padding: 24px 6px 36px;
+    }
+    body.productos-page-v3 .productos-grid.hp-grid .hp-card {
+        width: 100%;
+        max-width: none;
+    }
+}
