@@ -1,0 +1,60 @@
+/* yg-price.css — precio de las tarjetas de producto, IGUAL en el carrusel del home
+   ("Nuestros yogures") y en el catálogo (pages/productos.html).
+   Tipografía redondeada, artesanal, cálida y legible: Fredoka 550 en tono neutro oscuro y elegante. */
+
+:root {
+    --yg-price-font: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --yg-price-weight: 550;
+    --yg-price-size: 1.28rem;
+    --yg-price-color: #17171A;
+}
+
+/* contenedor del precio en la tarjeta: mismo bloque en ambas páginas */
+html body .hp-card .hp-card__price,
+html body .producto-card .precio {
+    margin: 0;
+    font-family: var(--yg-price-font) !important;
+    font-size: var(--yg-price-size);
+    font-weight: var(--yg-price-weight);
+    font-style: normal;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+/* la regla compartida */
+html body .yg-price {
+    font-family: var(--yg-price-font) !important;
+    font-style: normal !important;
+    font-weight: var(--yg-price-weight) !important;
+    font-size: var(--yg-price-size);
+    font-variant-numeric: normal;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--yg-price-color) !important;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+html body .yg-price s,
+html body .precio s,
+html body .hp-card .hp-card__price s {
+    font-family: var(--yg-price-font);
+    margin-right: 2px;
+    font-size: 0.76em;
+    font-weight: 500;
+    color: #8C847E;
+    text-decoration: line-through;
+    opacity: 0.85;
+}
+
+html body .yg-price.is-ask,
+html body .precio.is-ask {
+    font-size: calc(var(--yg-price-size) * 0.86);
+    color: #6B635C !important;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    :root { --yg-price-size: 1.2rem; }
+}
