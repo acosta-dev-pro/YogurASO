@@ -1,0 +1,457 @@
+/* ficha-modal.css — Ficha flotante "vitrina" (js/ficha-modal.js).
+   Fuentes = las de Preguntas frecuentes, Empaque y el post de Instagram:
+     - Fredoka 600 (-0.015em) solo para el nombre del sabor (como .emp__title / .showcase-title).
+     - Nunito Sans para todo lo demás: precio y encabezado de la ficha en 800 (como .faq-trigger),
+       etiquetas en mayúsculas 800 con tracking (como .emp__eyebrow / .insta-badge-pill), texto en 400.
+   Las reglas de fuente van con #yfm para ganarle a brand-pages.css (que fuerza fuentes por etiqueta).
+   Color por sabor: --yfm-c = --bg-<sabor> (fuerte, brand.css) en nombre, precio y botón.
+   Panel izquierdo: pastel --fondo-claro-<sabor>. */
+
+html.yfm-lock { overflow: hidden; }
+
+.yfm {
+    --yfm-c: var(--rojo-marca, #C3343E);                                   /* color fuerte del sabor */
+    --yfm-c-text: var(--yfm-c);                                            /* mismo color, para texto */
+    --yfm-c-deep: color-mix(in srgb, var(--yfm-c) 58%, #1F1A1B);           /* líneas de la ficha */
+    --yfm-ink: #1F1A1B;
+    --yfm-ink-2: #4A4244;
+    --yfm-muted: #7A7072;
+    --yfm-line: rgba(31, 26, 27, 0.10);
+    --yfm-sans: var(--font-ui, 'Nunito Sans', sans-serif);
+    --yfm-display: var(--font-display, 'Fredoka', sans-serif);
+    position: fixed; inset: 0; z-index: 2000;
+    width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; padding: clamp(12px, 3vw, 32px);
+    border: 0; background: transparent; color: var(--yfm-ink);
+    overflow: auto; overscroll-behavior: contain;
+}
+/* Sabores con color fuerte claro (amarillos/naranja): el texto se oscurece un poco para leerse sobre blanco. */
+.yfm[data-flavor="pina"], .yfm[data-flavor="mango"] { --yfm-c-text: color-mix(in srgb, var(--yfm-c) 80%, #3A1C00); }
+.yfm[data-flavor="melocoton"] { --yfm-c-text: color-mix(in srgb, var(--yfm-c) 90%, #3A1C00); }
+
+.yfm:not([open]) {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+.yfm[open] { display: grid; place-items: center; }
+.yfm::backdrop {
+    background: rgba(36, 14, 17, 0);
+    -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0);
+}
+.yfm.is-open::backdrop {
+    background: rgba(36, 14, 17, 0.42);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+
+/* ---------- tarjeta ---------- */
+.yfm-card {
+    position: relative;
+    width: min(800px, 100%);
+    border-radius: 24px;
+    background: #fff;
+    overflow: hidden;
+    opacity: 0; transform: translateY(14px) scale(0.975);
+}
+.yfm.is-open .yfm-card { opacity: 1; transform: none; }
+.yfm-inner { display: grid; grid-template-columns: 290px minmax(0, 1fr); min-height: 480px; }
+
+.yfm-x {
+    position: absolute; top: 14px; right: 14px; z-index: 3;
+    width: 32px; height: 32px; border-radius: 50%; border: 0 !important; padding: 0; cursor: pointer;
+    display: grid; place-items: center;
+    background: #fff; color: var(--yfm-ink);
+    outline: none !important;
+    outline-offset: 0 !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+.yfm-x:hover { transform: rotate(90deg); background: #F3F4F6; }
+.yfm-x:active { transform: scale(0.92); background: #E5E7EB; }
+.yfm-x:focus,
+.yfm-x:focus-visible {
+    outline: none !important;
+    border: none !important;
+}
+.yfm-x svg { width: 15px; height: 15px; }
+.yfm svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ---------- panel izquierdo (pastel del sabor) ---------- */
+.yfm-art {
+    position: relative; isolation: isolate;
+    display: flex; flex-direction: column;
+    padding: 18px 16px 16px;
+    background: radial-gradient(110% 70% at 50% 62%, rgba(255, 255, 255, 0.55) 0%, transparent 60%), var(--yfm-bg);
+}
+#yfm .yfm-art-top { display: flex; justify-content: space-between; gap: 8px; }
+#yfm .yfm-art-top span {
+    font: 600 12px/1.2 var(--yfm-sans); letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--yfm-c-deep);
+}
+.yfm-stage { position: relative; flex: 1; display: grid; place-items: center; min-height: 0; padding: 10px 0 6px; }
+.yfm-bottle {
+    position: relative; z-index: 1;
+    width: auto; height: min(300px, 100%); max-width: 82%; object-fit: contain;
+    
+}
+.yfm-floor {
+    position: absolute; left: 50%; bottom: 8px; width: 58%; height: 18px; transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(40, 20, 20, 0.22), transparent); filter: blur(2px);
+}
+#yfm .yfm-caption {
+    margin: 0; padding: 10px 12px; border-radius: 14px;
+    background: rgba(255, 255, 255, 0.62);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    font: 400 12px/1.45 var(--yfm-sans); color: var(--yfm-ink-2);
+}
+#yfm .yfm-caption strong { font: inherit; font-weight: 800; color: var(--yfm-c-deep); }
+
+/* ---------- panel derecho ---------- */
+.yfm-body { display: flex; flex-direction: column; gap: 12px; padding: 24px 26px 0 26px; min-width: 0; }
+.yfm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-right: 40px; }
+#yfm .yfm-title {
+    margin: 0; color: var(--yfm-c-text) !important;
+    font: 600 clamp(26px, 2.5vw, 31px)/1.05 var(--yfm-display) !important;
+    letter-spacing: -0.015em !important;
+}
+#yfm .yfm-price {
+    white-space: nowrap; color: var(--yfm-c-text);
+    font: 800 21px/1 var(--yfm-sans); letter-spacing: 0; font-variant-numeric: tabular-nums;
+}
+#yfm .yfm-price s { font: inherit; font-weight: 600; font-size: 13px; color: var(--yfm-muted); margin-right: 4px; }
+#yfm .yfm-lead { margin: 0; max-width: 52ch; font: 400 13.5px/1.5 var(--yfm-sans); color: var(--yfm-ink-2); }
+
+/* hoja "Ficha del producto" */
+.yfm-sheet {
+    border: 1.5px solid color-mix(in srgb, var(--yfm-c-deep) 55%, transparent);
+    border-radius: 12px; padding: 10px 12px 6px; background: #fff;
+}
+.yfm-sheet-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    padding-bottom: 7px; border-bottom: 3px solid var(--yfm-c-deep);
+}
+#yfm .yfm-sheet-head h3 {
+    margin: 0; color: var(--yfm-ink) !important;
+    font: 800 14.5px/1.2 var(--yfm-sans) !important; letter-spacing: 0 !important;
+}
+#yfm .yfm-sheet-head span { font: 400 10px/1.2 var(--yfm-sans); color: var(--yfm-muted); }
+.yfm-rows { margin: 0; max-height: 200px; overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; }
+.yfm-rows::-webkit-scrollbar { width: 4px; }
+.yfm-rows::-webkit-scrollbar-track { background: transparent; }
+.yfm-rows::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.16); border-radius: 4px; }
+.yfm-row {
+    display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: center; gap: 10px;
+    min-height: 29px; padding: 5px 0; border-bottom: 1px solid var(--yfm-line);
+}
+.yfm-row:last-child { border-bottom: 0; }
+.yfm-sep { height: 0; border-top: 3px solid var(--yfm-c-deep); margin: 0; }
+.yfm-row:has(+ .yfm-sep) { border-bottom: 0; }
+#yfm .yfm-row dt { margin: 0; font: 600 12px/1.2.3 var(--yfm-sans); color: var(--yfm-ink); }
+#yfm .yfm-row dd {
+    margin: 0; display: flex; align-items: center; gap: 8px; min-width: 0;
+    font: 400 12px/1.4 var(--yfm-sans); color: var(--yfm-ink-2);
+}
+#yfm .yfm-row dd > span:not(.yfm-pill):not(.yfm-dots) { font: inherit; white-space: nowrap; }
+.yfm-dots {
+    flex: 1 1 auto; min-width: 24px; max-width: 120px; height: 3px;
+    background: radial-gradient(circle, #D9D2D3 1.1px, transparent 1.4px) 0 50% / 7px 3px repeat-x;
+}
+#yfm .yfm-pill {
+    flex: none; display: inline-flex; align-items: center;
+    padding: 3px 9px; border-radius: 999px;
+    background: #FFF1C4; color: #8A6514; border: 1px solid #F0D27A;
+    font: 600 12px/1.2 var(--yfm-sans); letter-spacing: 0.08em; text-transform: uppercase;
+}
+#yfm .yfm-pill.is-verify { background: #FFF5D6; }
+.yfm .visually-hidden {
+    position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- pie extendido: de borde a borde del panel derecho, pegado a la esquina ---------- */
+.yfm-foot {
+    margin: auto -26px 0;                       /* sale hasta los bordes del panel */
+    padding: 14px 26px 16px;
+    display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px 12px;
+    border-top: 1px solid var(--yfm-line);
+    background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--yfm-c) 5%, #fff));
+}
+.yfm-qty {
+    display: inline-flex; align-items: center; gap: 2px;
+    padding: 3px; border-radius: 999px; background: #fff;
+}
+.yfm-qty button {
+    width: 30px; height: 30px; border: 0; padding: 0; border-radius: 50%; cursor: pointer;
+    display: grid; place-items: center; background: #F3F4F6; color: var(--yfm-c-text);
+}
+.yfm-qty button:hover { background: color-mix(in srgb, var(--yfm-c) 14%, #fff); }
+.yfm-qty svg { width: 12px; height: 12px; }
+#yfm .yfm-qty span { min-width: 28px; text-align: center; font: 800 14px/1 var(--yfm-sans); color: var(--yfm-ink); }
+#yfm .yfm-add {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    height: 46px; padding: 0 6px 0 20px; border: 0; border-radius: 999px; cursor: pointer;
+    background: var(--yfm-c); color: #fff; filter: none;   /* botón plano, sin sombras */
+    font: 800 14px/1 var(--yfm-sans); letter-spacing: 0; white-space: nowrap;
+}
+#yfm .yfm-add:hover { background: color-mix(in srgb, var(--yfm-c) 88%, #000); }
+#yfm .yfm-add:disabled { background: #B9B1B2; cursor: not-allowed; }
+#yfm .yfm-add-l { display: inline-flex; align-items: center; gap: 9px; font: inherit; color: inherit; }
+.yfm-add-l svg { width: 17px; height: 17px; }
+#yfm .yfm-add-p {
+    padding: 9px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.22);
+    font: 800 13.5px/1 var(--yfm-sans); color: #fff; font-variant-numeric: tabular-nums;
+}
+#yfm .yfm-note {
+    grid-column: 1 / -1; justify-self: end; margin: 0; text-align: right;;
+    font: 400 11px/1.35 var(--yfm-sans); color: var(--yfm-muted);
+}
+.yfm :focus-visible:not(.yfm-x) { outline: 2px solid var(--yfm-c); outline-offset: 2px; }
+.yfm[tabindex="-1"]:focus { outline: none !important; }
+
+/* las tarjetas que abren la ficha */
+.hp-card[data-slug]:not([data-slug=""]) .hp-card__body { cursor: pointer; }
+
+/* ---------- pantallas medianas / bajas ---------- */
+@media (max-height: 600px) and (min-width: 721px) {
+    .yfm-inner { min-height: 0; }
+    .yfm-body { gap: 9px; padding-top: 18px; }
+    .yfm-row { min-height: 25px; padding: 3px 0; }
+    .yfm-foot { padding-top: 10px; padding-bottom: 12px; }
+}
+
+/* ---------- móvil: hoja inferior (Bottom Sheet) bien pro que sube desde abajo ---------- */
+@media (max-width: 720px) {
+    .yfm[open] {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-width: 100vw !important;
+        max-height: 100dvh !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        overscroll-behavior: none !important;
+        -webkit-overflow-scrolling: auto;
+        touch-action: none;
+        display: flex !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+        background: transparent !important;
+    }
+    .yfm-card {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: min(86vh, 86dvh) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        border-radius: 26px 26px 0 0 !important;
+        overflow: hidden !important;
+        background: #FFFFFF !important;
+        opacity: 1 !important;
+        touch-action: pan-y;
+        transform: translate3d(0, 105%, 0) !important;
+    }
+    .yfm-card::before {
+        content: "";
+        position: absolute;
+        top: 7px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 38px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(31, 26, 27, 0.20);
+        z-index: 65;
+        pointer-events: none;
+    }
+    .yfm.is-open .yfm-card {
+        transform: translate3d(0, 0, 0) !important;
+    }
+    .yfm-x {
+        position: absolute !important;
+        top: 10px !important;
+        right: 12px !important;
+        z-index: 70 !important;
+        width: 36px !important;
+        height: 36px !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        border: none !important;
+        outline: none !important;
+        outline-offset: 0 !important;
+        -webkit-tap-highlight-color: transparent !important;
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+    }
+    .yfm-x:hover {
+        background: #F3F4F6 !important;
+    }
+    .yfm-x:active {
+        transform: scale(0.92) !important;
+        background: #E5E7EB !important;
+    }
+    .yfm-x:focus,
+    .yfm-x:focus-visible {
+        outline: none !important;
+        border: none !important;
+    }
+    .yfm-inner {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+    }
+    /* Cabecera compacta con la botellita y el nombre del sabor */
+    .yfm-art {
+        flex: 0 0 auto !important;
+        padding: 8px 14px 4px !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+    .yfm-stage {
+        padding: 0 !important;
+        min-height: 0 !important;
+        height: 102px !important;
+    }
+    .yfm-bottle {
+        height: 98px !important;
+        max-height: 98px !important;
+        width: auto !important;
+    }
+    .yfm-caption {
+        display: none !important;
+    }
+    #yfm .yfm-art-top {
+        padding-right: 36px !important;
+    }
+    .yfm-body {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        padding: 8px 16px 0 !important;
+        gap: 4px !important;
+    }
+    .yfm-head {
+        flex: 0 0 auto !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: baseline !important;
+        padding-right: 0 !important;
+    }
+    .yfm-lead {
+        display: none !important;
+    }
+    .yfm-size-selector {
+        flex: 0 0 auto !important;
+        margin-bottom: 4px !important;
+    }
+    /* ÚNICA ZONA CON SCROLL: la ficha técnica del producto */
+    .yfm-sheet {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+        padding-bottom: 8px !important;
+        margin-top: 2px !important;
+    }
+    .yfm-row {
+        grid-template-columns: 105px minmax(0, 1fr) !important;
+        padding: 3.5px 0 !important;
+        font-size: 12.5px !important;
+    }
+    /* Barra inferior estática fija siempre visible sin scroll */
+    .yfm-foot {
+        flex: 0 0 auto !important;
+        position: relative !important;
+        bottom: auto !important;
+        margin: 0 -16px !important;
+        padding: 10px 16px max(12px, env(safe-area-inset-bottom, 12px)) !important;
+        background: #FFFFFF !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+        z-index: 10 !important;
+    }
+}
+
+/* Selector de tamaño dentro de la ficha flotante */
+.yfm-size-selector {
+    display: inline-flex;
+    align-items: center;
+    background: #F0EEEB;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 999px;
+    padding: 2.5px;
+    gap: 3px;
+    margin-bottom: 8px;
+    align-self: flex-start;
+}
+.yfm-size-pill {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #66605A;
+    padding: 4px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    line-height: 1.2;
+}
+.yfm-size-pill:hover {
+    color: #17171A;
+}
+.yfm-size-pill.is-active {
+    background: #FFFFFF;
+    color: #17171A;
+    font-weight: 600;
+}
+
+/* Botón Agregar al carrito siempre negro */
+#yfm .yfm-add {
+    background: #111111 !important;
+    color: #FFFFFF !important;
+}
+#yfm .yfm-add:hover {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+}
+
+/* Tarjetas de productos: NUNCA retienen marco, borde ni contorno al enfocar o cerrar ficha */
+.hp-card,
+.hp-card *,
+.producto-card,
+.producto-card *,
+.hp-card:focus,
+.hp-card:focus-visible,
+.hp-card:focus-within,
+.hp-card *:focus,
+.hp-card *:focus-visible,
+.producto-card:focus,
+.producto-card:focus-visible,
+.producto-card:focus-within,
+.producto-card *:focus,
+.producto-card *:focus-visible,
+[data-hp-open],
+[data-hp-open]:focus,
+[data-hp-open]:focus-visible {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+/* La ficha por dentro es negra: solo el fondo de la imagen lleva el color (pastel) del sabor. */
+.yfm, .yfm[data-flavor] { --yfm-c: #000 !important; --yfm-c-text: #000 !important; --yfm-c-deep: #000 !important; }
+.yfm-rows { scrollbar-color: #000 #eee; scrollbar-width: thin; }
+.yfm-rows::-webkit-scrollbar { width: 8px; }
+.yfm-rows::-webkit-scrollbar-track { background: #eee; }
+.yfm-rows::-webkit-scrollbar-thumb { background: #000; }
