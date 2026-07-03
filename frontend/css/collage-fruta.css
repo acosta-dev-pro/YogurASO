@@ -1,0 +1,108 @@
+/* =========================================================
+   Paisaje "Neiva · Tello" (centrado) + trío debajo
+   ========================================================= */
+.fcol {
+    --fcol-red: var(--rojo-marca);
+    --fcol-ink: #171717;
+    --fcol-r: 16px;
+    --fcol-pad: clamp(18px, 1.5vw, 24px);
+    background: var(--flavor-wash, #FFF8F4) !important;
+    color: var(--fcol-ink);
+    padding: clamp(8px, 1.5vh, 18px) 0 0;
+    overflow-x: clip;
+    scroll-margin-top: 72px;
+}
+.fcol__wrap {
+    width: min(1240px, 100% - 40px);
+    margin: 0 auto;
+}
+.fcol__tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--fcol-r);
+    min-height: 0;
+}
+.fcol__k {
+    display: block;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fcol-red);
+}
+.fcol__c { position: relative; z-index: 2; }
+
+.fcol__campo {
+    color: #fff;
+    height: clamp(280px, 42vh, 420px);
+}
+.fcol__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 40% 50%;
+}
+.fcol__campo::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 58%;
+    background: linear-gradient(180deg, rgba(10,20,10,0), rgba(10,16,8,.74));
+}
+.fcol__campo .fcol__c {
+    position: absolute;
+    left: var(--fcol-pad);
+    right: var(--fcol-pad);
+    bottom: var(--fcol-pad);
+}
+.fcol__campo .fcol__k { color: rgba(255,255,255,.85); }
+.fcol__campo h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: clamp(26px, 3.2vw, 36px);
+    line-height: 1.06;
+    letter-spacing: -.01em;
+    margin: 4px 0 0;
+}
+.fcol__campo p {
+    color: rgba(255,255,255,.86);
+    max-width: 420px;
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 6px 0 0;
+}
+.fcol__badge {
+    position: absolute;
+    z-index: 2;
+    top: 16px;
+    right: 16px;
+    width: 60px;
+    height: 60px;
+}
+
+.fcol.is-ready .fcol__tile {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+}
+.fcol.is-ready .fcol__tile.is-in {
+    opacity: 1;
+    transform: none;
+}
+@media (hover: hover) {
+    .fcol__campo:hover .fcol__photo { transform: scale(1.04); }
+}
+
+@media (max-width: 860px) {
+    .fcol { padding: 28px 0 0; }
+    .fcol__wrap { width: min(1240px, 100% - 24px); }
+    .fcol__campo { height: 220px; }
+    .fcol__campo h3 { font-size: 22px; }
+    .fcol__campo p { font-size: 13px; }
+    .fcol__badge { width: 44px; height: 44px; top: 8px; right: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .fcol.is-ready .fcol__tile { opacity: 1; transform: none; }
+}
