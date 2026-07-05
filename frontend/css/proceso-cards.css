@@ -1,0 +1,83 @@
+/* =====================================================================
+   proceso-cards.css — Tarjetas del Proceso Responsable (4 pasos)
+   Tarjeta sólida, con esquinas amplias y desiguales (la misma forma de la tarjeta de distribuidores).
+   - En reposo: color súper claro del sabor.
+   - Cuando la flecha pasa por el paso (.is-llegado): el color pastel. Sin sombra ni animación.
+   La letra es siempre oscura; los colores siguen al sabor activo del hero.
+   ===================================================================== */
+
+.rc-tarjeta {
+    --fondo: color-mix(in srgb, var(--flavor-light, #FAE0E3) 28%, #fff);   /* súper claro */
+    --letra: var(--ink, #1c1210);
+    --acento: var(--flavor-dark, #C3343E);
+    position: relative;
+    width: calc(50% - 76px);
+    max-width: 500px;
+    padding: clamp(32px, 3.2vw, 42px) clamp(38px, 4vw, 52px) clamp(34px, 3.4vw, 44px);
+    border-radius: 48px 78px 54px 86px / 62px 54px 76px 58px;
+    background: var(--fondo);
+    color: var(--letra);
+}
+.rc-paso.is-llegado .rc-tarjeta { --fondo: var(--flavor-light, #FAE0E3); }   /* la flecha ya pasó: rojo pastel */
+
+/* ---------- Cabeza: número grande y etiqueta ---------- */
+.rc-cabeza {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.rc-num {
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 700;
+    font-size: clamp(3.2rem, 4.8vw, 4.6rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--acento);
+}
+.rc-tag {
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--acento);
+    color: var(--fondo);
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ---------- Texto ---------- */
+.rc-tarjeta-title {
+    margin: 0 0 8px;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 600;
+    font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: inherit;
+}
+.rc-tarjeta-desc {
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.88rem, 1vw, 0.98rem);
+    line-height: 1.55;
+    opacity: 0.86;
+}
+
+/* ---------- Móvil: tarjetas angostas ---------- */
+@media (max-width: 860px) {
+    .rc-tarjeta {
+        width: clamp(240px, 68vw, 300px);
+        max-width: 72vw;
+        padding: 26px 24px 28px;
+        border-radius: 38px 56px 42px 60px / 46px 40px 54px 42px;
+    }
+    .rc-num { font-size: 2.8rem; }
+    .rc-tag { padding: 5px 10px; font-size: 0.62rem; }
+    .rc-tarjeta-title { font-size: 1.05rem; }
+    .rc-tarjeta-desc { font-size: 0.78rem; line-height: 1.45; }
+}
