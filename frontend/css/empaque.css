@@ -1,0 +1,128 @@
+/* =========================================================
+   EMPAQUE — "anatomía": la botella en video (sin fondo, en bucle)
+   al centro y sus partes señaladas con líneas finas rojas.
+   Fondo crema (#FFF8F4 = fondo del MP4 de respaldo), ancho 1240px.
+   Los puntos de cada línea están fijados sobre la pose más grande
+   de la botella (fracciones del cuadro 520×720 del video).
+   ========================================================= */
+.emp {
+    --emp-ink: #171717;
+    --emp-muted: #6A6259;
+    --emp-red: var(--rojo-marca, #C3343E);
+    --emp-line: var(--rojo-marca, #C3343E);
+    --emp-h: clamp(300px, 50vh, 400px);          /* alto del video */
+    --emp-w: calc(var(--emp-h) * 0.7222);        /* 520 / 720 */
+    --emp-col: clamp(200px, 21vw, 280px);        /* del centro al borde del texto */
+    background: var(--flavor-wash, #FFF8F4) !important;
+    padding: clamp(26px, 4.2vh, 40px) 0 clamp(24px, 4vh, 36px);
+    scroll-margin-top: 72px;
+    overflow-x: clip;
+}
+.emp__wrap { width: min(1240px, 100% - 40px); margin: 0 auto; }
+
+/* ---------- Encabezado ---------- */
+.emp__head { text-align: center; }
+.emp__eyebrow { display: inline-block; font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--emp-red); }
+.emp__title { 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(24px, 2.35vw, 31px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 6px; color: var(--emp-ink); text-wrap: balance; }
+.emp .emp__lead { margin: 0 auto; color: var(--emp-muted); font-size: 14.5px; line-height: 1.5; max-width: min(640px, 100%); text-wrap: pretty; }
+
+/* ---------- Escenario: botella al centro + llamadas ---------- */
+.emp__stage { position: relative; height: var(--emp-h); margin-top: clamp(10px, 2vh, 18px); }
+.emp__video,
+.emp__canvas {
+    position: absolute; left: 50%; top: 0;
+    width: var(--emp-w); height: var(--emp-h);
+    transform: translateX(-50%);
+    display: block; object-fit: contain;
+    background: transparent !important;
+    z-index: 1;
+}
+.emp__video::-webkit-media-controls,
+.emp__video::-webkit-media-controls-enclosure,
+.emp__video::-webkit-media-controls-panel,
+.emp__video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+.emp__video.is-canvas-source {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0.001 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+.emp__calls { list-style: none; margin: 0; padding: 0; }
+
+/* Cada llamada es una franja de 1px que va del borde del texto (--emp-col)
+   hasta el punto sobre la botella (--ax). El texto cuelga del extremo exterior. */
+.emp__call { position: absolute; top: calc(var(--emp-h) * var(--ay)); height: 1px; z-index: 2; }
+.emp__call--l { left: calc(50% - var(--emp-col)); right: calc(50% - var(--emp-w) * var(--ax)); }
+.emp__call--r { left: calc(50% + var(--emp-w) * var(--ax)); right: calc(50% - var(--emp-col)); }
+.emp__call-line { position: absolute; inset: 0; background: var(--emp-line); opacity: .7; }
+.emp__call--l .emp__call-line { --o: left; }
+.emp__call--r .emp__call-line { --o: right; }
+.emp__call::after {           /* punta de flecha que señala la botella */
+    content: ""; position: absolute; top: 50%; margin-top: -7px; border: 7px solid transparent;
+}
+.emp__call--l::after { right: -2px; border-left: 13px solid var(--emp-line); border-right: 0; }
+.emp__call--r::after { left: -2px; border-right: 13px solid var(--emp-line); border-left: 0; }
+
+.emp__call-txt { position: absolute; top: 0; width: 230px; transform: translateY(-11px); }
+.emp__call--l .emp__call-txt { right: calc(100% + 14px); text-align: right; }
+.emp__call--r .emp__call-txt { left: calc(100% + 14px); text-align: left; }
+.emp__call-txt b { display: block; font-size: 15px; font-weight: 800; color: var(--emp-ink); line-height: 22px; }
+.emp__call-txt span { display: block; font-size: 12.5px; color: var(--emp-muted); line-height: 1.35; margin-top: 1px; }
+
+/* Puntos de anclaje (fracción del ancho desde el centro / fracción del alto) */
+.emp__call--tapa  { --ax: -0.165; --ay: 0.108; }  /* borde izq. de la tapa */
+.emp__call--asa   { --ax:  0.300; --ay: 0.255; }  /* asa lateral */
+.emp__call--label { --ax: -0.285; --ay: 0.555; }  /* cuerpo / etiqueta */
+.emp__call--size  { --ax:  0.285; --ay: 0.780; }  /* base */
+
+/* ---------- Franja de especificaciones ---------- */
+.emp__specs {
+    list-style: none; margin: clamp(12px, 2.2vh, 20px) 0 0; padding: 0;
+    display: flex; flex-wrap: wrap; justify-content: center; row-gap: 6px;
+}
+.emp__specs li { font-size: 12.5px; color: var(--emp-muted); line-height: 1.4; padding: 0 18px; border-left: 1px solid rgba(23, 23, 23, .14); }
+.emp__specs li:first-child { border-left: 0; }
+.emp__specs li[hidden] { display: none; }
+.emp__specs li b { color: var(--emp-ink); font-weight: 800; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1100px) {
+    .emp__call-txt { width: 190px; }
+    .emp__call-txt b { font-size: 14px; }
+    .emp__call-txt span { font-size: 12px; }
+}
+
+/* ---------- Móvil: botella centrada, llamadas en lista 2×2 debajo ---------- */
+@media (max-width: 760px) {
+    .emp { --emp-h: 240px; padding: 28px 0 24px; }
+    .emp__stage { height: auto; display: flex; flex-direction: column; align-items: stretch; }
+    .emp__video,
+    .emp__canvas {
+        position: relative; left: auto; top: auto; transform: none;
+        width: min(200px, 56vw); height: auto; aspect-ratio: 520 / 720;
+        margin: 4px auto 0; object-fit: contain; object-position: center;
+        background: transparent !important;
+    }
+    .emp__calls { margin-top: 14px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+    .emp__call, .emp__call--l, .emp__call--r { position: static; height: auto; }
+    .emp__call::after, .emp__call-line { display: none; }
+    .emp__call-txt, .emp__call--l .emp__call-txt, .emp__call--r .emp__call-txt {
+        display: block; position: static; width: auto; transform: none; text-align: left;
+        padding-left: 11px; border-left: 2px solid var(--emp-red);
+    }
+    .emp__call-txt b { font-size: 14px; line-height: 1.25; }
+    .emp__specs {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px;
+        margin-top: 16px; text-align: left; justify-items: start;
+    }
+    .emp__specs li, .emp__specs li:first-child, .emp__specs li + li {
+        border: 0; padding: 0;
+    }
+}
