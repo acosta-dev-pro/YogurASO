@@ -1,0 +1,316 @@
+/* =====================================================================
+   recorrido.css — Proceso Responsable Interactivo de YogurASO
+   - Zigzag central cerradito y suave (estilo Moxen) con tarjetas a cada lado.
+   - Las tarjetas de los pasos están en proceso-cards.css.
+   ===================================================================== */
+
+.rc-proceso {
+    position: relative;
+    width: 100%;
+    background: var(--flavor-wash, #FAE0E3);
+    color: var(--ink, #171717);
+    padding: clamp(16px, 2.5vh, 28px) 0 clamp(32px, 4.5vh, 52px);
+    overflow: hidden;
+}
+
+.rc-wave-top {
+    display: none;
+}
+
+.rc-wrap {
+    width: min(100% - 40px, 1180px);
+    margin-inline: auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Encabezado del Recorrido */
+.rc-intro {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    max-width: 760px;
+    
+    margin: clamp(48px, 7vh, 80px) auto clamp(24px, 3.5vh, 38px);
+    text-align: center;
+    padding: 0 20px;
+    z-index: 2;
+}
+.rc-logo {
+    display: block;
+    width: clamp(120px, 14vw, 170px);
+    height: auto;
+    margin: 0 auto 14px;
+}
+.rc-antetitulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 99px;
+    background: var(--flavor-light, #F4CBCF);
+    color: var(--flavor-dark, #C3343E);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.80rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+.rc-titulo {
+    margin: 0;
+    font-family: var(--font-display, 'Fredoka', 'Nunito Sans', sans-serif);
+    font-size: clamp(2.1rem, 4.2vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink, #1F1916);
+}
+.rc-titulo em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--flavor-dark, #C3343E);
+}
+.rc-bajada {
+    margin: 12px auto 0;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: clamp(0.98rem, 1.2vw, 1.12rem);
+    line-height: 1.5;
+    color: var(--muted, #6A6259);
+    max-width: 580px;
+}
+
+/* Escenario del camino en zigzag central cerradito */
+.rc-pasos {
+    position: relative;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 16px 16px 28px;
+}
+.rc-camino {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+}
+.rc-camino path {
+    fill: none;
+    stroke-linecap: round;
+}
+.rc-camino-fondo {
+    stroke: color-mix(in srgb, var(--flavor-dark, #C3343E) 22%, transparent);
+    stroke-width: 3;
+    stroke-dasharray: 5 10;
+}
+.rc-camino-trazo {
+    stroke: var(--flavor-dark, #C3343E);
+    stroke-width: 4;
+}
+
+/* Lista de pasos alternados a cada lado del canal central */
+.rc-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 2;
+}
+.rc-paso {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: clamp(240px, 28vh, 300px);
+    margin-bottom: clamp(24px, 3.6vh, 40px);
+}
+.rc-paso:nth-child(odd) {
+    justify-content: flex-end;
+}
+.rc-paso:nth-child(even) {
+    justify-content: flex-start;
+}
+
+/* Silueta SVG completa exterior en forma de ola */
+
+/* Capa interior de contenido adaptada a la curvatura de la ola */
+
+/* Cabecera superior con bolita de número interactiva */
+
+/* Bolita circular con número que cambia de color al pasar la botella */
+
+/* Contenedor interior con forma de ola: inversión exacta de pasteles */
+
+/* Datos inferiores debajo del contenedor de ola: SIN contenedor, solo texto limpio */
+
+/* Paso 5: recuadro a la derecha con el yogur ya puesto */
+.rc-dock-row {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    margin-top: -90px;
+}
+.rc-dock-frame {
+    position: relative;
+    z-index: 2;
+    width: calc(50% - 76px);
+    max-width: 500px;
+    border-radius: 48px 78px 54px 86px / 62px 54px 76px 58px;
+    background: color-mix(in srgb, var(--flavor-light, #FAE0E3) 28%, #fff);
+}
+.rc-dock-inner {
+    position: relative;
+    z-index: 2;
+    padding: 38px 36px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 310px;
+}
+.rc-dock-head {
+    width: 100%;
+    padding: 0 4px 6px;
+    text-align: center;
+}
+.rc-dock-kicker {
+    display: inline-block;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--flavor-dark, #C3343E);
+    margin-bottom: 4px;
+}
+.rc-dock-title {
+    display: block;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-size: clamp(1.20rem, 1.5vw, 1.40rem);
+    font-weight: 600;
+    color: #1F1916;
+    line-height: 1.16;
+}
+.rc-dock-stage {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 12px;
+}
+.rc-dock-bottle {
+    position: relative;
+    z-index: 2;
+    width: clamp(134px, 13.5vw, 172px);
+    height: clamp(220px, 22.5vw, 282px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rc-dock-bottle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    
+}
+.rc-dock-foot {
+    position: relative;
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: none !important;
+    border: none !important;
+}
+.rc-dock-btn {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 26px;
+    border-radius: 999px;
+    background: var(--flavor-dark, #C3343E);
+    color: #FFFFFF !important;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-size: 0.94rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+}
+.rc-dock-btn:hover {
+    background: var(--hero-floor, #8F2027);
+    transform: translateY(-2px);
+}
+.rc-dock-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+.rc-dock-btn__arrow {
+    display: inline-block;
+}
+.rc-dock-btn:hover .rc-dock-btn__arrow {
+    transform: translateX(3px);
+}
+
+/* Flecha que recorre el camino */
+.rc-flecha { fill: var(--flavor-dark, #C3343E); }
+
+/* Responsividad profesional en móviles y tablets:
+   Canal de recorrido lateral a la izquierda (sin cruzar jamás sobre las tarjetas)
+   y tarjetas alineadas limpiamente a la derecha del canal. */
+@media (max-width: 860px) {
+    .rc-wrap {
+        width: min(100% - 16px, 600px);
+    }
+    .rc-pasos {
+        padding: 12px 0 24px;
+    }
+    .rc-paso {
+        display: flex;
+        width: 100%;
+        margin-bottom: 28px;
+        min-height: auto;
+        box-sizing: border-box;
+    }
+    /* En móvil: Pasos alternados dejando canal libre espacioso para el yogur */
+    .rc-paso:nth-child(odd) {
+        justify-content: flex-end;
+        padding-left: 0;
+        padding-right: 2px;
+    }
+    .rc-paso:nth-child(even) {
+        justify-content: flex-start;
+        padding-left: 2px;
+        padding-right: 0;
+    }
+    .rc-dock-row {
+        justify-content: center;
+        margin-top: 14px;
+    }
+    .rc-dock-frame {
+        width: min(100% - 16px, 350px);
+        margin-inline: auto;
+    }
+    .rc-dock-inner {
+        padding: 24px 18px 16px;
+        min-height: auto;
+    }
+    .rc-dock-bottle {
+        width: 94px;
+        height: 163px;
+    }
+}
+
+.rc-dock-frame.is-llegado { background: var(--flavor-light, #FAE0E3); }   /* la flecha llegó al paso 5 */
