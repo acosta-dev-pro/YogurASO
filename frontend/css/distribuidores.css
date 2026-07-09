@@ -1,0 +1,191 @@
+/* ==========================================================================
+   distribuidores.css — Sección #distribuidores ("¿Quieres distribuir YogurASO?")
+   El título (imagen) sin contenedor y debajo: los tres caminos, cómo empezar en 3 pasos y una nota.
+   Los colores siguen al sabor activo: --flavor-dark / --flavor-light.
+   Entrada: los bloques con [data-entra] aparecen al llegar a pantalla (js/entrada.js).
+   ========================================================================== */
+
+.dst {
+    padding: clamp(40px, 6vw, 72px) 0 clamp(52px, 7vw, 92px);
+    background: var(--flavor-light, #F4CBCF);
+    color: var(--ink, #1F1916);
+}
+.dst__wrap {
+    width: min(100% - 40px, 960px);
+    margin-inline: auto;
+    display: grid;
+    gap: clamp(22px, 3vw, 34px);
+}
+
+/* ---------- Franja del título ---------- */
+.dst__franja {
+    display: flex;
+    justify-content: center;
+}
+/* El título es una imagen (assets/brand/quieres-distribuir.png); se recorta el blanco de arriba y abajo
+   y el multiply deja transparente el fondo blanco sobre la franja pastel. */
+.dst__title {
+    margin: 0;
+    width: clamp(250px, 60vw, 560px);
+    aspect-ratio: 1024 / 140;
+    overflow: hidden;
+}
+.dst__title img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}
+.dst__cta {
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    background: var(--flavor-dark, #C3343E);
+    color: #fff;
+    text-decoration: none;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 600;
+    font-size: 1rem;
+}
+.dst__cta:hover { transform: translateY(-2px) scale(1.03); }
+.dst__cta:active { transform: scale(0.98); }
+.dst__cta:focus-visible { outline: 3px solid var(--flavor-dark, #C3343E); outline-offset: 3px; }
+.dst__cta:hover .dst__cta-flecha { transform: translateX(5px); }
+
+.dst__lead {
+    max-width: 44em;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+    line-height: 1.55;
+}
+
+/* ---------- Los tres caminos ---------- */
+.dst__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.dst__card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 24px;
+    background: #fff;
+}
+.dst__card:hover { transform: translateY(-4px); }
+.dst__ico {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--flavor-light, #F4CBCF) 70%, #fff);
+    color: var(--flavor-dark, #C3343E);
+}
+.dst__ico svg { width: 23px; height: 23px; }
+.dst__card:hover .dst__ico { transform: rotate(-10deg) scale(1.08); background: var(--flavor-dark, #C3343E); color: #fff; }
+.dst__card-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dst__card-txt strong {
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 600;
+    font-size: 1.08rem;
+    line-height: 1.15;
+}
+.dst__card-txt span {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.84rem;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--ink, #1F1916) 70%, transparent);
+}
+
+/* ---------- Cómo empezar ---------- */
+.dst__pasos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.dst__pasos li { position: relative; display: flex; align-items: center; gap: 12px; }
+/* Raya punteada que une cada paso con el siguiente */
+.dst__pasos li:not(:last-child)::after {
+    content: '';
+    flex: 1;
+    min-width: 18px;
+    border-top: 2px dashed color-mix(in srgb, var(--flavor-dark, #C3343E) 45%, transparent);
+}
+.dst__pasos b {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--flavor-dark, #C3343E);
+    color: #fff;
+    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+.dst__pasos span {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    line-height: 1.3;
+}
+
+.dst__nota {
+    max-width: 46em;
+    margin: 0 auto;
+    padding: 18px 26px;
+    border: 2px dashed color-mix(in srgb, var(--flavor-dark, #C3343E) 45%, transparent);   /* marco de rayas separadas */
+    border-radius: 24px;
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--ink, #1F1916) 72%, transparent);
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 860px) {
+    .dst__card { flex-direction: column; align-items: flex-start; }
+    /* Los tres pasos siguen en una sola fila: número arriba y texto debajo */
+    .dst__pasos { gap: 8px; }
+    .dst__pasos li { flex-direction: column; text-align: center; gap: 6px; }
+    .dst__pasos li:not(:last-child)::after { display: none; }
+    .dst__pasos span { font-size: 0.78rem; }
+}
+
+/* ---------- Móvil: franja en columna y tres tarjetas pequeñas (ícono y título) ---------- */
+@media (max-width: 560px) {
+    .dst__title { width: 100%; max-width: 360px; }
+    .dst__cards { gap: 10px; }
+    .dst__card { align-items: center; gap: 8px; padding: 16px 8px 14px; border-radius: 22px; text-align: center; }
+    .dst__card:hover { transform: none; }
+    .dst__ico { width: 40px; height: 40px; }
+    .dst__ico svg { width: 20px; height: 20px; }
+    .dst__card-txt strong { font-size: 0.86rem; }
+    .dst__card-txt span {
+        position: absolute;
+        width: 1px; height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
