@@ -1,0 +1,126 @@
+﻿/* ysf-contacto.css: sección "Contacto" del home (scope .ysc), justo antes del footer.
+   Tipografía de #empaque: eyebrow Nunito Sans 800 / 11.5px / .2em, título Fredoka 600,
+   textos Nunito Sans 400 e ítems con negrita 800. Sin rojo: todo neutro; el único
+   color es el botón verde de WhatsApp.
+   Solo se anima transform/opacity con cubic-bezier(.23,1,.32,1). */
+.ysc{
+  --ysc-ink:var(--ink,#171717);
+  --ysc-ink2:#3A3330;
+  --ysc-wa:#25D366;
+  --ysc-wa-hover:#1EBE5D;
+  --ysc-muted:#6A6259;
+  --ysc-line:rgba(23,23,23,.14);
+  --ysc-field:#fff;
+  --ysc-max:var(--page-max,1120px);
+  --ysc-body: "Nunito Sans", sans-serif;
+  position:relative;
+  background:transparent;color:var(--ysc-ink);
+  padding:clamp(44px,6vw,76px) 0 clamp(36px,5vw,60px);
+  font:400 14px/1.5 var(--ysc-body);
+}
+.ysc *,.ysc *::before,.ysc *::after{box-sizing:border-box}
+.ysc p,.ysc ul,.ysc h2{margin:0;padding:0}
+.ysc ul{list-style:none}
+.ysc svg{display:block;flex:none}
+.ysc-anchor{position:absolute;top:0;left:0;width:1px;height:1px}
+.ysc-wrap{
+  width:min(100% - 40px,var(--ysc-max));margin-inline:auto;
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:clamp(20px,3vw,36px);align-items:stretch;
+  background:#fff;border-radius:24px;padding:clamp(16px,2vw,28px);
+}
+.ysc-mapcol{order:1;min-width:0}
+.ysc-info{order:2;min-width:0}
+
+/* Encabezado (#empaque) */
+.ysc .ysc-eyebrow{display:inline-block;font: 600 12px/1.2.2 var(--ysc-body);letter-spacing: 0.06em;text-transform:uppercase;color:var(--ysc-muted)}
+.ysc .ysc-title{margin:6px 0 6px;font:500 clamp(24px,2.35vw,31px)/1.08 "Fredoka", sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
+.ysc .ysc-lead{max-width:44ch;color:var(--ysc-muted);font-size:14.5px;line-height:1.5}
+
+/* Datos (llamadas de #empaque) */
+/* Datos separados del texto de entrada: más aire arriba + línea fina neutra.
+   .ysc .ysc-details para ganarle al reset ".ysc ul{margin:0;padding:0}" */
+.ysc .ysc-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 22px;margin-top:34px;padding-top:20px;border-top:1px solid var(--ysc-line)}
+.ysc-detail{min-width:0}
+.ysc-detail b{display:block;margin-bottom:5px;font-size: 12px; font-weight: 600;line-height:1.2;letter-spacing:.14em;text-transform:uppercase;color:var(--ysc-muted)}
+.ysc-detail span,.ysc-detail .ysc-link{font-size:15px;font-weight:700;line-height:1.35;color:var(--ysc-ink)}
+.ysc-link{position:relative;display:inline-block;color:var(--ysc-muted);text-decoration:none;overflow-wrap:anywhere}
+.ysc-link::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;}
+.ysc-link:hover{color:var(--ysc-ink)}
+.ysc-link:hover::after{transform:scaleX(1);transform-origin:left}
+.ysc-arrow{display:inline-block;margin-left:4px;}
+.ysc-link:hover .ysc-arrow{transform:translate(2px,-2px)}
+.ysc :focus-visible{outline:2px solid var(--ysc-ink);outline-offset:3px}
+.ysc a:focus-visible{border-radius:6px}
+
+/* Formulario */
+.ysc-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px}
+.ysc-field{display:grid;gap:5px;min-width:0}
+.ysc-field--full{grid-column:1/-1}
+.ysc-field label{font-size:12.5px;font-weight:800;color:var(--ysc-ink)}
+.ysc-opt{font-weight:400;color:var(--ysc-muted)}
+.ysc-field input,.ysc-field textarea{
+  width:100%;margin:0;padding:10px 12px;border:1px solid var(--ysc-line);border-radius:10px;
+  background:var(--ysc-field);color:var(--ysc-ink);font:400 14.5px/1.4 var(--ysc-body);
+  -webkit-appearance:none;appearance:none;
+}
+.ysc-field textarea{resize:vertical;min-height:96px}
+.ysc-field input:focus,.ysc-field textarea:focus{outline:none;border-color:var(--ysc-ink);}
+.ysc-field [aria-invalid="true"]{border-color:var(--ysc-ink2);border-style:dashed}
+.ysc-err{color:var(--ysc-ink2);font-size:12.5px;font-weight:800;line-height:1.35}
+.ysc-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 16px;margin-top:4px}.ysc-actions .ysc-note{margin-right:auto;order:-1}.ysc-submit{margin-left:auto}
+.ysc-submit{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px 0 16px;
+  border:0;border-radius:999px;background:var(--ysc-wa);color:#fff;
+  font:800 14px/1 var(--ysc-body);cursor:pointer;
+}
+.ysc-submit:hover{background:var(--ysc-wa-hover)}
+.ysc-submit svg{width:17px;height:17px;fill:currentColor}
+.ysc-submit-arrow{display:none}
+.ysc-submit:active{transform:scale(.97)}
+.ysc-note{color:var(--ysc-muted);font-size:12.5px}
+.ysc-status{grid-column:1/-1;font-size:12.5px;font-weight:800;color:var(--ysc-ink)}
+.ysc-status:empty{display:none}
+
+/* Mapa */
+.ysc-map{
+  position:relative;isolation:isolate;overflow:hidden;border-radius:24px;background:#fff;
+  border:1px solid rgba(23,23,23,.08);
+}
+.ysc-map-frame{position:relative;height:clamp(360px,40vw,500px);background:#F6F2EE}
+.ysc-map-frame iframe{display:block}
+.ysc-map-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:16px;text-align:center;color:var(--ysc-ink);font-weight:800}
+.ysc-map .nt-embed-ph{
+  gap:12px;padding:22px;
+  background:repeating-linear-gradient(0deg,transparent 0 31px,rgba(23,23,23,.04) 31px 32px),
+    repeating-linear-gradient(90deg,transparent 0 31px,rgba(23,23,23,.04) 31px 32px),#FAF6F3;
+}
+.ysc-map .nt-ico-lg{width:30px;height:30px;color:var(--ysc-ink2)}
+.ysc-map .nt-embed-ph strong{font:600 17px/1.2 "Nunito Sans", sans-serif,sans-serif}
+.ysc-map .nt-btn{min-height:38px;padding:0 16px;border-radius:999px;font:800 13px/1 var(--ysc-body);cursor:pointer;}
+.ysc-map .nt-btn-solid{background:var(--ysc-ink);border:1px solid var(--ysc-ink);color:#fff}
+.ysc-map .nt-btn-ghost{background:#fff;border:1px solid rgba(23,23,23,.16);color:var(--ysc-ink)}
+.ysc-map .nt-btn:active{transform:scale(.97)}
+.ysc-map-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px;padding:12px 18px;border-top:1px solid rgba(23,23,23,.08);font-size:13px}
+.ysc-map-place{display:flex;align-items:center;gap:7px;font-weight:800}
+.ysc-map-place svg{width:15px;height:15px;fill:none;stroke:var(--ysc-ink2);stroke-width:1.9;stroke-linejoin:round}
+
+/* Entrada: solo con .ysc--js; el estado oculto es instantáneo y la entrada anima */
+.ysc--js .ysc-rv{opacity:0;transform:translate3d(0,16px,0)}
+.ysc--js .ysc-rv.ysc-on{opacity:1;transform:none;}
+
+@media (max-width:900px){
+  .ysc-wrap{grid-template-columns:1fr}
+  .ysc-mapcol{order:1}
+  .ysc-info{order:2}
+  .ysc-map-frame{height:340px}
+}
+@media (max-width:560px){
+  .ysc .ysc-details{grid-template-columns:1fr}
+  .ysc-form{grid-template-columns:1fr}
+  .ysc-map-frame{height:280px}
+  .ysc-submit{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .ysc .ysc-rv{opacity:1!important;transform:none!important}
+  .ysc a:hover *,.ysc button:hover *,.ysc button:active{transform:none!important}
+}
