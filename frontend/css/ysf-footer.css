@@ -1,0 +1,445 @@
+/* ysf-footer.css: footer negro, compacto y flotante de YogurASO (scope .ysf).
+   Fuente de #empaque: Nunito Sans (800 en títulos, 400 en texto/listas). Todo el texto es blanco
+   (secundario con opacidad). Solo se anima transform/opacity con cubic-bezier(.23,1,.32,1). */
+.ysf{
+  --ysf-bg:#0A0A0A;
+  --ysf-w:#fff;
+  --ysf-w2:rgba(255,255,255,.72);
+  --ysf-w3:rgba(255,255,255,.6);
+  --ysf-line:rgba(255,255,255,.1);
+  --ysf-max:var(--page-max,1120px);
+  --ysf-body: "Nunito Sans", sans-serif;
+  position:relative;z-index:1;
+  margin-top:clamp(28px,4vw,48px);
+  background:var(--ysf-bg);color:var(--ysf-w);
+  border-radius:28px 28px 0 0;
+  padding:32px 0 0;
+  font:400 13px/1.5 var(--ysf-body);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  color-scheme:dark;
+}
+.ysf *,.ysf *::before,.ysf *::after{box-sizing:border-box}
+.ysf p,.ysf ul,.ysf h2{margin:0;padding:0}
+.ysf ul{list-style:none}
+.ysf svg{display:block;flex:none}
+.ysf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ysf-wrap{width:min(100% - 40px,var(--ysf-max));margin-inline:auto}
+
+/* Grid: marca | 3 columnas de links | redes */
+.ysf-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr)) auto;
+  gap:24px clamp(18px,2.4vw,32px);align-items:start;
+}
+.ysf-logo{display:inline-block;border-radius:6px}
+.ysf-logo img{display:block;width:auto;height:30px}
+.ysf .ysf-lead{margin-top:10px;max-width:26ch;color:var(--ysf-w2);font-size:12.5px;line-height:1.5}
+.ysf .ysf-h{margin-bottom:12px;font:700 13px/1.22 "Fredoka","Nunito Sans",sans-serif;letter-spacing:0.06em;text-transform:uppercase;color:var(--ysf-w)}
+/* brand-pages.css fuerza Fredoka en h2 con !important: aquí aseguramos tipografía consistente */
+.ysf .ysf-h{font-family:"Fredoka","Nunito Sans",sans-serif!important}
+.ysf-list{display:grid;gap:7px}
+.ysf-txt{color:var(--ysf-w2)}
+
+/* Links: subrayado que se dibuja (transform) */
+.ysf-link,.ysf-list>li>a:not([class]){
+  position:relative;display:inline-block;
+  color:var(--ysf-w2);font-weight:400;font-size:13px;text-decoration:none;overflow-wrap:anywhere;
+}
+.ysf-link::after,.ysf-list>li>a:not([class])::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:right;
+}
+.ysf-link:hover,.ysf-list>li>a:not([class]):hover{color:var(--ysf-w)}
+.ysf-link:hover::after,.ysf-list>li>a:not([class]):hover::after{transform:scaleX(1);transform-origin:left}
+.ysf a:focus-visible,.ysf button:focus-visible{outline:2px solid var(--ysf-w);outline-offset:3px;border-radius:6px}
+
+/* Redes en círculos (derecha) */
+.ysf-social{display:flex;gap:8px}
+.ysf-soc{
+  position:relative;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+  background:#262626;color:var(--ysf-w);
+}
+.ysf-soc::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,.12);opacity:0;}
+.ysf-soc svg{position:relative;z-index:1;width:15px;height:15px;fill:currentColor;}
+.ysf-soc:hover{transform:translateY(-2px)}
+.ysf-soc:hover::after{opacity:1}
+.ysf-soc:hover svg{transform:scale(1.08)}
+.ysf-soc:active{transform:scale(.95)}
+
+/* Divisor fino: legales + copyright */
+.ysf-bottom{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 24px;
+  margin-top:28px;padding:14px 0 18px;border-top:1px solid var(--ysf-line);
+  color:var(--ysf-w3);font-size:12px;
+}
+.ysf-legal ul{display:flex;flex-wrap:wrap;gap:4px 20px}
+.ysf-legal .ysf-link{font-size:12px;color:var(--ysf-w3)}
+.ysf-legal .ysf-link:hover{color:var(--ysf-w)}
+
+/* Entrada (solo con .ysf--js; el estado oculto es instantáneo y la entrada anima) */
+.ysf--js .ysf-rv{opacity:0;transform:translate3d(0,12px,0)}
+.ysf--js .ysf-rv.ysf-on{
+  opacity:1;transform:none;
+}
+.ysf-grid>:nth-child(2){--ysf-d:1}.ysf-grid>:nth-child(3){--ysf-d:2}.ysf-grid>:nth-child(4){--ysf-d:3}
+.ysf-grid>:nth-child(5){--ysf-d:4}
+
+/* Tablet: marca + redes arriba, 3 columnas de links */
+@media (max-width:900px){
+  .ysf-grid{grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:24px 20px}
+  .ysf-brand{grid-column:1/4}
+  .ysf-social{grid-column:4;grid-row:1}
+  .ysf-grid>:nth-child(n){--ysf-d:0}
+}
+/* Móvil: footer compacto y elegante que acaba exactamente igual que en PC sin espacio muerto abajo */
+@media (max-width:720px){
+  .ysf-wave {
+    height: clamp(34px, 5.5vw, 44px) !important;
+    margin-bottom: -1px !important;
+  }
+  .ysf {
+    border-radius: 0 !important;
+    padding: 12px 0 14px !important;
+    margin-top: 0 !important;
+  }
+  .ysf-wrap {
+    width: min(100% - 24px, 1120px) !important;
+  }
+  .ysf-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px 8px !important;
+    align-items: start !important;
+  }
+  .ysf-brand {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-bottom: 6px !important;
+    border-bottom: 1px solid var(--ysf-line) !important;
+  }
+  .ysf-logo img {
+    height: 22px !important;
+    width: auto !important;
+  }
+  .ysf .ysf-lead {
+    display: none !important;
+  }
+  .ysf-col {
+    grid-row: 2 !important;
+  }
+  .ysf .ysf-h {
+    font-size: 11px !important;
+    margin-bottom: 5px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .ysf-list {
+    gap: 3.5px !important;
+  }
+  .ysf-link, .ysf-list > li > a:not([class]), .ysf-txt {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+  .ysf-social {
+    grid-column: 1 / -1 !important;
+    grid-row: 3 !important;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin: 4px 0 0 !important;
+  }
+  .ysf-soc {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .ysf-soc svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+  .ysf-bottom {
+    margin-top: 10px !important;
+    padding: 8px 0 0 !important;
+    border-top: 1px solid var(--ysf-line) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 3px !important;
+    font-size: 10.5px !important;
+  }
+  .ysf-legal ul {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+  .ysf-legal .ysf-link {
+    font-size: 10.5px !important;
+  }
+  .ysf-copy {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ysf .ysf-rv{opacity:1!important;transform:none!important}
+  .ysf a:hover,.ysf a:hover *,.ysf a:active,.ysf a:active *,.ysf button:active{transform:none!important}
+}
+
+/* ==========================================================================
+   FOOTER ADAPTATIVO SÓLIDO ESTILO PARANAICE (INICIO Y CATÁLOGO)
+   En el inicio o catálogo el footer adopta el color del producto/sabor activo.
+   ========================================================================== */
+.ysf {
+    --ysf-bg: var(--hero-bg, var(--brand-red, #C3343E));
+    background: var(--ysf-bg) !important;
+    color: #FFFFFF !important;
+    position: relative;
+    z-index: 2;
+    margin-top: 0 !important;
+    padding: 16px 0 20px !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+}
+
+/* Onda en el tope del footer: 100% sólida adaptada al color del producto */
+.ysf-wave {
+    position: relative;
+    width: 100%;
+    height: clamp(65px, 7.5vw, 120px);
+    margin-top: 0 !important;
+    margin-bottom: -2px;
+    pointer-events: none;
+    overflow: hidden;
+    line-height: 0;
+    z-index: 2;
+    background-color: var(--flavor-wash, #FFF5F6) !important;
+}
+.ysf-wave svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.ysf-wave-path {
+    fill: var(--hero-bg, var(--brand-red, #C3343E));
+    opacity: 1 !important;
+}
+
+/* Sección de contacto sincronizada con el fondo dinámico */
+.ysc {
+    background-color: var(--flavor-wash, #FFF5F6) !important;
+}
+
+/* Tipografía blanca nítida */
+.ysf .ysf-h {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 13.5px !important;
+    letter-spacing: 0.05em !important;
+    font-family: 'Fredoka', 'Nunito Sans', sans-serif !important;
+}
+.ysf .ysf-lead,
+.ysf .ysf-txt,
+.ysf .ysf-link,
+.ysf .ysf-copy,
+.ysf-list > li > a {
+    font-family: 'Nunito Sans', sans-serif !important;
+    color: rgba(255, 255, 255, 0.90) !important;
+}
+.ysf .ysf-link:hover,
+.ysf-list > li > a:hover {
+    color: #FFFFFF !important;
+}
+.ysf-link::after,
+.ysf-list > li > a:not([class])::after {
+    background: #FFFFFF !important;
+}
+.ysf-soc {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #FFFFFF !important;
+}
+.ysf-soc:hover {
+    background: rgba(255, 255, 255, 0.34) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+}
+.ysf-logo img {
+    filter: brightness(0) invert(1);
+    opacity: 0.95;
+}
+.ysf-logo:hover img {
+    opacity: 1;
+}
+
+/* Evita que el overscroll elástico de iPhone en el tope inferior muestre un color claro debajo del footer */
+html {
+    background-color: var(--hero-bg, var(--brand-red, #C3343E));
+    overscroll-behavior-y: none;
+}
+html:has(body.admin-page),
+html:has(body.profile-page) {
+    background-color: #0C0C0E;
+}
+
+/* En móvil: datos 100% centrados, tipografía limpia y cierre exacto al ras de la pantalla */
+@media (max-width: 720px) {
+    .ysf-wave {
+        height: clamp(34px, 5.5vw, 44px) !important;
+        margin-bottom: -1px !important;
+    }
+    .ysf {
+        border-radius: 0 !important;
+        padding: 14px 0 max(16px, env(safe-area-inset-bottom, 16px)) !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    .ysf-wrap {
+        width: min(100% - 24px, 1120px) !important;
+        margin-inline: auto !important;
+    }
+    .ysf-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 14px 8px !important;
+        align-items: start !important;
+        justify-items: center !important;
+        text-align: center !important;
+    }
+    .ysf-brand {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1px solid var(--ysf-line) !important;
+    }
+    .ysf-col {
+        grid-row: 2 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    .ysf .ysf-h {
+        font-family: 'Fredoka', 'Nunito Sans', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 11.5px !important;
+        margin-bottom: 6px !important;
+        letter-spacing: 0.05em !important;
+        text-align: center !important;
+    }
+    .ysf-list {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 4px !important;
+        width: 100% !important;
+    }
+    .ysf-list > li {
+        text-align: center !important;
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+    }
+    .ysf-link, .ysf-list > li > a:not([class]), .ysf-txt {
+        font-family: 'Nunito Sans', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 11.5px !important;
+        line-height: 1.35 !important;
+        text-align: center !important;
+    }
+    .ysf-social {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        gap: 12px !important;
+        margin: 4px 0 0 !important;
+    }
+    .ysf-bottom {
+        margin-top: 10px !important;
+        padding: 8px 0 0 !important;
+        border-top: 1px solid var(--ysf-line) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 4px !important;
+        font-size: 10.5px !important;
+    }
+}
+
+/* ==========================================================================
+   FOOTER NEGRO EXCLUSIVO PARA USUARIO Y ADMIN
+   "El footer era de color negro solo en usuario o admin.
+    En el inicio o en el catálogo debe ser del color adaptado del producto"
+   ========================================================================== */
+body.admin-page .ysf,
+body.profile-page .ysf {
+    --ysf-bg: #0C0C0E !important;
+    background: #0C0C0E !important;
+    color: #FFFFFF !important;
+}
+body.admin-page .ysf-wave,
+body.profile-page .ysf-wave {
+    background: transparent !important;
+}
+body.admin-page main + .ysf-wave,
+body.admin-page .admin-panel + .ysf-wave,
+body.profile-page main + .ysf-wave,
+body.profile-page .profile-shell + .ysf-wave {
+    margin-top: clamp(28px, 4vw, 56px) !important;
+}
+body.admin-page .ysf-wave-path,
+body.profile-page .ysf-wave-path {
+    fill: #0C0C0E !important;
+    opacity: 1 !important;
+}
+body.admin-page .ysf-soc,
+body.profile-page .ysf-soc {
+    background: #1C1C20 !important;
+}
+body.admin-page .ysf-soc:hover,
+body.profile-page .ysf-soc:hover {
+    background: var(--rojo-marca, #C3343E) !important;
+    color: #FFFFFF !important;
+}
+body.admin-page .ysf-link::after,
+body.profile-page .ysf-link::after {
+    background: var(--rojo-marca, #C3343E) !important;
+}
+
+/* Onda superior de #productos: 100% SÓLIDA */
+.hp-wave-top {
+    position: relative;
+    width: 100%;
+    height: clamp(55px, 6vw, 95px);
+    margin-top: -1px;
+    margin-bottom: -2px;
+    pointer-events: none;
+    overflow: hidden;
+    line-height: 0;
+    z-index: 2;
+    background-color: var(--flavor-wash, #FFF5F6);
+}
+.hp-wave-top svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.hp-wave-path {
+    fill: var(--flavor-light, #F4CBCF);
+    opacity: 1 !important;
+}
