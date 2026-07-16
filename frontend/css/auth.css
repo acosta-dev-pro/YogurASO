@@ -1,0 +1,284 @@
+﻿/* =====================================================================
+   auth.css — Login y registro (YogurASO v2)
+   Tarjeta blanca, pequeña y sencilla sobre crema. Sin imágenes ni
+   decoración. Nunito Sans en todo; Fredoka 600 solo en el título.
+   Movimiento: solo transform / opacity, cubic-bezier(0.23, 1, 0.32, 1).
+   Se carga al final del <head> de login.html y registro.html.
+   ===================================================================== */
+
+body.ya-auth-page {
+    --ya-red: var(--rojo-marca, #C3343E);
+    --ya-red-hover: #AE2C36;
+    --ya-ink: #1B1720;
+    --ya-text: #3D3842;
+    --ya-muted: #77707D;
+    --ya-line: #ECE9E6;
+    --ya-line-strong: #D9D5D1;
+    --ya-gray: #F3F4F6;
+    --ya-cream: #FFF8F4;
+    --ya-font: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ya-font-title: "Fredoka", "Nunito Sans", system-ui, sans-serif;
+    background: var(--ya-cream) !important;
+    color: var(--ya-text);
+}
+
+/* ---------- Marco de página ---------- */
+.ya-auth {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 16px 56px;
+    font-family: var(--ya-font);
+}
+
+/* ---------- Tarjeta ---------- */
+.ya-card {
+    width: 100%;
+    max-width: 352px;
+    background: #fff;
+    border: 1px solid var(--ya-line);
+    border-radius: 14px;
+    padding: 22px;
+}
+.ya-auth--registro .ya-card { max-width: 380px; }
+
+body.ya-auth-page .ya-title {
+    font-family: var(--ya-font-title) !important;
+    font-weight: 600 !important;
+    font-size: 20px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em !important;
+    color: var(--ya-ink) !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-align: left !important;
+    margin: 0 0 2px !important;
+    padding: 0 !important;
+    background: none !important;
+}
+.ya-title::after { content: none !important; display: none !important; }
+
+.ya-lead {
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--ya-muted);
+}
+
+/* ---------- Formulario ---------- */
+.ya-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+}
+.ya-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.ya-row--stack { grid-template-columns: 1fr; gap: 10px; }
+.ya-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+.ya-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+.ya-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ya-text);
+    letter-spacing: 0;
+}
+.ya-label small {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ya-muted);
+    margin-left: 2px;
+}
+
+body.ya-auth-page .ya-input {
+    width: 100%;
+    height: 37px;
+    min-height: 0;
+    padding: 0 11px !important;
+    font-family: var(--ya-font) !important;
+    font-size: 13.5px !important;
+    font-weight: 500;
+    color: var(--ya-ink);
+    background: #fff !important;
+    border: 1px solid var(--ya-line-strong) !important;
+    border-radius: 8px !important;
+    outline: none;
+    transform: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+}
+body.ya-auth-page .ya-input::placeholder { color: #A6A0AA; opacity: 1; }
+body.ya-auth-page .ya-input:hover { border-color: #C4BFBA !important; }
+body.ya-auth-page .ya-input:focus,
+body.ya-auth-page .ya-input:focus-visible {
+    border-color: var(--ya-red) !important;
+    outline: none !important;
+}
+body.ya-auth-page .ya-input[aria-invalid="true"] {
+    border-color: var(--ya-red) !important;
+    background: #FFFBFB !important;
+}
+
+/* Contraseña con botón Ver / Ocultar */
+.ya-pass { position: relative; }
+body.ya-auth-page .ya-pass .ya-input { padding-right: 56px !important; }
+.ya-eye {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    height: 26px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ya-muted);
+    font: 700 11px/1 var(--ya-font);
+    cursor: pointer;
+}
+.ya-eye:hover { color: var(--ya-ink); background: var(--ya-gray); }
+.ya-eye:focus-visible { outline: 2px solid var(--ya-red); outline-offset: 1px; }
+
+/* Error en línea */
+.ya-error {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ya-red);
+}
+.ya-error[hidden] { display: none; }
+
+.ya-link {
+    color: var(--ya-red) !important;
+    font-weight: 700;
+    text-decoration: none;
+}
+.ya-link:hover { text-decoration: underline; text-underline-offset: 2px; }
+.ya-link--sm { font-size: 11.5px; }
+
+/* Casilla de términos */
+.ya-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ya-text);
+    cursor: pointer;
+}
+.ya-check input {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    margin: 1px 0 0;
+    accent-color: var(--ya-red);
+    cursor: pointer;
+}
+.ya-check input:focus-visible { outline: 2px solid var(--ya-red); outline-offset: 2px; }
+
+/* ---------- Botones ---------- */
+.ya-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-family: var(--ya-font) !important;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    cursor: pointer;
+}
+.ya-btn:active { transform: scale(0.98); }
+.ya-btn:focus-visible { outline: 2px solid var(--ya-red); outline-offset: 2px; }
+.ya-btn[disabled] { opacity: 0.6; cursor: progress; }
+.ya-btn[hidden] { display: none !important; }
+
+.ya-btn--primary {
+    margin-top: 2px;
+    border: 0;
+    background: var(--ya-red);
+    color: #fff;
+}
+.ya-btn--primary:hover { background: var(--ya-red-hover); }
+
+.ya-btn--google {
+    border: 1px solid #DADCE0;
+    background: #fff;
+    color: #3C4043;
+    font-weight: 600;
+}
+.ya-btn--google:hover { background: #F8F9FA; }
+.ya-btn--google svg { width: 16px; height: 16px; flex: none; }
+
+/* Botón oficial de Google (iframe de GSI) */
+.ya-google {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.ya-google .google-btn-mount {
+    display: flex;
+    justify-content: center;
+    min-height: 0;
+    margin: 0;
+}
+.ya-google .google-btn-mount:not(:empty) { min-height: 38px; }
+.ya-google .google-btn-mount:not(:empty) + .ya-btn--google { display: none !important; }
+
+/* Divisor "o" */
+.ya-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ya-muted);
+}
+.ya-divider::before,
+.ya-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--ya-line);
+}
+
+.ya-switch {
+    margin: 14px 0 0;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--ya-muted);
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 480px) {
+    .ya-auth { padding: 88px 14px 40px; }
+    .ya-card { padding: 20px 18px; }
+    body.ya-auth-page .ya-input { font-size: 16px !important; } /* evita el zoom de iOS */
+}
+@media (max-width: 340px) {
+    .ya-row { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ya-btn:active { transform: none; }
+}
