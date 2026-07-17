@@ -1,5 +1,12 @@
 # Environment files
 *.env
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Uploads
+backend/uploads/
 
 # Logs
 npm-debug.log*
@@ -12,6 +19,10 @@ Thumbs.db
 
 # VS Code settings
 .vscode/
+
+# Backups
+*.bak
+backup/
 
 # Temporary Git files
 .git_tmp_node_files.txt

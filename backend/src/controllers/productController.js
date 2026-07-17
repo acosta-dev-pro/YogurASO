@@ -1,5 +1,11 @@
-﻿const db = require('../config/db');
+﻿/**
+ * productController.js — CRUD de productos (backend)
+ * Listar, obtener por id, crear, actualizar y eliminar.
+ * Los productos activos alimentan las cards del frontend.
+ */
+const db = require('../config/db');
 
+/** Normaliza una fila de PostgreSQL al formato que usa el frontend */
 const mapProduct = (row) => ({
     id: row.id,
     nombre: row.nombre,
@@ -11,12 +17,50 @@ const mapProduct = (row) => ({
     activo: row.activo
 });
 
+function parseId(raw) {
+    const id = Number(raw);
+    if (!Number.isInteger(id) || id <= 0) return null;
+    return id;
+}
+
+function validateProductPayload({ nombre, precio, stock }, { partial = false } = {}) {
+    if (!partial || nombre !== undefined) {
+        if (!nombre || !String(nombre).trim()) {
+            return 'El nombre es requerido';
+        }
+    }
+
+    if (!partial || precio !== undefined) {
+        const precioNum = Number(precio);
+        if (!Number.isFinite(precioNum) || precioNum < 0) {
+            return 'Precio inválido';
+        }
+    }
+
+    if (!partial || stock !== undefined) {
+        const stockNum = Number(stock);
+        if (!Number.isInteger(stockNum) || stockNum < 0) {
+            return 'Stock inválido';
+        }
+    }
+
+    return null;
+}
+
 const getProducts = async (req, res) => {
     try {
         const includeInactive = req.query.includeInactive === 'true';
+
+        if (includeInactive) {
+            if (!req.usuario || req.usuario.rol !== 'admin') {
+                return res.status(403).json({ success: false, message: 'Acceso denegado', products: [] });
+            }
+        }
+
         const sql = includeInactive
             ? 'SELECT id, nombre, descripcion, precio, stock, imagen_url, categoria, activo FROM productos ORDER BY id DESC'
             : 'SELECT id, nombre, descripcion, precio, stock, imagen_url, categoria, activo FROM productos WHERE activo = true ORDER BY id DESC';
+
         const result = await db.query(sql);
         res.json({ success: true, products: result.rows.map(mapProduct) });
     } catch (error) {
@@ -27,14 +71,26 @@ const getProducts = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
+        const id = parseId(req.params.id);
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'ID inválido' });
+        }
+
         const result = await db.query(
             'SELECT id, nombre, descripcion, precio, stock, imagen_url, categoria, activo FROM productos WHERE id = $1',
-            [req.params.id]
+            [id]
         );
+
         if (result.rows.length === 0) {
             return res.status(404).json({ success: false, message: 'Producto no encontrado' });
         }
-        res.json({ success: true, product: mapProduct(result.rows[0]) });
+
+        const product = mapProduct(result.rows[0]);
+        if (!product.activo && (!req.usuario || req.usuario.rol !== 'admin')) {
+            return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+        }
+
+        res.json({ success: true, product });
     } catch (error) {
         console.error('Error al obtener producto:', error);
         res.status(500).json({ success: false, message: 'Error al obtener producto' });
@@ -44,9 +100,9 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         const { nombre, descripcion, precio, stock, imagen_url, categoria, activo } = req.body;
-
-        if (!nombre || precio === undefined || stock === undefined) {
-            return res.status(400).json({ success: false, message: 'Nombre, precio y stock son requeridos' });
+        const validationError = validateProductPayload({ nombre, precio, stock });
+        if (validationError) {
+            return res.status(400).json({ success: false, message: validationError });
         }
 
         const result = await db.query(
@@ -54,8 +110,8 @@ const createProduct = async (req, res) => {
              VALUES ($1, $2, $3, $4, $5, $6, $7)
              RETURNING id, nombre, descripcion, precio, stock, imagen_url, categoria, activo`,
             [
-                nombre.trim(),
-                descripcion || null,
+                String(nombre).trim(),
+                descripcion ? String(descripcion).trim() : null,
                 Number(precio),
                 Number(stock),
                 imagen_url || null,
@@ -73,7 +129,16 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
+        const id = parseId(req.params.id);
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'ID inválido' });
+        }
+
         const { nombre, descripcion, precio, stock, imagen_url, categoria, activo } = req.body;
+        const validationError = validateProductPayload({ nombre, precio, stock });
+        if (validationError) {
+            return res.status(400).json({ success: false, message: validationError });
+        }
 
         const result = await db.query(
             `UPDATE productos
@@ -87,14 +152,14 @@ const updateProduct = async (req, res) => {
              WHERE id = $8
              RETURNING id, nombre, descripcion, precio, stock, imagen_url, categoria, activo`,
             [
-                nombre?.trim(),
-                descripcion || null,
+                String(nombre).trim(),
+                descripcion ? String(descripcion).trim() : null,
                 Number(precio),
                 Number(stock),
                 imagen_url || null,
                 categoria || 'Yogur',
                 activo === undefined ? true : Boolean(activo),
-                req.params.id
+                id
             ]
         );
 
@@ -111,13 +176,20 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
+        const id = parseId(req.params.id);
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'ID inválido' });
+        }
+
         const result = await db.query(
             'DELETE FROM productos WHERE id = $1 RETURNING id',
-            [req.params.id]
+            [id]
         );
+
         if (result.rows.length === 0) {
             return res.status(404).json({ success: false, message: 'Producto no encontrado' });
         }
+
         res.json({ success: true, message: 'Producto eliminado' });
     } catch (error) {
         console.error('Error al eliminar producto:', error);

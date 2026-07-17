@@ -1,24 +1,46 @@
-﻿const express = require('express');
+﻿/**
+ * server.js — Punto de entrada del backend YogurASO (Express)
+ * -----------------------------------------------------------
+ * Aquí se montan:
+ *  - CORS, JSON, rate limit
+ *  - Upload de imágenes (solo admin)
+ *  - Rutas /api/auth y /api/products
+ *  - Archivos estáticos de /uploads
+ *
+ * Frontend y backend corren por separado.
+ */
+const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
-const db = require('./src/config/db');
-const authRoutes = require('./src/routes/authRoutes');
-const productRoutes = require('./src/routes/productRoutes');
-const testRoutes = require('./src/routes/testRoutes');
 
 dotenv.config();
 
+const requiredEnv = ['JWT_SECRET', 'DB_USER', 'DB_PASSWORD', 'DB_NAME', 'DB_HOST'];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+if (missingEnv.length) {
+    console.error('Faltan variables de entorno:', missingEnv.join(', '));
+    process.exit(1);
+}
+
+const db = require('./src/config/db');
+const authRoutes = require('./src/routes/authRoutes');
+const productRoutes = require('./src/routes/productRoutes');
+const { verificarToken, verificarAdmin } = require('./src/middleware/verifyToken');
+const { createRateLimiter } = require('./src/middleware/rateLimit');
+
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5500,http://127.0.0.1:5500,http://localhost:5501,http://127.0.0.1:5501,null')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
 
-// Crear carpeta uploads si no existe
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
-// Multer: almacenamiento de imágenes
 const storage = multer.diskStorage({
     destination: (_req, _file, cb) => cb(null, uploadsDir),
     filename: (_req, file, cb) => {
@@ -27,29 +49,42 @@ const storage = multer.diskStorage({
         cb(null, safeName);
     }
 });
+
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+    limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (_req, file, cb) => {
-        const allowed = /jpeg|jpg|png|webp|gif/;
-        const ok = allowed.test(path.extname(file.originalname).toLowerCase()) &&
-                   allowed.test(file.mimetype.split('/')[1]);
-        cb(ok ? null : new Error('Solo se permiten imágenes'), ok);
+        const allowedExt = /\.(jpeg|jpg|png|webp|gif)$/i;
+        const allowedMime = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        const ok = allowedExt.test(file.originalname) && allowedMime.includes(file.mimetype);
+        cb(ok ? null : new Error('Solo se permiten imágenes JPG, PNG, WEBP o GIF'), ok);
     }
 });
 
-app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
+const authLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 30, message: 'Demasiados intentos. Intenta de nuevo más tarde.' });
+const uploadLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 40, message: 'Demasiadas subidas. Intenta de nuevo más tarde.' });
 
-// Servir archivos subidos como estáticos
+app.use(cors({
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        // Desarrollo local: cualquier puerto en localhost / 127.0.0.1
+        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('Origen no permitido por CORS'));
+    },
+    credentials: true
+}));
+app.use(express.json({ limit: '1mb' }));
 app.use('/uploads', express.static(uploadsDir));
 
-// RUTAS PRINCIPALES
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
     res.json({ success: true, message: 'API YogurASO funcionando' });
 });
 
-app.get('/api/health', async (req, res) => {
+app.get('/api/health', async (_req, res) => {
     try {
         const result = await db.query('SELECT NOW() as server_time');
         res.json({ success: true, database: 'connected', time: result.rows[0].server_time });
@@ -58,18 +93,42 @@ app.get('/api/health', async (req, res) => {
     }
 });
 
-// UPLOAD DE IMÁGENES
-app.post('/api/upload', upload.single('imagen'), (req, res) => {
-    if (!req.file) return res.status(400).json({ success: false, message: 'No se recibió ningún archivo' });
-    const url = `http://localhost:${PORT}/uploads/${req.file.filename}`;
-    res.json({ success: true, url });
+app.post(
+    '/api/upload',
+    uploadLimiter,
+    verificarToken,
+    verificarAdmin,
+    (req, res, next) => {
+        upload.single('imagen')(req, res, (err) => {
+            if (err) {
+                return res.status(400).json({ success: false, message: err.message || 'Error al subir archivo' });
+            }
+            next();
+        });
+    },
+    (req, res) => {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No se recibió ningún archivo' });
+        }
+
+        const baseUrl = process.env.PUBLIC_BASE_URL || `${req.protocol}://${req.get('host')}`;
+        const url = `${baseUrl}/uploads/${req.file.filename}`;
+        res.json({ success: true, url });
+    }
+);
+
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/products', productRoutes);
+
+app.use((err, _req, res, _next) => {
+    if (err && err.message === 'Origen no permitido por CORS') {
+        return res.status(403).json({ success: false, message: 'Origen no permitido' });
+    }
+    console.error('Error no controlado:', err);
+    res.status(500).json({ success: false, message: 'Error del servidor' });
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/test', testRoutes);
-
-app.use((req, res) => {
+app.use((_req, res) => {
     res.status(404).json({ success: false, message: 'Ruta no encontrada' });
 });
 
@@ -84,6 +143,6 @@ app.listen(PORT, '0.0.0.0', () => {
         const count = await db.query('SELECT COUNT(*) FROM productos');
         console.log('Total productos en BD:', count.rows[0].count);
     } catch (error) {
-        console.error('Error BD:', error);
+        console.error('Error BD:', error.message);
     }
 })();
