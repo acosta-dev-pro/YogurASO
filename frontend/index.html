@@ -4,33 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YogurASO · Yogurt Artesanal</title>
-    <!-- Font Awesome para iconos -->
+    <meta name="description" content="YogurASO elabora yogurt artesanal fresco con cultivos vivos. Explora sabores, arma tu pedido y cómpralo por WhatsApp.">
+    <meta name="theme-color" content="#FA5053">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <meta property="og:title" content="YogurASO · Yogurt Artesanal">
+    <meta property="og:description" content="Yogurt artesanal elaborado a diario. Sin conservantes, con sabor real.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_CO">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- Accesibilidad: enlace para saltar al contenido principal -->
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+    <!-- =========================================================
+         HEADER / NAVBAR
+         Aquí va el logo de la marca, el menú, el carrito y el usuario.
+         Estilos: styles.css → sección HEADER
+         ========================================================= -->
     <header>
+        <!-- LOGO: nombre de la marca (se puede cambiar desde config.js) -->
         <div class="logo">
-            <h2>YogurASO</h2>
+            <h2 data-config="company-name">YogurASO</h2>
         </div>
         <div class="nav">
+            <!-- Menú de navegación principal -->
             <ul id="nav-items">
-                <li class="active"><a href="index.html">inicio</a></li>
-                <li><a href="index.html#nosotros">nosotros</a></li>
-                <li><a href="#beneficios">beneficios</a></li>
-                <li><a href="pages/productos.html">productos</a></li>
-                <li><a href="#contact">contacto</a></li>
+                <li class="active"><a href="index.html" aria-current="page">Inicio</a></li>
+                <li><a href="index.html#nosotros">Nosotros</a></li>
+                <li><a href="#beneficios">Beneficios</a></li>
+                <li><a href="pages/productos.html">Productos</a></li>
+                <li><a href="#contact">Contacto</a></li>
             </ul>
             
-            <!-- BOTÓN DEL CARRITO -->
+            <!-- Botón del carrito (abre el sidebar) -->
             <div class="icon-buttons">
-                <button class="icon-btn" id="cartBtn" aria-label="Carrito">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge" id="cart-count">0</span>
+                <button class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
             </div>
             
-            <!-- MENÚ DE USUARIO -->
+            <!-- Menú de usuario (login / logout / admin) -->
             <div class="user-menu">
                 <button class="user-menu-btn" id="userMenuBtn">
                     <i class="fas fa-user-circle"></i>
@@ -49,7 +67,10 @@
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- =========================================================
+         HERO (primera vista / portada)
+         Título grande + imagen del producto. Estilos: .hero-section
+         ========================================================= -->
     <div class="hero-section">
         <div class="hero-content">
             <p class="hero-kicker">Micro-lote artesanal</p>
@@ -60,12 +81,15 @@
                 <a class="hero-link" href="pages/productos.html">Explorar catalogo</a>
             </div>
         </div>
+        <!-- Imagen principal del hero -->
         <div class="hero-img">
             <img src="assets/img/fresa sin fondo.png" alt="Fresa YogurASO">
         </div>
     </div>
 
-    <!-- SECCIÓN BENEFICIOS -->
+    <!-- =========================================================
+         BENEFICIOS — cards informativas (.beneficio-card)
+         ========================================================= -->
     <section id="beneficios" class="beneficios">
         <div class="beneficios-banner">
             <span class="beneficios-sep-tag"><i class="fas fa-seedling"></i> Por qué elegirnos</span>
@@ -138,30 +162,39 @@
         </div>
     </section>
 
-    <!-- PRODUCTOS DESTACADOS -->
-    <section class="productos-catalogo">
+    <!-- =========================================================
+         PRODUCTOS DESTACADOS (CARDS)
+         El HTML vacío se llena con JavaScript (main.js → renderProducts).
+         Cada card usa la clase .producto-card (diseño en styles.css).
+         Contenedor: #productos-container
+         ========================================================= -->
+    <section id="main-content" class="productos-catalogo" aria-label="Productos destacados">
         <div class="productos-header">
-            <span class="productos-kicker"><i class="fas fa-jar"></i> Elaborado a diario</span>
+            <span class="productos-kicker"><i class="fas fa-jar" aria-hidden="true"></i> Elaborado a diario</span>
             <h2>Nuestros Yogures</h2>
             <p class="productos-subtitle">Cada sabor hecho con leche fresca y cultivos vivos. Sin conservantes, sin compromiso.</p>
         </div>
         <div class="productos-scroll-wrapper">
-            <div id="productos-container" class="productos-grid-horizontal">
+            <!-- Aquí se insertan dinámicamente las cards de productos -->
+            <div id="productos-container" class="productos-grid-horizontal" aria-live="polite">
                 <p class="cargando">Cargando la frescura del campo...</p>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- =========================================================
+         FOOTER — contacto, redes y navegación
+         Datos de empresa vienen de config.js (data-config)
+         ========================================================= -->
     <footer id="contact" class="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">
-                <span class="footer-logo">YogurASO</span>
-                <p>Yogurt artesanal elaborado a diario<br>con ingredientes frescos y cultivos vivos.</p>
+                <span class="footer-logo" data-config="company-name">YogurASO</span>
+                <p data-config="company-tagline">Yogurt artesanal elaborado a diario<br>con ingredientes frescos y cultivos vivos.</p>
                 <div class="footer-social">
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="https://wa.me/573001234567" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" data-config="instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                    <a href="#" data-config="facebook" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                    <a href="#" data-config="whatsapp" data-wa-text="Hola YogurASO" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="footer-col">
@@ -184,42 +217,55 @@
             <div class="footer-col">
                 <h4>Contacto</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Colombia</li>
-                    <li><i class="fas fa-envelope"></i> hola@yoguraso.co</li>
-                    <li><i class="fab fa-whatsapp"></i> +57 300 123 4567</li>
+                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span data-config="company-location">Colombia</span></li>
+                    <li><i class="fas fa-envelope" aria-hidden="true"></i> <span data-config="company-email">hola@yoguraso.co</span></li>
+                    <li><i class="fab fa-whatsapp" aria-hidden="true"></i> <span data-config="whatsapp-display">+57 300 123 4567</span></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <span>&copy; 2026 YogurASO &mdash; Todos los derechos reservados.</span>
+            <span>&copy; 2026 <span data-config="company-name">YogurASO</span> &mdash; Todos los derechos reservados.</span>
         </div>
     </footer>
 
-    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
-    <a href="https://wa.me/573001234567?text=Hola%20YogurASO,%20quiero%20hacer%20un%20pedido" 
-       class="whatsapp-float" 
-       target="_blank" 
-       rel="noopener noreferrer">
-        <i class="fab fa-whatsapp"></i>
+    <!-- Botón flotante de WhatsApp (número en config.js) -->
+    <a href="#"
+       class="whatsapp-float"
+       data-config="whatsapp"
+       data-wa-text="Hola YogurASO, quiero hacer un pedido"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Escribir por WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </a>
 
-    <!-- CART SIDEBAR -->
+    <!-- =========================================================
+         SIDEBAR DEL CARRITO (diseño: .cart-sidebar)
+         Lógica: cart.js | Checkout: WhatsApp
+         ========================================================= -->
     <div class="overlay" id="cartOverlay"></div>
-    <div class="cart-sidebar" id="cartSidebar">
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
             <span>Tu carrito</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
-        <div class="cart-items" id="cart-items-container">
-            <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
+        <!-- Lista de items del carrito (se pinta en cart.js) -->
+        <div class="cart-items" id="cart-sidebar-items">
+            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
             <span id="cartTotalAmount">$0</span>
         </div>
-        <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
-    </div>
+        <button type="button" class="btn-clear-cart" id="btn-clear-cart-sidebar" hidden>Vaciar carrito</button>
+        <button type="button" class="checkout-btn" id="checkoutBtn">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
+        </button>
+    </aside>
 
+    <!-- Scripts: config → utils → carrito → auth → catálogo/cards -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/cart.js"></script>
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/main.js"></script>
