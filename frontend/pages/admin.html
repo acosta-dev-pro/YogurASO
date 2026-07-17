@@ -3,161 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - YogurASO</title>
+    <title>Admin · YogurASO</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#FA5053">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <header>
         <div class="logo">
-            <h2>YogurASO <span>Admin</span></h2>
+            <h2><span data-config="company-name">YogurASO</span> <span>Admin</span></h2>
         </div>
         <div class="nav">
             <ul id="nav-items">
                 <li><a href="../index.html">Inicio</a></li>
-                <li class="active"><a href="#productos">Productos</a></li>
-                <li><a href="#pedidos">Pedidos</a></li>
+                <li class="active"><a href="#productos" aria-current="page">Productos</a></li>
             </ul>
-            
-            <!-- BOTÓN DEL CARRITO -->
             <div class="icon-buttons">
-                <button class="icon-btn" id="cartBtn" aria-label="Carrito">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge" id="cart-count">0</span>
+                <button class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
             </div>
-            
-            <!-- MENÚ DE USUARIO -->
             <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn">
-                    <i class="fas fa-user-shield"></i>
+                <button class="user-menu-btn" id="userMenuBtn" aria-label="Menú de administrador">
+                    <i class="fas fa-user-shield" aria-hidden="true"></i>
                 </button>
                 <div class="user-dropdown" id="userDropdown">
-                    <a href="../index.html" class="dropdown-item">
-                        <i class="fas fa-store"></i>
-                        Ver Tienda
-                    </a>
-                    <a href="#" class="dropdown-item" id="btn-logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Cerrar Sesión
-                    </a>
+                    <a href="../index.html" class="dropdown-item"><i class="fas fa-store" aria-hidden="true"></i> Ver Tienda</a>
+                    <a href="#" class="dropdown-item" id="btn-logout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Cerrar Sesión</a>
                 </div>
             </div>
         </div>
     </header>
 
-  <main class='container admin-panel'>
-    <div class='admin-header'>
-      <h1>Gestión de Inventario</h1>
-      <button class='btn btn-primary' id='btn-nuevo-producto'>+ Nuevo Yogur</button>
-    </div>
-
-    <div class='admin-table-container'>
-      <table class='admin-table'>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id='admin-productos-lista'></tbody>
-      </table>
-    </div>
-  </main>
-
-  <div id='modal-producto' class='modal' aria-hidden='true'>
-    <div class='modal-content'>
-      <div class='modal-header'>
-        <h2 id='modal-title'>Añadir Producto</h2>
-        <span class='close-modal'>&times;</span>
-      </div>
-
-      <form id='form-producto'>
-        <input type='hidden' id='p-id'>
-        <div class='form-group'>
-          <label>Nombre</label>
-          <input type='text' id='p-nombre' required>
+    <!-- =========================================================
+         ADMIN — inventario y dashboard
+         Lógica: admin.js | Estilos: .admin-panel / .stat-card
+         ========================================================= -->
+    <main id="main-content" class="container admin-panel">
+        <div class="admin-header">
+            <h1>Gestión de Inventario</h1>
+            <button type="button" class="btn btn-primary" id="btn-nuevo-producto">+ Nuevo Yogur</button>
         </div>
 
-        <div class='form-row'>
-          <div class='form-group'>
-            <label>Precio</label>
-            <input type='number' id='p-precio' required>
-          </div>
-          <div class='form-group'>
-            <label>Stock</label>
-            <input type='number' id='p-stock' required>
-          </div>
-        </div>
+        <!-- Tarjetas de resumen (stats) -->
+        <section class="admin-dashboard" aria-label="Resumen del inventario">
+            <article class="stat-card">
+                <span class="stat-label">Productos</span>
+                <strong class="stat-value" id="stat-productos">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Stock total</span>
+                <strong class="stat-value" id="stat-stock">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Categorías</span>
+                <strong class="stat-value" id="stat-categorias">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Activos</span>
+                <strong class="stat-value" id="stat-activos">0</strong>
+            </article>
+            <article class="stat-card stat-card-wide">
+                <span class="stat-label">Última actualización</span>
+                <strong class="stat-value stat-value-sm" id="stat-updated">—</strong>
+            </article>
+        </section>
 
-        <div class='form-group'>
-          <label>Categoría</label>
-          <select id='p-categoria'>
-            <option value='natural'>Natural</option>
-            <option value='frutas'>Con Frutas</option>
-            <option value='griego'>Griego</option>
-            <option value='sin_lactosa'>Sin Lactosa</option>
-          </select>
-        </div>
-
-        <div class='form-group'>
-          <label>Imagen del Producto</label>
-          <div class='image-upload-area' id='image-upload-area'>
-            <div class='image-upload-placeholder' id='image-upload-placeholder'>
-              <i class='fas fa-cloud-upload-alt'></i>
-              <p>Arrastra una imagen o <span>haz clic para seleccionar</span></p>
-              <small>JPG, PNG, WebP — máx. 5 MB</small>
+        <div class="admin-toolbar">
+            <div class="catalog-search-wrap">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <label class="sr-only" for="admin-search">Buscar en inventario</label>
+                <input type="search" id="admin-search" placeholder="Buscar por nombre, categoría o ID..." autocomplete="off">
             </div>
-            <img id='image-preview' class='image-preview' src='' alt='Vista previa' style='display:none'>
-            <button type='button' class='image-remove-btn' id='image-remove-btn' style='display:none'>
-              <i class='fas fa-times'></i> Quitar imagen
-            </button>
-          </div>
-          <input type='file' id='p-imagen-file' accept='image/*' style='display:none'>
-          <input type='hidden' id='p-imagen'>
         </div>
 
-        <div class='form-group'>
-          <label>Descripción</label>
-          <textarea id='p-descripcion' rows='3'></textarea>
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-productos-lista"></tbody>
+            </table>
         </div>
+    </main>
 
-        <div class='form-group form-checkbox'>
-          <label>
-            <input type='checkbox' id='p-activo' checked>
-            Producto activo
-          </label>
+    <div id="modal-producto" class="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal-header">
+                <h2 id="modal-title">Añadir Producto</h2>
+                <span class="close-modal" aria-label="Cerrar">&times;</span>
+            </div>
+            <form id="form-producto">
+                <input type="hidden" id="p-id">
+                <div class="form-group">
+                    <label for="p-nombre">Nombre</label>
+                    <input type="text" id="p-nombre" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="p-precio">Precio</label>
+                        <input type="number" id="p-precio" min="0" step="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="p-stock">Stock</label>
+                        <input type="number" id="p-stock" min="0" step="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="p-categoria">Categoría</label>
+                    <select id="p-categoria">
+                        <option value="natural">Natural</option>
+                        <option value="frutas">Con Frutas</option>
+                        <option value="griego">Griego</option>
+                        <option value="sin_lactosa">Sin Lactosa</option>
+                        <option value="leches">Leches</option>
+                        <option value="quesos">Quesos</option>
+                        <option value="kumis">Kumis</option>
+                        <option value="arequipe">Arequipe</option>
+                        <option value="suero">Suero Costeño</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Imagen del Producto</label>
+                    <div class="image-upload-area" id="image-upload-area">
+                        <div class="image-upload-placeholder" id="image-upload-placeholder">
+                            <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                            <p>Arrastra una imagen o <span>haz clic para seleccionar</span></p>
+                            <small>JPG, PNG, WebP — máx. 5 MB</small>
+                        </div>
+                        <img id="image-preview" class="image-preview" src="" alt="Vista previa del producto" style="display:none">
+                        <button type="button" class="image-remove-btn" id="image-remove-btn" style="display:none">
+                            <i class="fas fa-times" aria-hidden="true"></i> Quitar imagen
+                        </button>
+                    </div>
+                    <input type="file" id="p-imagen-file" accept="image/*" style="display:none">
+                    <input type="hidden" id="p-imagen">
+                </div>
+                <div class="form-group">
+                    <label for="p-descripcion">Descripción</label>
+                    <textarea id="p-descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group form-checkbox">
+                    <label>
+                        <input type="checkbox" id="p-activo" checked>
+                        Producto activo
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+            </form>
         </div>
+    </div>
 
-        <button type='submit' class='btn btn-primary btn-block'>Guardar</button>
-      </form>
-    </div>
-  </div>
+    <div class="overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+        <div class="cart-header">
+            <span>Tu carrito</span>
+            <i class="fas fa-times" id="closeCart"></i>
+        </div>
+        <div class="cart-items" id="cart-sidebar-items">
+            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalAmount">$0</span>
+        </div>
+        <button type="button" class="btn-clear-cart" id="btn-clear-cart-sidebar" hidden>Vaciar carrito</button>
+        <button type="button" class="checkout-btn" id="checkoutBtn">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
+        </button>
+    </aside>
 
-  <!-- CART SIDEBAR -->
-  <div class="overlay" id="cartOverlay"></div>
-  <div class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
-      <span>Tu carrito</span>
-      <i class="fas fa-times" id="closeCart"></i>
-    </div>
-    <div class="cart-items" id="cart-items-container">
-      <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
-    </div>
-    <div class="cart-total">
-      <span>Total:</span>
-      <span id="cartTotalAmount">$0</span>
-    </div>
-    <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
-  </div>
-
-  <script src='../js/cart.js'></script>
-  <script type='module' src='../js/auth.js'></script>
-  <script type='module' src='../js/admin.js'></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/cart.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
 </body>
 </html>
