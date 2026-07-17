@@ -1,6 +1,9 @@
 -- =============================================
--- YOGURASO - ESQUEMA DE BASE DE DATOS
--- PostgreSQL
+-- YOGURASO - ESQUEMA DE BASE DE DATOS (PostgreSQL)
+-- Tablas clave del MVP:
+--   usuarios  → login y roles (admin | cliente)
+--   productos → catálogo (alimenta las cards del frontend)
+-- Compra actual: por WhatsApp (sin pedidos internos en la app).
 -- =============================================
 
 -- Eliminar tablas en orden inverso
@@ -13,7 +16,7 @@ DROP TABLE IF EXISTS tokens_recuperacion CASCADE;
 DROP TABLE IF EXISTS usuarios CASCADE;
 
 -- =============================================
--- TABLA: usuarios
+-- TABLA: usuarios (auth / roles)
 -- =============================================
 CREATE TABLE usuarios (
     id          SERIAL PRIMARY KEY,
@@ -41,7 +44,7 @@ CREATE TABLE tokens_recuperacion (
 );
 
 -- =============================================
--- TABLA: productos
+-- TABLA: productos (catálogo → cards del frontend)
 -- =============================================
 CREATE TABLE productos (
     id              SERIAL PRIMARY KEY,
@@ -139,7 +142,18 @@ INSERT INTO productos (nombre, descripcion, precio, stock, imagen_url, categoria
 ('Sin Lactosa',     'Yogur especial para intolerantes a la lactosa.',            6500, 30, '',                                          'Sin Lactosa');
 
 -- =============================================
--- USUARIO ADMIN (contraseña: password)
+-- SCHEMA YogurASO (PostgreSQL)
+-- Tablas principales usadas por el MVP:
+--   usuarios   → login / roles (admin | cliente)
+--   productos  → catálogo (alimenta las cards del frontend)
+-- El resto (pedidos, carrito DB, etc.) queda como base ampliable;
+-- la compra actual se hace por WhatsApp (sin pedidos internos).
+-- =============================================
+
+-- =============================================
+-- USUARIO ADMIN DE DESARROLLO
+-- Email: admin@yoguraso.com | Contraseña temporal: password
+-- IMPORTANTE: cámbiala antes de cualquier entorno real.
 -- =============================================
 INSERT INTO usuarios (nombre, apellido, email, password, rol) VALUES
 ('Admin', 'YogurASO', 'admin@yoguraso.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
