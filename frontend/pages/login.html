@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YogurASO · Iniciar Sesión</title>
+    <title>Iniciar sesión · YogurASO</title>
+    <meta name="description" content="Inicia sesión en YogurASO para gestionar tu cuenta.">
+    <meta name="theme-color" content="#FA5053">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+    <a class="skip-link" href="#loginForm">Saltar al formulario</a>
     <header>
         <div class="logo">
             <h2>YogurASO</h2>
         </div>
         <div class="nav">
             <ul id="nav-items">
-                <li><a href="../index.html">home</a></li>
-                <li><a href="../index.html#nosotros">about</a></li>
-                <li><a href="productos.html">services</a></li>
-                <li><a href="../index.html#contact">contact</a></li>
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="../index.html#nosotros">Nosotros</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="../index.html#contact">Contacto</a></li>
             </ul>
             <div class="user-menu">
                 <button class="user-menu-btn" id="userMenuBtn">
@@ -65,8 +69,8 @@
         </div>
     </div>
 
-    <a href="https://wa.me/573001234567?text=Hola%20YogurASO" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
+    <a href="#" class="whatsapp-float" data-config="whatsapp" data-wa-text="Hola YogurASO" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </a>
 
     <!-- CART SIDEBAR -->
@@ -76,14 +80,16 @@
             <span>Tu carrito</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
-        <div class="cart-items" id="cart-items-container">
+        <div class="cart-items" id="cart-sidebar-items">
             <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
             <span id="cartTotalAmount">$0</span>
         </div>
-        <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
+        <button type="button" class="checkout-btn" id="checkoutBtn">
+            <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
+        </button>
     </div>
 
     <!-- FOOTER -->
@@ -129,6 +135,8 @@
         </div>
     </footer>
 
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/cart.js"></script>
     <script type="module" src="../js/auth.js"></script>
 </body>

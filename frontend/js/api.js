@@ -1,13 +1,20 @@
-﻿const API_URL = 'http://localhost:3000/api';
+﻿/**
+ * api.js — Cliente HTTP hacia el backend
+ * Todas las llamadas al API pasan por aquí (productos, auth, upload).
+ * La URL base sale de config.js → YOGUR_CONFIG.API_URL
+ */
+const API_URL = (window.YOGUR_CONFIG && window.YOGUR_CONFIG.API_URL) || 'http://localhost:3000/api';
 
 async function request(path, options = {}) {
     try {
+        const headers = {
+            ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+            ...(options.headers || {})
+        };
+
         const response = await fetch(`${API_URL}${path}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                ...(options.headers || {})
-            },
-            ...options
+            ...options,
+            headers
         });
 
         const data = await response.json().catch(() => ({}));
@@ -31,9 +38,10 @@ export async function checkHealth() {
     return request('/health');
 }
 
-export async function fetchProducts(includeInactive = false) {
+export async function fetchProducts(includeInactive = false, token = null) {
     const query = includeInactive ? '?includeInactive=true' : '';
-    const data = await request(`/products${query}`);
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const data = await request(`/products${query}`, { headers });
     if (!data.success) return [];
     return data.products || [];
 }
@@ -45,9 +53,7 @@ export async function getProduct(id) {
 export async function createProduct(payload, token) {
     return request('/products', {
         method: 'POST',
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload)
     });
 }
@@ -55,9 +61,7 @@ export async function createProduct(payload, token) {
 export async function updateProduct(id, payload, token) {
     return request(`/products/${id}`, {
         method: 'PUT',
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload)
     });
 }
@@ -65,9 +69,17 @@ export async function updateProduct(id, payload, token) {
 export async function deleteProduct(id, token) {
     return request(`/products/${id}`, {
         method: 'DELETE',
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
+export async function uploadImage(file, token) {
+    const formData = new FormData();
+    formData.append('imagen', file);
+    return request('/upload', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
     });
 }
 
@@ -87,8 +99,6 @@ export async function register(userData) {
 
 export async function getProfile(token) {
     return request('/auth/perfil', {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
     });
 }

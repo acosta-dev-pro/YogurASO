@@ -1,112 +1,81 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
-    console.log('Vista de carrito cargada');
+﻿/**
+ * cart_view.js — Página completa del carrito (carrito.html)
+ * Usa window.Cart para cantidades / eliminar / checkout WhatsApp.
+ */
+document.addEventListener('DOMContentLoaded', () => {
     renderizarCarrito();
-    
-    const btnCheckout = document.getElementById('btn-checkout');
-    if (btnCheckout) {
-        btnCheckout.addEventListener('click', () => {
-            const carrito = window.Cart?.getCart() || [];
-            if (carrito.length === 0) {
-                alert('Tu carrito está vacío');
-            } else {
-                alert('Funcionalidad de pago próximamente');
-            }
-        });
-    }
+
+    document.getElementById('btn-checkout')?.addEventListener('click', () => {
+        window.Cart?.checkoutWhatsApp();
+    });
+
+    window.addEventListener('yogur:cart-updated', renderizarCarrito);
 });
 
 function renderizarCarrito() {
-    const container = document.getElementById('cart-items-container');
+    const container = document.getElementById('cart-page-items');
     const carrito = window.Cart?.getCart() || [];
-    
-    console.log('Carrito actual:', carrito);
-    
-    if (!container) {
-        console.error('No container');
-        return;
-    }
-    
+    const escapeHtml = window.YogurUtils?.escapeHtml || ((v) => String(v ?? ''));
+    const formatCOP = window.YogurUtils?.formatCOP || ((n) => `$${Number(n || 0).toLocaleString('es-CO')}`);
+    const clearBtn = document.getElementById('btn-clear-cart');
+
+    if (!container) return;
+    if (clearBtn) clearBtn.hidden = carrito.length === 0;
+
     if (carrito.length === 0) {
-        container.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
+        container.innerHTML = '<p class="empty-cart"><i class="fas fa-shopping-bag" aria-hidden="true"></i>Tu carrito está vacío. <a href="productos.html">Ver productos</a></p>';
         actualizarResumen(0);
         return;
     }
 
-    container.innerHTML = '';
     let subtotal = 0;
+    container.innerHTML = carrito.map((item) => {
+        const lineTotal = Number(item.precio) * Number(item.cantidad);
+        subtotal += lineTotal;
+        const img = item.imagen
+            ? `<img class="cart-item-thumb" src="${escapeHtml(item.imagen)}" alt="${escapeHtml(item.nombre)}" onerror="this.style.display='none'">`
+            : '';
 
-    carrito.forEach(item => {
-        subtotal += item.precio * item.cantidad;
-        
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.setAttribute('data-id', item.id);
-        div.innerHTML = `
-            <div class="cart-item-info">
-                <span class="cart-item-name">${item.nombre}</span>
-                <div class="cart-item-controls">
-                    <button class="cart-qty-btn" onclick="window.cambiarCantidad(${item.id}, -1)">-</button>
-                    <span class="cart-item-qty">${item.cantidad}</span>
-                    <button class="cart-qty-btn" onclick="window.cambiarCantidad(${item.id}, 1)">+</button>
-                    <span class="cart-item-price">$${(Number(item.precio) * item.cantidad).toLocaleString('es-CO')}</span>
+        return `
+            <div class="cart-item" data-id="${escapeHtml(item.id)}">
+                ${img}
+                <div class="cart-item-info">
+                    <span class="cart-item-name">${escapeHtml(item.nombre)}</span>
+                    <div class="cart-item-controls">
+                        <button type="button" class="cart-qty-btn" data-action="qty" data-id="${escapeHtml(item.id)}" data-delta="-1" aria-label="Disminuir">-</button>
+                        <span class="cart-item-qty">${escapeHtml(item.cantidad)}</span>
+                        <button type="button" class="cart-qty-btn" data-action="qty" data-id="${escapeHtml(item.id)}" data-delta="1" aria-label="Aumentar">+</button>
+                        <span class="cart-item-price">${formatCOP(lineTotal)}</span>
+                    </div>
                 </div>
+                <button type="button" class="cart-remove-btn" data-action="remove" data-id="${escapeHtml(item.id)}" aria-label="Eliminar">
+                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                </button>
             </div>
-            <button class="cart-remove-btn" onclick="window.eliminarDelCarrito(${item.id})">
-                <i class="fas fa-trash-alt"></i>
-            </button>
         `;
-        container.appendChild(div);
-    });
+    }).join('');
 
     actualizarResumen(subtotal);
+
+    if (!container.dataset.bound) {
+        container.dataset.bound = '1';
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+            const id = btn.dataset.id;
+            if (btn.dataset.action === 'qty') {
+                window.Cart?.changeQuantity(id, Number(btn.dataset.delta));
+            } else if (btn.dataset.action === 'remove') {
+                window.Cart?.removeItem(id);
+            }
+        });
+    }
 }
 
 function actualizarResumen(subtotal) {
-    const envio = subtotal > 0 ? 5000 : 0;
-    const total = subtotal + envio;
-    
+    const formatCOP = window.YogurUtils?.formatCOP || ((n) => `$${Number(n || 0).toLocaleString('es-CO')}`);
     const subtotalEl = document.getElementById('subtotal');
     const totalEl = document.getElementById('total');
-    
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toLocaleString('es-CO')}`;
-    if (totalEl) totalEl.textContent = `$${total.toLocaleString('es-CO')}`;
-}
-
-// Funciones globales
-window.cambiarCantidad = (id, cambio) => {
-    let carrito = JSON.parse(localStorage.getItem('yogur_cart')) || [];
-    const index = carrito.findIndex(i => i.id == id);
-    
-    if (index !== -1) {
-        carrito[index].cantidad += cambio;
-        
-        if (carrito[index].cantidad <= 0) {
-            carrito.splice(index, 1);
-        }
-        
-        localStorage.setItem('yogur_cart', JSON.stringify(carrito));
-        renderizarCarrito();
-        window.Cart?.updateCounter();
-        mostrarNotificacion('Carrito actualizado');
-    }
-};
-
-window.eliminarDelCarrito = (id) => {
-    let carrito = JSON.parse(localStorage.getItem('yogur_cart')) || [];
-    carrito = carrito.filter(i => i.id != id);
-    localStorage.setItem('yogur_cart', JSON.stringify(carrito));
-    renderizarCarrito();
-    window.Cart?.updateCounter();
-    mostrarNotificacion('Producto eliminado');
-};
-
-function mostrarNotificacion(mensaje) {
-    const notificacion = document.createElement('div');
-    notificacion.className = 'notificacion';
-    notificacion.textContent = mensaje;
-    document.body.appendChild(notificacion);
-    
-    setTimeout(() => {
-        notificacion.remove();
-    }, 2000);
+    if (subtotalEl) subtotalEl.textContent = formatCOP(subtotal);
+    if (totalEl) totalEl.textContent = formatCOP(subtotal);
 }

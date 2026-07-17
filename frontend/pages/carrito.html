@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito - YogurASO</title>
+    <title>Carrito · YogurASO</title>
+    <meta name="description" content="Revisa tu carrito YogurASO y finaliza tu pedido por WhatsApp.">
+    <meta name="theme-color" content="#FA5053">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <header>
         <div class="logo">
             <h2>YogurASO</h2>
@@ -19,18 +23,16 @@
                 <li><a href="../index.html#beneficios">Beneficios</a></li>
                 <li><a href="productos.html">Productos</a></li>
             </ul>
-            
-            <!-- BOTÓN DEL CARRITO -->
+
             <div class="icon-buttons">
                 <button class="icon-btn active" id="cartBtn" aria-label="Carrito">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cart-count">0</span>
                 </button>
             </div>
-            
-            <!-- MENÚ DE USUARIO -->
+
             <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn">
+                <button class="user-menu-btn" id="userMenuBtn" aria-label="Menú de usuario">
                     <i class="fas fa-user-circle"></i>
                 </button>
                 <div class="user-dropdown" id="userDropdown">
@@ -47,10 +49,13 @@
         </div>
     </header>
 
-    <main class="container cart-page">
+    <main class="container cart-page" id="main-content">
         <section class="cart-items-section">
-            <h1><i class="fas fa-shopping-bag"></i> Tu Carrito</h1>
-            <div id="cart-items-container">
+            <div class="cart-page-heading">
+                <h1><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu Carrito</h1>
+                <button type="button" class="btn-clear-cart" id="btn-clear-cart" hidden>Vaciar carrito</button>
+            </div>
+            <div id="cart-page-items">
                 <p class="empty-cart">Tu carrito está vacío</p>
             </div>
         </section>
@@ -59,46 +64,43 @@
             <h3>Resumen del Pedido</h3>
             <div class="summary-details">
                 <div class="summary-line">
-                    <span><i class="fas fa-calculator"></i> Subtotal</span>
+                    <span><i class="fas fa-calculator" aria-hidden="true"></i> Subtotal</span>
                     <span id="subtotal">$0</span>
-                </div>
-                <div class="summary-line">
-                    <span><i class="fas fa-truck"></i> Envío</span>
-                    <span>$5.000</span>
                 </div>
                 <hr>
                 <div class="summary-line total">
-                    <span><i class="fas fa-file-invoice"></i> Total</span>
-                    <span id="total">$5.000</span>
+                    <span><i class="fas fa-file-invoice" aria-hidden="true"></i> Total</span>
+                    <span id="total">$0</span>
                 </div>
             </div>
-            <button id="btn-checkout" class="btn btn-primary btn-block">
-                <i class="fas fa-credit-card"></i> Finalizar Compra
+            <button type="button" id="btn-checkout" class="btn btn-primary btn-block">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
             </button>
             <a href="productos.html" class="btn-continue">
-                <i class="fas fa-arrow-left"></i> Seguir comprando
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> Seguir comprando
             </a>
         </aside>
     </main>
 
-    <!-- CART SIDEBAR -->
     <div class="overlay" id="cartOverlay"></div>
-    <div class="cart-sidebar" id="cartSidebar">
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
             <span>Tu carrito</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
-        <div class="cart-items" id="cart-items-container">
-            <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
+        <div class="cart-items" id="cart-sidebar-items">
+            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
             <span id="cartTotalAmount">$0</span>
         </div>
-        <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
-    </div>
+        <button type="button" class="btn-clear-cart" id="btn-clear-cart-sidebar" hidden>Vaciar carrito</button>
+        <button type="button" class="checkout-btn" id="checkoutBtn">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
+        </button>
+    </aside>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -141,7 +143,10 @@
         </div>
     </footer>
 
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/cart.js"></script>
-    <script type="module" src="../js/cart_view.js"></script>
+    <script src="../js/cart_view.js"></script>
+    <script type="module" src="../js/auth.js"></script>
 </body>
 </html>
