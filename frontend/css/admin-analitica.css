@@ -1,0 +1,237 @@
+/* Admin: analítica, alertas de stock y preguntas — parte de admin-theme.css (dividido por secciones; mantener el orden de carga en admin.html) */
+/* ==========================================================================
+   SECCIONES DE ANALÍTICA Y ALERTAS EN EL PANEL ADMIN
+   ========================================================================== */
+
+.admin-stats-analytics .admin-stat {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-trend {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.stat-trend.up {
+    color: #2E7D32;
+}
+
+.stat-trend.neutral {
+    color: #8C847E;
+}
+
+.admin-analytics-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2E7D32;
+    background: #E8F5E9;
+    padding: 6px 14px;
+    border-radius: 999px;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.admin-flavor-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.admin-bar-track {
+    width: 100%;
+    height: 8px;
+    background: #F0ECE8;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.admin-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Alertas de Stock */
+.stock-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.stock-badge.stock-ok {
+    background: #E8F7EE;
+    color: #1B7A43;
+}
+
+.stock-badge.stock-low {
+    background: #FEECE0;
+    color: #D35400;
+}
+
+.stock-badge.stock-warning {
+    background: #FDE8E8;
+    color: #C3343E;
+}
+
+.admin-alerts-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.admin-alerts-filter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    body.admin-page .admin-studio-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-row-3cols {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   SECCIÓN DE PREGUNTAS DE CLIENTES EN EL PANEL ADMIN
+   ========================================================================== */
+.admin-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.admin-q-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(23, 23, 26, 0.08);
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.admin-q-card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+.admin-q-card.is-pending {
+    border-left: 5px solid #E68A00;
+}
+.admin-q-card.is-answered {
+    border-left: 5px solid #2A9D60;
+}
+
+.admin-q-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-q-author {
+    font-size: 14px;
+    font-weight: 700;
+    color: #17171A;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.admin-q-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-q-date {
+    font-size: 11.5px;
+    color: #8C867F;
+}
+
+.admin-q-body {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #2D2A26;
+    background: #FAF9F7;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.admin-q-answer-published {
+    background: #F0F9F3;
+    border: 1px solid rgba(42, 157, 96, 0.18);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+}
+.admin-q-answer-published strong {
+    color: #2A9D60;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 3px;
+}
+.admin-q-answer-published p {
+    font-size: 13.5px;
+    color: #1D5C38;
+    margin: 0;
+}
+
+.admin-q-reply-box {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-q-textarea {
+    width: 100%;
+    min-height: 52px;
+    padding: 9px 12px;
+    border: 1px solid #D8D8DE;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13.5px;
+    background: #FFFFFF;
+    resize: vertical;
+}
+.admin-q-textarea:focus {
+    outline: none;
+    border-color: var(--rojo-marca, #D62300);
+    box-shadow: 0 0 0 3px rgba(214, 35, 0, 0.1);
+}
+
+.admin-q-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
