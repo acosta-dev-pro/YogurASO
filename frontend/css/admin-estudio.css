@@ -1,0 +1,195 @@
+/* Admin: estudio de color y de multimedia — parte de admin-theme.css (dividido por secciones; mantener el orden de carga en admin.html) */
+/* Selector único de color */
+.admin-color-helper-text {
+    font-size: 11px;
+    line-height: 1.35;
+    color: #6B655E;
+    margin: 2px 0 7px;
+}
+
+.admin-color-dots {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 4px;
+    margin: 6px 0 8px;
+}
+
+.admin-color-dot {
+    width: 21px;
+    height: 21px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(23, 23, 26, 0.16);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+body.admin-page .admin-modal-studio .admin-color-picker-btn input[type="color"] {
+    width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    padding: 2px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(23, 23, 26, 0.16) !important;
+    cursor: pointer;
+}
+
+.admin-color-dot:hover {
+    transform: scale(1.18);
+}
+
+.admin-color-dot.is-active {
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #17171A;
+    transform: scale(1.08);
+}
+
+.admin-color-group {
+    margin-bottom: 9px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(23, 23, 26, 0.08);
+}
+
+/* Pastel de la tarjeta: se calcula solo a partir del color elegido */
+.admin-claro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #2D2A26;
+}
+
+.admin-claro-swatch {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: 1px solid rgba(23, 23, 26, 0.14);
+}
+
+.admin-claro code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px;
+    color: #6B655E;
+}
+
+/* Estudio de Inicio, Video y Anuncios (Pestaña 4) */
+.admin-media-studio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 960px) {
+    .admin-media-studio-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-media-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.admin-media-input-row .admin-simple-input {
+    flex: 1 1 auto;
+}
+
+.admin-upload-btn {
+    cursor: pointer;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    height: 38px;
+}
+
+.admin-media-presets {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.admin-preset-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #55524E;
+}
+
+.admin-preset-chip {
+    border: 1px solid #D8D8DE;
+    background: #FFFFFF;
+    color: #2D2A26;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+.admin-preset-chip:hover {
+    background: #17171A;
+    color: #FFFFFF;
+    border-color: #17171A;
+}
+
+.admin-media-live-preview {
+    margin-top: 14px;
+    background: #FFFFFF;
+    border: 1px solid #E2E0DB;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.admin-media-preview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: #F4F3F0;
+    border-bottom: 1px solid #E5E3DE;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2D2A26;
+}
+
+.admin-media-preview-head small {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #15803D;
+    background: #E8F8F0;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.admin-media-preview-stage {
+    height: 210px;
+    background: #121215;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-media-preview-stage img,
+.admin-media-preview-stage video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.admin-media-preview-stage img[hidden],
+.admin-media-preview-stage video[hidden] {
+    display: none !important;
+}
