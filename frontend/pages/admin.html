@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Admin · YogurASO</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#C3343E">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../fonts/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/brand.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/admin-base.css">
+    <link rel="stylesheet" href="../css/admin-producto-modal.css">
+    <link rel="stylesheet" href="../css/admin-analitica.css">
+    <link rel="stylesheet" href="../css/admin-anuncios.css">
+    <link rel="stylesheet" href="../css/admin-tabs.css">
+    <link rel="stylesheet" href="../css/admin-estudio.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/motion.css">
+    <link rel="stylesheet" href="../css/brand-pages.css">
+    <link rel="stylesheet" href="../css/home-v3.css">
+    <link rel="stylesheet" href="../css/ysf-footer.css">
+    <link rel="stylesheet" href="../css/notice.css">
+    <link rel="stylesheet" href="../css/scale.css">
+</head>
+<body class="admin-page">
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <header class="site-header site-header--solid" id="siteHeader">
+        <a class="brand-logo" href="../index.html" id="brandLogoBtn" aria-label="YoguraSo, ir al inicio">
+            <span class="brand-badge-container">
+                <span class="brand-badge">
+                    <img class="logo-blanco" src="../assets/brand/logo-brand-official.png" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-oscuro" src="../assets/brand/logo-brand-official-dark.png" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-rojo" src="../assets/brand/logo-brand-official.png" alt="YoguraSo" width="3105" height="1119">
+                </span>
+                <span class="brand-pull-tab" aria-hidden="true">
+                    <svg class="pull-tab-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </span>
+            </span>
+        </a>
+        <nav class="nav" aria-label="Principal">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
+            <ul id="nav-items">
+                <li><a href="../index.html#productos">Sabores</a></li>
+                <li><a href="productos.html">Catálogo</a></li>
+                <li><a href="../index.html#nosotros">Nosotros</a></li>
+                <li><a href="../index.html#distribuidores">Distribuidores</a></li>
+                <li><a href="../index.html#preguntas">Preguntas</a></li>
+                <li><a href="../index.html#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+        <div class="icon-buttons">
+            <a class="icon-btn" href="productos.html#buscar" aria-label="Buscar sabores"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></a>
+            <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>
+                <span class="cart-badge" id="cart-count" hidden>0</span>
+            </button>
+            <a class="btn-header-register" id="accountBtn" href="registro.html" aria-label="Regístrate"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span>Regístrate</span></a>
+        </div>
+    </header>
+    <main id="main-content" class="container admin-panel">
+        <nav class="admin-subnav" aria-label="Secciones del panel de administración">
+            <button type="button" class="admin-subnav-btn is-on" data-tab="tab-inventario">
+                <i class="fas fa-boxes"></i> 1. Inventario & Alertas
+            </button>
+            <button type="button" class="admin-subnav-btn" data-tab="tab-usuarios">
+                <i class="fas fa-users"></i> 2. Usuarios & Métricas
+            </button>
+            <button type="button" class="admin-subnav-btn" data-tab="tab-preguntas">
+                <i class="fas fa-comments"></i> 3. Preguntas de Clientes
+                <span class="admin-chip" id="admin-pending-q-chip" style="font-size: 10px; padding: 2px 7px; margin-left: 4px; display: none; background: #17171A; color: #fff;">0</span>
+            </button>
+            <button type="button" class="admin-subnav-btn" data-tab="tab-anuncios">
+                <i class="fas fa-photo-video"></i> 4. Inicio, Video & Anuncios
+            </button>
+        </nav>
+        <div id="tab-inventario" class="admin-tab-pane is-active">
+            <section id="productos" class="admin-section" aria-label="Inventario de productos">
+                <div class="admin-header">
+                    <div>
+                        <h1>Inventario de Productos</h1>
+                        <p class="admin-subtitle" id="admin-inventory-line">Cargando catálogo…</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-export-csv" title="Exportar CSV"><i class="fas fa-file-csv"></i> Exportar</button>
+                        <button type="button" class="btn btn-primary" id="btn-nuevo-producto"><i class="fas fa-plus"></i> Nuevo yogur</button>
+                        <button type="button" class="btn btn-secondary" id="btn-logout">Cerrar sesión</button>
+                    </div>
+                </div>
+                <div class="admin-stats" id="admin-stats-bar">
+                    <div class="admin-stat"><span>Productos</span><strong id="stat-total">0</strong></div>
+                    <div class="admin-stat"><span>Activos</span><strong id="stat-activos">0</strong></div>
+                    <div class="admin-stat"><span>Stock total</span><strong id="stat-stock">0</strong></div>
+                    <div class="admin-stat"><span>Pedidos</span><strong id="stat-pedidos">0</strong></div>
+                    <div class="admin-stat"><span>Seleccionados</span><strong id="stat-selected">0</strong></div>
+                </div>
+                <div class="admin-toolbar admin-toolbar-pro">
+                    <input type="search" id="admin-search" placeholder="Buscar nombre, categoría o #id" class="admin-search-input">
+                    <select id="admin-filter-cat" class="admin-select" aria-label="Filtrar categoría">
+                        <option value="">Todas las categorías</option>
+                    </select>
+                    <select id="admin-filter-status" class="admin-select" aria-label="Filtrar estado">
+                        <option value="">Todos los estados</option>
+                        <option value="active">Solo activos</option>
+                        <option value="inactive">Solo inactivos</option>
+                    </select>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-bulk-deactivate" disabled>Desactivar selección</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-bulk-activate" disabled>Activar selección</button>
+                </div>
+                <div class="admin-sheet-wrap">
+                    <table class="admin-sheet" id="admin-productos-sheet">
+                        <thead>
+                            <tr>
+                                <th class="col-check"><input type="checkbox" id="admin-select-all" aria-label="Seleccionar todos"></th>
+                                <th class="sortable" data-sort="id">ID</th>
+                                <th class="sortable" data-sort="nombre">Producto</th>
+                                <th class="sortable" data-sort="categoria">Categoría</th>
+                                <th class="sortable" data-sort="precio">Precio</th>
+                                <th class="sortable" data-sort="stock">Stock</th>
+                                <th class="sortable" data-sort="activo">Estado</th>
+                                <th>Letrero</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-productos-lista"></tbody>
+                    </table>
+                </div>
+            </section>
+            <section id="alertas" class="admin-section admin-alerts-section" aria-label="Alertas de inventario y reabastecimiento" style="margin-top: 24px;">
+                <div class="admin-header">
+                    <div>
+                        <h2>Alertas de Stock y Reabastecimiento</h2>
+                        <p class="admin-subtitle" id="admin-alerts-subtitle">Control en tiempo real del stock por sabor conectado directamente al inventario de la tienda.</p>
+                    </div>
+                    <div class="admin-alerts-filter-wrap">
+                        <select id="admin-alerts-filter" class="admin-select" aria-label="Filtrar control de stock">
+                            <option value="all">Ver todos los sabores (Stock real)</option>
+                            <option value="low">Solo stock preventivo / crítico (≤ 20 und)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="admin-sheet-wrap">
+                    <table class="admin-sheet" id="admin-alerts-sheet">
+                        <thead>
+                            <tr>
+                                <th>Sabor / Producto</th>
+                                <th>Presentación</th>
+                                <th>Stock actual (Real)</th>
+                                <th>Estado de inventario</th>
+                                <th>Reabastecimiento rápido</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-alertas-lista">
+                            <tr>
+                                <td colspan="5" class="admin-sheet-empty">Sincronizando stock real de productos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div id="tab-usuarios" class="admin-tab-pane">
+            <section id="usuarios" class="admin-section admin-users-section" aria-label="Gestión de usuarios" style="margin-top: 24px;">
+                <div class="admin-header">
+                    <div>
+                        <h2>Usuarios Registrados</h2>
+                        <p class="admin-subtitle">Activa o pausa cuentas. Tu cuenta actual no se puede desactivar desde aquí.</p>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="btn-reload-users">Recargar</button>
+                </div>
+                <div class="admin-toolbar admin-toolbar-pro">
+                    <input type="search" id="admin-user-search" placeholder="Buscar usuario o email" class="admin-search-input">
+                </div>
+                <div class="admin-sheet-wrap">
+                    <table class="admin-sheet">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-usuarios-lista"></tbody>
+                    </table>
+                </div>
+            </section>
+            <div style="margin-top: 24px;">
+                <section id="analitica" class="admin-section admin-analytics-section" aria-label="Métricas y visitas" style="margin-top: 24px;">
+                    <div class="admin-header">
+                        <div>
+                            <h2>Visitas y Rendimiento de Tienda</h2>
+                            <p class="admin-subtitle">Métricas reales de visitantes, inspecciones en tarjetas de producto y pedidos por WhatsApp.</p>
+                        </div>
+                        <div class="admin-header-actions">
+                            <span class="admin-analytics-badge">Datos en tiempo real</span>
+                            <button type="button" class="btn btn-secondary" id="btn-reset-analytics" style="padding: 7px 12px; font-size: 12px; border-radius: 8px;">
+                                <i class="fas fa-undo"></i> Reiniciar métricas
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-stats admin-stats-analytics">
+                        <div class="admin-stat stat-glow">
+                            <span>Visitas a la web</span>
+                            <strong id="analytics-visitas">0</strong>
+                            <small class="stat-trend up" id="analytics-visitas-sub"><i class="fas fa-users"></i> Personas que ingresaron</small>
+                        </div>
+                        <div class="admin-stat">
+                            <span>Clics e inspecciones</span>
+                            <strong id="analytics-clicks">0</strong>
+                            <small class="stat-trend up"><i class="fas fa-mouse-pointer"></i> Interacciones con productos</small>
+                        </div>
+                        <div class="admin-stat">
+                            <span>Pedidos WhatsApp</span>
+                            <strong id="analytics-pedidos">0</strong>
+                            <small class="stat-trend neutral"><i class="fab fa-whatsapp"></i> Inicios de compra</small>
+                        </div>
+                        <div class="admin-stat">
+                            <span>Tasa de conversión</span>
+                            <strong id="analytics-conversion">0.0%</strong>
+                            <small class="stat-trend neutral">Visita a pedido</small>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="tab-preguntas" class="admin-tab-pane">
+            <section id="preguntas" class="admin-section" aria-label="Preguntas y respuestas a clientes">
+                <div class="admin-header">
+                    <div>
+                        <h1>Preguntas de Clientes</h1>
+                        <p class="admin-subtitle" id="admin-questions-subtitle">Responde las inquietudes que dejan los visitantes en la web para publicarlas oficialmente.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-reload-questions" title="Recargar"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                    </div>
+                </div>
+                <div class="admin-stats">
+                    <div class="admin-stat"><span>Total recibidas</span><strong id="stat-q-total">0</strong></div>
+                    <div class="admin-stat"><span>Pendientes</span><strong id="stat-q-pending" style="color: #D62300;">0</strong></div>
+                    <div class="admin-stat"><span>Respondidas</span><strong id="stat-q-answered" style="color: #2A9D60;">0</strong></div>
+                </div>
+                <div class="admin-toolbar admin-toolbar-pro">
+                    <input type="search" id="admin-q-search" placeholder="Buscar en preguntas o autor..." class="admin-search-input">
+                    <select id="admin-q-filter" class="admin-select" aria-label="Filtrar por estado">
+                        <option value="">Todas las preguntas</option>
+                        <option value="pending">Solo pendientes</option>
+                        <option value="approved">Solo respondidas</option>
+                    </select>
+                </div>
+                <div class="admin-questions-list" id="admin-questions-list">
+                </div>
+            </section>
+        </div>
+        <div id="tab-anuncios" class="admin-tab-pane">
+            <section class="admin-section" aria-label="Configuración de Inicio, Video y Anuncios">
+                <div class="admin-header">
+                    <div>
+                        <h1>Inicio, Video y Anuncios</h1>
+                        <p class="admin-subtitle">Personaliza la imagen o video de la pantalla principal y la ventana de bienvenida con sincronización inmediata.</p>
+                    </div>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-probar-letrero" title="Probar ventana emergente ahora"><i class="fas fa-eye"></i> Probar ventana</button>
+                        <a href="../index.html" target="_blank" class="btn btn-secondary" title="Ver en la tienda"><i class="fas fa-external-link-alt"></i> Ver tienda</a>
+                        <button type="button" class="btn btn-primary" id="btn-guardar-cfg-anuncios"><i class="fas fa-save"></i> Guardar y Sincronizar</button>
+                    </div>
+                </div>
+                <form id="form-cfg-anuncios" novalidate>
+                    <div class="admin-media-studio-grid">
+                        <div class="admin-simple-box">
+                            <div class="admin-simple-box-header">
+                                <label class="admin-switch-row">
+                                    <input type="checkbox" id="cfg-inicio-activo" checked>
+                                    <span class="admin-switch-title"><i class="fas fa-photo-video"></i> 1. Imagen o Video en la Pantalla Principal (Inicio)</span>
+                                </label>
+                                <span class="admin-simple-badge">Sección Inicio</span>
+                            </div>
+                            <p class="admin-simple-desc">Cambia la fotografía o coloca un video en la sección destacada de la página principal («Desde el campo · Neiva · Tello»).</p>
+                            <div class="admin-simple-grid">
+                                <div class="form-group">
+                                    <label for="cfg-inicio-tipo">Formato a mostrar en Inicio:</label>
+                                    <select id="cfg-inicio-tipo" class="admin-simple-input">
+                                        <option value="imagen">Imagen destacada</option>
+                                        <option value="video">Video en reproducción</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cfg-inicio-kicker">Subtítulo superior:</label>
+                                    <input type="text" id="cfg-inicio-kicker" class="admin-simple-input" value="Desde el campo · Neiva · Tello" placeholder="Desde el campo · Neiva · Tello">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label for="cfg-inicio-titulo">Título de la sección en Inicio:</label>
+                                <input type="text" id="cfg-inicio-titulo" class="admin-simple-input" value="Hecho con fruta real y leche fresca del Huila" placeholder="Título principal de la sección">
+                            </div>
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label for="cfg-inicio-texto">Texto descriptivo:</label>
+                                <textarea id="cfg-inicio-texto" rows="2" class="admin-simple-input" placeholder="Descripción corta...">Seleccionamos fruta madura de cosecha local y leche entera recién ordeñada para lograr una textura cremosa, sin conservantes artificiales.</textarea>
+                            </div>
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label for="cfg-inicio-url">Imagen o Video de Inicio (sube un archivo o pega un enlace):</label>
+                                <div class="admin-media-input-row">
+                                    <input type="text" id="cfg-inicio-url" class="admin-simple-input" value="assets/marketing/paisaje-campo-yoguraso.jpg" placeholder="Ruta o URL de imagen o video (.jpg, .png, .webp, .mp4)">
+                                    <label class="btn btn-secondary btn-sm admin-upload-btn">
+                                        <i class="fas fa-upload"></i> Subir archivo
+                                        <input type="file" id="cfg-inicio-file" accept="image/*,video/*" hidden>
+                                    </label>
+                                </div>
+                                <div class="admin-media-presets" id="cfg-inicio-presets">
+                                    <span class="admin-preset-label">Elegir rápido:</span>
+                                    <button type="button" class="admin-preset-chip" data-target="inicio" data-type="imagen" data-url="assets/marketing/paisaje-campo-yoguraso.jpg">Paisaje del Campo</button>
+                                    <button type="button" class="admin-preset-chip" data-target="inicio" data-type="imagen" data-url="assets/marketing/tazon-yogurt-fresa.jpg">Tazón Fresa</button>
+                                    <button type="button" class="admin-preset-chip" data-target="inicio" data-type="imagen" data-url="assets/marketing/pina-showcase.jpg">Cosecha Piña</button>
+                                    <button type="button" class="admin-preset-chip" data-target="inicio" data-type="video" data-url="assets/video/empaque-botella.mp4">Video Botella MP4</button>
+                                </div>
+                            </div>
+                            <div class="admin-media-live-preview" id="cfg-inicio-preview-box">
+                                <div class="admin-media-preview-head">
+                                    <span><i class="fas fa-desktop"></i> Vista previa en vivo (Sección de Inicio)</span>
+                                    <small id="cfg-inicio-status-badge">Sincronizado</small>
+                                </div>
+                                <div class="admin-media-preview-stage" id="cfg-inicio-preview-stage">
+                                    <img id="cfg-inicio-preview-img" src="../assets/marketing/paisaje-campo-yoguraso.jpg" alt="Vista previa de inicio">
+                                    <video id="cfg-inicio-preview-video" controls playsinline muted loop hidden></video>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-simple-box">
+                            <div class="admin-simple-box-header">
+                                <label class="admin-switch-row">
+                                    <input type="checkbox" id="cfg-letrero-activo" checked>
+                                    <span class="admin-switch-title"><i class="fas fa-window-maximize"></i> 2. Ventana de Bienvenida al Entrar (Imagen o Video)</span>
+                                </label>
+                                <span class="admin-simple-badge">Popup de Entrada</span>
+                            </div>
+                            <p class="admin-simple-desc">Es la ventana promocional que recibe al visitante con un video con audio o una imagen destacada.</p>
+                            <div class="admin-simple-grid">
+                                <div class="form-group">
+                                    <label for="cfg-letrero-tipo">Tipo de Contenido:</label>
+                                    <select id="cfg-letrero-tipo" class="admin-simple-input">
+                                        <option value="imagen">Imagen promocional</option>
+                                        <option value="video">Video (con audio)</option>
+                                        <option value="varias">Galería de sabores (carrusel)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cfg-letrero-tamano">Tamaño de la Ventana:</label>
+                                    <select id="cfg-letrero-tamano" class="admin-simple-input">
+                                        <option value="compacto">Compacto (440 px)</option>
+                                        <option value="mediano" selected>Mediano (580 px - recomendado)</option>
+                                        <option value="grande">Grande (720 px)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label for="cfg-letrero-titulo">Título de la Ventana:</label>
+                                <input type="text" id="cfg-letrero-titulo" class="admin-simple-input" placeholder="Ej: ¡Nuestra Cosecha & Pasión Artesanal!" value="Nuestra Cosecha & Pasión Artesanal">
+                            </div>
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label for="cfg-letrero-mensaje">Mensaje o Descripción breve:</label>
+                                <textarea id="cfg-letrero-mensaje" rows="2" class="admin-simple-input" placeholder="Explica la promoción o la historia del sabor...">Conoce cómo transformamos leche fresca de las granjas del Huila en un yogurt artesanal ultra cremoso.</textarea>
+                            </div>
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label for="cfg-letrero-url">Archivo de Imagen o Video (sube desde tu equipo o pega URL):</label>
+                                <div class="admin-media-input-row">
+                                    <input type="text" id="cfg-letrero-url" class="admin-simple-input" value="assets/marketing/tazon-yogurt-fresa.jpg" placeholder="Ruta o URL de imagen o video">
+                                    <label class="btn btn-secondary btn-sm admin-upload-btn">
+                                        <i class="fas fa-upload"></i> Subir archivo
+                                        <input type="file" id="cfg-letrero-file" accept="image/*,video/*" hidden>
+                                    </label>
+                                </div>
+                                <div class="admin-media-presets" id="cfg-letrero-presets">
+                                    <span class="admin-preset-label">Elegir rápido:</span>
+                                    <button type="button" class="admin-preset-chip" data-target="letrero" data-type="imagen" data-url="assets/marketing/tazon-yogurt-fresa.jpg">Imagen Tazón Fresa</button>
+                                    <button type="button" class="admin-preset-chip" data-target="letrero" data-type="imagen" data-url="assets/marketing/paisaje-campo-yoguraso.jpg">Imagen Paisaje Huila</button>
+                                    <button type="button" class="admin-preset-chip" data-target="letrero" data-type="video" data-url="assets/video/empaque-botella.mp4">Video Botella (MP4)</button>
+                                </div>
+                            </div>
+                            <div class="admin-simple-grid" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label for="cfg-letrero-btn-texto">Texto del Botón:</label>
+                                    <input type="text" id="cfg-letrero-btn-texto" class="admin-simple-input" value="Probar Sabores Artesanales">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cfg-letrero-btn-url">Enlace del Botón:</label>
+                                    <input type="text" id="cfg-letrero-btn-url" class="admin-simple-input" value="#productos">
+                                </div>
+                            </div>
+                            <div class="admin-media-live-preview" id="cfg-letrero-preview-box">
+                                <div class="admin-media-preview-head">
+                                    <span><i class="fas fa-window-restore"></i> Vista previa en vivo (Ventana de Entrada)</span>
+                                    <small id="cfg-letrero-status-badge">Listo</small>
+                                </div>
+                                <div class="admin-media-preview-stage" id="cfg-letrero-preview-stage">
+                                    <img id="cfg-letrero-preview-img" src="../assets/marketing/tazon-yogurt-fresa.jpg" alt="Vista previa del letrero">
+                                    <video id="cfg-letrero-preview-video" controls playsinline muted loop hidden></video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="submit" class="btn btn-primary" style="padding: 12px 26px; font-size: 14px;">
+                            <i class="fas fa-check-circle"></i> Guardar y Aplicar en la Pantalla Principal
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+    <div class="ysf-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path class="ysf-wave-path" d="M0,64 C160,128 320,8 520,62 C720,118 880,12 1100,68 C1260,114 1360,18 1440,54 L1440,120 L0,120 Z" />
+        </svg>
+    </div>
+    <footer class="ysf" data-ysf>
+        <div class="ysf-wrap">
+            <div class="ysf-grid">
+                <div class="ysf-brand ysf-rv">
+                    <a class="ysf-logo" href="../index.html"><img src="../assets/brand/logo-brand-official.png" alt="YogurASO, ir al inicio" width="3105" height="1119" loading="lazy" decoding="async"></a>
+                    <p class="ysf-lead" data-config="company-tagline">Yogurt artesanal elaborado a diario<br>en Tello y Neiva, Huila</p>
+                </div>
+                <nav class="ysf-col ysf-rv" aria-label="Navegación del pie de página">
+                    <h2 class="ysf-h">Navegación</h2>
+                    <ul class="ysf-list">
+                        <li><a class="ysf-link" href="../index.html">Inicio</a></li>
+                        <li><a class="ysf-link" href="productos.html">Productos</a></li>
+                        <li><a class="ysf-link" href="../index.html#nosotros">Nosotros</a></li>
+                        <li><a class="ysf-link" href="../index.html#distribuidores">Distribuidores</a></li>
+                    </ul>
+                </nav>
+                <nav class="ysf-col ysf-rv" aria-label="Cuenta">
+                    <h2 class="ysf-h">Cuenta</h2>
+                    <ul class="ysf-list" data-ysf-account>
+                        <li><a class="ysf-link" href="login.html">Iniciar sesión</a></li>
+                        <li><a class="ysf-link" href="registro.html">Registrarse</a></li>
+                        <li><a class="ysf-link" href="perfil.html">Mi perfil</a></li>
+                    </ul>
+                </nav>
+                <div class="ysf-col ysf-rv">
+                    <h2 class="ysf-h">Contacto</h2>
+                    <ul class="ysf-list">
+                        <li class="ysf-txt" data-config="company-location">Tello y Neiva, Huila</li>
+                        <li><a class="ysf-link" href="mailto:yogurasoweb@gmail.com" data-config="company-email">yogurasoweb@gmail.com</a></li>
+                        <li><a class="ysf-link" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero hacer un pedido (Neiva/Tello)" target="_blank" rel="noopener"><span class="ysf-sr">WhatsApp: </span><span data-config="whatsapp-display">+57 310 327 9958</span></a></li>
+                    </ul>
+                </div>
+                <ul class="ysf-social ysf-rv" aria-label="Redes sociales">
+                    <li><a class="ysf-soc" href="#" data-config="instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a></li>
+                    <li><a class="ysf-soc" href="#" data-config="facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a></li>
+                    <li><a class="ysf-soc" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero hacer un pedido (Neiva/Tello)" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a></li>
+                </ul>
+            </div>
+            <div class="ysf-bottom ysf-rv">
+                <nav class="ysf-legal" aria-label="Legal">
+                    <ul>
+                        <li><a class="ysf-link" href="privacidad.html">Datos personales</a></li>
+                        <li><a class="ysf-link" href="privacidad.html#cookies" data-open-cookies>Preferencias de cookies</a></li>
+                    </ul>
+                </nav>
+                <p class="ysf-copy">&copy; <span data-ysf-year>2026</span> <span data-config="company-name">YogurASO</span> &mdash; Mayoreo en Neiva y Tello, Huila.</p>
+            </div>
+        </div>
+    </footer>
+    <div id="modal-producto" class="modal admin-modal" aria-hidden="true">
+        <div class="modal-content admin-modal-content admin-modal-studio" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal-header">
+                <div>
+                    <span class="admin-eyebrow" id="modal-eyebrow">Edición de catálogo</span>
+                    <h2 id="modal-title">Editar producto</h2>
+                    <p class="admin-modal-hint" id="modal-hint">Ajusta los detalles, el color pastel y la presentación del yogur con vista previa en vivo.</p>
+                </div>
+                <button type="button" class="admin-modal-close" id="btn-cerrar-modal" aria-label="Cerrar">×</button>
+            </div>
+            <form id="form-producto" novalidate>
+                <input type="hidden" id="p-id">
+                <div class="admin-studio-grid">
+                    <aside class="admin-studio-aside">
+                        <div class="admin-live-card-container">
+                            <div class="admin-card-extracted-wrap" id="adminCardPreviewWrap">
+                                <article class="hp-card is-active" id="adminLiveCard" style="--producto-card-bg: #FFF8F4; --hp-c: #FFF8F4;">
+                                    <span class="hp-card__panel" aria-hidden="true"></span>
+                                    <div class="hp-card__media">
+                                        <span class="hp-card__floor"></span>
+                                        <img id="adminLiveBottle" src="../assets/products/yoguraso-fresa-500ml-sm.webp" alt="Vista previa del sabor" width="220" height="380">
+                                    </div>
+                                    <div class="hp-card__badges" id="adminLiveBadges">
+                                        <span class="hp-badge" id="adminLiveBadge" style="display: none;"></span>
+                                    </div>
+                                    <div class="hp-card__body">
+                                        <h3 class="hp-card__name" id="adminLiveTitle">Fresa Natural</h3>
+                                        <div class="hp-card__meta">
+                                            <span class="yg-size-selector" data-card-sizes role="radiogroup" aria-label="Presentación">
+                                                <button type="button" class="yg-size-btn is-active" id="preview-size-500">500 ml</button>
+                                                <button type="button" class="yg-size-btn" id="preview-size-1L">1 L</button>
+                                            </span>
+                                            <span id="adminLiveCat">Natural</span>
+                                        </div>
+                                        <p class="hp-card__price" id="adminLivePrice">
+                                            <span class="yg-price">$6.900</span>
+                                        </p>
+                                        <div class="hp-card__actions">
+                                            <button type="button" class="hp-add" tabindex="-1">Agregar al carrito</button>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="admin-color-studio-box" id="adminColorStudioBox">
+                                <div class="admin-color-group">
+                                    <div class="admin-color-header-row">
+                                        <label class="admin-color-studio-label">
+                                            <i class="fas fa-palette" id="adminColorDotIcon" style="color: #C3343E;" aria-hidden="true"></i> Color del Sabor
+                                        </label>
+                                        <span class="admin-color-name" id="adminDarkColorName">Fresa</span>
+                                    </div>
+                                    <p class="admin-color-helper-text">Elige un color y los tonos del fondo web y la tarjeta se sincronizan solos.</p>
+                                    <div class="admin-color-dots" id="adminPaletteDarkDots">
+                                        <button type="button" class="admin-color-dot is-active" data-color="#C3343E" data-name="Fresa" title="Fresa" style="background:#C3343E;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#82366B" data-name="Mora" title="Mora" style="background:#82366B;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#DD6827" data-name="Melocotón" title="Melocotón" style="background:#DD6827;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#B12C4E" data-name="Frutos Rojos" title="Frutos Rojos" style="background:#B12C4E;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#663E31" data-name="Café" title="Café" style="background:#663E31;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#488738" data-name="Guanábana" title="Guanábana" style="background:#488738;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#E4A30F" data-name="Piña" title="Piña" style="background:#E4A30F;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#ED8311" data-name="Mango" title="Mango" style="background:#ED8311;"></button>
+                                        <button type="button" class="admin-color-dot" data-color="#3F4E8C" data-name="Arándano" title="Arándano" style="background:#3F4E8C;"></button>
+                                    </div>
+                                    <div class="admin-color-picker-row">
+                                        <label for="p-color-dark" class="admin-color-picker-btn" title="Elegir cualquier color personalizado">
+                                            <input type="color" id="p-color-dark" value="#C3343E" aria-label="Elegir color del sabor">
+                                            <i class="fas fa-eye-dropper" aria-hidden="true"></i>
+                                            <span>Elegir color</span>
+                                        </label>
+                                        <input type="text" id="p-color-dark-text" maxlength="7" class="admin-color-hex-input" value="#C3343E" placeholder="#C3343E" aria-label="Código hexadecimal del color">
+                                    </div>
+                                </div>
+                                <div class="admin-claro">
+                                    <span class="admin-claro-swatch" id="adminColorClaro" style="background:#F4CBCF;"></span>
+                                    <span>Pastel de la tarjeta (automático) <code id="adminColorClaroHex">#F4CBCF</code></span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                    <div class="admin-studio-fields">
+                        <div class="form-row form-row-split">
+                            <div class="form-group">
+                                <label for="p-nombre">Nombre del producto *</label>
+                                <input type="text" id="p-nombre" required maxlength="100" placeholder="Ej: Fresa Artesanal" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="p-categoria">Categoría</label>
+                                <select id="p-categoria">
+                                    <option value="Frutales">Frutales</option>
+                                    <option value="Especiales">Especiales</option>
+                                    <option value="Clásicos">Clásicos</option>
+                                    <option value="natural">Natural</option>
+                                    <option value="frutas">Con Frutas</option>
+                                    <option value="griego">Griego</option>
+                                    <option value="sin_lactosa">Sin Lactosa</option>
+                                    <option value="leches">Leches</option>
+                                    <option value="quesos">Quesos</option>
+                                    <option value="kumis">Kumis</option>
+                                    <option value="arequipe">Arequipe</option>
+                                    <option value="suero">Suero Costeño</option>
+                                </select>
+                                <input type="hidden" id="p-activo" value="true">
+                            </div>
+                        </div>
+                        <div class="form-row form-row-3cols">
+                            <div class="form-group">
+                                <label for="p-precio">Precio 500 ml (COP) *</label>
+                                <input type="number" id="p-precio" min="0" step="100" required placeholder="6900">
+                            </div>
+                            <div class="form-group">
+                                <label for="p-precio-1l">Precio 1 Litro (COP)</label>
+                                <input type="number" id="p-precio-1l" min="0" step="100" placeholder="12500">
+                            </div>
+                            <div class="form-group">
+                                <label for="p-stock">Stock total (unidades) *</label>
+                                <input type="number" id="p-stock" min="0" step="1" required placeholder="50">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Imagen del producto (sube tu foto o elige una botella)</label>
+                            <div class="image-upload-area" id="image-upload-area">
+                                <div class="image-upload-placeholder" id="image-upload-placeholder">
+                                    <i class="fas fa-image" aria-hidden="true"></i>
+                                    <p>Arrastra una foto de la botella o <span>elige un archivo de tu equipo</span></p>
+                                    <small>Se comprime y sincroniza al instante con la tarjeta y toda la web</small>
+                                </div>
+                                <img id="image-preview" class="image-preview" src="" alt="Vista previa del producto" hidden>
+                                <button type="button" class="image-remove-btn" id="image-remove-btn" hidden>
+                                    <i class="fas fa-times" aria-hidden="true"></i> Quitar
+                                </button>
+                            </div>
+                            <input type="file" id="p-imagen-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+                            <input type="hidden" id="p-imagen">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-descripcion">Descripción y notas de sabor</label>
+                            <textarea id="p-descripcion" rows="2" maxlength="500" placeholder="Notas de sabor, proceso artesanal o características especiales..."></textarea>
+                        </div>
+                        <div class="admin-letrero-section">
+                            <div class="admin-section-header">
+                                <label class="admin-section-title"><i class="fas fa-tag" aria-hidden="true"></i> Etiqueta Promocional (Opcional)</label>
+                                <span class="admin-section-sub">Destaca el producto con una insignia visual o aplica un descuento.</span>
+                            </div>
+                            <div class="admin-badge-type-selector" id="adminBadgeTypePills" role="radiogroup" aria-label="Tipo de letrero">
+                                <button type="button" class="admin-type-pill is-active" data-type="">Sin etiqueta</button>
+                                <button type="button" class="admin-type-pill" data-type="nuevo">Nuevo</button>
+                                <button type="button" class="admin-type-pill" data-type="oferta">Oferta</button>
+                                <button type="button" class="admin-type-pill" data-type="descuento">Descuento (%)</button>
+                                <button type="button" class="admin-type-pill" data-type="personalizado">Personalizado</button>
+                            </div>
+                            <input type="hidden" id="p-letrero-tipo" value="">
+                            <div class="admin-badge-styling-row" id="adminBadgeStylingRow">
+                                <div class="admin-badge-style-group">
+                                    <span class="admin-style-sublabel">Forma:</span>
+                                    <div class="admin-shape-pills" id="adminShapePills">
+                                        <button type="button" class="shape-pill is-active" data-shape="pill" title="Píldora redondeada">Píldora</button>
+                                        <button type="button" class="shape-pill" data-shape="rounded" title="Etiqueta suave">Etiqueta</button>
+                                        <button type="button" class="shape-pill" data-shape="flag" title="Banderín">Banderín</button>
+                                    </div>
+                                    <input type="hidden" id="p-letrero-forma" value="pill">
+                                </div>
+                                <div class="admin-badge-style-group">
+                                    <span class="admin-style-sublabel">Color:</span>
+                                    <div class="admin-badge-colors" id="adminBadgeColors">
+                                        <button type="button" class="badge-color-dot is-active" data-color="#D62300" title="Rojo marca" style="background:#D62300;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#E68A00" title="Ámbar / Oferta" style="background:#E68A00;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#2A9D60" title="Verde fresco" style="background:#2A9D60;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#7B2CBF" title="Morado silvestre" style="background:#7B2CBF;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#1C1C20" title="Negro noche" style="background:#1C1C20;"></button>
+                                        <label class="badge-color-custom-btn" title="Color personalizado">
+                                            <input type="color" id="p-letrero-color-picker" value="#D62300" aria-label="Elegir color personalizado de etiqueta">
+                                            <i class="fas fa-eye-dropper" aria-hidden="true"></i>
+                                        </label>
+                                    </div>
+                                    <input type="hidden" id="p-color-acento" value="#D62300">
+                                </div>
+                            </div>
+                            <div class="form-group" id="adminLetreroTextWrap">
+                                <label for="p-letrero">Texto de la etiqueta</label>
+                                <input type="text" id="p-letrero" maxlength="24" placeholder="Ej: NUEVO, ¡OFERTA!, FAVORITO">
+                            </div>
+                            <div class="admin-discount-calculator-box" id="adminDiscountBox" hidden>
+                                <div class="admin-calc-header">
+                                    <span><i class="fas fa-percent" aria-hidden="true"></i> Configurar Descuento</span>
+                                    <small>Elige un porcentaje rápido o indica el precio final en promoción.</small>
+                                </div>
+                                <div class="admin-calc-grid">
+                                    <div class="calc-input-group">
+                                        <label for="p-descuento">Porcentaje de descuento</label>
+                                        <div class="calc-input-wrap">
+                                            <input type="number" id="p-descuento" min="0" max="80" step="1" value="0" placeholder="0">
+                                            <span class="calc-suffix">%</span>
+                                        </div>
+                                        <div class="calc-quick-pills">
+                                            <button type="button" class="quick-pct-btn" data-pct="10">10%</button>
+                                            <button type="button" class="quick-pct-btn" data-pct="15">15%</button>
+                                            <button type="button" class="quick-pct-btn" data-pct="20">20%</button>
+                                            <button type="button" class="quick-pct-btn" data-pct="30">30%</button>
+                                        </div>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label for="p-precio-final-input">Precio con descuento (500 ml)</label>
+                                        <div class="calc-input-wrap">
+                                            <input type="number" id="p-precio-final-input" min="0" step="100" placeholder="6900">
+                                            <span class="calc-suffix">$</span>
+                                        </div>
+                                        <span class="calc-hint">Ajuste automático</span>
+                                    </div>
+                                </div>
+                                <div class="admin-calc-summary" id="adminCalcSummary">
+                                    <div class="calc-sum-col">
+                                        <span>Precio normal</span>
+                                        <strong id="calcBasePrice">$0</strong>
+                                    </div>
+                                    <div class="calc-sum-col">
+                                        <span>Ahorro</span>
+                                        <strong id="calcSaveAmount" class="text-save">$0 (0%)</strong>
+                                    </div>
+                                    <div class="calc-sum-col is-total">
+                                        <span>Precio final</span>
+                                        <strong id="calcFinalPrice">$0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-cancelar-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-guardar-producto">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
+        <div class="cart-header">
+            <span>Bolsa</span>
+            <i class="fas fa-times" id="closeCart"></i>
+        </div>
+        <div class="cart-items" id="cart-sidebar-items">
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalAmount">$0</span>
+        </div>
+        <button type="button" class="btn-clear-cart" id="btn-clear-cart-sidebar" hidden>Vaciar carrito</button>
+        <button type="button" class="checkout-btn" id="checkoutBtn">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
+        </button>
+    </aside>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/flavors.js"></script>
+    <script src="../js/theme-reactor.js"></script>
+    <script src="../js/notice.js"></script>
+    <script src="../js/site-announcements.js"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/analytics.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
+    <script src="../js/ysf-footer.js" defer></script>
+</body>
+</html>
