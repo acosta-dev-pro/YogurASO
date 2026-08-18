@@ -1,0 +1,41 @@
+name: Publicar sitio en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: pages
+        uses: actions/configure-pages@v5
+      # Cache-busting: copia el sitio y añade ?v=<commit> a todos los JS/CSS (ver tools/stamp-version.js).
+      # Evita que celulares (iOS Safari) mezclen HTML nuevo con JS/CSS viejos en caché.
+      - name: Versionar archivos estaticos
+        run: |
+          cp -r frontend _site
+          node tools/stamp-version.js _site "${GITHUB_SHA::10}"
+      # SEO: pone el dominio real en sitemap, robots, canonical y Open Graph.
+      # Con dominio propio, crea la variable SITE_URL del repositorio (Settings > Variables > Actions).
+      - name: Dominio para buscadores
+        run: node tools/stamp-seo.js _site "${{ vars.SITE_URL || steps.pages.outputs.base_url }}"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
