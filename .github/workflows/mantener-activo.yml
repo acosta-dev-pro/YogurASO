@@ -1,0 +1,20 @@
+name: Mantener activo Supabase
+
+# El plan gratis de Supabase pausa el proyecto tras ~1 semana sin uso.
+# Este flujo hace una consulta de lectura dos veces por semana para que no se pause.
+# Usa solo la clave pública (publishable), la misma que ya está en frontend/js/supabase-client.js.
+
+on:
+  schedule:
+    - cron: '17 9 * * 1,4'   # lunes y jueves, 09:17 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consulta de lectura al catálogo
+        run: |
+          curl --fail --silent --show-error \
+            -H "apikey: sb_publishable_Te13tbZo0GYLIn54PnOEwA_sJ-XDBjl" \
+            "https://xrgpqdqayevzyjfolcfb.supabase.co/rest/v1/products?select=id&limit=1"
