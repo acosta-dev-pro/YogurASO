@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="YogurASO">
+  <rect width="64" height="64" rx="14" fill="#FA5053"/>
+  <circle cx="32" cy="28" r="14" fill="#fff8f4"/>
+  <path d="M18 46c4-8 24-8 28 0" fill="none" stroke="#fff8f4" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="26" cy="26" r="2.2" fill="#FA5053"/>
+  <circle cx="32" cy="24" r="2.2" fill="#FA5053"/>
+  <circle cx="38" cy="27" r="2.2" fill="#FA5053"/>
+</svg>
