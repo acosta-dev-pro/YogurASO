@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos personales · YogurASO</title>
+    <meta name="description" content="Cómo YogurASO trata los datos de cuenta, pedidos por WhatsApp y cookies técnicas.">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
+</head>
+<body>
+    <a class="skip-link" href="#texto">Saltar al texto</a>
+    <header>
+        <div class="logo">
+            <h2><a href="../index.html" style="color:inherit;text-decoration:none">YogurASO</a></h2>
+        </div>
+        <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
+            <ul id="nav-items">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="../index.html#contact">Contacto</a></li>
+            </ul>
+
+            <div class="icon-buttons">
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
+                </button>
+            </div>
+            
+            
+        </div>
+    </header>
+
+    <main id="texto" class="auth-container" style="max-width:720px;margin:120px auto 64px;padding:0 20px;">
+        <h1 style="font-size:28px;margin-bottom:12px;">Datos personales</h1>
+        <p style="color:#6b6278;line-height:1.6;margin-bottom:16px;">
+            YogurASO (Huila) usa tu información para crear la cuenta, mostrarte el catálogo
+            y armar el mensaje de WhatsApp cuando pides yogurt. No vendemos listas de clientes.
+        </p>
+        <h2 style="font-size:18px;margin:20px 0 8px;">Qué guardamos</h2>
+        <p style="color:#6b6278;line-height:1.6;">Nombre, correo, teléfono si lo escribes, y (si entras con Google) el id que manda Google. La clave se guarda cifrada. El carrito vive en este navegador (localStorage), no en el servidor.</p>
+        <h2 style="font-size:18px;margin:20px 0 8px;">WhatsApp</h2>
+        <p style="color:#6b6278;line-height:1.6;">Al pulsar comprar se abre WhatsApp con el resumen del pedido. A partir de ahí el chat es entre tú y el negocio; no hay pasarela de pago en esta web.</p>
+        <h2 style="font-size:18px;margin:20px 0 8px;">Cómo pedirnos borrar datos</h2>
+        <p style="color:#6b6278;line-height:1.6;">Escríbenos al correo o WhatsApp que aparecen en el pie de página. Un admin puede desactivar la cuenta desde el panel.</p>
+        <p style="margin-top:28px;"><a href="../index.html" style="color:#E08888;font-weight:700;">Volver al inicio</a></p>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/cart.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+</html>

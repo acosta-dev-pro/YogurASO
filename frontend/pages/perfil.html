@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil · YogurASO</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#E08888">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/profile-pro.css">
+</head>
+<body class="profile-page">
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <header>
+        <div class="logo"><h2>YogurASO</h2></div>
+        <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
+            <ul id="nav-items">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="../index.html#contact">Contacto</a></li>
+            </ul>
+
+            <div class="icon-buttons">
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="profile-shell">
+        <section class="profile-hero" aria-label="Resumen de cuenta">
+            <div class="profile-hero-avatar" aria-hidden="true"><i class="fas fa-user"></i></div>
+            <div class="profile-hero-text">
+                <h1 id="profile-hero-name">Mi cuenta</h1>
+                <div class="profile-hero-meta">
+                    <span class="profile-hero-email" id="profile-hero-email">—</span>
+                    <span class="profile-badge" id="profile-provider-badge">—</span>
+                </div>
+            </div>
+            <button type="button" class="profile-btn-outline" id="btn-logout">Cerrar sesión</button>
+        </section>
+
+        <aside class="profile-admin-card" id="profile-admin-card" hidden>
+            <div class="profile-admin-card-text">
+                <strong>Panel de administración</strong>
+                <p>Gestiona inventario, usuarios y el catálogo de YogurASO.</p>
+            </div>
+            <a class="profile-btn" id="profile-admin-link" href="admin.html">
+                <i class="fas fa-user-shield" aria-hidden="true"></i>
+                Ir al panel admin
+            </a>
+        </aside>
+
+        <nav class="profile-tabs" aria-label="Secciones del perfil">
+            <button type="button" class="profile-tab is-active" data-tab="datos">Mis datos</button>
+            <button type="button" class="profile-tab" data-tab="seguridad">Seguridad</button>
+            <button type="button" class="profile-tab" data-tab="pedidos">Pedidos</button>
+        </nav>
+
+        <!-- DATOS -->
+        <section id="tab-datos" class="profile-pane is-active">
+            <div class="profile-grid">
+                <article class="profile-box">
+                    <div class="profile-box-head">
+                        <h2>Información actual</h2>
+                    </div>
+                    <dl class="profile-fields">
+                        <div><dt>Nombre</dt><dd id="view-nombre">—</dd></div>
+                        <div><dt>Apellido</dt><dd id="view-apellido">—</dd></div>
+                        <div><dt>Correo</dt><dd id="view-email">—</dd></div>
+                        <div><dt>Teléfono</dt><dd id="view-telefono">—</dd></div>
+                        <div><dt>Rol</dt><dd id="view-rol">—</dd></div>
+                    </dl>
+                </article>
+
+                <article class="profile-box profile-box-edit">
+                    <div class="profile-box-head">
+                        <h2>Editar datos</h2>
+                    </div>
+                    <p class="profile-hint">Los cambios se guardan en tu cuenta al pulsar Guardar.</p>
+                    <form class="profile-form" id="profileForm">
+                        <div class="profile-form-row">
+                            <label for="perfil-nombre">Nombre</label>
+                            <input type="text" id="perfil-nombre" required>
+                        </div>
+                        <div class="profile-form-row">
+                            <label for="perfil-apellido">Apellido</label>
+                            <input type="text" id="perfil-apellido">
+                        </div>
+                        <div class="profile-form-row">
+                            <label for="perfil-email">Correo</label>
+                            <input type="email" id="perfil-email" disabled>
+                        </div>
+                        <div class="profile-form-row">
+                            <label for="perfil-telefono">Teléfono</label>
+                            <input type="tel" id="perfil-telefono" placeholder="Ej: 300 123 4567">
+                        </div>
+                        <button type="submit" class="profile-btn">Guardar cambios</button>
+                    </form>
+                </article>
+            </div>
+        </section>
+
+        <!-- SEGURIDAD -->
+        <section id="tab-seguridad" class="profile-pane">
+            <article class="profile-box">
+                <h2>Cambiar contraseña</h2>
+                <p class="profile-hint">Te enviamos un código de 6 dígitos a <strong id="security-email-hint">tu correo registrado</strong>.</p>
+
+                <div class="profile-steps">
+                    <div class="profile-step">
+                        <span class="profile-step-num">1</span>
+                        <div>
+                            <p>Solicita el código</p>
+                            <button type="button" class="profile-btn profile-btn-outline" id="btn-enviar-codigo">
+                                <i class="fas fa-envelope"></i> Enviar código al correo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="profile-step">
+                        <span class="profile-step-num">2</span>
+                        <div>
+                            <p>Ingresa el código y tu nueva clave</p>
+                            <form class="profile-form" id="passwordForm">
+                                <div class="profile-form-row">
+                                    <label for="password-codigo">Código (6 dígitos)</label>
+                                    <input type="text" id="password-codigo" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code">
+                                </div>
+                                <div class="profile-form-row">
+                                    <label for="password-nueva">Nueva contraseña</label>
+                                    <input type="password" id="password-nueva" minlength="8" autocomplete="new-password">
+                                </div>
+                                <div class="profile-form-row">
+                                    <label for="password-confirm">Confirmar contraseña</label>
+                                    <input type="password" id="password-confirm" minlength="8" autocomplete="new-password">
+                                </div>
+                                <button type="submit" class="profile-btn">Cambiar contraseña</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <details class="profile-advanced">
+                    <summary>Cambiar con contraseña actual (opcional)</summary>
+                    <form class="profile-form" id="passwordLegacyForm">
+                        <div class="profile-form-row">
+                            <label for="password-actual">Contraseña actual</label>
+                            <input type="password" id="password-actual" autocomplete="current-password">
+                        </div>
+                        <div class="profile-form-row">
+                            <label for="password-nueva-legacy">Nueva contraseña</label>
+                            <input type="password" id="password-nueva-legacy" minlength="8" autocomplete="new-password">
+                        </div>
+                        <button type="submit" class="profile-btn profile-btn-outline">Actualizar con clave actual</button>
+                    </form>
+                </details>
+            </article>
+        </section>
+
+        <!-- PEDIDOS -->
+        <section id="tab-pedidos" class="profile-pane">
+            <article class="profile-box">
+                <h2>Compras anteriores</h2>
+                <p class="profile-hint">Pedidos enviados por WhatsApp desde este dispositivo.</p>
+                <div id="profile-orders-list"></div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">YogurASO</span>
+                <p>Yogurt artesanal elaborado a diario<br>con ingredientes frescos y cultivos vivos.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="carrito.html">Mi carrito</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Cuenta</h4>
+                <ul>
+                    <li><a href="perfil.html" aria-current="page">Mi perfil</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <ul>
+                    <li><i class="fas fa-envelope" aria-hidden="true"></i> hola@yoguraso.co</li>
+                    <li><i class="fab fa-whatsapp" aria-hidden="true"></i> +57 300 123 4567</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 YogurASO &mdash; Todos los derechos reservados.</span>
+        </div>
+    </footer>
+    <div class="overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
+        <div class="cart-header">
+            <span>Bolsa</span>
+            <i class="fas fa-times" id="closeCart"></i>
+        </div>
+        <div class="cart-items" id="cart-sidebar-items">
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
+        </div>
+        <div class="cart-total">
+            <span>Total:</span>
+            <span id="cartTotalAmount">$0</span>
+        </div>
+        <button type="button" class="btn-clear-cart" id="btn-clear-cart-sidebar" hidden>Vaciar carrito</button>
+        <button type="button" class="checkout-btn" id="checkoutBtn">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
+        </button>
+    </aside>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/cart.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+</html>

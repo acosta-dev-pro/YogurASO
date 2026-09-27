@@ -1,0 +1,107 @@
+/* cards-home.css — tarjetas de la página de inicio
+   - .beneficio-card  → “100% Natural”, “Calidad Premium”, etc.
+   - .beneficios-metricas → Mayoreo / 24h / 100%
+   - .pastel-card     → Mayoreo, Neiva, Tello, Pedido fácil
+   El HTML está en index.html (secciones #beneficios y #cobertura). */
+
+.beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 5%;
+    flex-wrap: unset;
+}
+
+.beneficios-grid .beneficio-card {
+    flex: unset;
+    max-width: none;
+    min-height: 160px;
+    border-radius: 22px;
+    padding: 22px 18px;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--text-main) !important;
+    text-align: left;
+}
+
+.beneficios-grid .beneficio-card.pastel-rosa { background: var(--pastel-rosa) !important; }
+.beneficios-grid .beneficio-card.pastel-amarillo { background: var(--pastel-amarillo) !important; }
+.beneficios-grid .beneficio-card.pastel-naranja { background: var(--pastel-naranja) !important; }
+
+.beneficios-grid .beneficio-card h3,
+.beneficios-grid .beneficio-card p {
+    color: var(--text-main) !important;
+}
+
+.beneficios-grid .beneficio-card p {
+    color: rgba(31, 22, 48, 0.78) !important;
+}
+
+.beneficios-grid .beneficio-icono {
+    color: var(--brand-main) !important;
+    font-size: 22px !important;
+    margin-bottom: 10px !important;
+}
+
+.beneficios-metricas {
+    max-width: 1100px;
+    padding: 0 5%;
+    gap: 14px;
+}
+
+.beneficios-metricas div {
+    border-radius: 22px;
+    padding: 22px 18px;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none;
+}
+
+.beneficios-metricas .pastel-morado { background: var(--pastel-morado) !important; }
+.beneficios-metricas .pastel-crema { background: var(--pastel-crema) !important; }
+.beneficios-metricas .pastel-rosa { background: var(--pastel-rosa) !important; }
+
+.beneficios-metricas strong {
+    color: var(--text-main) !important;
+}
+
+.beneficios-metricas span {
+    color: rgba(31, 22, 48, 0.78) !important;
+    -webkit-text-fill-color: rgba(31, 22, 48, 0.78);
+}
+
+.pastel-card {
+    border-radius: 22px;
+    padding: 22px 18px;
+    border: none;
+    box-shadow: none;
+    min-height: 160px;
+}
+
+.pastel-card h3 {
+    font-family: var(--font-brand);
+    font-size: 18px;
+    margin: 0 0 8px;
+    color: var(--text-main);
+}
+
+.pastel-card p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(31, 22, 48, 0.78);
+}
+
+@media screen and (max-width: 900px) {
+    .beneficios-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .beneficios-grid {
+        grid-template-columns: 1fr;
+    }
+}

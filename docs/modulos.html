@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Módulos del sistema YogurASO</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 2cm 2.2cm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.55;
+      color: #1a1a1a;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 20pt;
+      text-align: center;
+      margin: 0 0 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #222;
+      color: #111;
+    }
+    h2 {
+      font-size: 14pt;
+      margin: 28px 0 12px;
+      color: #111;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 12pt;
+      margin: 18px 0 10px;
+      color: #222;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 0 0 10px;
+      text-align: justify;
+    }
+    ul {
+      margin: 8px 0 12px;
+      padding-left: 0;
+      list-style: none;
+    }
+    li {
+      margin-bottom: 16px;
+      page-break-inside: avoid;
+    }
+    li .titulo {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11.5pt;
+    }
+    code, .path {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 10pt;
+      background: #f3f3f3;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 28px 0;
+    }
+    .intro {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Módulos del sistema YogurASO</h1>
+
+  <h2>1. Frontend (HTML, CSS y JavaScript)</h2>
+  <p class="intro">
+    El frontend es la parte visible de la aplicación: lo que el usuario ve e interactúa en el navegador.
+    En YogurASO se implementa con HTML5, CSS3 y JavaScript vanilla (sin React ni frameworks).
+    Todo el código de esta capa se encuentra dentro de la carpeta <span class="path">frontend/</span>
+    y se comunica con el backend mediante peticiones HTTP.
+  </p>
+
+  <h3>Módulos del frontend:</h3>
+  <ul>
+    <li>
+      <span class="titulo">Páginas e interfaz</span>
+      Son las vistas del sitio: cada archivo HTML corresponde a una pantalla con la que el usuario navega, compra o administra.
+      La navegación entre pantallas se hace con enlaces HTML normales.
+      La página de inicio está en <span class="path">frontend/index.html</span>.
+      El catálogo vive en <span class="path">frontend/pages/productos.html</span>,
+      el carrito en <span class="path">frontend/pages/carrito.html</span>,
+      el login en <span class="path">frontend/pages/login.html</span>,
+      el registro en <span class="path">frontend/pages/registro.html</span>
+      y el panel de administración en <span class="path">frontend/pages/admin.html</span>.
+      También existe <span class="path">frontend/404.html</span> para páginas no encontradas.
+      Los estilos visuales del sitio están centralizados en <span class="path">frontend/css/styles.css</span>,
+      y las imágenes de productos y marca se guardan en <span class="path">frontend/assets/img/</span>.
+    </li>
+    <li>
+      <span class="titulo">Gestión de estado</span>
+      En YogurASO no se usan librerías como Redux ni Context API. El estado se maneja con JavaScript y el
+      almacenamiento del navegador (<span class="path">localStorage</span>), para que la aplicación recuerde
+      al usuario y sus productos aunque recargue la página.
+      La lógica del carrito (agregar, quitar y calcular totales) está en <span class="path">frontend/js/cart.js</span>,
+      y su representación en pantalla se controla desde <span class="path">frontend/js/cart_view.js</span>.
+      La sesión del usuario autenticado, el login, el registro y el guardado del token JWT se gestionan en
+      <span class="path">frontend/js/auth.js</span>.
+      El estado y las acciones del panel administrador están en <span class="path">frontend/js/admin.js</span>.
+      La lógica general de la página de inicio se encuentra en <span class="path">frontend/js/main.js</span>,
+      y las funciones auxiliares compartidas entre varios módulos están en <span class="path">frontend/js/utils.js</span>.
+    </li>
+    <li>
+      <span class="titulo">Conexión con el backend</span>
+      Se realiza con la API <span class="path">fetch</span> del navegador. Todas las llamadas al servidor
+      (productos, autenticación y subida de imágenes) pasan por el cliente HTTP ubicado en
+      <span class="path">frontend/js/api.js</span>.
+      La URL del API, el número de WhatsApp, las redes sociales y el nombre de la marca se configuran en un
+      solo archivo: <span class="path">frontend/js/config.js</span>. De este modo, el frontend y el backend
+      pueden correr por separado y solo hace falta cambiar esa configuración al publicar el sitio.
+    </li>
+  </ul>
+
+  <hr />
+
+  <h2>2. Backend (Node.js + Express)</h2>
+  <p class="intro">
+    El backend es la capa del servidor: recibe peticiones del frontend, aplica reglas de negocio, consulta
+    la base de datos y responde con JSON. En YogurASO se construye con Node.js y Express, y se organiza por
+    capas para mantener el código ordenado y fácil de mantener.
+    El punto de entrada del servidor es <span class="path">backend/server.js</span>. Ahí se montan CORS,
+    el parseo de JSON, el rate limit, la subida de imágenes con Multer y las rutas principales
+    <span class="path">/api/auth</span> y <span class="path">/api/products</span>.
+    Las imágenes subidas por el administrador se almacenan en la carpeta <span class="path">backend/uploads/</span>.
+  </p>
+
+  <h3>Módulos del backend:</h3>
+  <ul>
+    <li>
+      <span class="titulo">Rutas (routes)</span>
+      Definen las entradas del sistema, es decir, las URLs que el cliente puede llamar. Cada ruta indica el
+      método HTTP (GET, POST, PUT, DELETE), qué middlewares aplicar y a qué controlador enviar la solicitud.
+      Las rutas de autenticación están en <span class="path">backend/src/routes/authRoutes.js</span> y exponen:
+      <span class="path">POST /api/auth/login</span>, <span class="path">POST /api/auth/registro</span> y
+      <span class="path">GET /api/auth/perfil</span>.
+      Las rutas de productos están en <span class="path">backend/src/routes/productRoutes.js</span> y exponen:
+      listar y crear en <span class="path">/api/products</span>, y obtener, actualizar o eliminar un producto en
+      <span class="path">/api/products/:id</span>.
+      Ambas se registran desde <span class="path">backend/server.js</span>, que es quien las conecta a la aplicación Express.
+    </li>
+    <li>
+      <span class="titulo">Controladores (controllers)</span>
+      Procesan las solicitudes entrantes, ejecutan la lógica de negocio y devuelven respuestas al cliente.
+      El controlador no define la URL: solo decide qué hacer cuando llega una petición.
+      El archivo <span class="path">backend/src/controllers/authController.js</span> se encarga del login,
+      el registro y la consulta del perfil, usando JWT y bcrypt para autenticar de forma segura.
+      El archivo <span class="path">backend/src/controllers/productController.js</span> se encarga de listar,
+      crear, actualizar y eliminar productos del catálogo.
+    </li>
+    <li>
+      <span class="titulo">Middlewares</span>
+      Son funciones intermedias que se ejecutan antes del controlador. Se usan para validación, autenticación,
+      autorización y protección del servidor.
+      En <span class="path">backend/src/middleware/verifyToken.js</span> están las funciones
+      <span class="path">verificarToken</span> (exige un JWT válido),
+      <span class="path">verificarAdmin</span> (exige rol de administrador) y
+      <span class="path">optionalAuth</span> (lee el token si viene, sin obligarlo).
+      En <span class="path">backend/src/middleware/rateLimit.js</span> se limita la cantidad de peticiones
+      que un cliente puede hacer en un tiempo determinado, para evitar abusos.
+    </li>
+    <li>
+      <span class="titulo">Modelos / datos</span>
+      Representan las estructuras de datos en la base de datos y cómo interactuar con ellas. En este proyecto
+      no hay una carpeta <span class="path">models</span> ni un ORM como Sequelize: los controladores consultan
+      PostgreSQL directamente con SQL mediante el cliente <span class="path">pg</span>.
+      La definición de tablas (usuarios, productos y demás relaciones) está en
+      <span class="path">database/schema.sql</span>. Ese archivo es la referencia de cómo están organizados
+      los datos que el backend lee y escribe.
+    </li>
+    <li>
+      <span class="titulo">Conexión con la base de datos</span>
+      Es la configuración y el manejo de consultas hacia PostgreSQL.
+      El pool de conexiones se crea en <span class="path">backend/src/config/db.js</span> usando la librería
+      <span class="path">pg</span>. Las credenciales no van escritas en el código: se leen desde
+      <span class="path">backend/.env</span> (variables como <span class="path">DB_HOST</span>,
+      <span class="path">DB_USER</span>, <span class="path">DB_PASSWORD</span>,
+      <span class="path">DB_NAME</span> y <span class="path">DB_PORT</span>).
+      Como plantilla para configurar el entorno existe <span class="path">backend/.env.example</span>,
+      que indica qué variables hacen falta sin exponer secretos reales. Todas las consultas del backend
+      pasan por esta conexión de forma centralizada.
+    </li>
+  </ul>
+</body>
+</html>

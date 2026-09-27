@@ -1,21 +1,26 @@
 ﻿/**
  * db.js — Conexión a PostgreSQL (pool)
- * Credenciales obligatorias desde .env (sin passwords hardcodeados).
+ * Credenciales desde backend/.env
  */
+const path = require('path');
 const { Pool } = require('pg');
-require('dotenv').config();
 
-const required = ['DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD'];
-const missing = required.filter((key) => !process.env[key]);
-if (missing.length) {
-    throw new Error(`Faltan variables de entorno de base de datos: ${missing.join(', ')}`);
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
+
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+const dbName = process.env.DB_NAME;
+const dbHost = process.env.DB_HOST || 'localhost';
+
+if (!dbUser || !dbPassword || !dbName) {
+    throw new Error('Faltan DB_USER / DB_PASSWORD / DB_NAME en backend/.env');
 }
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
+    user: dbUser,
+    host: dbHost,
+    database: dbName,
+    password: dbPassword,
     port: Number(process.env.DB_PORT || 5432),
 });
 

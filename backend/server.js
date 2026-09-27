@@ -2,21 +2,22 @@
  * server.js — Punto de entrada del backend YogurASO (Express)
  * -----------------------------------------------------------
  * Aquí se montan:
- *  - CORS, JSON, rate limit
+ *  - Helmet, CORS, JSON, rate limit
  *  - Upload de imágenes (solo admin)
- *  - Rutas /api/auth y /api/products
+ *  - Rutas /api/auth, /api/products y /api/users
  *  - Archivos estáticos de /uploads
  *
  * Frontend y backend corren por separado.
  */
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const requiredEnv = ['JWT_SECRET', 'DB_USER', 'DB_PASSWORD', 'DB_NAME', 'DB_HOST'];
 const missingEnv = requiredEnv.filter((key) => !process.env[key]);
@@ -28,6 +29,7 @@ if (missingEnv.length) {
 const db = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
 const productRoutes = require('./src/routes/productRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 const { verificarToken, verificarAdmin } = require('./src/middleware/verifyToken');
 const { createRateLimiter } = require('./src/middleware/rateLimit');
 
@@ -64,13 +66,19 @@ const upload = multer({
 const authLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 30, message: 'Demasiados intentos. Intenta de nuevo más tarde.' });
 const uploadLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 40, message: 'Demasiadas subidas. Intenta de nuevo más tarde.' });
 
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    // CSP apagada: el front carga Font Awesome, Google Fonts y el botón de Google
+    contentSecurityPolicy: false
+}));
 app.use(cors({
     origin(origin, callback) {
         if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
-        // Desarrollo local: cualquier puerto en localhost / 127.0.0.1
-        if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+        const enLocal = process.env.NODE_ENV !== 'production'
+            && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+        if (enLocal) {
             return callback(null, true);
         }
         return callback(new Error('Origen no permitido por CORS'));
@@ -89,7 +97,7 @@ app.get('/api/health', async (_req, res) => {
         const result = await db.query('SELECT NOW() as server_time');
         res.json({ success: true, database: 'connected', time: result.rows[0].server_time });
     } catch (error) {
-        res.status(500).json({ success: false, database: 'disconnected', error: error.message });
+        res.status(500).json({ success: false, database: 'disconnected' });
     }
 });
 
@@ -119,6 +127,7 @@ app.post(
 
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
 
 app.use((err, _req, res, _next) => {
     if (err && err.message === 'Origen no permitido por CORS') {
@@ -140,6 +149,9 @@ app.listen(PORT, '0.0.0.0', () => {
     try {
         await db.query('SELECT NOW()');
         console.log('Conectado a PostgreSQL');
+        await db.query('ALTER TABLE productos ADD COLUMN IF NOT EXISTS letrero VARCHAR(40)');
+        await db.query('ALTER TABLE productos ADD COLUMN IF NOT EXISTS letrero_tipo VARCHAR(20)');
+        await db.query('ALTER TABLE productos ADD COLUMN IF NOT EXISTS descuento INTEGER DEFAULT 0');
         const count = await db.query('SELECT COUNT(*) FROM productos');
         console.log('Total productos en BD:', count.rows[0].count);
     } catch (error) {

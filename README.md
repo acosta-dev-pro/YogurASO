@@ -1,41 +1,57 @@
 # YogurASO
 
-Tienda web de yogurt artesanal. Catálogo, carrito local, autenticación JWT, panel administrador y checkout por WhatsApp.
+Sitio de yogurt artesanal (Huila). Catálogo, carrito en el navegador, cuentas con JWT y panel admin. El pedido se manda por WhatsApp; no hay caja de pagos ni pedidos guardados en la API.
 
-## Tecnologías
+---
 
-- Frontend: HTML5, CSS3, JavaScript (Vanilla)
-- Backend: Node.js + Express
-- Base de datos: PostgreSQL
-- Auth: JWT + bcrypt
-- Imágenes: Multer
+## Qué hay adentro
 
-## Estructura
+| Capa | Tecnología |
+|------|------------|
+| Front | HTML, CSS, JavaScript (sin framework) |
+| API | Node.js + Express |
+| Base de datos | PostgreSQL |
+| Auth | JWT, bcrypt, Google opcional |
+| Imágenes | Multer → `backend/uploads` |
+
+---
+
+## Mapa del repo
 
 ```
 YOGURASO-WEB/
-├── frontend/           # Sitio estático
+├── frontend/
 │   ├── index.html
-│   ├── 404.html
-│   ├── robots.txt
-│   ├── sitemap.xml
-│   ├── pages/          # productos, carrito, login, registro, admin
-│   ├── js/             # config, utils, cart, auth, admin, api
+│   ├── pages/                  productos, carrito, login, registro, perfil, admin, privacidad
 │   ├── css/
+│   │   ├── styles.css          layout, header desktop, footer, hero
+│   │   ├── header.css          menú de tres rayas (celular)
+│   │   ├── cards-home.css      cards de beneficios / pasteles
+│   │   ├── cards-productos.css card del catálogo
+│   │   ├── shop-ui.css         tienda, login, toasts
+│   │   └── admin-theme.css     panel
+│   ├── js/
+│   │   ├── config.js           WhatsApp, URL del API, redes
+│   │   ├── nav.js              abre/cierra el menú
+│   │   ├── api.js              llamadas HTTP
+│   │   ├── auth.js             sesión y formularios
+│   │   ├── cart.js             carrito y mensaje de WhatsApp
+│   │   ├── main.js             arma el HTML de cada producto
+│   │   └── admin.js            CRUD
 │   └── assets/
-├── backend/            # API Express
+├── backend/
 │   ├── server.js
 │   ├── .env.example
 │   └── src/
-└── database/
-    └── schema.sql
+├── database/                   schema.sql y scripts
+└── tests/                      Playwright
 ```
 
-## Instalación
+---
+
+## Arranque en local
 
 ### 1. Base de datos
-
-Crea la base en PostgreSQL y ejecuta el schema:
 
 ```bash
 psql -U postgres -c "CREATE DATABASE yoguraso_db;"
@@ -46,74 +62,89 @@ psql -U postgres -d yoguraso_db -f database/schema.sql
 
 ```bash
 cd backend
-cp .env.example .env
-# Edita .env con tus credenciales
+copy .env.example .env
 npm install
 npm run dev
 ```
 
-La API queda en `http://localhost:3000`.
+API: `http://localhost:3000` — health: `http://localhost:3000/api/health`
 
 ### 3. Frontend
 
-Abre la carpeta `frontend/` con Live Server (o cualquier servidor estático).
+Abre `frontend/` con Live Server (o `npx serve frontend`).
 
-> El frontend y el backend corren por separado.
+En `frontend/js/config.js`, `API_URL` debe coincidir con ese puerto.
 
-## Variables de entorno (`backend/.env`)
+---
 
-| Variable | Descripción |
-|----------|-------------|
-| `PORT` | Puerto del API (default 3000) |
-| `DB_USER` | Usuario PostgreSQL |
-| `DB_PASSWORD` | Contraseña PostgreSQL |
-| `DB_NAME` | Nombre de la base |
-| `DB_HOST` | Host (localhost) |
-| `DB_PORT` | Puerto DB (5432) |
-| `JWT_SECRET` | Secreto para firmar tokens |
-| `PUBLIC_BASE_URL` | URL pública para imágenes (opcional) |
-| `CORS_ORIGINS` | Orígenes permitidos (opcional) |
+## Dónde se configura
 
-## Configuración del frontend
+**`frontend/js/config.js`** — WhatsApp, API, `SITE_URL`, Google, redes.
 
-Edita solo `frontend/js/config.js`:
+**`backend/.env`** — Postgres, `JWT_SECRET`, `CORS_ORIGINS`, `FRONTEND_URL`, SMTP, `GOOGLE_CLIENT_ID`.
 
-- `WHATSAPP_NUMBER`
-- `COMPANY_NAME`
-- `COMPANY_EMAIL`
-- `INSTAGRAM` / `FACEBOOK`
-- `API_URL`
+Admin de ejemplo (cámbialo antes de publicar):
 
-## Usuario administrador
-
-- Email: `admin@yoguraso.com`
-- Contraseña temporal: `password`
-
-Cámbiala antes de cualquier entorno real.
-
-## Flujo de compra
-
-1. Explorar catálogo  
-2. Agregar al carrito  
-3. Ajustar cantidades  
-4. **Comprar por WhatsApp**  
-5. Continuar la venta por chat  
-
-No hay pasarela de pagos ni pedidos internos.
-
-## Scripts
+- correo: `admin@yoguraso.com`
+- clave: `password`
 
 ```bash
-# Backend
-cd backend
-npm run dev    # desarrollo con nodemon
-npm start      # producción
+node database/generar_hash_password.js "TuClaveNueva"
 ```
 
-## Capturas
+---
 
-Agrega aquí capturas del home, catálogo, carrito y panel admin cuando las tengas listas.
+## Cómo se compra hoy
 
-## Licencia
+1. El usuario arma el carrito (`localStorage`).
+2. Pulsa comprar y se abre WhatsApp con el resumen.
+3. Ustedes cierran la venta en el chat.
 
-Proyecto educativo / portafolio. Uso libre con atribución a YogurASO.
+No hay pedidos en PostgreSQL conectados a esta app.
+
+---
+
+## Cuentas
+
+Login, registro, Google, recuperar clave, perfil. La clave pide **8 caracteres**.
+
+Si no hay SMTP, el link de recuperación sale en la consola del backend.
+
+---
+
+## CSS: qué archivo tocar
+
+- Home / header desktop / footer → `css/styles.css`
+- Menú celular → `css/header.css` + `js/nav.js`
+- Cards “por qué nosotros” y cobertura → `css/cards-home.css`
+- Card de yogurt → `css/cards-productos.css` (el HTML sale de `js/main.js`)
+- Login, toasts, catálogo extra → `css/shop-ui.css`
+- Admin → `css/admin-theme.css`
+
+---
+
+## Tests
+
+```bash
+npm install
+npx playwright install chromium
+npm test
+```
+
+Playwright sirve `frontend/` en el puerto 4173. Cubre inicio, catálogo y menú en 390px.
+
+---
+
+## Subir a internet
+
+1. Postgres en el hosting.
+2. `JWT_SECRET` nuevo y admin con clave fuerte.
+3. HTTPS en el sitio y en la API.
+4. `config.js` y `.env` con dominio real y WhatsApp real.
+5. En `frontend/sitemap.xml` cambia `yoguraso.example`.
+6. SMTP para los correos de clave.
+7. `NODE_ENV=production` (así CORS no abre cualquier localhost).
+
+Notas extra: `docs/QUE_FALTA_PARA_LANZAR.md`.
+
+No subas `backend/.env` al git.

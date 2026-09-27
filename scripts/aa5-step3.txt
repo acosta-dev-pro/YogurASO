@@ -1,0 +1,1 @@
+bash /mnt/yoguraso/scripts/abrir-yoguraso-firefox.sh

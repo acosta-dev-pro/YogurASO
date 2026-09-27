@@ -1,0 +1,4 @@
+-- Letreros de cards (admin)
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS letrero VARCHAR(40);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS letrero_tipo VARCHAR(20);
+ALTER TABLE productos ADD COLUMN IF NOT EXISTS descuento INTEGER DEFAULT 0;

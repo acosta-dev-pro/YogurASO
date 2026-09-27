@@ -1,14 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión · YogurASO</title>
     <meta name="description" content="Inicia sesión en YogurASO para gestionar tu cuenta.">
-    <meta name="theme-color" content="#FA5053">
+    <meta name="theme-color" content="#E08888">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
     <a class="skip-link" href="#loginForm">Saltar al formulario</a>
@@ -17,82 +19,95 @@
             <h2>YogurASO</h2>
         </div>
         <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
             <ul id="nav-items">
                 <li><a href="../index.html">Inicio</a></li>
-                <li><a href="../index.html#nosotros">Nosotros</a></li>
                 <li><a href="productos.html">Productos</a></li>
                 <li><a href="../index.html#contact">Contacto</a></li>
             </ul>
-            <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn">
-                    <i class="fas fa-user-circle"></i>
+            <div class="icon-buttons">
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="login.html" class="dropdown-item">
-                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                    </a>
-                    <a href="registro.html" class="dropdown-item">
-                        <i class="fas fa-user-plus"></i> Registrarse
-                    </a>
-                </div>
             </div>
         </div>
     </header>
 
     <div class="auth-container">
-        <div class="auth-card">
-            <h1 class="auth-title">Iniciar <span>Sesión</span></h1>
-            
-            <form class="auth-form" id="loginForm">
-                <div class="form-group">
-                    <label for="email">
-                        <i class="fas fa-envelope"></i>
-                        Correo Electrónico
-                    </label>
-                    <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+        <div class="shop-auth-wrap">
+            <aside class="shop-auth-promo" aria-hidden="true">
+                <div>
+                    <p class="shop-kicker">YogurASO</p>
+                    <h2>Tu yogurt artesanal en un tap.</h2>
+                    <p>Entra para guardar pedidos, ver tu perfil y repetir sabores favoritos en Neiva y Tello.</p>
                 </div>
+                <ul class="shop-auth-bullets">
+                    <li><i class="fas fa-bolt"></i> Checkout rápido por WhatsApp</li>
+                    <li><i class="fas fa-heart"></i> Sabores y mayoreo local</li>
+                    <li><i class="fas fa-shield-halved"></i> Sesión segura</li>
+                </ul>
+            </aside>
+            <div class="auth-card">
+                <p class="shop-kicker">Mi cuenta</p>
+                <h1 class="auth-title">Iniciar <span>sesión</span></h1>
+                <p class="auth-lead">Usa tu correo o continúa con Google.</p>
 
-                <div class="form-group">
-                    <label for="password">
-                        <i class="fas fa-lock"></i>
-                        Contraseña
-                    </label>
-                    <input type="password" id="password" placeholder="••••••••" required>
-                </div>
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Correo electrónico
+                        </label>
+                        <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required autocomplete="email">
+                    </div>
 
-                <button type="submit" class="auth-submit">Iniciar Sesión</button>
-            </form>
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Contraseña
+                        </label>
+                        <input type="password" id="password" placeholder="Tu contraseña" required autocomplete="current-password">
+                        <a class="auth-forgot" href="recuperar.html">¿Olvidaste tu contraseña?</a>
+                    </div>
 
-            <p class="auth-redirect">
-                ¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a>
-            </p>
+                    <button type="submit" class="auth-submit">Iniciar sesión</button>
+                </form>
+
+                <div class="auth-divider"><span>o continúa con</span></div>
+                <div id="googleBtnMount" class="google-btn-mount" aria-label="Google Sign-In"></div>
+                <button type="button" class="google-fallback-btn" id="googleSignInBtn" hidden>
+                    <i class="fab fa-google"></i> Continuar con Google
+                </button>
+
+                <p class="auth-redirect">
+                    ¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a>
+                </p>
+            </div>
         </div>
     </div>
 
-    <a href="#" class="whatsapp-float" data-config="whatsapp" data-wa-text="Hola YogurASO" target="_blank" rel="noopener" aria-label="WhatsApp">
-        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-    </a>
-
-    <!-- CART SIDEBAR -->
     <div class="overlay" id="cartOverlay"></div>
-    <div class="cart-sidebar" id="cartSidebar">
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
-            <span>Tu carrito</span>
+            <span>Bolsa</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
         <div class="cart-items" id="cart-sidebar-items">
-            <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
             <span id="cartTotalAmount">$0</span>
         </div>
+        <button type="button" class="btn-clear-cart" id="btn-clear-cart-sidebar" hidden>Vaciar carrito</button>
         <button type="button" class="checkout-btn" id="checkoutBtn">
-            <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
         </button>
-    </div>
+    </aside>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-brand">
@@ -116,7 +131,7 @@
             <div class="footer-col">
                 <h4>Cuenta</h4>
                 <ul>
-                    <li><a href="login.html">Iniciar sesión</a></li>
+                    <li><a href="login.html" aria-current="page">Iniciar sesión</a></li>
                     <li><a href="registro.html">Registrarse</a></li>
                     <li><a href="carrito.html">Mi carrito</a></li>
                 </ul>
@@ -124,9 +139,9 @@
             <div class="footer-col">
                 <h4>Contacto</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Colombia</li>
-                    <li><i class="fas fa-envelope"></i> hola@yoguraso.co</li>
-                    <li><i class="fab fa-whatsapp"></i> +57 300 123 4567</li>
+                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Colombia</li>
+                    <li><i class="fas fa-envelope" aria-hidden="true"></i> hola@yoguraso.co</li>
+                    <li><i class="fab fa-whatsapp" aria-hidden="true"></i> +57 300 123 4567</li>
                 </ul>
             </div>
         </div>
@@ -136,7 +151,9 @@
     </footer>
 
     <script src="../js/config.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="../js/cart.js"></script>
     <script type="module" src="../js/auth.js"></script>
 </body>

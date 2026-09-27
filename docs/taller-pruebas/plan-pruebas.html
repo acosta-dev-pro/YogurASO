@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>AA1-EV02 Plan de Pruebas YogurASO</title>
+<style>
+  @page { size: A4; margin: 1.8cm; }
+  body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.45; color: #111; }
+  h1 { font-size: 14pt; margin: 1.1em 0 0.4em; }
+  h2 { font-size: 12.5pt; margin: 0.9em 0 0.35em; }
+  p { text-align: justify; margin: 0 0 0.55em; }
+  .center { text-align: center; }
+  .mark { background: #ffff00; font-weight: bold; }
+  ul { margin: 0.3em 0 0.7em; padding-left: 1.2em; }
+  li { margin-bottom: 0.35em; }
+  table { width: 100%; border-collapse: collapse; margin: 0.6em 0 1em; font-size: 10pt; }
+  th, td { border: 1px solid #000; padding: 5px 6px; vertical-align: top; }
+  th { background: #fff2cc; }
+  .cover-gap { height: 18px; }
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+  <p class="center"><strong>SERVICIO NACIONAL DE APRENDIZAJE – SENA</strong></p>
+  <p class="center"><strong>AA1-EV02 – Plan de Pruebas</strong></p>
+  <div class="cover-gap"></div>
+  <p class="center" style="font-size:14pt"><strong>Plan de pruebas del proyecto: “<span class="mark">YogurASO – Tienda web de yogurt artesanal</span>”</strong></p>
+  <div class="cover-gap"></div>
+  <p class="center">Nombres integrantes: ________________________________</p>
+  <p class="center">Nombre de la institución: ______________________________</p>
+  <p class="center">Ciudad: ______________________________________________</p>
+  <p class="center">Año: 2026</p>
+
+  <div class="page-break"></div>
+  <h1>Tabla de contenido</h1>
+  <p>1. Introducción<br>2. Alcance<br>3. Estrategia de Pruebas<br>4. Detalles de la Estrategia de Pruebas<br>&nbsp;&nbsp;4.1. Pruebas Unitarias<br>&nbsp;&nbsp;4.2. Pruebas de Integración<br>&nbsp;&nbsp;4.3. Pruebas de Aceptación/Funcionales<br>&nbsp;&nbsp;4.4. Pruebas End-to-End (E2E)<br>5. Criterios de Aceptación<br>6. Ambiente de Pruebas<br>7. Planificación de Pruebas<br>8. Recursos y Herramientas<br>9. Riesgos y Mitigación<br>10. Comunicación y Reportes<br>11. Lista de chequeo de pruebas<br>Conclusiones</p>
+
+  <div class="page-break"></div>
+  <h1>1. Introducción</h1>
+  <p>Este documento describe el plan de pruebas para el proyecto <span class="mark">“YogurASO – Tienda web de yogurt artesanal”</span>. Se utilizará la Pirámide de Pruebas para garantizar una estrategia de pruebas equilibrada y eficiente. YogurASO cuenta con frontend en HTML/CSS/JavaScript, backend Node.js + Express y base de datos PostgreSQL, con autenticación JWT, catálogo, carrito local, panel administrador y checkout por WhatsApp.</p>
+
+  <h1>2. Alcance</h1>
+  <p>El alcance incluye pruebas unitarias, de integración, de aceptación y end-to-end para YogurASO, cubriendo autenticación (/api/auth), productos (/api/products), middlewares de seguridad, páginas del frontend y la comunicación frontend–backend mediante <em>frontend/js/api.js</em>.</p>
+
+  <h1>3. Estrategia de Pruebas</h1>
+  <p>La estrategia se basa en la Pirámide de Pruebas:</p>
+  <ul>
+    <li>Pruebas Unitarias (Base de la pirámide)</li>
+    <li>Pruebas de Integración (Capa intermedia)</li>
+    <li>Pruebas de Aceptación/Funcionales (Capa superior)</li>
+    <li>Pruebas End-to-End (Pico de la pirámide)</li>
+  </ul>
+
+  <h1>4. Detalles de la Estrategia de Pruebas</h1>
+  <h2>4.1. Pruebas Unitarias</h2>
+  <ul>
+    <li><strong>Objetivo:</strong> Verificar unidades de código (funciones/métodos).</li>
+    <li><strong>Herramientas:</strong> Jest (JavaScript/Node.js).</li>
+    <li><strong>Casos:</strong> Validaciones de <em>authController.js</em>, totales de <em>cart.js</em>, utilidades de <em>utils.js</em>.</li>
+    <li><strong>Responsabilidad:</strong> Desarrolladores.</li>
+    <li><strong>Cobertura:</strong> Al menos 80% del código crítico.</li>
+  </ul>
+
+  <h2>4.2. Pruebas de Integración</h2>
+  <ul>
+    <li><strong>Objetivo:</strong> Validar interacción entre módulos/servicios.</li>
+    <li><strong>Herramientas:</strong> Postman (API) y Mocha/supertest (opcional).</li>
+    <li><strong>Casos:</strong> PostgreSQL ↔ backend; <em>authRoutes</em>/<em>productRoutes</em>; consumo desde <em>api.js</em>.</li>
+    <li><strong>Áreas clave:</strong> BD, API REST y middlewares <em>verifyToken.js</em> / <em>rateLimit.js</em>.</li>
+  </ul>
+
+  <h2>4.3. Pruebas de Aceptación/Funcionales</h2>
+  <ul>
+    <li><strong>Objetivo:</strong> Cumplir requisitos funcionales.</li>
+    <li><strong>Herramientas:</strong> Postman (API) y Playwright (UI).</li>
+    <li><strong>Casos:</strong> Formularios login/registro, CRUD admin, catálogo y carrito.</li>
+  </ul>
+
+  <h2>4.4. Pruebas End-to-End (E2E)</h2>
+  <ul>
+    <li><strong>Objetivo:</strong> Flujo completo de extremo a extremo.</li>
+    <li><strong>Herramientas:</strong> <span class="mark">Playwright (UI/E2E) y Postman (API).</span></li>
+    <li><strong>Casos:</strong> Interfaz → Backend Express → PostgreSQL.</li>
+    <li><strong>Áreas clave:</strong> Registro, login, productos, carrito, admin y 404.</li>
+  </ul>
+
+  <h1>5. Criterios de Aceptación</h1>
+  <ul>
+    <li><strong>Unitarias:</strong> Todas pasan; cobertura crítica ≥ 80%.</li>
+    <li><strong>Integración:</strong> API y PostgreSQL validados.</li>
+    <li><strong>Aceptación:</strong> Login, catálogo, carrito y admin aprobados.</li>
+    <li><strong>E2E:</strong> Flujos críticos sin errores bloqueantes.</li>
+  </ul>
+
+  <h1>6. Ambiente de Pruebas</h1>
+  <ul>
+    <li><strong>Desarrollo:</strong> Unitarias e integración. API en localhost:3000; frontend estático.</li>
+    <li><strong>Staging/local integrado:</strong> Aceptación, Postman y Playwright.</li>
+  </ul>
+
+  <h1>7. Planificación de Pruebas</h1>
+  <ul>
+    <li><strong>Desarrollo:</strong> Unitarias + integración (Postman).</li>
+    <li><strong>Pre-lanzamiento:</strong> Aceptación y E2E (Playwright).</li>
+    <li><strong>Post-lanzamiento:</strong> Regresión de auth, productos y vistas.</li>
+  </ul>
+
+  <h1>8. Recursos y Herramientas</h1>
+  <ul>
+    <li><strong>Humanos:</strong> Aprendiz desarrollador e instructor/interesados.</li>
+    <li><strong>Herramientas:</strong> Jest, Postman, Playwright, Node.js, PostgreSQL, Chromium.</li>
+  </ul>
+
+  <h1>9. Riesgos y Mitigación</h1>
+  <ul>
+    <li><strong>Riesgo:</strong> Baja cobertura en auth/CRUD. <strong>Mitigación:</strong> Ampliar Postman y regresiones Playwright.</li>
+    <li><strong>Riesgo:</strong> Falla frontend–backend (CORS/token). <strong>Mitigación:</strong> Probar /api/health y Authorization.</li>
+    <li><strong>Riesgo:</strong> BD no disponible. <strong>Mitigación:</strong> Validar conexión al arrancar <em>server.js</em>.</li>
+  </ul>
+
+  <h1>10. Comunicación y Reportes</h1>
+  <ul>
+    <li><strong>Frecuencia:</strong> Al cerrar cada batería Postman/Playwright.</li>
+    <li><strong>Formato:</strong> Progreso, defectos, capturas y métricas PASS/FAIL.</li>
+  </ul>
+
+  <div class="page-break"></div>
+  <h1>11. Lista de chequeo de pruebas (<span class="mark">diseño de formato</span>)</h1>
+  <p>Formato de lista de chequeo adaptado a YogurASO para registrar pruebas con <strong>Postman (API)</strong> y <strong>Playwright (UI/E2E)</strong>.</p>
+
+  <p><strong>A) API – Postman</strong></p>
+  <table>
+    <tr><th>ID</th><th>Caso de prueba</th><th>Resultado esperado</th><th>OK</th><th>Observación</th></tr>
+    <tr><td>API-01</td><td>GET /api/health</td><td>success y DB connected</td><td>☐</td><td></td></tr>
+    <tr><td>API-02</td><td>POST /api/auth/registro</td><td>Usuario creado / validación</td><td>☐</td><td></td></tr>
+    <tr><td>API-03</td><td>POST /api/auth/login</td><td>Token JWT + usuario</td><td>☐</td><td></td></tr>
+    <tr><td>API-04</td><td>GET /api/auth/perfil</td><td>Perfil autenticado</td><td>☐</td><td></td></tr>
+    <tr><td>API-05</td><td>GET /api/products</td><td>Listado JSON</td><td>☐</td><td></td></tr>
+    <tr><td>API-06</td><td>POST /api/products sin token</td><td>401/403</td><td>☐</td><td></td></tr>
+    <tr><td>API-07</td><td>POST productos (admin)</td><td>Producto creado</td><td>☐</td><td></td></tr>
+    <tr><td>API-08</td><td>PUT/DELETE productos</td><td>Actualiza/elimina</td><td>☐</td><td></td></tr>
+  </table>
+
+  <p><strong>B) UI / E2E – Playwright</strong></p>
+  <table>
+    <tr><th>ID</th><th>Caso de prueba</th><th>Resultado esperado</th><th>OK</th><th>Evidencia</th></tr>
+    <tr><td>UI-01</td><td>index.html</td><td>Home visible</td><td>☐</td><td></td></tr>
+    <tr><td>UI-02</td><td>productos.html</td><td>Buscador presente</td><td>☐</td><td></td></tr>
+    <tr><td>UI-03</td><td>login.html</td><td>Formulario visible</td><td>☐</td><td></td></tr>
+    <tr><td>UI-04</td><td>registro.html</td><td>Formulario usable</td><td>☐</td><td></td></tr>
+    <tr><td>UI-05</td><td>carrito.html</td><td>Vista renderizada</td><td>☐</td><td></td></tr>
+    <tr><td>UI-06</td><td>admin.html</td><td>Panel visible</td><td>☐</td><td></td></tr>
+    <tr><td>UI-07</td><td>Login datos prueba</td><td>Entrada aceptada</td><td>☐</td><td></td></tr>
+    <tr><td>UI-08</td><td>404.html</td><td>Página accesible</td><td>☐</td><td></td></tr>
+  </table>
+
+  <h1>Conclusiones</h1>
+  <p>Este plan de pruebas pretende asegurar que <span class="mark">“YogurASO – Tienda web de yogurt artesanal”</span> cumpla con los requisitos de calidad esperados, usando la Pirámide de Pruebas. Postman cubre la API REST y Playwright la interfaz, alineados con los módulos reales del proyecto (auth, productos, carrito y administración).</p>
+</body>
+</html>

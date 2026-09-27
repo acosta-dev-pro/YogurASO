@@ -1,8 +1,6 @@
 ﻿/**
- * verifyToken.js — Middleware de seguridad
- * verificarToken: exige JWT válido
- * verificarAdmin: exige rol admin
- * optionalAuth: intenta leer token si viene (para includeInactive)
+ * verifyToken.js
+ * Lee el Bearer del header. Sin token no pasa. verificarAdmin mira el rol del JWT.
  */
 const jwt = require('jsonwebtoken');
 

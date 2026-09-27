@@ -1,95 +1,101 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito · YogurASO</title>
     <meta name="description" content="Revisa tu carrito YogurASO y finaliza tu pedido por WhatsApp.">
-    <meta name="theme-color" content="#FA5053">
+    <meta name="theme-color" content="#E08888">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
-<body>
+<body class="cart-body">
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <header>
         <div class="logo">
             <h2>YogurASO</h2>
         </div>
         <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
             <ul id="nav-items">
                 <li><a href="../index.html">Inicio</a></li>
-                <li><a href="../index.html#nosotros">Nosotros</a></li>
-                <li><a href="../index.html#beneficios">Beneficios</a></li>
                 <li><a href="productos.html">Productos</a></li>
+                <li><a href="../index.html#contact">Contacto</a></li>
             </ul>
 
             <div class="icon-buttons">
-                <button class="icon-btn active" id="cartBtn" aria-label="Carrito">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge" id="cart-count">0</span>
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
             </div>
 
-            <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn" aria-label="Menú de usuario">
-                    <i class="fas fa-user-circle"></i>
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="login.html" class="dropdown-item">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Iniciar Sesión
-                    </a>
-                    <a href="registro.html" class="dropdown-item">
-                        <i class="fas fa-user-plus"></i>
-                        Registrarse
-                    </a>
-                </div>
-            </div>
+            
+
+            
         </div>
     </header>
 
-    <main class="container cart-page" id="main-content">
+    <main class="cart-page" id="main-content">
+        <p class="shop-cart-kicker"><a href="productos.html">Productos</a> / Carrito</p>
+
         <section class="cart-items-section">
             <div class="cart-page-heading">
-                <h1><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu Carrito</h1>
-                <button type="button" class="btn-clear-cart" id="btn-clear-cart" hidden>Vaciar carrito</button>
+                <h1>Bolsa de compra</h1>
+                <button type="button" class="btn-clear-cart" id="btn-clear-cart" hidden>Vaciar bolsa</button>
             </div>
             <div id="cart-page-items">
-                <p class="empty-cart">Tu carrito está vacío</p>
+                <div class="cart-empty-state">
+                    <div class="cart-empty-icon" aria-hidden="true"><i class="fas fa-shopping-bag"></i></div>
+                    <p class="cart-empty-title">Tu carrito está vacío</p>
+                    <p class="cart-empty-text">Aún no agregaste yogures. Explora el catálogo y arma tu pedido fresco para Neiva o Tello.</p>
+                    <a class="cart-empty-cta" href="productos.html">Ver productos</a>
+                </div>
             </div>
         </section>
 
-        <aside class="cart-summary">
-            <h3>Resumen del Pedido</h3>
+        <aside class="cart-summary is-empty">
+            <h3>Resumen</h3>
             <div class="summary-details">
                 <div class="summary-line">
-                    <span><i class="fas fa-calculator" aria-hidden="true"></i> Subtotal</span>
+                    <span>Subtotal</span>
                     <span id="subtotal">$0</span>
+                </div>
+                <div class="summary-line">
+                    <span>Entrega</span>
+                    <span>Por WhatsApp</span>
                 </div>
                 <hr>
                 <div class="summary-line total">
-                    <span><i class="fas fa-file-invoice" aria-hidden="true"></i> Total</span>
+                    <span>Total</span>
                     <span id="total">$0</span>
                 </div>
             </div>
-            <button type="button" id="btn-checkout" class="btn btn-primary btn-block">
-                <i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp
+            <button type="button" id="btn-checkout" class="btn btn-primary btn-block cart-wa-btn">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                <span>Pedir por WhatsApp</span>
             </button>
-            <a href="productos.html" class="btn-continue">
-                <i class="fas fa-arrow-left" aria-hidden="true"></i> Seguir comprando
-            </a>
+            <a href="productos.html" class="btn-continue">Seguir comprando</a>
+            <ul class="shop-trust">
+                <li><i class="fas fa-snowflake" aria-hidden="true"></i><span>Producto fresco, elaborado a diario</span></li>
+                <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i><span>Entrega en Neiva y Tello</span></li>
+                <li><i class="fas fa-lock" aria-hidden="true"></i><span>Pedido confirmado por WhatsApp</span></li>
+            </ul>
         </aside>
     </main>
-
-    <div class="overlay" id="cartOverlay"></div>
-    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
+<div class="overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito lateral">
         <div class="cart-header">
-            <span>Tu carrito</span>
-            <i class="fas fa-times" id="closeCart"></i>
+            <span>Bolsa</span>
+            <i class="fas fa-times" id="closeCart" role="button" tabindex="0" aria-label="Cerrar carrito"></i>
         </div>
         <div class="cart-items" id="cart-sidebar-items">
-            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
@@ -126,15 +132,15 @@
                 <ul>
                     <li><a href="login.html">Iniciar sesión</a></li>
                     <li><a href="registro.html">Registrarse</a></li>
-                    <li><a href="carrito.html">Mi carrito</a></li>
+                    <li><a href="carrito.html" aria-current="page">Mi carrito</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Contacto</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> Colombia</li>
-                    <li><i class="fas fa-envelope"></i> hola@yoguraso.co</li>
-                    <li><i class="fab fa-whatsapp"></i> +57 300 123 4567</li>
+                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Colombia</li>
+                    <li><i class="fas fa-envelope" aria-hidden="true"></i> hola@yoguraso.co</li>
+                    <li><i class="fab fa-whatsapp" aria-hidden="true"></i> +57 300 123 4567</li>
                 </ul>
             </div>
         </div>
@@ -145,6 +151,7 @@
 
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="../js/cart.js"></script>
     <script src="../js/cart_view.js"></script>
     <script type="module" src="../js/auth.js"></script>

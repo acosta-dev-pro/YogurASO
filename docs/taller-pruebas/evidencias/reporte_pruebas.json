@@ -1,0 +1,55 @@
+{
+  "herramienta": "Playwright (Chromium)",
+  "fecha": "2026-08-04T19:08:00.896Z",
+  "proyecto": "YogurASO",
+  "resultados": [
+    {
+      "id": 1,
+      "nombre": "Carga de página de inicio",
+      "ok": true,
+      "detalle": "Título: YogurASO · Yogurt Artesanal"
+    },
+    {
+      "id": 2,
+      "nombre": "Catálogo de productos visible",
+      "ok": true,
+      "detalle": "Campo de búsqueda #catalog-search presente"
+    },
+    {
+      "id": 3,
+      "nombre": "Formulario de login disponible",
+      "ok": true,
+      "detalle": "Inputs de autenticación encontrados"
+    },
+    {
+      "id": 4,
+      "nombre": "Formulario de registro disponible",
+      "ok": true,
+      "detalle": "Campo nombre presente"
+    },
+    {
+      "id": 5,
+      "nombre": "Vista de carrito",
+      "ok": true,
+      "detalle": "Página carrito.html renderizada"
+    },
+    {
+      "id": 6,
+      "nombre": "Panel administrador",
+      "ok": true,
+      "detalle": "Página admin.html renderizada"
+    },
+    {
+      "id": 7,
+      "nombre": "Interacción con formulario login",
+      "ok": true,
+      "detalle": "Se ingresaron datos de prueba en el formulario"
+    },
+    {
+      "id": 8,
+      "nombre": "Página 404",
+      "ok": true,
+      "detalle": "404.html accesible"
+    }
+  ]
+}

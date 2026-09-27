@@ -7,6 +7,14 @@
     "start": "cd backend && npm start",
     "install-backend": "cd backend && npm install",
     "install-frontend": "echo 'Frontend no requiere instalación específica'",
-    "install-all": "npm run install-backend && npm run install-frontend"
+    "install-all": "npm run install-backend && npm run install-frontend",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2"
   }
 }

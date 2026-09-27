@@ -52,16 +52,26 @@
         message = '¿Estás seguro?',
         confirmText = 'Confirmar',
         cancelText = 'Cancelar',
-        danger = false
+        danger = false,
+        type = 'question'
     } = {}) {
         return new Promise((resolve) => {
+            const icons = {
+                question: 'fa-circle-question',
+                warning: 'fa-triangle-exclamation',
+                danger: 'fa-shield-halved',
+                success: 'fa-circle-check',
+                info: 'fa-circle-info'
+            };
+            const iconClass = icons[danger ? 'danger' : type] || icons.question;
             const overlay = document.createElement('div');
             overlay.className = 'confirm-overlay';
             overlay.setAttribute('role', 'dialog');
             overlay.setAttribute('aria-modal', 'true');
             overlay.setAttribute('aria-labelledby', 'confirm-title');
             overlay.innerHTML = `
-                <div class="confirm-dialog">
+                <div class="confirm-dialog confirm-${danger ? 'danger' : type}">
+                    <div class="confirm-icon" aria-hidden="true"><i class="fas ${iconClass}"></i></div>
                     <h3 id="confirm-title">${escapeHtml(title)}</h3>
                     <p>${escapeHtml(message)}</p>
                     <div class="confirm-actions">
@@ -86,6 +96,48 @@
             });
             overlay.querySelector('.confirm-cancel').addEventListener('click', () => close(false));
             overlay.querySelector('.confirm-ok').addEventListener('click', () => close(true));
+            document.addEventListener('keydown', onKey);
+            document.body.appendChild(overlay);
+            overlay.querySelector('.confirm-ok').focus();
+        });
+    }
+
+    function alertAction({
+        title = 'Aviso',
+        message = '',
+        confirmText = 'Entendido',
+        type = 'info'
+    } = {}) {
+        return new Promise((resolve) => {
+            const icons = {
+                warning: 'fa-triangle-exclamation',
+                danger: 'fa-shield-halved',
+                success: 'fa-circle-check',
+                info: 'fa-circle-info'
+            };
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+            overlay.setAttribute('role', 'alertdialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.innerHTML = `
+                <div class="confirm-dialog confirm-${type}">
+                    <div class="confirm-icon" aria-hidden="true"><i class="fas ${icons[type] || icons.info}"></i></div>
+                    <h3>${escapeHtml(title)}</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <div class="confirm-actions confirm-actions-single">
+                        <button type="button" class="confirm-ok">${escapeHtml(confirmText)}</button>
+                    </div>
+                </div>
+            `;
+            const close = () => {
+                overlay.remove();
+                document.removeEventListener('keydown', onKey);
+                resolve(true);
+            };
+            const onKey = (e) => {
+                if (e.key === 'Escape' || e.key === 'Enter') close();
+            };
+            overlay.querySelector('.confirm-ok').addEventListener('click', close);
             document.addEventListener('keydown', onKey);
             document.body.appendChild(overlay);
             overlay.querySelector('.confirm-ok').focus();
@@ -137,6 +189,7 @@
         getConfig,
         showToast,
         confirmAction,
+        alertAction,
         applySiteConfig
     };
 

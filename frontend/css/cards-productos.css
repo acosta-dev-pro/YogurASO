@@ -1,0 +1,66 @@
+/* cards-productos.css — card del catálogo (.producto-card)
+   El HTML de cada card lo arma frontend/js/main.js (función cardHtml).
+   El grid (columnas, chips, rail) está en shop-ui.css.
+   Acá queda el recuadro: foto, título, precio y botón. */
+
+.producto-card {
+    background: #fff;
+    border: none;
+    border-radius: 18px;
+    box-shadow: none;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.producto-card .producto-img-container,
+.producto-card .producto-img-wrap {
+    background: #fff8f4;
+    position: relative;
+    overflow: hidden;
+}
+
+.producto-card .producto-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: auto;
+    z-index: 3;
+    font-size: 10px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(23, 23, 26, 0.18);
+}
+
+.producto-card .badge-nuevo { background: #E08888; }
+.producto-card .badge-oferta { background: #c45b2d; }
+.producto-card .badge-descuento { background: #b42318; }
+.producto-card .badge-destacado { background: #17171a; }
+.producto-card .badge-stock {
+    top: auto;
+    bottom: 8px;
+    left: auto;
+    right: 8px;
+    background: #111827;
+}
+
+.producto-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main, #1f1630);
+}
+
+.producto-card .btn-add,
+.producto-card .btn-add-cart {
+    background: var(--brand-main, #E08888);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+}

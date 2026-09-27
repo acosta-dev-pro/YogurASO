@@ -1,0 +1,1 @@
+echo ubuntu123 | sudo -S mount -t vboxsf yoguraso /mnt/yoguraso

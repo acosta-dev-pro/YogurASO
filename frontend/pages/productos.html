@@ -1,17 +1,20 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos · YogurASO</title>
     <meta name="description" content="Catálogo de yogurt artesanal YogurASO. Busca, filtra y ordena sabores naturales, griegos y con frutas.">
-    <meta name="theme-color" content="#FA5053">
+    <meta name="theme-color" content="#E08888">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <meta property="og:title" content="Productos · YogurASO">
     <meta property="og:description" content="Explora toda la variedad de yogures artesanales YogurASO.">
     <meta property="og:type" content="website">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/cards-productos.css">
 </head>
 <body>
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
@@ -20,28 +23,20 @@
             <h2 data-config="company-name">YogurASO</h2>
         </div>
         <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
             <ul id="nav-items">
                 <li><a href="../index.html">Inicio</a></li>
-                <li><a href="../index.html#nosotros">Nosotros</a></li>
                 <li class="active"><a href="productos.html" aria-current="page">Productos</a></li>
                 <li><a href="../index.html#contact">Contacto</a></li>
             </ul>
 
             <div class="icon-buttons">
-                <button class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
                     <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
-            </div>
-
-            <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn" aria-label="Menú de usuario" aria-haspopup="true">
-                    <i class="fas fa-user-circle" aria-hidden="true"></i>
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="login.html" class="dropdown-item"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Iniciar Sesión</a>
-                    <a href="registro.html" class="dropdown-item"><i class="fas fa-user-plus" aria-hidden="true"></i> Registrarse</a>
-                </div>
             </div>
         </div>
     </header>
@@ -49,32 +44,32 @@
     <!-- Catálogo completo: filtros + cards (.producto-card vía main.js) -->
     <main id="main-content" class="container productos-catalogo">
         <div class="productos-header productos-header-compact">
+            <p class="shop-kicker">Catálogo</p>
             <h1>Todos los Yogures</h1>
-            <p class="productos-subtitle">Explora, busca y filtra nuestra variedad de sabores artesanales.</p>
+            <p class="productos-subtitle">Elige sabor, filtra y arma tu pedido.</p>
         </div>
 
-        <!-- Barra de búsqueda / filtro / orden (solo frontend) -->
         <section class="catalog-toolbar" aria-label="Filtros del catálogo">
             <div class="catalog-search-wrap">
                 <i class="fas fa-search" aria-hidden="true"></i>
                 <label class="sr-only" for="catalog-search">Buscar productos</label>
-                <input type="search" id="catalog-search" placeholder="Buscar por nombre o descripción..." autocomplete="off">
+                <input type="search" id="catalog-search" placeholder="Buscar sabor..." autocomplete="off">
             </div>
             <div class="catalog-filters">
-                <label class="sr-only" for="filtro-categoria">Categoría</label>
-                <select id="filtro-categoria" aria-label="Filtrar por categoría">
-                    <option value="all">Todas las categorías</option>
-                </select>
                 <label class="sr-only" for="filtro-orden">Ordenar</label>
                 <select id="filtro-orden" aria-label="Ordenar productos">
                     <option value="default">Más recientes</option>
-                    <option value="price-asc">Precio ↑</option>
-                    <option value="price-desc">Precio ↓</option>
+                    <option value="price-asc">Precio: menor a mayor</option>
+                    <option value="price-desc">Precio: mayor a menor</option>
                     <option value="name-asc">Nombre A-Z</option>
                 </select>
             </div>
             <p class="catalog-count" id="catalog-count" aria-live="polite">0 productos</p>
         </section>
+        <div class="catalog-chips" id="catalog-chips" role="tablist" aria-label="Categorías"></div>
+        <select id="filtro-categoria" hidden aria-hidden="true">
+            <option value="all">Todas las categorías</option>
+        </select>
 
         <div class="container">
             <!-- Aquí se insertan las cards de productos (main.js) -->
@@ -83,15 +78,14 @@
             </div>
         </div>
     </main>
-
-    <div class="overlay" id="cartOverlay"></div>
+<div class="overlay" id="cartOverlay"></div>
     <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
-            <span>Tu carrito</span>
+            <span>Bolsa</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
         <div class="cart-items" id="cart-sidebar-items">
-            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
@@ -146,6 +140,7 @@
 
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="../js/cart.js"></script>
     <script type="module" src="../js/auth.js"></script>
     <script type="module" src="../js/main.js"></script>

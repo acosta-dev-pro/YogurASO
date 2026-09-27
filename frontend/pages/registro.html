@@ -1,14 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse · YogurASO</title>
     <meta name="description" content="Crea tu cuenta en YogurASO y empieza a pedir yogurt artesanal.">
-    <meta name="theme-color" content="#FA5053">
+    <meta name="theme-color" content="#E08888">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/cards-productos.css">
 </head>
 <body>
     <a class="skip-link" href="#registerForm">Saltar al formulario</a>
@@ -17,71 +20,91 @@
             <h2>YogurASO</h2>
         </div>
         <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
             <ul id="nav-items">
                 <li><a href="../index.html">Inicio</a></li>
-                <li><a href="../index.html#nosotros">Nosotros</a></li>
                 <li><a href="productos.html">Productos</a></li>
                 <li><a href="../index.html#contact">Contacto</a></li>
             </ul>
-            <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn">
-                    <i class="fas fa-user-circle"></i>
+
+            <div class="icon-buttons">
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="login.html" class="dropdown-item">
-                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                    </a>
-                    <a href="registro.html" class="dropdown-item">
-                        <i class="fas fa-user-plus"></i> Registrarse
-                    </a>
-                </div>
             </div>
+            
+            
         </div>
     </header>
 
     <div class="auth-container">
+        <div class="shop-auth-wrap">
+            <aside class="shop-auth-promo" aria-hidden="true">
+                <div>
+                    <p class="shop-kicker">Únete</p>
+                    <h2>Crea tu cuenta y pide en minutos.</h2>
+                    <p>Registro simple. Después puedes entrar también con Google.</p>
+                </div>
+                <ul class="shop-auth-bullets">
+                    <li><i class="fas fa-cheese"></i> Catálogo fresco del día</li>
+                    <li><i class="fas fa-truck-fast"></i> Neiva y Tello</li>
+                    <li><i class="fas fa-lock"></i> Tus datos protegidos</li>
+                </ul>
+            </aside>
         <div class="auth-card">
-            <h1 class="auth-title">Crear <span>Cuenta</span></h1>
+            <p class="shop-kicker">Registro</p>
+            <h1 class="auth-title">Crear <span>cuenta</span></h1>
+            <p class="auth-lead">Completa tus datos o continúa con Google.</p>
             
             <form class="auth-form" id="registerForm">
-                <div class="form-group">
-                    <label for="nombre">
-                        <i class="fas fa-user"></i>
-                        Nombre Completo
-                    </label>
-                    <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre"><i class="fas fa-user"></i> Nombre</label>
+                        <input type="text" id="nombre" placeholder="Ej: Juan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido"><i class="fas fa-user"></i> Apellido</label>
+                        <input type="text" id="apellido" placeholder="Ej: Pérez" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">
-                        <i class="fas fa-envelope"></i>
-                        Correo Electrónico
-                    </label>
-                    <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+                    <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" id="email" placeholder="tucorreo@gmail.com" required>
+                    <small class="field-hint">A este correo llega la bienvenida y, si olvidas la clave, el código de recuperación.</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">
-                        <i class="fas fa-lock"></i>
-                        Contraseña
-                    </label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <label for="telefono"><i class="fas fa-phone"></i> Teléfono</label>
+                    <input type="tel" id="telefono" placeholder="300 123 4567" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="confirm-password">
-                        <i class="fas fa-lock"></i>
-                        Confirmar Contraseña
-                    </label>
-                    <input type="password" id="confirm-password" placeholder="••••••••" required>
+                    <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" id="password" placeholder="Mínimo 8 caracteres" required minlength="8">
                 </div>
 
-                <button type="submit" class="auth-submit">Registrarse</button>
+                <div class="form-group">
+                    <label for="confirm-password"><i class="fas fa-lock"></i> Confirmar contraseña</label>
+                    <input type="password" id="confirm-password" placeholder="Repite la contraseña" required minlength="8">
+                </div>
+
+                <button type="submit" class="auth-submit">Crear cuenta</button>
             </form>
+
+            <div class="auth-divider"><span>o continúa con</span></div>
+            <div id="googleBtnMount" class="google-btn-mount" aria-label="Google Sign-In"></div>
+            <button type="button" class="google-fallback-btn" id="googleSignInBtn" hidden>
+                <i class="fab fa-google"></i> Continuar con Google
+            </button>
 
             <p class="auth-redirect">
                 ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión aquí</a>
             </p>
+        </div>
         </div>
     </div>
 
@@ -90,14 +113,14 @@
     </a>
 
     <!-- CART SIDEBAR -->
-    <div class="overlay" id="cartOverlay"></div>
+<div class="overlay" id="cartOverlay"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <span>Tu carrito</span>
+            <span>Bolsa</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
         <div class="cart-items" id="cart-sidebar-items">
-            <div class="cart-empty"><i class="fas fa-cart-shopping"></i> Tu carrito está vacío</div>
+            <div class="cart-empty"><i class="fas fa-shopping-bag"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
@@ -152,7 +175,9 @@
     </footer>
 
     <script src="../js/config.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="../js/cart.js"></script>
     <script type="module" src="../js/auth.js"></script>
 </body>

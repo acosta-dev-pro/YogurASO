@@ -1,179 +1,280 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin · YogurASO</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#FA5053">
+    <meta name="theme-color" content="#E08888">
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/admin-theme.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
-<body>
+<body class="admin-page">
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <header>
         <div class="logo">
-            <h2><span data-config="company-name">YogurASO</span> <span>Admin</span></h2>
+            <h2 data-config="company-name">YogurASO</h2>
         </div>
         <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
             <ul id="nav-items">
                 <li><a href="../index.html">Inicio</a></li>
-                <li class="active"><a href="#productos" aria-current="page">Productos</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="../index.html#contact">Contacto</a></li>
             </ul>
+
             <div class="icon-buttons">
-                <button class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
                     <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
-            </div>
-            <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn" aria-label="Menú de administrador">
-                    <i class="fas fa-user-shield" aria-hidden="true"></i>
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="../index.html" class="dropdown-item"><i class="fas fa-store" aria-hidden="true"></i> Ver Tienda</a>
-                    <a href="#" class="dropdown-item" id="btn-logout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Cerrar Sesión</a>
-                </div>
             </div>
         </div>
     </header>
 
-    <!-- =========================================================
-         ADMIN — inventario y dashboard
-         Lógica: admin.js | Estilos: .admin-panel / .stat-card
-         ========================================================= -->
     <main id="main-content" class="container admin-panel">
-        <div class="admin-header">
-            <h1>Gestión de Inventario</h1>
-            <button type="button" class="btn btn-primary" id="btn-nuevo-producto">+ Nuevo Yogur</button>
-        </div>
+        <nav class="admin-subnav" aria-label="Secciones del panel">
+            <a href="#productos" class="admin-subnav-link is-on">Inventario</a>
+            <a href="#usuarios" class="admin-subnav-link">Usuarios</a>
+        </nav>
 
-        <!-- Tarjetas de resumen (stats) -->
-        <section class="admin-dashboard" aria-label="Resumen del inventario">
-            <article class="stat-card">
-                <span class="stat-label">Productos</span>
-                <strong class="stat-value" id="stat-productos">0</strong>
-            </article>
-            <article class="stat-card">
-                <span class="stat-label">Stock total</span>
-                <strong class="stat-value" id="stat-stock">0</strong>
-            </article>
-            <article class="stat-card">
-                <span class="stat-label">Categorías</span>
-                <strong class="stat-value" id="stat-categorias">0</strong>
-            </article>
-            <article class="stat-card">
-                <span class="stat-label">Activos</span>
-                <strong class="stat-value" id="stat-activos">0</strong>
-            </article>
-            <article class="stat-card stat-card-wide">
-                <span class="stat-label">Última actualización</span>
-                <strong class="stat-value stat-value-sm" id="stat-updated">—</strong>
-            </article>
+        <section id="productos" class="admin-section" aria-label="Inventario de productos">
+            <div class="admin-header">
+                <div>
+                    <h1>Inventario</h1>
+                    <p class="admin-subtitle" id="admin-inventory-line">Cargando catálogo…</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-export-csv" title="Exportar CSV"><i class="fas fa-file-csv"></i> Exportar</button>
+                    <button type="button" class="btn btn-primary" id="btn-nuevo-producto"><i class="fas fa-plus"></i> Nuevo yogur</button>
+                    <button type="button" class="btn btn-secondary" id="btn-logout">Cerrar sesión</button>
+                </div>
+            </div>
+
+            <div class="admin-stats" id="admin-stats-bar">
+                <div class="admin-stat"><span>Productos</span><strong id="stat-total">0</strong></div>
+                <div class="admin-stat"><span>Activos</span><strong id="stat-activos">0</strong></div>
+                <div class="admin-stat"><span>Stock total</span><strong id="stat-stock">0</strong></div>
+                <div class="admin-stat"><span>Seleccionados</span><strong id="stat-selected">0</strong></div>
+            </div>
+
+            <div class="admin-toolbar admin-toolbar-pro">
+                <input type="search" id="admin-search" placeholder="Buscar nombre, categoría o #id" class="admin-search-input">
+                <select id="admin-filter-cat" class="admin-select" aria-label="Filtrar categoría">
+                    <option value="">Todas las categorías</option>
+                </select>
+                <select id="admin-filter-status" class="admin-select" aria-label="Filtrar estado">
+                    <option value="">Todos los estados</option>
+                    <option value="active">Solo activos</option>
+                    <option value="inactive">Solo inactivos</option>
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-bulk-deactivate" disabled>Desactivar selección</button>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-bulk-activate" disabled>Activar selección</button>
+            </div>
+
+            <div class="admin-sheet-wrap">
+                <table class="admin-sheet" id="admin-productos-sheet">
+                    <thead>
+                        <tr>
+                            <th class="col-check"><input type="checkbox" id="admin-select-all" aria-label="Seleccionar todos"></th>
+                            <th class="sortable" data-sort="id">ID</th>
+                            <th class="sortable" data-sort="nombre">Producto</th>
+                            <th class="sortable" data-sort="categoria">Categoría</th>
+                            <th class="sortable" data-sort="precio">Precio</th>
+                            <th class="sortable" data-sort="stock">Stock</th>
+                            <th class="sortable" data-sort="activo">Estado</th>
+                            <th>Letrero</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-productos-lista"></tbody>
+                </table>
+            </div>
         </section>
 
-        <div class="admin-toolbar">
-            <div class="catalog-search-wrap">
-                <i class="fas fa-search" aria-hidden="true"></i>
-                <label class="sr-only" for="admin-search">Buscar en inventario</label>
-                <input type="search" id="admin-search" placeholder="Buscar por nombre, categoría o ID..." autocomplete="off">
+        <section id="usuarios" class="admin-section admin-users-section" aria-label="Gestión de usuarios">
+            <div class="admin-header">
+                <div>
+                    <h1>Usuarios</h1>
+                    <p class="admin-subtitle">Activa o pausa cuentas. La tuya no se puede apagar desde aquí.</p>
+                </div>
+                <button type="button" class="btn btn-secondary" id="btn-reload-users">Recargar</button>
             </div>
-        </div>
-
-        <div class="admin-table-container">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Producto</th>
-                        <th>Categoría</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-productos-lista"></tbody>
-            </table>
-        </div>
+            <div class="admin-toolbar admin-toolbar-pro">
+                <input type="search" id="admin-user-search" placeholder="Buscar usuario o email" class="admin-search-input">
+            </div>
+            <div class="admin-sheet-wrap">
+                <table class="admin-sheet">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-usuarios-lista"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
-    <div id="modal-producto" class="modal" aria-hidden="true">
-        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-producto" class="modal admin-modal" aria-hidden="true">
+        <div class="modal-content admin-modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-header">
-                <h2 id="modal-title">Añadir Producto</h2>
-                <span class="close-modal" aria-label="Cerrar">&times;</span>
+                <div>
+                    <span class="admin-eyebrow" id="modal-eyebrow">Inventario</span>
+                    <h2 id="modal-title">Nuevo producto</h2>
+                    <p class="admin-modal-hint" id="modal-hint">Completa los datos del yogur para publicarlo en el catálogo.</p>
+                </div>
+                <button type="button" class="admin-modal-close" id="btn-cerrar-modal" aria-label="Cerrar">×</button>
             </div>
-            <form id="form-producto">
+            <form id="form-producto" novalidate>
                 <input type="hidden" id="p-id">
-                <div class="form-group">
-                    <label for="p-nombre">Nombre</label>
-                    <input type="text" id="p-nombre" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="p-precio">Precio</label>
-                        <input type="number" id="p-precio" min="0" step="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="p-stock">Stock</label>
-                        <input type="number" id="p-stock" min="0" step="1" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="p-categoria">Categoría</label>
-                    <select id="p-categoria">
-                        <option value="natural">Natural</option>
-                        <option value="frutas">Con Frutas</option>
-                        <option value="griego">Griego</option>
-                        <option value="sin_lactosa">Sin Lactosa</option>
-                        <option value="leches">Leches</option>
-                        <option value="quesos">Quesos</option>
-                        <option value="kumis">Kumis</option>
-                        <option value="arequipe">Arequipe</option>
-                        <option value="suero">Suero Costeño</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Imagen del Producto</label>
-                    <div class="image-upload-area" id="image-upload-area">
-                        <div class="image-upload-placeholder" id="image-upload-placeholder">
-                            <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
-                            <p>Arrastra una imagen o <span>haz clic para seleccionar</span></p>
-                            <small>JPG, PNG, WebP — máx. 5 MB</small>
+
+                <div class="admin-modal-grid">
+                    <section class="admin-modal-block">
+                        <h3>Datos del producto</h3>
+                        <div class="form-group">
+                            <label for="p-nombre">Nombre *</label>
+                            <input type="text" id="p-nombre" required maxlength="100" placeholder="Ej: Fresa Natural" autocomplete="off">
                         </div>
-                        <img id="image-preview" class="image-preview" src="" alt="Vista previa del producto" style="display:none">
-                        <button type="button" class="image-remove-btn" id="image-remove-btn" style="display:none">
-                            <i class="fas fa-times" aria-hidden="true"></i> Quitar imagen
-                        </button>
-                    </div>
-                    <input type="file" id="p-imagen-file" accept="image/*" style="display:none">
-                    <input type="hidden" id="p-imagen">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="p-precio">Precio (COP) *</label>
+                                <input type="number" id="p-precio" min="0" step="100" required placeholder="5500">
+                            </div>
+                            <div class="form-group">
+                                <label for="p-stock">Stock *</label>
+                                <input type="number" id="p-stock" min="0" step="1" required placeholder="50">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="p-categoria">Categoría</label>
+                            <select id="p-categoria">
+                                <option value="natural">Natural</option>
+                                <option value="frutas">Con Frutas</option>
+                                <option value="griego">Griego</option>
+                                <option value="sin_lactosa">Sin Lactosa</option>
+                                <option value="leches">Leches</option>
+                                <option value="quesos">Quesos</option>
+                                <option value="kumis">Kumis</option>
+                                <option value="arequipe">Arequipe</option>
+                                <option value="suero">Suero Costeño</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="p-descripcion">Descripción</label>
+                            <textarea id="p-descripcion" rows="3" maxlength="500" placeholder="Notas de sabor, presentación o mayoreo..."></textarea>
+                        </div>
+                    </section>
+
+                    <section class="admin-modal-block">
+                        <h3>Imagen y visibilidad</h3>
+                        <div class="form-group">
+                            <label>Imagen del producto</label>
+                            <div class="image-upload-area" id="image-upload-area">
+                                <div class="image-upload-placeholder" id="image-upload-placeholder">
+                                    <i class="fas fa-image" aria-hidden="true"></i>
+                                    <p>Arrastra una imagen o <span>elige archivo</span></p>
+                                    <small>JPG, PNG, WebP — máx. 5 MB</small>
+                                </div>
+                                <img id="image-preview" class="image-preview" src="" alt="Vista previa del producto" hidden>
+                                <button type="button" class="image-remove-btn" id="image-remove-btn" hidden>
+                                    <i class="fas fa-times" aria-hidden="true"></i> Quitar
+                                </button>
+                            </div>
+                            <input type="file" id="p-imagen-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+                            <input type="hidden" id="p-imagen">
+                        </div>
+                        <div class="form-group form-checkbox admin-activo-box">
+                            <label for="p-activo">
+                                <input type="checkbox" id="p-activo" checked>
+                                <span>
+                                    <strong>Producto activo</strong>
+                                    <small>Si está activo, se muestra en el catálogo público.</small>
+                                </span>
+                            </label>
+                        </div>
+                        <details class="admin-promo-box" open>
+                            <summary>Letrero y descuento</summary>
+                            <p class="admin-promo-note">El letrero sale en la card. El % baja el precio en la tienda.</p>
+
+                            <div class="form-group">
+                                <label for="p-letrero-tipo">Tipo de letrero</label>
+                                <select id="p-letrero-tipo">
+                                    <option value="">Sin letrero</option>
+                                    <option value="nuevo">Nuevo</option>
+                                    <option value="oferta">Oferta</option>
+                                    <option value="descuento">Descuento</option>
+                                    <option value="destacado">Destacado</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <span class="admin-field-label">Descuento rápido</span>
+                                <div class="admin-discount-chips" id="admin-discount-chips" role="group" aria-label="Descuentos rápidos">
+                                    <button type="button" class="admin-discount-chip" data-off="0">0%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="10">10%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="15">15%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="20">20%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="25">25%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="30">30%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="40">40%</button>
+                                    <button type="button" class="admin-discount-chip" data-off="50">50%</button>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="p-letrero">Texto del letrero</label>
+                                    <input type="text" id="p-letrero" maxlength="24" placeholder="Ej: -20%">
+                                </div>
+                                <div class="form-group">
+                                    <label for="p-descuento">% descuento</label>
+                                    <input type="number" id="p-descuento" min="0" max="80" step="1" value="0">
+                                </div>
+                            </div>
+
+                            <div class="admin-price-preview" id="admin-price-preview" aria-live="polite">
+                                <div class="admin-price-preview-badge" id="admin-price-preview-badge" hidden></div>
+                                <div class="admin-price-preview-row">
+                                    <span class="admin-price-preview-label">Precio actual</span>
+                                    <strong id="admin-price-before">$0</strong>
+                                </div>
+                                <div class="admin-price-preview-row is-final">
+                                    <span class="admin-price-preview-label">Precio en tienda</span>
+                                    <strong id="admin-price-after">$0</strong>
+                                </div>
+                                <p class="admin-price-preview-note" id="admin-price-preview-note">Sin descuento: se muestra el precio normal.</p>
+                            </div>
+                        </details>
+                    </section>
                 </div>
-                <div class="form-group">
-                    <label for="p-descripcion">Descripción</label>
-                    <textarea id="p-descripcion" rows="3"></textarea>
+
+                <div class="admin-modal-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-cancelar-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-guardar-producto">Crear producto</button>
                 </div>
-                <div class="form-group form-checkbox">
-                    <label>
-                        <input type="checkbox" id="p-activo" checked>
-                        Producto activo
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Guardar</button>
             </form>
         </div>
     </div>
-
     <div class="overlay" id="cartOverlay"></div>
-    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+    <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
-            <span>Tu carrito</span>
+            <span>Bolsa</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
         <div class="cart-items" id="cart-sidebar-items">
-            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
@@ -187,6 +288,7 @@
 
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
     <script src="../js/cart.js"></script>
     <script type="module" src="../js/auth.js"></script>
     <script type="module" src="../js/admin.js"></script>

@@ -19,16 +19,18 @@ DROP TABLE IF EXISTS usuarios CASCADE;
 -- TABLA: usuarios (auth / roles)
 -- =============================================
 CREATE TABLE usuarios (
-    id          SERIAL PRIMARY KEY,
-    nombre      VARCHAR(100) NOT NULL,
-    apellido    VARCHAR(100) NOT NULL,
-    email       VARCHAR(255) UNIQUE NOT NULL,
-    password    VARCHAR(255) NOT NULL,
-    telefono    VARCHAR(20),
-    rol         VARCHAR(20) DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin')),
-    activo      BOOLEAN DEFAULT TRUE,
-    created_at  TIMESTAMP DEFAULT NOW(),
-    updated_at  TIMESTAMP DEFAULT NOW()
+    id              SERIAL PRIMARY KEY,
+    nombre          VARCHAR(100) NOT NULL,
+    apellido        VARCHAR(100) NOT NULL,
+    email           VARCHAR(255) UNIQUE NOT NULL,
+    password        VARCHAR(255),
+    google_id       VARCHAR(255),
+    auth_provider   VARCHAR(20) DEFAULT 'local',
+    telefono        VARCHAR(20),
+    rol             VARCHAR(20) DEFAULT 'cliente' CHECK (rol IN ('cliente', 'admin')),
+    activo          BOOLEAN DEFAULT TRUE,
+    created_at      TIMESTAMP DEFAULT NOW(),
+    updated_at      TIMESTAMP DEFAULT NOW()
 );
 
 -- =============================================
@@ -55,6 +57,9 @@ CREATE TABLE productos (
     imagen_url      VARCHAR(500),
     categoria       VARCHAR(80) DEFAULT 'Yogur',
     activo          BOOLEAN DEFAULT TRUE,
+    letrero         VARCHAR(40),
+    letrero_tipo    VARCHAR(20),
+    descuento       INT DEFAULT 0,
     created_at      TIMESTAMP DEFAULT NOW(),
     updated_at      TIMESTAMP DEFAULT NOW()
 );
@@ -125,6 +130,7 @@ CREATE TABLE detalles_pedido (
 -- ÍNDICES
 -- =============================================
 CREATE INDEX idx_usuarios_email ON usuarios(email);
+CREATE UNIQUE INDEX idx_usuarios_google_id ON usuarios (google_id) WHERE google_id IS NOT NULL;
 CREATE INDEX idx_pedidos_usuario ON pedidos(usuario_id);
 CREATE INDEX idx_pedidos_estado ON pedidos(estado);
 CREATE INDEX idx_carrito_items_carrito ON carrito_items(carrito_id);

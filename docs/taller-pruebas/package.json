@@ -1,0 +1,22 @@
+{
+  "name": "taller-pruebas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "canvas": "^3.2.3",
+    "cfb": "^1.2.2",
+    "docx": "^9.7.1",
+    "exceljs": "^4.4.0",
+    "pdf-poppler": "^0.2.3",
+    "pdfjs-dist": "^4.4.168",
+    "playwright": "^1.62.1"
+  }
+}

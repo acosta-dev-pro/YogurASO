@@ -1,0 +1,82 @@
+/* header.css — barra de arriba + menú en celular
+   El look del header (pill, logo, iconos) sigue en styles.css.
+   Acá solo está el botón de las tres rayas y el menú desplegable. */
+
+.nav {
+    position: relative;
+}
+
+.nav-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    padding: 10px 9px;
+    border: 1px solid var(--border, #eee);
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+
+.nav-toggle span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--text-main, #1f1630);
+    border-radius: 2px;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+        order: 3;
+    }
+
+    header .icon-buttons {
+        order: 2;
+        margin-left: auto;
+    }
+
+    header {
+        flex-wrap: wrap;
+        border-radius: 22px;
+        overflow: visible;
+    }
+
+    #nav-items {
+        display: none;
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        left: auto;
+        min-width: 180px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 8px;
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        box-shadow: none;
+        z-index: 220;
+    }
+
+    #nav-items.is-open {
+        display: flex;
+    }
+
+    #nav-items li {
+        font-size: 14px;
+    }
+
+    #nav-items li a {
+        display: block;
+        padding: 10px 12px;
+    }
+
+    #nav-items li a::after {
+        display: none;
+    }
+}

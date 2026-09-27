@@ -1,14 +1,22 @@
-﻿/**
+/**
  * authRoutes.js — Rutas de autenticación
- * POST /login, POST /registro, GET /perfil (requiere token)
  */
 const express = require('express');
 const router = express.Router();
-const { login, registro, perfil } = require('../controllers/authController');
+const auth = require('../controllers/authController');
 const { verificarToken } = require('../middleware/verifyToken');
 
-router.post('/login', login);
-router.post('/registro', registro);
-router.get('/perfil', verificarToken, perfil);
+router.post('/login', auth.login);
+router.post('/registro', auth.registro);
+router.post('/google', auth.googleLogin);
+router.post('/recuperar', auth.solicitarRecuperacion);
+router.post('/reset-password', auth.resetPassword);
+router.get('/perfil', verificarToken, auth.perfil);
+router.put('/perfil', verificarToken, auth.actualizarPerfil);
+router.put('/cambiar-password', verificarToken, auth.cambiarPassword);
+router.post('/perfil/codigo-password', verificarToken, auth.solicitarCodigoCambioPassword);
+router.get('/profile', verificarToken, auth.perfil);
+router.put('/profile', verificarToken, auth.actualizarPerfil);
+router.put('/change-password', verificarToken, auth.cambiarPassword);
 
 module.exports = router;

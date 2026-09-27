@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña · YogurASO</title>
+    <meta name="description" content="Recupera el acceso a tu cuenta YogurASO.">
+    <meta name="theme-color" content="#E08888">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/shop-ui.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/cards-productos.css">
+</head>
+<body>
+    <a class="skip-link" href="#recoverForm">Saltar al formulario</a>
+    <header>
+        <div class="logo"><h2>YogurASO</h2></div>
+        <div class="nav">
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
+            <ul id="nav-items">
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="productos.html">Productos</a></li>
+                <li><a href="../index.html#contact">Contacto</a></li>
+            </ul>
+
+            <div class="icon-buttons">
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cart-count" hidden>0</span>
+                </button>
+            </div>
+            
+            
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="shop-auth-wrap">
+            <aside class="shop-auth-promo" aria-hidden="true">
+                <div>
+                    <p class="shop-kicker">Ayuda</p>
+                    <h2>Recupera el acceso en un minuto.</h2>
+                    <p>Te enviamos un enlace a Gmail. Revisa también Spam.</p>
+                </div>
+            </aside>
+        <div class="auth-card">
+            <p class="shop-kicker">Seguridad</p>
+            <h1 class="auth-title">Recuperar <span>contraseña</span></h1>
+            <p class="auth-lead">Te enviamos un código de 6 dígitos. Revisa Gmail y la carpeta de spam.</p>
+
+            <form class="auth-form" id="recoverForm">
+                <div class="form-group recover-step" data-step="1">
+                    <label for="email"><i class="fas fa-envelope"></i> Correo</label>
+                    <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required autocomplete="email">
+                </div>
+                <div class="form-group recover-step" data-step="2" hidden>
+                    <label for="codigo">Código de 6 dígitos</label>
+                    <input type="text" id="codigo" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code">
+                </div>
+                <div class="recover-step" data-step="3" hidden>
+                    <div class="form-group">
+                        <label for="new-pass">Nueva contraseña</label>
+                        <input type="password" id="new-pass" minlength="8" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-pass-2">Confirmar</label>
+                        <input type="password" id="new-pass-2" minlength="8" autocomplete="new-password">
+                    </div>
+                </div>
+                <button type="submit" class="auth-submit" id="recoverSubmit">Enviar código</button>
+            </form>
+
+            <p class="auth-redirect">
+                <a href="login.html">Volver a iniciar sesión</a>
+            </p>
+        </div>
+        </div>
+    </div>
+
+    <a href="#" class="whatsapp-float" data-config="whatsapp" data-wa-text="Hola YogurASO" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    </a>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/cart.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+</body>
+</html>

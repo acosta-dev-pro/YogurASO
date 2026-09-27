@@ -26,3 +26,18 @@ backup/
 
 # Temporary Git files
 .git_tmp_node_files.txt
+
+# Carpetas temporales de los generadores de documentos
+docs/taller-pruebas/_estdent_fix_tmp/
+docs/taller-pruebas/_vba_tmp/
+docs/taller-pruebas/_xlsm_unzip/
+docs/taller-pruebas/ods-extract/
+docs/taller-pruebas/inspect-*.txt
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+docs/taller-pruebas/_tmp_*.zip

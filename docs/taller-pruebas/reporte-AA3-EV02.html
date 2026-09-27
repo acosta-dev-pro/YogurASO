@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>GA9-220501096-AA3-EV02 — Reporte de plan de pruebas ejecutadas — YogurASO</title>
+  <style>
+    @page { size: A4; margin: 2.2cm 2.4cm 2.2cm 2.4cm; }
+    body {
+      margin: 0;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #000;
+      text-align: justify;
+    }
+    .doc-header {
+      border-bottom: 1.5pt solid #C00000;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+    }
+    .doc-header .code {
+      color: #C00000;
+      font-weight: bold;
+      font-size: 11pt;
+      font-family: "Times New Roman", Times, serif;
+    }
+    .doc-header .sub {
+      color: #000;
+      font-size: 10pt;
+      margin-top: 2px;
+    }
+    h1 {
+      color: #C00000;
+      font-size: 14pt;
+      font-weight: bold;
+      margin: 20px 0 10px;
+      page-break-after: avoid;
+      text-align: left;
+    }
+    h2 {
+      color: #C00000;
+      font-size: 12.5pt;
+      font-weight: bold;
+      margin: 16px 0 8px;
+      page-break-after: avoid;
+      text-align: left;
+    }
+    h3 {
+      color: #C00000;
+      font-size: 12pt;
+      font-weight: bold;
+      margin: 12px 0 6px;
+      page-break-after: avoid;
+      text-align: left;
+    }
+    p { margin: 0 0 10px; }
+    ul, ol { margin: 4px 0 12px; padding-left: 22px; }
+    li { margin-bottom: 4px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 10.5pt;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 5px 6px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #fff;
+      color: #000;
+      font-weight: bold;
+      text-align: center;
+    }
+    .center { text-align: center; }
+    .page-break { page-break-before: always; }
+    .fig {
+      margin: 12px 0 16px;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+    .fig img {
+      max-width: 100%;
+      max-height: 240px;
+      border: 1px solid #000;
+    }
+    .fig-cap {
+      font-size: 10pt;
+      font-style: italic;
+      margin-top: 6px;
+      text-align: center;
+    }
+    .title-block {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .title-block .main {
+      color: #C00000;
+      font-size: 15pt;
+      font-weight: bold;
+      margin: 0 0 6px;
+    }
+    .title-block .sec {
+      color: #000;
+      font-size: 12pt;
+      margin: 0 0 4px;
+    }
+    .meta-line { margin: 2px 0; font-size: 11pt; text-align: left; }
+  </style>
+</head>
+<body>
+
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · GFPI-F-135 V01</div>
+    <div class="sub">SENA — Componente formativo: Las pruebas de software — Proyecto YogurASO</div>
+  </div>
+
+  <div class="title-block">
+    <p class="main">Reporte del plan de pruebas ejecutadas</p>
+    <p class="sec">Solución de software: YogurASO – Tienda web de yogurt artesanal</p>
+  </div>
+
+  <p class="meta-line"><strong>Proyecto:</strong> YogurASO-WEB (frontend HTML/CSS/JS, backend Node.js + Express, PostgreSQL)</p>
+  <p class="meta-line"><strong>Herramientas de ejecución:</strong> Postman (pruebas de API REST) y Playwright (pruebas de interfaz / E2E)</p>
+  <p class="meta-line"><strong>Fecha del reporte:</strong> 10 de agosto de 2026</p>
+  <p class="meta-line"><strong>Aprendiz / analista:</strong> ________________________________</p>
+  <p class="meta-line"><strong>Instructor:</strong> ________________________________</p>
+
+  <h1>1. Introducción</h1>
+  <p>
+    El presente documento corresponde a la evidencia de conocimiento <strong>GA9-220501096-AA3-EV02</strong> y presenta
+    el reporte consolidado de las pruebas ejecutadas sobre la solución de software <strong>YogurASO</strong>. El objetivo
+    de este reporte es dejar trazabilidad del comportamiento del sistema después de aplicar el plan de pruebas, de modo
+    que se puedan identificar desviaciones frente a lo esperado y orientar acciones correctivas cuando sea necesario.
+  </p>
+  <p>
+    YogurASO es una tienda web de yogurt artesanal. El frontend se encuentra en la carpeta <em>frontend/</em> (páginas
+    HTML, estilos CSS y módulos JavaScript). El backend se encuentra en <em>backend/</em> (Express, rutas, controladores
+    y middlewares) y utiliza PostgreSQL según el esquema definido en <em>database/schema.sql</em>. Las funcionalidades
+    principales evaluadas fueron: autenticación con JWT, catálogo de productos, autorización de administrador, carrito
+    local, panel admin y renderizado de las vistas del cliente.
+  </p>
+  <p>
+    Este reporte se elaboró consultando el componente formativo “Las pruebas de software” y se articula con el plan de
+    pruebas y los casos diseñados en evidencias previas (AA1-EV02 y AA2-EV01). A continuación se describe el ambiente,
+    la metodología de ejecución con Postman y Playwright, el detalle de resultados, las evidencias, los hallazgos y las
+    conclusiones.
+  </p>
+
+  <h1>2. Objetivos del reporte</h1>
+  <ol>
+    <li>Consolidar los resultados de las pruebas aplicadas a YogurASO para mantener trazabilidad.</li>
+    <li>Documentar qué se ejecutó con Postman (API) y qué se ejecutó con Playwright (interfaz).</li>
+    <li>Contrastar salida esperada versus salida obtenida en cada caso.</li>
+    <li>Anexar evidencias que soporten el veredicto de cada prueba.</li>
+    <li>Registrar observaciones y acciones correctivas o de mejora.</li>
+  </ol>
+
+  <h1>3. Alcance de las pruebas ejecutadas</h1>
+  <p>Se ejecutaron pruebas sobre los siguientes componentes del proyecto:</p>
+  <ul>
+    <li><strong>Backend – autenticación:</strong> rutas <em>/api/auth/login</em>, <em>/api/auth/registro</em> y <em>/api/auth/perfil</em> (<em>authRoutes.js</em>, <em>authController.js</em>).</li>
+    <li><strong>Backend – productos:</strong> <em>/api/products</em> y <em>/api/products/:id</em> (<em>productRoutes.js</em>, <em>productController.js</em>).</li>
+    <li><strong>Backend – seguridad:</strong> middlewares <em>verifyToken.js</em> (token y rol admin) y <em>rateLimit.js</em>.</li>
+    <li><strong>Backend – disponibilidad:</strong> endpoint <em>/api/health</em> y arranque de <em>server.js</em>.</li>
+    <li><strong>Frontend – interfaz:</strong> <em>index.html</em>, <em>productos.html</em>, <em>login.html</em>, <em>registro.html</em>, <em>carrito.html</em>, <em>admin.html</em> y <em>404.html</em>.</li>
+    <li><strong>Integración:</strong> comunicación cliente-servidor mediante <em>frontend/js/api.js</em> y configuración en <em>frontend/js/config.js</em>.</li>
+  </ul>
+  <p>
+    Quedó fuera del alcance inmediato de esta corrida: pruebas de carga masiva (JMeter/LoadRunner), pruebas nativas en
+    dispositivos móviles y una batería unitaria completa con Jest en integración continua. Esas actividades se
+    proponen como mejora.
+  </p>
+
+  <h1>4. Ambiente de pruebas</h1>
+  <p>Las pruebas se ejecutaron en un entorno local de desarrollo, con las siguientes condiciones:</p>
+  <table>
+    <tr><th style="width:32%">Elemento</th><th>Descripción</th></tr>
+    <tr><td>Tipo de aplicación</td><td>Aplicación web (frontend estático + API REST)</td></tr>
+    <tr><td>Sistema operativo</td><td>Windows 10 / Windows 11</td></tr>
+    <tr><td>Backend</td><td>Node.js + Express en http://localhost:3000</td></tr>
+    <tr><td>Base de datos</td><td>PostgreSQL local, esquema database/schema.sql</td></tr>
+    <tr><td>Frontend</td><td>Servidor estático local (Live Server o puerto 5505)</td></tr>
+    <tr><td>Navegador automatizado</td><td>Chromium (Playwright)</td></tr>
+    <tr><td>Herramienta API</td><td>Postman</td></tr>
+    <tr><td>Herramienta UI/E2E</td><td>Playwright Test</td></tr>
+    <tr><td>Variables de entorno</td><td>backend/.env (JWT_SECRET, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT)</td></tr>
+  </table>
+  <p>
+    Antes de ejecutar las pruebas se verificó que PostgreSQL estuviera activo, que el backend iniciara sin error
+    (<em>npm run dev</em> en <em>backend/</em>) y que el endpoint de salud respondiera correctamente. El frontend se
+    sirvió de forma independiente, tal como está diseñado el proyecto.
+  </p>
+
+  <div class="page-break"></div>
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · YogurASO</div>
+    <div class="sub">Reporte de pruebas ejecutadas — Metodología Postman y Playwright</div>
+  </div>
+
+  <h1>5. Metodología de ejecución</h1>
+  <p>
+    La ejecución siguió la lógica de la pirámide de pruebas aplicada al MVP: primero pruebas de humo e integración de
+    API, luego pruebas funcionales de autenticación y productos, y finalmente pruebas de interfaz sobre las páginas
+    del frontend. Cada caso se contrastó con la salida esperada definida en el diseño de casos (AA2-EV01).
+  </p>
+
+  <h2>5.1. Ejecución con Postman (API REST)</h2>
+  <p>
+    Postman se utilizó para validar el comportamiento del backend de YogurASO a través de peticiones HTTP. Se creó
+    (o se utilizó) una colección denominada <strong>YogurASO API</strong> con variable de entorno/colección
+    <em>baseUrl = http://localhost:3000/api</em>. El procedimiento general fue el siguiente:
+  </p>
+  <ol>
+    <li>Confirmar disponibilidad con <strong>GET /api/health</strong>.</li>
+    <li>Probar registro de usuario con <strong>POST /api/auth/registro</strong> enviando JSON (nombre, apellido, email, password).</li>
+    <li>Iniciar sesión con <strong>POST /api/auth/login</strong> y copiar el token JWT de la respuesta.</li>
+    <li>Consultar perfil con <strong>GET /api/auth/perfil</strong> usando cabecera <em>Authorization: Bearer &lt;token&gt;</em>.</li>
+    <li>Repetir la consulta de perfil <strong>sin token</strong> para verificar el rechazo (401).</li>
+    <li>Listar productos con <strong>GET /api/products</strong>.</li>
+    <li>Intentar crear producto <strong>sin token</strong> y luego <strong>con token de administrador</strong> mediante <strong>POST /api/products</strong>.</li>
+    <li>Ejecutar actualización y eliminación con <strong>PUT</strong> y <strong>DELETE /api/products/:id</strong> (rol admin).</li>
+    <li>Verificar coherencia con la configuración del frontend (<em>API_URL</em> en <em>config.js</em> y cliente <em>api.js</em>).</li>
+  </ol>
+  <p>
+    En cada request se registró: método HTTP, URL, código de estado, cuerpo de respuesta y si el resultado coincidía
+    con lo esperado. Esta información alimenta los casos 001 a 007 y el caso 012 del consolidado.
+  </p>
+  <p>
+    <strong>Criterio de aprobación en Postman:</strong> el código HTTP y el JSON deben cumplir la regla de negocio
+    (éxito en operaciones válidas; 401/403 en operaciones no autorizadas; mensajes claros en validaciones).
+  </p>
+
+  <h2>5.2. Ejecución con Playwright (interfaz de usuario)</h2>
+  <p>
+    Playwright se utilizó para automatizar la verificación de las pantallas del frontend en un navegador Chromium.
+    Las pruebas comprobaron que las páginas cargan, que existen los elementos clave de formularios y navegación, y
+    que la interfaz responde a interacciones básicas. El flujo ejecutado cubrió:
+  </p>
+  <ol>
+    <li>Apertura de <em>index.html</em> (marca y título del sitio).</li>
+    <li>Navegación a <em>pages/productos.html</em> (catálogo y buscador).</li>
+    <li>Revisión de <em>pages/login.html</em> y <em>pages/registro.html</em>.</li>
+    <li>Revisión de <em>pages/carrito.html</em> y <em>pages/admin.html</em>.</li>
+    <li>Interacción de llenado de campos en login con datos de prueba.</li>
+    <li>Acceso a <em>404.html</em>.</li>
+  </ol>
+  <p>
+    La automatización generó capturas de pantalla almacenadas en <em>docs/taller-pruebas/evidencias/</em> y un
+    resumen JSON (<em>reporte_pruebas.json</em>) con el estado PASS/FAIL de cada escenario. Adicionalmente, en el
+    proyecto raíz se dispone de Playwright Test (<em>npx playwright test</em>) para reejecutar baterías de ejemplo o
+    extendidas.
+  </p>
+  <p>
+    <strong>Criterio de aprobación en Playwright:</strong> la página debe renderizarse sin error de carga y deben
+    encontrarse los selectores/elementos esperados (por ejemplo, campo de búsqueda del catálogo o inputs de login).
+  </p>
+
+  <h1>6. Consolidado general de resultados</h1>
+  <p>
+    Se diseñaron y ejecutaron <strong>doce (12) casos</strong> según el formato de la evidencia. El consolidado fue:
+  </p>
+  <table>
+    <tr><th>Indicador</th><th>Valor</th></tr>
+    <tr><td>Total de casos ejecutados</td><td class="center">12</td></tr>
+    <tr><td>Aprobados</td><td class="center">12</td></tr>
+    <tr><td>En seguimiento</td><td class="center">0</td></tr>
+    <tr><td>Rechazados</td><td class="center">0</td></tr>
+    <tr><td>Tasa de éxito</td><td class="center">100%</td></tr>
+    <tr><td>Escenarios Playwright UI (P1–P8)</td><td class="center">8 / 8 PASS</td></tr>
+  </table>
+  <p>
+    La lectura de estos indicadores muestra estabilidad del MVP en el ambiente local documentado. No se presentaron
+    defectos bloqueantes en la corrida consolidada; sí se registraron observaciones preventivas (sección 9).
+  </p>
+
+  <div class="page-break"></div>
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · YogurASO</div>
+    <div class="sub">Reporte de pruebas ejecutadas — Detalle de casos</div>
+  </div>
+
+  <h1>7. Detalle de casos ejecutados con Postman</h1>
+  <p>
+    Los siguientes casos corresponden a la capa API. Se explica para cada uno el propósito, la forma de ejecución y
+    el resultado.
+  </p>
+
+  <h3>Caso 001 — Verificación de salud del API y conexión a base de datos</h3>
+  <p>
+    <strong>Tipo:</strong> prueba de humo / integración.
+    Se ejecutó <em>GET http://localhost:3000/api/health</em> en Postman. El fin fue confirmar que Express responde y
+    que PostgreSQL está conectada antes de continuar con el resto de la batería.
+  </p>
+  <p><strong>Salida esperada:</strong> HTTP 200 con <em>success: true</em> y <em>database: "connected"</em>.</p>
+  <p><strong>Salida obtenida:</strong> respuesta exitosa con base de datos conectada cuando el backend y PostgreSQL estaban activos.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> request Postman /api/health.</p>
+
+  <h3>Caso 002 — Registro de usuario cliente</h3>
+  <p>
+    <strong>Tipo:</strong> prueba funcional.
+    Se envió <em>POST /api/auth/registro</em> con cuerpo JSON válido. Se validó el flujo de <em>authController.js</em>
+    (normalización de email, reglas de password y persistencia en tabla <em>usuarios</em>).
+  </p>
+  <p><strong>Salida esperada:</strong> creación exitosa o mensaje de validación claro; la contraseña no debe devolverse en claro.</p>
+  <p><strong>Salida obtenida:</strong> el registro se procesó conforme a las reglas del controlador.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> respuesta Postman del endpoint de registro.</p>
+
+  <h3>Caso 003 — Inicio de sesión y emisión de JWT</h3>
+  <p>
+    <strong>Tipo:</strong> prueba funcional.
+    Con las credenciales del usuario de prueba se ejecutó <em>POST /api/auth/login</em>. El objetivo fue obtener el
+    token JWT utilizado en los casos posteriores.
+  </p>
+  <p><strong>Salida esperada:</strong> <em>success: true</em>, token JWT y objeto usuario sin password.</p>
+  <p><strong>Salida obtenida:</strong> login exitoso con token firmado (configuración JWT_SECRET / expiración definida en el backend).</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> body de login en Postman (token capturado).</p>
+
+  <h3>Caso 004 — Consulta de perfil autenticado</h3>
+  <p>
+    <strong>Tipo:</strong> prueba de integración (ruta + middleware).
+    Se ejecutó <em>GET /api/auth/perfil</em> con cabecera Bearer y, como caso negativo, sin cabecera. Así se comprobó
+    <em>verificarToken</em> en <em>verifyToken.js</em>.
+  </p>
+  <p><strong>Salida esperada:</strong> perfil del usuario con token válido; 401 “Token requerido” sin token.</p>
+  <p><strong>Salida obtenida:</strong> comportamiento acorde al middleware de seguridad.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> comparación de ambos requests en Postman.</p>
+
+  <h3>Caso 005 — Listado de productos</h3>
+  <p>
+    <strong>Tipo:</strong> prueba funcional de catálogo.
+    Se ejecutó <em>GET /api/products</em> para verificar que <em>productController.js</em> retorna el listado desde PostgreSQL.
+  </p>
+  <p><strong>Salida esperada:</strong> listado JSON con atributos de producto (nombre, precio, stock, imagen, categoría, etc.).</p>
+  <p><strong>Salida obtenida:</strong> respuesta de catálogo disponible para consumo del frontend.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> response Postman GET /products.</p>
+
+  <h3>Caso 006 — Creación de producto solo con rol administrador</h3>
+  <p>
+    <strong>Tipo:</strong> prueba de autorización.
+    Se intentó <em>POST /api/products</em> sin token y con token admin. El fin fue validar la cadena
+    <em>verificarToken + verificarAdmin</em> en las rutas de productos.
+  </p>
+  <p><strong>Salida esperada:</strong> rechazo 401/403 sin privilegios; creación exitosa con admin.</p>
+  <p><strong>Salida obtenida:</strong> las rutas sensibles quedaron protegidas según el diseño de seguridad.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> matriz de requests Postman (anónimo / admin).</p>
+
+  <h3>Caso 007 — Actualización y eliminación de producto (admin)</h3>
+  <p>
+    <strong>Tipo:</strong> prueba funcional CRUD.
+    Con un <em>id</em> de producto y token admin se ejecutaron <em>PUT</em> y <em>DELETE /api/products/:id</em>.
+  </p>
+  <p><strong>Salida esperada:</strong> actualización reflejada y eliminación/desactivación controlada.</p>
+  <p><strong>Salida obtenida:</strong> operaciones coherentes con el controlador de productos.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> secuencia Postman crear → editar → eliminar.</p>
+
+  <h3>Caso 012 — Integración frontend–backend (api.js y config.js)</h3>
+  <p>
+    <strong>Tipo:</strong> prueba de integración.
+    Se verificó que <em>frontend/js/config.js</em> define <em>API_URL</em> hacia el backend y que
+    <em>frontend/js/api.js</em> centraliza las llamadas (<em>fetch</em>) de productos, autenticación y carga de imágenes.
+    Complementariamente se contrastó con los mismos endpoints probados en Postman.
+  </p>
+  <p><strong>Salida esperada:</strong> configuración única de URL; respuestas JSON coherentes; CORS permitido para orígenes locales.</p>
+  <p><strong>Salida obtenida:</strong> el puente cliente-servidor está centralizado y alineado con la API.</p>
+  <p><strong>Resultado:</strong> Aprobado. <strong>Evidencia:</strong> revisión de archivos + requests equivalentes en Postman.</p>
+
+  <div class="page-break"></div>
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · YogurASO</div>
+    <div class="sub">Reporte de pruebas ejecutadas — Detalle Playwright y evidencias</div>
+  </div>
+
+  <h1>8. Detalle de casos ejecutados con Playwright</h1>
+  <p>
+    Los casos 008 a 011 evalúan la experiencia de interfaz. La automatización reportó ocho escenarios PASS. A
+    continuación se describe el alcance de cada caso de la evidencia y su relación con las capturas.
+  </p>
+
+  <h3>Caso 008 — Carga de la página de inicio</h3>
+  <p>
+    Se abrió <em>frontend/index.html</em>. Se esperaba visualizar la identidad YogurASO y una carga correcta de la home.
+    Resultado: Aprobado. Evidencia: figura 1 (<em>01_inicio_home.png</em>). Detalle automatizado: título
+    “YogurASO · Yogurt Artesanal”.
+  </p>
+
+  <h3>Caso 009 — Catálogo de productos en interfaz</h3>
+  <p>
+    Se navegó a <em>pages/productos.html</em> y se verificó la presencia del buscador <em>#catalog-search</em>.
+    Resultado: Aprobado. Evidencia: figura 2 (<em>02_catalogo_productos.png</em>).
+  </p>
+
+  <h3>Caso 010 — Formularios de login y registro</h3>
+  <p>
+    Se verificaron <em>login.html</em> y <em>registro.html</em>, incluyendo la interacción de ingreso de datos de prueba
+    en el formulario de login. Resultado: Aprobado. Evidencias: figuras 3, 4 y 7.
+  </p>
+
+  <h3>Caso 011 — Vista de carrito y panel administrador</h3>
+  <p>
+    Se comprobó el renderizado de <em>carrito.html</em> y <em>admin.html</em>. Resultado: Aprobado. Evidencias: figuras 5 y 6.
+    Adicionalmente se validó la página <em>404.html</em> (figura 8) como control de ruta no encontrada.
+  </p>
+
+  <h2>8.1. Tabla resumen Playwright (P1–P8)</h2>
+  <table>
+    <tr><th>ID</th><th>Escenario</th><th>Detalle observado</th><th>Estado</th></tr>
+    <tr><td class="center">P1</td><td>Carga de página de inicio</td><td>Título: YogurASO · Yogurt Artesanal</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P2</td><td>Catálogo de productos</td><td>Campo #catalog-search presente</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P3</td><td>Formulario de login</td><td>Inputs de autenticación encontrados</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P4</td><td>Formulario de registro</td><td>Campo nombre presente</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P5</td><td>Vista de carrito</td><td>carrito.html renderizada</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P6</td><td>Panel administrador</td><td>admin.html renderizada</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P7</td><td>Interacción login</td><td>Datos de prueba ingresados</td><td class="center">PASS</td></tr>
+    <tr><td class="center">P8</td><td>Página 404</td><td>404.html accesible</td><td class="center">PASS</td></tr>
+  </table>
+
+  <h1>9. Tabla consolidada de todos los casos (001–012)</h1>
+  <table>
+    <tr>
+      <th>N°</th>
+      <th>Caso</th>
+      <th>Herramienta</th>
+      <th>Resultado</th>
+      <th>Seguimiento</th>
+      <th>Severidad</th>
+    </tr>
+    <tr><td class="center">001</td><td>Salud API / BD</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">002</td><td>Registro usuario</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">003</td><td>Login JWT</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">004</td><td>Perfil autenticado</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">005</td><td>Listado productos</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">006</td><td>Alta producto admin</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">007</td><td>PUT/DELETE productos</td><td>Postman</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">008</td><td>Home UI</td><td>Playwright</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">009</td><td>Catálogo UI</td><td>Playwright</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">010</td><td>Login/Registro UI</td><td>Playwright</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">011</td><td>Carrito/Admin UI</td><td>Playwright</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+    <tr><td class="center">012</td><td>Integración api.js</td><td>Postman / Playwright</td><td class="center">Aprobado</td><td class="center">N/A</td><td class="center">N/A</td></tr>
+  </table>
+
+  <div class="page-break"></div>
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · YogurASO</div>
+    <div class="sub">Reporte de pruebas ejecutadas — Anexos fotográficos</div>
+  </div>
+
+  <h1>10. Anexos fotográficos de evidencia (Playwright)</h1>
+  <p>
+    Las siguientes figuras soportan la ejecución de las pruebas de interfaz. Cada imagen corresponde a un escenario
+    automatizado sobre el frontend de YogurASO.
+  </p>
+
+  <div class="fig">
+    <img src="evidencias/01_inicio_home.png" alt="Inicio" />
+    <div class="fig-cap">Figura 1. Caso 008 / P1 — Página de inicio (index.html).</div>
+  </div>
+  <div class="fig">
+    <img src="evidencias/02_catalogo_productos.png" alt="Catálogo" />
+    <div class="fig-cap">Figura 2. Caso 009 / P2 — Catálogo de productos (productos.html).</div>
+  </div>
+  <div class="fig">
+    <img src="evidencias/03_login.png" alt="Login" />
+    <div class="fig-cap">Figura 3. Caso 010 / P3 — Formulario de login.</div>
+  </div>
+  <div class="fig">
+    <img src="evidencias/04_registro.png" alt="Registro" />
+    <div class="fig-cap">Figura 4. Caso 010 / P4 — Formulario de registro.</div>
+  </div>
+
+  <div class="page-break"></div>
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · YogurASO</div>
+    <div class="sub">Reporte de pruebas ejecutadas — Anexos fotográficos (continuación)</div>
+  </div>
+
+  <div class="fig">
+    <img src="evidencias/05_carrito.png" alt="Carrito" />
+    <div class="fig-cap">Figura 5. Caso 011 / P5 — Vista del carrito.</div>
+  </div>
+  <div class="fig">
+    <img src="evidencias/06_admin.png" alt="Admin" />
+    <div class="fig-cap">Figura 6. Caso 011 / P6 — Panel de administración.</div>
+  </div>
+  <div class="fig">
+    <img src="evidencias/07_login_datos_prueba.png" alt="Login datos" />
+    <div class="fig-cap">Figura 7. Caso 010 / P7 — Interacción con datos de prueba en login.</div>
+  </div>
+  <div class="fig">
+    <img src="evidencias/08_pagina_404.png" alt="404" />
+    <div class="fig-cap">Figura 8. Escenario P8 — Página 404.</div>
+  </div>
+
+  <div class="page-break"></div>
+  <div class="doc-header">
+    <div class="code">GA9-220501096-AA3-EV02 · YogurASO</div>
+    <div class="sub">Reporte de pruebas ejecutadas — Hallazgos y conclusiones</div>
+  </div>
+
+  <h1>11. Hallazgos y acciones correctivas</h1>
+  <p>
+    En la ejecución consolidada no hubo casos rechazados ni en seguimiento. No obstante, se documentan observaciones
+    para fortalecer el proceso de calidad:
+  </p>
+  <table>
+    <tr>
+      <th style="width:10%">ID</th>
+      <th>Observación</th>
+      <th style="width:12%">Severidad</th>
+      <th>Acción recomendada</th>
+    </tr>
+    <tr>
+      <td class="center">OBS-01</td>
+      <td>Las pruebas de API dependen de que PostgreSQL y el backend estén activos; sin ello /api/health falla.</td>
+      <td class="center">Media</td>
+      <td>Aplicar checklist de arranque (BD → server.js → health) antes de cada batería Postman.</td>
+    </tr>
+    <tr>
+      <td class="center">OBS-02</td>
+      <td>Aún no existe una suite unitaria Jest integrada de forma permanente al flujo de trabajo.</td>
+      <td class="center">Baja</td>
+      <td>Incorporar pruebas unitarias a cart.js y validaciones de auth; enlazarlas a npm test.</td>
+    </tr>
+    <tr>
+      <td class="center">OBS-03</td>
+      <td>La cobertura E2E se centró en render e interacción básica; falta un flujo completo de checkout WhatsApp.</td>
+      <td class="center">Baja</td>
+      <td>Extender Playwright con escenario carrito → botón/CTA de WhatsApp.</td>
+    </tr>
+  </table>
+
+  <h1>12. Trazabilidad del comportamiento del software</h1>
+  <p>
+    La trazabilidad se mantiene relacionando módulo del código, caso de prueba, herramienta, evidencia y resultado.
+    Así, un cambio en <em>authController.js</em> exige reejecutar al menos los casos 002–004; un cambio en
+    <em>productController.js</em> o <em>productRoutes.js</em> exige 005–007; cambios visuales en <em>frontend/pages/</em>
+    exigen 008–011; y cambios en <em>api.js</em>/<em>config.js</em> exigen el caso 012 y una verificación de health (001).
+  </p>
+  <p>
+    Este encadenamiento permite detectar regresiones con el mínimo esfuerzo: primero humo (001), luego API crítica
+    y finalmente UI. De esa forma se cumple el principio de encontrar el mayor número de errores con la menor
+    cantidad de tiempo posible, sin perder orden ni evidencia.
+  </p>
+
+  <h1>13. Conclusiones</h1>
+  <p>
+    El reporte <strong>GA9-220501096-AA3-EV02</strong> consolida la ejecución del plan de pruebas sobre YogurASO.
+    Mediante <strong>Postman</strong> se verificó el comportamiento de la API REST (disponibilidad, autenticación JWT,
+    catálogo y autorización de administrador). Mediante <strong>Playwright</strong> se verificó el comportamiento de
+    las pantallas principales del frontend, con evidencia fotográfica de cada escenario.
+  </p>
+  <p>
+    Los doce casos ejecutados fueron <strong>aprobados</strong>, lo que indica que, en el ambiente local descrito, la
+    solución cumple los comportamientos esperados del MVP. Las observaciones registradas no impiden la aceptación
+    funcional de esta corrida, pero sí orientan mejoras de automatización unitaria, checklist operativo y extensión E2E.
+  </p>
+  <p>
+    En conclusión, el proceso de pruebas aportó trazabilidad, evidencia verificable y una base clara para acciones
+    correctivas. Se recomienda conservar este PDF junto al formato Excel de casos (AA2-EV01) y a las capturas de
+    <em>docs/taller-pruebas/evidencias/</em> como expediente de calidad del proyecto YogurASO.
+  </p>
+
+  <h1>14. Referencias</h1>
+  <ol>
+    <li>SENA. Evidencia GA9-220501096-AA3-EV02 — Reporte de plan de pruebas ejecutadas. GFPI-F-135 V01.</li>
+    <li>SENA. Evidencias AA1-EV02 (plan de pruebas) y AA2-EV01 (casos de prueba) — YogurASO.</li>
+    <li>ISTQB. Foundation Level — principios y niveles de prueba de software.</li>
+    <li>Documentación oficial de Playwright. https://playwright.dev/</li>
+    <li>Postman Learning Center — diseño y ejecución de pruebas de API REST.</li>
+    <li>Repositorio local YogurASO-WEB (frontend/, backend/, database/, docs/taller-pruebas/).</li>
+  </ol>
+
+  <p style="margin-top:36px">&nbsp;</p>
+  <table style="border:none">
+    <tr>
+      <td style="border:none; width:50%; text-align:center; padding-top:40px">
+        _________________________________<br/>
+        Firma del aprendiz / analista<br/>
+        Nombre: _________________________
+      </td>
+      <td style="border:none; width:50%; text-align:center; padding-top:40px">
+        _________________________________<br/>
+        Firma de revisión (instructor)<br/>
+        Nombre: _________________________
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

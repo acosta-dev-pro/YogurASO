@@ -1,20 +1,25 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YogurASO · Yogurt Artesanal</title>
-    <meta name="description" content="YogurASO elabora yogurt artesanal fresco con cultivos vivos. Explora sabores, arma tu pedido y cómpralo por WhatsApp.">
-    <meta name="theme-color" content="#FA5053">
+    <meta name="description" content="YogurASO elabora yogurt artesanal en Tello y Neiva, Huila. Pedidos al detal y mayoristas. Explora sabores y compra por WhatsApp.">
+    <meta name="theme-color" content="#E08888">
     <meta name="robots" content="index, follow">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <meta property="og:title" content="YogurASO · Yogurt Artesanal">
-    <meta property="og:description" content="Yogurt artesanal elaborado a diario. Sin conservantes, con sabor real.">
+    <meta property="og:description" content="Yogurt artesanal del Huila. Mayoreo en Neiva y Tello.">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="es_CO">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop-ui.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/cards-home.css">
+    <link rel="stylesheet" href="css/cards-productos.css">
+    <meta property="og:image" content="assets/img/Fresa.png">
 </head>
 <body>
     <!-- Accesibilidad: enlace para saltar al contenido principal -->
@@ -23,7 +28,7 @@
     <!-- =========================================================
          HEADER / NAVBAR
          Aquí va el logo de la marca, el menú, el carrito y el usuario.
-         Estilos: styles.css → sección HEADER
+         Estilos: styles.css ? sección HEADER
          ========================================================= -->
     <header>
         <!-- LOGO: nombre de la marca (se puede cambiar desde config.js) -->
@@ -32,37 +37,20 @@
         </div>
         <div class="nav">
             <!-- Menú de navegación principal -->
+            <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
+                <span></span><span></span><span></span>
+            </button>
             <ul id="nav-items">
                 <li class="active"><a href="index.html" aria-current="page">Inicio</a></li>
-                <li><a href="index.html#nosotros">Nosotros</a></li>
-                <li><a href="#beneficios">Beneficios</a></li>
                 <li><a href="pages/productos.html">Productos</a></li>
                 <li><a href="#contact">Contacto</a></li>
             </ul>
-            
-            <!-- Botón del carrito (abre el sidebar) -->
+
             <div class="icon-buttons">
-                <button class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
-                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <button type="button" class="icon-btn" id="cartBtn" aria-label="Abrir carrito">
+                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
                     <span class="cart-badge" id="cart-count" hidden>0</span>
                 </button>
-            </div>
-            
-            <!-- Menú de usuario (login / logout / admin) -->
-            <div class="user-menu">
-                <button class="user-menu-btn" id="userMenuBtn">
-                    <i class="fas fa-user-circle"></i>
-                </button>
-                <div class="user-dropdown" id="userDropdown">
-                    <a href="pages/login.html" class="dropdown-item">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Iniciar Sesión
-                    </a>
-                    <a href="pages/registro.html" class="dropdown-item">
-                        <i class="fas fa-user-plus"></i>
-                        Registrarse
-                    </a>
-                </div>
             </div>
         </div>
     </header>
@@ -73,12 +61,10 @@
          ========================================================= -->
     <div class="hero-section">
         <div class="hero-content">
-            <p class="hero-kicker">Micro-lote artesanal</p>
-            <h1>Delicioso <span>Yogurt</span> Artesanal</h1>
-            <p>Sin aditivos, sin conservantes, solo pureza y sabor en cada cucharada.</p>
+            <h1>Delicioso <br><span>Yogurt</span><br> Artesanal</h1>
+            <p>Sin aditivos ni conservantes. Pedidos al detal y mayoreo en Neiva y Tello.</p>
             <div class="hero-actions">
                 <button onclick="window.location.href='pages/productos.html'">Ver Sabores</button>
-                <a class="hero-link" href="pages/productos.html">Explorar catalogo</a>
             </div>
         </div>
         <!-- Imagen principal del hero -->
@@ -92,38 +78,68 @@
          ========================================================= -->
     <section id="beneficios" class="beneficios">
         <div class="beneficios-banner">
-            <span class="beneficios-sep-tag"><i class="fas fa-seedling"></i> Por qué elegirnos</span>
+            <span class="beneficios-sep-tag"><i class="fas fa-cheese"></i> Por qué elegirnos</span>
             <h2 class="beneficios-titulo">Nuestros Beneficios</h2>
         </div>
         <div class="beneficios-grid">
-            <div class="beneficio-card">
-                <div class="beneficio-icono"><i class="fas fa-leaf" aria-hidden="true"></i></div>
+            <div class="beneficio-card pastel-rosa">
+                <div class="beneficio-icono"><i class="fas fa-droplet" aria-hidden="true"></i></div>
                 <h3>100% Natural</h3>
                 <p>Ingredientes limpios y sin conservantes.</p>
             </div>
-            <div class="beneficio-card">
+            <div class="beneficio-card pastel-amarillo">
                 <div class="beneficio-icono"><i class="fas fa-award" aria-hidden="true"></i></div>
                 <h3>Calidad Premium</h3>
                 <p>Lácteos frescos y controlados.</p>
             </div>
-            <div class="beneficio-card">
+            <div class="beneficio-card pastel-naranja">
                 <div class="beneficio-icono"><i class="fas fa-truck-fast" aria-hidden="true"></i></div>
-                <h3>Entrega Rápida</h3>
-                <p>Pedidos listos en menos de 24h.</p>
+                <h3>Neiva y Tello</h3>
+                <p>Pedidos mayoristas a todo el territorio.</p>
             </div>
         </div>
         <div class="beneficios-metricas">
-            <div>
-                <strong>+2.5k</strong>
-                <span>Clientes felices</span>
+            <div class="pastel-morado">
+                <strong>Mayoreo</strong>
+                <span>Tiendas y negocios</span>
             </div>
-            <div>
+            <div class="pastel-crema">
                 <strong>24h</strong>
                 <span>Entrega local</span>
             </div>
-            <div>
+            <div class="pastel-rosa">
                 <strong>100%</strong>
                 <span>Ingredientes reales</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cobertura / mayoreo -->
+    <section id="cobertura" class="info-band" aria-labelledby="cobertura-title">
+        <div class="info-band-inner">
+            <span class="info-kicker"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> Cobertura Huila</span>
+            <h2 id="cobertura-title">Pedidos mayoristas a <span>todo Neiva y Tello</span></h2>
+            <p class="info-lead">
+                YogurASO abastece hogares, tiendas, cafeterías y puntos de venta en Neiva y Tello (Huila).
+                Armamos pedidos al detal y por mayoreo, con yogurt fresco elaborado a diario.
+            </p>
+            <div class="pastel-grid">
+                <article class="pastel-card pastel-rosa">
+                    <h3><i class="fas fa-store" aria-hidden="true"></i> Mayoreo</h3>
+                    <p>Volúmenes para negocios: precios especiales y entrega coordinada en la zona.</p>
+                </article>
+                <article class="pastel-card pastel-amarillo">
+                    <h3><i class="fas fa-city" aria-hidden="true"></i> Neiva</h3>
+                    <p>Distribución en la capital del Huila para clientes particulares y comercios.</p>
+                </article>
+                <article class="pastel-card pastel-naranja">
+                    <h3><i class="fas fa-house-chimney" aria-hidden="true"></i> Tello</h3>
+                    <p>Nuestra zona base: yogurt artesanal cercano, fresco y listo para pedir.</p>
+                </article>
+                <article class="pastel-card pastel-morado">
+                    <h3><i class="fab fa-whatsapp" aria-hidden="true"></i> Pedido fácil</h3>
+                    <p>Elige sabores en la web y confirma por WhatsApp. Te orientamos en cantidades y presentaciones.</p>
+                </article>
             </div>
         </div>
     </section>
@@ -135,19 +151,21 @@
             <div class="nosotros-grid">
                 <div class="nosotros-content">
                     <span class="nosotros-badge">Sobre Nosotros</span>
-                    <h2 class="nosotros-title">YogurASO: Pasión por la <span>frescura natural</span></h2>
+                    <h2 class="nosotros-title">YogurASO: yogurt artesanal del <span>Huila</span></h2>
                     <p class="nosotros-text">
-                        En YogurASO creemos que la mejor comida es la que se hace con ingredientes reales. Nuestro yogurt se elabora diariamente con leche de granjas locales y cultivos probióticos vivos.
+                        Elaboramos yogurt a diario con leche fresca y cultivos vivos. Creemos en un producto limpio:
+                        sin aditivos innecesarios, con sabor real y textura cremosa.
                     </p>
                     <p class="nosotros-text">
-                        Utilizamos métodos de fermentación lentos que pueden tardar hasta 12 horas, resultando en un producto más nutritivo y digestible.
+                        Además del consumo familiar, atendemos <strong>pedidos mayoristas</strong> en Neiva y Tello:
+                        envases prácticos, sabores rotativos y acompañamiento para que tu negocio ofrezca frescura local.
                     </p>
                 </div>
                 <div class="nosotros-images">
                     <div class="collage-wrapper">
                         <div class="collage-main">
                             <img src="assets/img/leche.jpg" alt="Preparación de yogurt">
-                            <div class="collage-tag"><i class="fas fa-leaf"></i> Proceso artesanal</div>
+                            <div class="collage-tag"><i class="fas fa-cheese"></i> Proceso artesanal</div>
                         </div>
                         <div class="collage-secondary">
                             <img src="assets/img/fresitas.png" alt="Ingredientes frescos">
@@ -162,24 +180,79 @@
         </div>
     </section>
 
+    <!-- Proceso + envases -->
+    <section id="proceso" class="proceso-section" aria-labelledby="proceso-title">
+        <div class="proceso-inner">
+            <span class="info-kicker"><i class="fas fa-flask" aria-hidden="true"></i> Del campo al vaso</span>
+            <h2 id="proceso-title">Cómo hacemos nuestro yogurt</h2>
+            <p class="info-lead">
+                Un proceso corto, cuidadoso y transparente: leche, fermentación lenta, sabor y empaque listo para ti.
+            </p>
+            <div class="proceso-steps">
+                <article class="proceso-step pastel-amarillo">
+                    <span class="proceso-num">01</span>
+                    <h3>Leche fresca</h3>
+                    <p>Seleccionamos leche de calidad para una base limpia y nutritiva.</p>
+                </article>
+                <article class="proceso-step pastel-rosa">
+                    <span class="proceso-num">02</span>
+                    <h3>Cultivos vivos</h3>
+                    <p>Fermentación lenta con probióticos para cremosidad y digestibilidad.</p>
+                </article>
+                <article class="proceso-step pastel-morado">
+                    <span class="proceso-num">03</span>
+                    <h3>Sabores naturales</h3>
+                    <p>Frutas y preparaciones reales, sin cargar el yogurt de químicos.</p>
+                </article>
+                <article class="proceso-step pastel-naranja">
+                    <span class="proceso-num">04</span>
+                    <h3>Envases listos</h3>
+                    <p>Presentaciones prácticas para casa o mayoreo: fáciles de refrigerar y vender.</p>
+                </article>
+            </div>
+            <div class="envases-note pastel-crema">
+                <div>
+                    <h3>Presentaciones y contenedores</h3>
+                    <p>
+                        Ofrecemos yogurt en envases individuales y formatos más grandes para negocios.
+                        Ideal para neveras de tienda, desayunos y pedidos recurrentes en Neiva y Tello.
+                    </p>
+                </div>
+                <a class="btn-pastel" href="pages/productos.html">Ver sabores disponibles</a>
+            </div>
+        </div>
+    </section>
+
     <!-- =========================================================
          PRODUCTOS DESTACADOS (CARDS)
-         El HTML vacío se llena con JavaScript (main.js → renderProducts).
+         El HTML vacío se llena con JavaScript (main.js ? renderProducts).
          Cada card usa la clase .producto-card (diseño en styles.css).
          Contenedor: #productos-container
          ========================================================= -->
     <section id="main-content" class="productos-catalogo" aria-label="Productos destacados">
         <div class="productos-header">
-            <span class="productos-kicker"><i class="fas fa-jar" aria-hidden="true"></i> Elaborado a diario</span>
+            <span class="productos-kicker"><i class="fas fa-cheese" aria-hidden="true"></i> Elaborado a diario</span>
             <h2>Nuestros Yogures</h2>
             <p class="productos-subtitle">Cada sabor hecho con leche fresca y cultivos vivos. Sin conservantes, sin compromiso.</p>
         </div>
-        <div class="productos-scroll-wrapper">
-            <!-- Aquí se insertan dinámicamente las cards de productos -->
-            <div id="productos-container" class="productos-grid-horizontal" aria-live="polite">
-                <p class="cargando">Cargando la frescura del campo...</p>
+        <div class="home-rail">
+            <button type="button" class="rail-arrow rail-prev" id="rail-prev" aria-label="Ver anteriores">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <div class="home-rail-stage">
+                <div class="productos-scroll-wrapper" id="home-rail-track">
+                    <div id="productos-container" class="productos-grid-horizontal" aria-live="polite">
+                        <p class="cargando">Cargando la frescura del campo...</p>
+                    </div>
+                </div>
             </div>
+            <button type="button" class="rail-arrow rail-next" id="rail-next" aria-label="Ver siguientes">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </button>
         </div>
+        <p class="home-rail-hint">
+            <a class="btn-full-catalog" href="pages/productos.html">Ver catálogo completo</a>
+        </p>
     </section>
 
     <!-- =========================================================
@@ -190,20 +263,21 @@
         <div class="footer-inner">
             <div class="footer-brand">
                 <span class="footer-logo" data-config="company-name">YogurASO</span>
-                <p data-config="company-tagline">Yogurt artesanal elaborado a diario<br>con ingredientes frescos y cultivos vivos.</p>
+                <p data-config="company-tagline">Yogurt artesanal elaborado a diario<br>en Tello y Neiva, Huila</p>
                 <div class="footer-social">
                     <a href="#" data-config="instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
                     <a href="#" data-config="facebook" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
-                    <a href="#" data-config="whatsapp" data-wa-text="Hola YogurASO" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                    <a href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero un pedido mayorista para Neiva/Tello" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="footer-col">
                 <h4>Navegación</h4>
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
-                    <li><a href="#nosotros">Nosotros</a></li>
-                    <li><a href="#beneficios">Beneficios</a></li>
+                    <li><a href="#cobertura">Cobertura</a></li>
+                    <li><a href="#proceso">Proceso</a></li>
                     <li><a href="pages/productos.html">Productos</a></li>
+                    <li><a href="pages/privacidad.html">Datos personales</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -217,14 +291,30 @@
             <div class="footer-col">
                 <h4>Contacto</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span data-config="company-location">Colombia</span></li>
+                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span data-config="company-location">Tello y Neiva, Huila</span></li>
                     <li><i class="fas fa-envelope" aria-hidden="true"></i> <span data-config="company-email">hola@yoguraso.co</span></li>
                     <li><i class="fab fa-whatsapp" aria-hidden="true"></i> <span data-config="whatsapp-display">+57 300 123 4567</span></li>
                 </ul>
             </div>
         </div>
+
+        <div class="footer-map-wrap">
+            <div class="footer-map-copy">
+                <h3>Encuéntranos en el Huila</h3>
+                <p>Mapa centrado en <strong>Tello, Huila</strong>. Atendemos pedidos mayoristas en Tello y en toda Neiva.</p>
+            </div>
+            <div class="footer-map">
+                <iframe
+                    title="Mapa de Tello, Huila — YogurASO"
+                    src="https://maps.google.com/maps?q=Tello%2C%20Huila%2C%20Colombia&hl=es&z=13&output=embed"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+
         <div class="footer-bottom">
-            <span>&copy; 2026 <span data-config="company-name">YogurASO</span> &mdash; Todos los derechos reservados.</span>
+            <span>&copy; 2026 <span data-config="company-name">YogurASO</span> &mdash; Mayoreo en Neiva y Tello, Huila.</span>
         </div>
     </footer>
 
@@ -232,7 +322,7 @@
     <a href="#"
        class="whatsapp-float"
        data-config="whatsapp"
-       data-wa-text="Hola YogurASO, quiero hacer un pedido"
+       data-wa-text="Hola YogurASO, quiero hacer un pedido (Neiva/Tello)"
        target="_blank"
        rel="noopener noreferrer"
        aria-label="Escribir por WhatsApp">
@@ -243,15 +333,15 @@
          SIDEBAR DEL CARRITO (diseño: .cart-sidebar)
          Lógica: cart.js | Checkout: WhatsApp
          ========================================================= -->
-    <div class="overlay" id="cartOverlay"></div>
+<div class="overlay" id="cartOverlay"></div>
     <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
-            <span>Tu carrito</span>
+            <span>Bolsa</span>
             <i class="fas fa-times" id="closeCart"></i>
         </div>
         <!-- Lista de items del carrito (se pinta en cart.js) -->
         <div class="cart-items" id="cart-sidebar-items">
-            <div class="cart-empty"><i class="fas fa-cart-shopping" aria-hidden="true"></i> Tu carrito está vacío</div>
+            <div class="cart-empty"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Tu carrito está vacío</div>
         </div>
         <div class="cart-total">
             <span>Total:</span>
@@ -263,9 +353,10 @@
         </button>
     </aside>
 
-    <!-- Scripts: config → utils → carrito → auth → catálogo/cards -->
+    <!-- Scripts: config ? utils ? carrito ? auth ? catálogo/cards -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/nav.js"></script>
     <script src="js/cart.js"></script>
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/main.js"></script>
