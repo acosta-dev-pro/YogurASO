@@ -60,6 +60,7 @@ CREATE TABLE productos (
     letrero         VARCHAR(40),
     letrero_tipo    VARCHAR(20),
     descuento       INT DEFAULT 0,
+    color_fondo     VARCHAR(7) NOT NULL DEFAULT '#FFF8F4' CHECK (color_fondo ~ '^#[0-9A-Fa-f]{6}$'),
     created_at      TIMESTAMP DEFAULT NOW(),
     updated_at      TIMESTAMP DEFAULT NOW()
 );

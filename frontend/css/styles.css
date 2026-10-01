@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap');
 
 /* ===================================================
    YogurASO — Hoja de estilos principal (diseño)
@@ -31,6 +31,7 @@
     --header-h: 64px;
     --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
     --font-brand: "Outfit", "Plus Jakarta Sans", sans-serif;
+    --font-display: "Lobster", "Lemon-Regular", cursive;
 }
 
 /* --- FUENTES LOCALES (fallback si no carga Google Fonts) --- */
@@ -330,13 +331,13 @@ header .user-menu {
     opacity: 1;
 }
 .hero-section h1 {
-    font-family: var(--font-brand);
-    font-weight: 800;
+    font-family: var(--font-display);
+    font-weight: 400;
     font-size: clamp(36px,5.2vw,60px);
     line-height: 1.08;
-    color: var(--text-main);
+    color: #000;
     margin-bottom: 16px;
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
 }
 .hero-section h1 span {
     color: var(--brand-main);
@@ -405,7 +406,6 @@ header .user-menu {
 .hero-img {
     position: relative; z-index: 2;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    animation: slideInRight 0.9s 0.15s cubic-bezier(0.22,1,0.36,1) both;
 }
 .hero-img::before {
     content: ''; position: absolute;
@@ -423,10 +423,8 @@ header .user-menu {
     animation: orbBreath2 7s ease-in-out infinite; z-index: -1;
 }
 .hero-img img {
-    max-width: 100%; width: clamp(230px,31vw,390px); height: auto;
+    max-width: 100%; width: clamp(300px,40vw,520px); height: auto;
     filter: drop-shadow(0 32px 56px rgba(239,94,65,0.28));
-    animation: yogurFloat 7s cubic-bezier(0.45,0,0.55,1) infinite;
-    will-change: transform, filter;
 }
 
 /* Span global */
@@ -470,10 +468,10 @@ span { color: inherit; -webkit-text-fill-color: inherit; }
 .beneficios-sep-tag i { display: none; }
 
 .beneficios-titulo {
-    font-family: "Plus Jakarta Sans", "OpenSans-Bold", sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(18px,2.4vw,28px);
-    font-weight: 800; color: #1a1a1a; margin: 0;
-    letter-spacing: -0.01em;
+    font-weight: 400; color: #1a1a1a; margin: 0;
+    letter-spacing: 0;
 }
 .beneficios-titulo::after { content: none; }
 .beneficios-grid {
@@ -582,10 +580,10 @@ span { color: inherit; -webkit-text-fill-color: inherit; }
     font-weight: 700;
 }
 .nosotros-title {
-    font-family: "Plus Jakarta Sans", "OpenSans-Bold", sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(22px,3.2vw,36px);
-    font-weight: 800; margin-bottom: 20px; line-height: 1.22; color: #1a1a1a;
-    letter-spacing: -0.02em;
+    font-weight: 400; margin-bottom: 20px; line-height: 1.22; color: #1a1a1a;
+    letter-spacing: 0;
 }
 .nosotros-title span { color: #E08888; -webkit-text-fill-color: #E08888; }
 .nosotros-text {
@@ -724,11 +722,11 @@ span { color: inherit; -webkit-text-fill-color: inherit; }
     display: none; /* menos “demo / award vibe” */
 }
 .productos-header h2 {
-    font-family: var(--font-brand);
+    font-family: var(--font-display);
     font-size: clamp(22px, 3vw, 32px);
-    font-weight: 800;
-    color: var(--text-main);
-    letter-spacing: -0.03em;
+    font-weight: 400;
+    color: #000;
+    letter-spacing: 0;
     margin: 0 0 8px;
 }
 .productos-subtitle {
@@ -771,7 +769,7 @@ span { color: inherit; -webkit-text-fill-color: inherit; }
     overflow: hidden;
     height: 112px;
     min-height: 112px;
-    background: #FAFAFA;
+    background: var(--producto-card-bg, #FAFAFA);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1615,7 +1613,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
     .hero-section > .hero-content > p { margin: 0 auto 16px; }
     .hero-actions { justify-content: center; }
     .hero-stats { grid-template-columns: repeat(3,1fr); max-width: 100%; margin-top: 18px; }
-    .hero-img img { width: clamp(210px,56vw,300px); }
+    .hero-img img { width: clamp(260px,68vw,360px); }
     .beneficios-metricas { grid-template-columns: repeat(3,1fr); max-width: 100%; }
     .nosotros-grid { grid-template-columns: 1fr; gap: 48px; }
     .collage-wrapper { grid-template-columns: 1fr; }
@@ -1854,11 +1852,11 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
 .site-footer { background: #fff; border-top: 1px solid var(--border); box-shadow: none; }
 
 .productos-header h1 {
-    font-family: var(--font-brand);
+    font-family: var(--font-display);
     font-size: clamp(22px, 3vw, 32px);
-    font-weight: 800;
+    font-weight: 400;
     color: var(--text-main);
-    letter-spacing: -0.03em;
+    letter-spacing: 0;
     margin: 0 0 8px;
 }
 .catalog-search-wrap {
@@ -1982,7 +1980,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
     gap: 16px;
 }
 .producto-card {
-    background: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.92);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: none;
@@ -1995,7 +1993,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
 .producto-img-container {
     height: 140px;
     min-height: 140px;
-    background: rgba(255,255,255,0.35);
+    background: var(--producto-card-bg, rgba(255,255,255,0.35));
 }
 .producto-info {
     padding: 12px 14px 14px;
@@ -2146,7 +2144,8 @@ button:focus-visible, input:focus-visible, a:focus-visible, select:focus-visible
     }
     .hero-content { max-width: 100%; }
     .hero-actions { justify-content: center; }
-    .hero-img img { width: min(650px, 80vw); }
+    .hero-img { width: 100%; animation: none; }
+    .hero-img img { width: min(760px, 94vw); max-width: none; }
 }
 @media screen and (max-width: 768px) {
     header {
@@ -2212,7 +2211,7 @@ body {
     box-shadow: 0 -30px 70px rgba(233,69,69,0.10);
 }
 
-/* --- Pasteles / cobertura / proceso / mapa --- */
+/* --- Pasteles / cobertura / mapa --- */
 .pastel-rosa { background: var(--pastel-rosa) !important; }
 .pastel-amarillo { background: var(--pastel-amarillo) !important; }
 .pastel-morado { background: var(--pastel-morado) !important; }
@@ -2225,20 +2224,14 @@ body {
     box-shadow: none !important;
 }
 
-.info-band,
-.proceso-section {
+.info-band {
     padding: 64px 5% 72px;
 }
 .info-band {
     background:
         linear-gradient(180deg, rgba(255,214,227,0.35) 0%, rgba(255,249,246,0.2) 100%);
 }
-.proceso-section {
-    background:
-        linear-gradient(180deg, rgba(228,212,248,0.28) 0%, rgba(255,233,168,0.18) 55%, transparent 100%);
-}
-.info-band-inner,
-.proceso-inner {
+.info-band-inner {
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -2257,16 +2250,14 @@ body {
     padding: 0;
 }
 .info-kicker i { display: none; }
-.info-band h2,
-.proceso-section h2 {
+.info-band h2 {
     font-family: var(--font-brand);
     font-size: clamp(28px, 4vw, 40px);
     letter-spacing: -0.03em;
     margin: 0 0 12px;
     max-width: 18ch;
 }
-.info-band h2 span,
-.proceso-section h2 span {
+.info-band h2 span {
     color: var(--brand-main);
 }
 .info-lead {
@@ -2281,16 +2272,14 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
 }
-.pastel-card,
-.proceso-step {
+.pastel-card {
     border-radius: 22px;
     padding: 22px 18px;
     border: none;
     box-shadow: none;
     min-height: 160px;
 }
-.pastel-card h3,
-.proceso-step h3 {
+.pastel-card h3 {
     font-family: var(--font-brand);
     font-size: 18px;
     margin: 0 0 8px;
@@ -2299,95 +2288,28 @@ body {
     gap: 8px;
     color: var(--text-main);
 }
-.pastel-card p,
-.proceso-step p {
+.pastel-card p {
     margin: 0;
     font-size: 13.5px;
     line-height: 1.55;
     color: rgba(31,22,48,0.78);
 }
-.proceso-steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 18px;
-}
-.proceso-num {
-    display: inline-block;
-    font-family: var(--font-brand);
-    font-weight: 800;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    color: rgba(31,22,48,0.45);
-    margin-bottom: 10px;
-}
-.envases-note {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    border-radius: 24px;
-    padding: 22px 24px;
-    border: none;
-    flex-wrap: wrap;
-}
-.envases-note h3 {
-    font-family: var(--font-brand);
-    font-size: 20px;
-    margin: 0 0 6px;
-}
-.envases-note p {
-    margin: 0;
-    max-width: 62ch;
-    font-size: 14px;
-    line-height: 1.55;
-    color: rgba(31,22,48,0.78);
-}
-.btn-pastel {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 18px;
-    border-radius: 999px;
-    background: var(--brand-main);
-    color: #fff;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 13px;
-    white-space: nowrap;
-    box-shadow: 0 10px 22px rgba(233,69,69,0.25);
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-.btn-pastel:hover {
-    background: var(--brand-deep);
-    transform: translateY(-2px);
-}
-
 .footer-map-wrap {
     max-width: 1200px;
     margin: 0 auto;
     padding: 8px 5% 28px;
     display: grid;
-    grid-template-columns: 0.9fr 1.4fr;
-    gap: 18px;
-    align-items: stretch;
+    grid-template-columns: 1fr;
+    gap: 12px;
 }
-.footer-map-copy {
-    background: var(--pastel-amarillo);
-    border-radius: 22px;
-    padding: 22px;
-    border: none;
-}
-.footer-map-copy h3 {
-    font-family: var(--font-brand);
-    font-size: 22px;
-    margin: 0 0 8px;
-}
-.footer-map-copy p {
+.footer-map-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
     margin: 0;
-    font-size: 14px;
-    line-height: 1.55;
-    color: rgba(31,22,48,0.78);
+    color: #000;
+    text-align: center;
+    letter-spacing: 0;
 }
 .footer-map {
     border-radius: 22px;
@@ -2404,31 +2326,26 @@ body {
     display: block;
 }
 
-/* Cards de beneficios / métricas / pasteles: css/cards-home.css */
-.envases-note.pastel-crema,
-.envases-note.pastel-beige {
-    background: var(--pastel-crema) !important;
-    border: none !important;
-    box-shadow: none !important;
+@media screen and (max-width: 640px) {
+    .footer-map-title {
+        font-size: 24px;
+    }
 }
+
+/* Cards de beneficios / métricas / pasteles: css/cards-home.css */
 
 @media screen and (max-width: 900px) {
     .pastel-grid,
-    .proceso-steps,
-    .footer-map-wrap,
     .beneficios-grid {
         grid-template-columns: 1fr 1fr;
     }
 }
 @media screen and (max-width: 640px) {
     .pastel-grid,
-    .proceso-steps,
-    .footer-map-wrap,
     .beneficios-grid {
         grid-template-columns: 1fr;
     }
-    .info-band h2,
-    .proceso-section h2 {
+    .info-band h2 {
         max-width: none;
     }
 }
@@ -2742,9 +2659,6 @@ body.admin-page .modal-header {
 .beneficio-card,
 .beneficios-metricas div,
 .pastel-card,
-.proceso-step,
-.envases-note,
-.footer-map-copy,
 .footer-map,
 .producto-card,
 .hero-stats div,
@@ -2764,7 +2678,6 @@ body.admin-page .admin-price-preview,
 .producto-card:hover,
 .beneficios-metricas div:hover,
 .pastel-card:hover,
-.proceso-step:hover,
 .hero-stats div:hover {
     border: none !important;
     box-shadow: none !important;

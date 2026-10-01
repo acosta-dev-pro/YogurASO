@@ -3,6 +3,7 @@
  * CRUD de productos. El catálogo (cards) solo pide los que están activos.
  */
 const db = require('../config/db');
+const DEFAULT_PRODUCT_COLOR = '#FFF8F4';
 
 /** Normaliza una fila de PostgreSQL al formato que usa el frontend */
 const mapProduct = (row) => ({
@@ -16,8 +17,14 @@ const mapProduct = (row) => ({
     letrero: row.letrero || '',
     letrero_tipo: row.letrero_tipo || '',
     descuento: Number(row.descuento || 0),
+    color_fondo: /^#[0-9A-Fa-f]{6}$/.test(row.color_fondo || '') ? row.color_fondo.toUpperCase() : DEFAULT_PRODUCT_COLOR,
         activo: row.activo !== undefined ? Boolean(row.activo) : row.activo !== false
 });
+
+function parseProductColor(value) {
+    const color = String(value || DEFAULT_PRODUCT_COLOR).trim();
+    return /^#[0-9A-Fa-f]{6}$/.test(color) ? color.toUpperCase() : null;
+}
 
 function parseId(raw) {
     const id = Number(raw);
@@ -133,16 +140,20 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
     try {
         const { nombre, descripcion, precio, stock, imagen_url, categoria, activo } = req.body;
+        const colorFondo = parseProductColor(req.body.color_fondo);
         const tag = parseLetrero(req.body);
         const validationError = validateProductPayload({ nombre, precio, stock });
         if (validationError) {
             return res.status(400).json({ success: false, message: validationError });
         }
+        if (!colorFondo) {
+            return res.status(400).json({ success: false, message: 'Color de tarjeta inválido' });
+        }
 
         const result = await db.query(
-            `INSERT INTO productos (nombre, descripcion, precio, stock, imagen_url, categoria, activo, letrero, letrero_tipo, descuento)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-             RETURNING id, nombre, descripcion, precio, stock, imagen_url, categoria, activo, letrero, letrero_tipo, descuento`,
+            `INSERT INTO productos (nombre, descripcion, precio, stock, imagen_url, categoria, activo, letrero, letrero_tipo, descuento, color_fondo)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+             RETURNING id, nombre, descripcion, precio, stock, imagen_url, categoria, activo, letrero, letrero_tipo, descuento, color_fondo`,
             [
                 String(nombre).trim(),
                 descripcion ? String(descripcion).trim() : null,
@@ -153,15 +164,16 @@ const createProduct = async (req, res) => {
                 activo === undefined ? true : Boolean(activo),
                 tag.letrero,
                 tag.letrero_tipo,
-                tag.descuento
+                tag.descuento,
+                colorFondo
             ]
         );
 
         res.status(201).json({ success: true, message: 'Producto creado', product: mapProduct(result.rows[0]) });
     } catch (error) {
         console.error('Error al crear producto:', error);
-        const hint = /letrero|descuento/i.test(String(error.message || ''))
-            ? ' Falta migración de letreros en la base de datos.'
+        const hint = /letrero|descuento|color_fondo/i.test(String(error.message || ''))
+            ? ' Falta aplicar las migraciones de productos en la base de datos.'
             : '';
         res.status(500).json({ success: false, message: `Error al crear producto.${hint}` });
     }
@@ -175,10 +187,14 @@ const updateProduct = async (req, res) => {
         }
 
         const { nombre, descripcion, precio, stock, imagen_url, categoria, activo } = req.body;
+        const colorFondo = parseProductColor(req.body.color_fondo);
         const tag = parseLetrero(req.body);
         const validationError = validateProductPayload({ nombre, precio, stock });
         if (validationError) {
             return res.status(400).json({ success: false, message: validationError });
+        }
+        if (!colorFondo) {
+            return res.status(400).json({ success: false, message: 'Color de tarjeta inválido' });
         }
 
         const result = await db.query(
@@ -192,9 +208,10 @@ const updateProduct = async (req, res) => {
                  activo = $7,
                  letrero = $8,
                  letrero_tipo = $9,
-                 descuento = $10
-             WHERE id = $11
-             RETURNING id, nombre, descripcion, precio, stock, imagen_url, categoria, activo, letrero, letrero_tipo, descuento`,
+                 descuento = $10,
+                 color_fondo = $11
+             WHERE id = $12
+             RETURNING id, nombre, descripcion, precio, stock, imagen_url, categoria, activo, letrero, letrero_tipo, descuento, color_fondo`,
             [
                 String(nombre).trim(),
                 descripcion ? String(descripcion).trim() : null,
@@ -206,6 +223,7 @@ const updateProduct = async (req, res) => {
                 tag.letrero,
                 tag.letrero_tipo,
                 tag.descuento,
+                colorFondo,
                 id
             ]
         );
@@ -247,4 +265,27 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
+const permanentlyDeleteProduct = async (req, res) => {
+    try {
+        const id = parseId(req.params.id);
+        if (!id) {
+            return res.status(400).json({ success: false, message: 'ID inválido' });
+        }
+
+        const result = await db.query(
+            'DELETE FROM productos WHERE id = $1 RETURNING id',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+        }
+
+        res.json({ success: true, message: 'Producto eliminado permanentemente' });
+    } catch (error) {
+        console.error('Error al eliminar producto permanentemente:', error);
+        res.status(500).json({ success: false, message: 'Error al eliminar producto permanentemente' });
+    }
+};
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct, permanentlyDeleteProduct };

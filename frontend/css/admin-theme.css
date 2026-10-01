@@ -181,7 +181,8 @@ body.admin-page .status-pill.is-inactive { background: #f6eeee; color: #9a3b3b; 
 
 body.admin-page .btn-edit,
 body.admin-page .btn-delete,
-body.admin-page .btn-activate {
+body.admin-page .btn-activate,
+body.admin-page .btn-delete-permanent {
     border: none;
     background: #f4f4f6;
     padding: 8px 12px;
@@ -197,17 +198,19 @@ body.admin-page .admin-modal-content {
     border: none !important;
     border-radius: 24px !important;
     box-shadow: 0 28px 70px rgba(23, 23, 26, 0.16);
-    width: min(980px, 100%) !important;
-    max-width: 980px !important;
+    width: min(760px, 100%) !important;
+    max-width: 760px !important;
     padding: 36px 40px 32px !important;
 }
 
 body.admin-page .admin-modal-grid,
 body.admin-page .admin-modal-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 36px 40px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    max-width: 680px;
+    margin-inline: auto;
+    align-items: stretch;
 }
 
 body.admin-page .admin-modal-block,
@@ -216,6 +219,11 @@ body.admin-page .admin-modal-block {
     background: transparent !important;
     box-shadow: none !important;
     padding: 0 !important;
+}
+
+body.admin-page .admin-modal-block + .admin-modal-block {
+    padding-top: 22px !important;
+    border-top: 1px solid rgba(23, 23, 26, 0.09) !important;
 }
 
 body.admin-page .admin-modal-block h3,
@@ -234,8 +242,8 @@ body.admin-page .admin-modal .form-group {
 
 body.admin-page .admin-modal .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
 }
 
 body.admin-page .admin-modal input,
@@ -342,40 +350,11 @@ body.admin-page .admin-promo-note {
     line-height: 1.45;
 }
 
-body.admin-page .admin-field-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: #17171a;
-    margin-bottom: 8px;
-}
-
-body.admin-page .admin-discount-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-body.admin-page .admin-discount-chip {
-    border: 1px solid #d8d8de;
-    background: #fff;
-    color: #17171a;
-    border-radius: 999px;
-    padding: 8px 12px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-body.admin-page .admin-discount-chip:hover {
-    border-color: #E08888;
-    color: #E08888;
-}
-
-body.admin-page .admin-discount-chip.is-on {
-    background: #E08888;
-    border-color: #E08888;
-    color: #fff;
+body.admin-page .admin-promo-box input:disabled {
+    background: #f0f1f2 !important;
+    border-color: #dedfe2 !important;
+    color: #777b82 !important;
+    cursor: not-allowed;
 }
 
 body.admin-page .admin-price-preview {
@@ -481,6 +460,24 @@ body.admin-page .btn-edit,
 body.admin-page .btn-delete,
 body.admin-page .btn-activate {
     border-radius: 12px;
+}
+
+body.admin-page .btn-delete-permanent {
+    border: 1px solid #e7b4b4;
+    background: #fff7f7;
+    color: #9f3030;
+    border-radius: 12px;
+}
+
+body.admin-page .btn-delete-permanent:hover {
+    border-color: #b42318;
+    background: #b42318;
+    color: #fff;
+}
+
+body.admin-page .btn-delete-permanent:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
 body.admin-page .admin-modal .modal-content,

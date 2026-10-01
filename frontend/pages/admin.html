@@ -171,6 +171,13 @@
                                 <option value="suero">Suero Costeño</option>
                             </select>
                         </div>
+                        <div class="form-group admin-product-color-field">
+                            <label for="p-color-fondo">Color de fondo de la tarjeta</label>
+                            <div class="admin-product-color-control">
+                                <input type="color" id="p-color-fondo" value="#FFF8F4" aria-label="Elegir color de fondo de la tarjeta">
+                                <span>Se usa como fondo de la tarjeta en la tienda.</span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="p-descripcion">Descripción</label>
                             <textarea id="p-descripcion" rows="3" maxlength="500" placeholder="Notas de sabor, presentación o mayoreo..."></textarea>
@@ -205,13 +212,13 @@
                             </label>
                         </div>
                         <details class="admin-promo-box" open>
-                            <summary>Letrero y descuento</summary>
-                            <p class="admin-promo-note">El letrero sale en la card. El % baja el precio en la tienda.</p>
+                            <summary>Letrero y descuento (opcional)</summary>
+                            <p class="admin-promo-note">La etiqueta y el porcentaje son independientes. Combina cualquier etiqueta con un descuento o deja la etiqueta vacía para mostrar solo el precio rebajado.</p>
 
                             <div class="form-group">
-                                <label for="p-letrero-tipo">Tipo de letrero</label>
+                                <label for="p-letrero-tipo">Tipo de etiqueta</label>
                                 <select id="p-letrero-tipo">
-                                    <option value="">Sin letrero</option>
+                                    <option value="" selected disabled>Elige un tipo (opcional)</option>
                                     <option value="nuevo">Nuevo</option>
                                     <option value="oferta">Oferta</option>
                                     <option value="descuento">Descuento</option>
@@ -219,27 +226,13 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <span class="admin-field-label">Descuento rápido</span>
-                                <div class="admin-discount-chips" id="admin-discount-chips" role="group" aria-label="Descuentos rápidos">
-                                    <button type="button" class="admin-discount-chip" data-off="0">0%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="10">10%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="15">15%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="20">20%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="25">25%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="30">30%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="40">40%</button>
-                                    <button type="button" class="admin-discount-chip" data-off="50">50%</button>
-                                </div>
-                            </div>
-
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="p-letrero">Texto del letrero</label>
-                                    <input type="text" id="p-letrero" maxlength="24" placeholder="Ej: -20%">
+                                    <label for="p-letrero">Texto visible (opcional)</label>
+                                    <input type="text" id="p-letrero" maxlength="24" placeholder="Se completa según el tipo">
                                 </div>
                                 <div class="form-group">
-                                    <label for="p-descuento">% descuento</label>
+                                    <label for="p-descuento">Descuento (%)</label>
                                     <input type="number" id="p-descuento" min="0" max="80" step="1" value="0">
                                 </div>
                             </div>

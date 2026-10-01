@@ -23,10 +23,8 @@ const IMG_PLACEHOLDER_HTML = `
 `;
 
 const JAR_SIZES = [
-    { id: '150', label: '150 ml', hint: 'Individual', factor: 0.65 },
-    { id: '250', label: '250 ml', hint: 'Clásico', factor: 1 },
-    { id: '500', label: '500 ml', hint: 'Familiar', factor: 1.8 },
-    { id: '1000', label: '1 L', hint: 'Mayoreo', factor: 3.2 }
+    { id: '1000', label: '1 L', hint: 'Familiar', factor: 3.2 },
+    { id: '2000', label: '2 L', hint: 'Mayoreo', factor: 6.4 }
 ];
 
 function bindProductImageFallbacks(container) {
@@ -44,7 +42,7 @@ let filters = { q: '', categoria: 'all', sort: 'default' };
 
 /** Animaciones al hacer scroll (beneficios, nosotros, etc.) */
 function aplicarAnimacionesEntrada() {
-    const revealItems = document.querySelectorAll('.beneficio-card, .pastel-card, .proceso-step, .nosotros-content, .nosotros-images, .section-title');
+    const revealItems = document.querySelectorAll('.beneficio-card, .pastel-card, .nosotros-content, .nosotros-images, .section-title');
     if (!revealItems.length || !('IntersectionObserver' in window)) return;
 
     const observer = new IntersectionObserver((entries) => {
@@ -309,7 +307,7 @@ function ensureInspectModal() {
     document.getElementById('inspectAdd').addEventListener('click', () => {
         const p = inspectState.product;
         if (!p) return;
-        const size = JAR_SIZES.find((s) => s.id === inspectState.sizeId) || JAR_SIZES[1];
+        const size = JAR_SIZES.find((s) => s.id === inspectState.sizeId) || JAR_SIZES[0];
         window.Cart?.addToCart({
             id: p.id,
             lineId: `${p.id}::${size.id}`,
@@ -324,12 +322,12 @@ function ensureInspectModal() {
     });
 }
 
-const inspectState = { product: null, sizeId: '250', qty: 1 };
+const inspectState = { product: null, sizeId: '1000', qty: 1 };
 
 function refreshInspectPrice() {
     const p = inspectState.product;
     if (!p) return;
-    const size = JAR_SIZES.find((s) => s.id === inspectState.sizeId) || JAR_SIZES[1];
+    const size = JAR_SIZES.find((s) => s.id === inspectState.sizeId) || JAR_SIZES[0];
     const unit = roundPrice(salePrice(p) * size.factor);
     document.getElementById('inspectQtyVal').textContent = String(inspectState.qty);
     document.getElementById('inspectUnit').textContent = `${formatCOP(unit)} c/u`;
@@ -347,7 +345,7 @@ function openInspect(id) {
     }
     ensureInspectModal();
     inspectState.product = p;
-    inspectState.sizeId = '250';
+    inspectState.sizeId = '1000';
     inspectState.qty = 1;
 
     document.getElementById('inspectCat').textContent = p.categoria || 'Yogur artesanal';
@@ -361,7 +359,7 @@ function openInspect(id) {
     if (hasImg) bindProductImageFallbacks(media);
 
     document.getElementById('inspectSizes').innerHTML = JAR_SIZES.map((s) => `
-        <button type="button" class="size-chip ${s.id === '250' ? 'is-on' : ''}" data-size="${s.id}">
+        <button type="button" class="size-chip ${s.id === inspectState.sizeId ? 'is-on' : ''}" data-size="${s.id}">
             <strong>${s.label}</strong>
             <span>${s.hint}</span>
         </button>
@@ -420,9 +418,10 @@ function renderProducts() {
         const precioHtml = p.descuento > 0
             ? `<span class="precio"><s class="precio-antes">${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
             : `<span class="precio" aria-label="Precio">${formatCOP(venta)}</span>`;
+        const colorFondo = /^#[0-9A-Fa-f]{6}$/.test(p.color_fondo || '') ? p.color_fondo : '#FFF8F4';
 
         return `
-            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" style="animation-delay:${Math.min(index * 0.04, 0.28)}s">
+            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" style="--producto-card-bg:${colorFondo};animation-delay:${Math.min(index * 0.04, 0.28)}s">
                 <div class="producto-img-container">
                     ${badgeHtml(p, sinStock)}
                     ${mediaHtml}

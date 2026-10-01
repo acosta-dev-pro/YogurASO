@@ -1,7 +1,7 @@
 /**
  * admin.js — Panel administrador (CRUD de productos + usuarios)
  */
-import { fetchProducts, createProduct, updateProduct, deleteProduct, uploadImage, fetchUsers, toggleUserActive } from './api.js';
+import { fetchProducts, createProduct, updateProduct, deleteProduct, permanentlyDeleteProduct, uploadImage, fetchUsers, toggleUserActive } from './api.js';
 
 const categoriaMap = {
     natural: 'Natural',
@@ -85,6 +85,8 @@ function limpiarFormulario() {
     if (activo) activo.checked = true;
     const categoria = document.getElementById('p-categoria');
     if (categoria) categoria.value = 'natural';
+    const colorFondo = document.getElementById('p-color-fondo');
+    if (colorFondo) colorFondo.value = '#FFF8F4';
     const tipo = document.getElementById('p-letrero-tipo');
     const texto = document.getElementById('p-letrero');
     const desc = document.getElementById('p-descuento');
@@ -100,38 +102,32 @@ function formatAdminCOP(n) {
     return window.YogurUtils?.formatCOP?.(n) || `$${Number(n || 0).toLocaleString('es-CO')}`;
 }
 
-function syncDiscountChips(off) {
-    document.querySelectorAll('.admin-discount-chip').forEach((btn) => {
-        const val = Number(btn.dataset.off || 0);
-        btn.classList.toggle('is-on', val === off);
-    });
-}
-
 function syncPromoPreview() {
     const precio = Number(document.getElementById('p-precio')?.value || 0);
-    const tipo = document.getElementById('p-letrero-tipo')?.value || '';
+    const tipoEl = document.getElementById('p-letrero-tipo');
     const textoEl = document.getElementById('p-letrero');
     const descEl = document.getElementById('p-descuento');
+    const tipo = tipoEl?.value || '';
     let off = Math.round(Number(descEl?.value || 0));
     if (!Number.isFinite(off) || off < 0) off = 0;
     if (off > 80) off = 80;
     if (descEl && Number(descEl.value) !== off) descEl.value = String(off);
 
-    // Si eligen % y el tipo vacío, pasar a descuento y armar el texto
-    if (off > 0 && tipo === '' && document.getElementById('p-letrero-tipo')) {
-        document.getElementById('p-letrero-tipo').value = 'descuento';
-    }
-    const tipoNow = document.getElementById('p-letrero-tipo')?.value || '';
+    const tipoNow = tipoEl?.value || '';
+    if (textoEl) textoEl.disabled = tipoNow === '';
     if (textoEl && tipoNow === 'descuento' && off > 0) {
         const auto = `-${off}%`;
         if (!textoEl.value.trim() || /^-\d+%$/.test(textoEl.value.trim())) {
             textoEl.value = auto;
         }
     }
+    if (textoEl && tipoNow === 'descuento' && off === 0 && /^-\d+%$/.test(textoEl.value.trim())) {
+        textoEl.value = '';
+    }
     if (textoEl && tipoNow === 'nuevo' && !textoEl.value.trim()) textoEl.value = 'Nuevo';
     if (textoEl && tipoNow === 'oferta' && !textoEl.value.trim()) textoEl.value = 'Oferta';
     if (textoEl && tipoNow === 'destacado' && !textoEl.value.trim()) textoEl.value = 'Destacado';
-    if (textoEl && tipoNow === '' && off === 0) textoEl.value = '';
+    if (textoEl && tipoNow === '') textoEl.value = '';
 
     const final = off > 0 ? Math.round(precio * (1 - off / 100)) : precio;
     const before = document.getElementById('admin-price-before');
@@ -162,7 +158,6 @@ function syncPromoPreview() {
         }
     }
     if (preview) preview.classList.toggle('has-discount', off > 0);
-    syncDiscountChips(off);
 }
 
 function setupPromoControls() {
@@ -170,9 +165,8 @@ function setupPromoControls() {
     const tipo = document.getElementById('p-letrero-tipo');
     const texto = document.getElementById('p-letrero');
     const desc = document.getElementById('p-descuento');
-    const chips = document.getElementById('admin-discount-chips');
 
-    [precio, tipo, texto, desc].forEach((el) => {
+    [precio, tipo, desc].forEach((el) => {
         el?.addEventListener('input', syncPromoPreview);
         el?.addEventListener('change', syncPromoPreview);
     });
@@ -186,23 +180,20 @@ function setupPromoControls() {
             else if (t === 'descuento') {
                 const off = Math.round(Number(desc?.value || 0));
                 texto.value = off > 0 ? `-${off}%` : '';
-            } else if (t === '') {
-                texto.value = '';
-                if (desc) desc.value = '0';
-            }
+            } else texto.value = '';
         }
         syncPromoPreview();
     });
 
-    chips?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.admin-discount-chip');
-        if (!btn) return;
-        const off = Number(btn.dataset.off || 0);
-        if (desc) desc.value = String(off);
-        if (off > 0 && tipo) tipo.value = 'descuento';
-        if (off === 0 && tipo?.value === 'descuento') {
-            tipo.value = '';
-            if (texto) texto.value = '';
+    texto?.addEventListener('input', () => {
+        if (!texto.value.trim() && tipo?.value) {
+            tipo.selectedIndex = -1;
+        }
+        syncPromoPreview();
+    });
+    texto?.addEventListener('change', () => {
+        if (!texto.value.trim() && tipo?.value) {
+            tipo.selectedIndex = -1;
         }
         syncPromoPreview();
     });
@@ -482,6 +473,7 @@ function renderRows(productos) {
                 <button type="button" class="${p.activo ? 'btn-delete' : 'btn-activate'}" data-id="${escapeHtml(p.id)}" data-activo="${p.activo ? '1' : '0'}">
                     ${p.activo ? 'Desactivar' : 'Activar'}
                 </button>
+                <button type="button" class="btn-delete-permanent" data-id="${escapeHtml(p.id)}" aria-label="Eliminar ${escapeHtml(p.nombre)} definitivamente" title="Eliminar definitivamente">Eliminar</button>
             </td>
         </tr>
     `).join('');
@@ -539,6 +531,40 @@ function renderRows(productos) {
                 return;
             }
             toast(activar ? 'Producto activado' : 'Producto desactivado', 'success');
+            await cargarTablaProductos();
+        });
+    });
+
+    lista.querySelectorAll('.btn-delete-permanent').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = Number(btn.dataset.id);
+            const producto = allAdminProducts.find((item) => item.id === id);
+            if (!producto) return;
+
+            const ok = confirmAction
+                ? await confirmAction({
+                    title: 'Eliminar producto definitivamente',
+                    message: `¿Eliminar "${producto.nombre}" del catálogo? Esta acción no se puede deshacer. También quitará el producto de los carritos guardados; el historial de pedidos conservará su detalle.`,
+                    confirmText: 'Eliminar definitivamente',
+                    cancelText: 'Conservar producto',
+                    danger: true,
+                    type: 'danger'
+                })
+                : window.confirm(`¿Eliminar "${producto.nombre}" definitivamente? Esta acción no se puede deshacer.`);
+
+            if (!ok) return;
+
+            btn.disabled = true;
+            const result = await permanentlyDeleteProduct(id, getToken());
+            btn.disabled = false;
+
+            if (!result.success) {
+                toast(result.message || 'No se pudo eliminar el producto', 'error');
+                return;
+            }
+
+            selectedIds.delete(id);
+            toast('Producto eliminado definitivamente', 'success');
             await cargarTablaProductos();
         });
     });
@@ -610,6 +636,8 @@ async function cargarTablaUsuarios() {
 
 function payloadDesdeFormulario() {
     const categoriaKey = document.getElementById('p-categoria')?.value || 'natural';
+    const letrero = document.getElementById('p-letrero')?.value.trim() || '';
+    const tipoLetrero = document.getElementById('p-letrero-tipo')?.value || '';
     return {
         nombre: document.getElementById('p-nombre')?.value.trim(),
         precio: Number(document.getElementById('p-precio')?.value || 0),
@@ -617,9 +645,10 @@ function payloadDesdeFormulario() {
         descripcion: document.getElementById('p-descripcion')?.value.trim() || '',
         imagen_url: document.getElementById('p-imagen')?.value.trim() || '',
         categoria: categoriaMap[categoriaKey] || 'Natural',
+        color_fondo: document.getElementById('p-color-fondo')?.value || '#FFF8F4',
         activo: Boolean(document.getElementById('p-activo')?.checked),
-        letrero: document.getElementById('p-letrero')?.value.trim() || '',
-        letrero_tipo: document.getElementById('p-letrero-tipo')?.value || '',
+        letrero,
+        letrero_tipo: letrero ? tipoLetrero : '',
         descuento: Number(document.getElementById('p-descuento')?.value || 0)
     };
 }
@@ -636,6 +665,8 @@ function llenarFormulario(producto) {
 
     const categoriaKey = Object.keys(categoriaMap).find((key) => categoriaMap[key] === producto.categoria) || 'natural';
     document.getElementById('p-categoria').value = categoriaKey;
+    const colorFondo = document.getElementById('p-color-fondo');
+    if (colorFondo) colorFondo.value = /^#[0-9A-Fa-f]{6}$/.test(producto.color_fondo || '') ? producto.color_fondo : '#FFF8F4';
     document.getElementById('p-activo').checked = Boolean(producto.activo);
     const tipo = document.getElementById('p-letrero-tipo');
     const texto = document.getElementById('p-letrero');

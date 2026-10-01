@@ -16,7 +16,7 @@
 
 .producto-card .producto-img-container,
 .producto-card .producto-img-wrap {
-    background: #fff8f4;
+    background: var(--producto-card-bg, #fff8f4);
     position: relative;
     overflow: hidden;
 }
@@ -63,4 +63,58 @@
     color: #fff;
     border: none;
     border-radius: 999px;
+}
+
+/* Catálogo completo: tarjetas amplias para que el producto sea protagonista. */
+.productos-grid:not(.productos-grid-horizontal) {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+    gap: 20px;
+    max-width: 1120px;
+    margin-inline: auto;
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card {
+    width: 100%;
+    height: auto;
+    min-height: 410px;
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-container,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-wrap {
+    height: 260px;
+    min-height: 260px;
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+    transform: scale(1.18);
+}
+
+.productos-grid:not(.productos-grid-horizontal) .producto-card:hover .producto-img {
+    transform: scale(1.24);
+}
+
+@media screen and (max-width: 640px) {
+    .productos-grid:not(.productos-grid-horizontal) {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 420px;
+        gap: 16px;
+    }
+
+    .productos-grid:not(.productos-grid-horizontal) .producto-card {
+        min-height: 370px;
+    }
+
+    .productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-container,
+    .productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-wrap {
+        height: 230px;
+        min-height: 230px;
+    }
+
+    .productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+        transform: scale(1.2);
+    }
+
+    .productos-grid:not(.productos-grid-horizontal) .producto-card:hover .producto-img {
+        transform: scale(1.25);
+    }
 }

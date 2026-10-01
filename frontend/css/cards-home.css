@@ -1,12 +1,11 @@
 /* cards-home.css — tarjetas de la página de inicio
    - .beneficio-card  → “100% Natural”, “Calidad Premium”, etc.
    - .beneficios-metricas → Mayoreo / 24h / 100%
-   - .pastel-card     → Mayoreo, Neiva, Tello, Pedido fácil
-   El HTML está en index.html (secciones #beneficios y #cobertura). */
+    El HTML está en index.html (sección #beneficios). */
 
 .beneficios-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 14px;
     max-width: 1100px;
     margin: 0 auto;

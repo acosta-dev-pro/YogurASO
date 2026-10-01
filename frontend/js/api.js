@@ -100,6 +100,13 @@ export async function deleteProduct(id, token) {
     });
 }
 
+export async function permanentlyDeleteProduct(id, token) {
+    return request(`/products/${id}/permanent`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
 export async function uploadImage(file, token) {
     const formData = new FormData();
     formData.append('imagen', file);
