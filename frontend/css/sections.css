@@ -54,11 +54,12 @@
 .sx-shapes i {
     position: absolute; width: var(--w, 320px); aspect-ratio: 1; border-radius: 42% 58% 63% 37% / 45% 39% 61% 55%;
     background: var(--bg, rgba(229, 29, 42, 0.08)); filter: blur(var(--b, 40px));
-    animation: sxBlob var(--t, 22s) ease-in-out infinite alternate;
+    animation: sxBlob var(--t, 22s) ease-in-out infinite alternate; will-change: transform;
 }
 @keyframes sxBlob {
-    0% { transform: translate3d(0, 0, 0) rotate(0deg); border-radius: 42% 58% 63% 37% / 45% 39% 61% 55%; }
-    100% { transform: translate3d(var(--dx, 30px), var(--dy, -24px), 0) rotate(40deg); border-radius: 58% 42% 38% 62% / 55% 61% 39% 45%; }
+    /* Solo transform: el desenfoque se pinta una vez y la capa se mueve sin repintar (60 fps). */
+    0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+    100% { transform: translate3d(var(--dx, 30px), var(--dy, -24px), 0) rotate(40deg) scale(1.08); }
 }
 
 /* Botones redondos (flechas) */
