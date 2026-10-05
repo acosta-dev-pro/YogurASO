@@ -147,30 +147,127 @@
          ========================================================= -->
     <section id="beneficios" class="beneficios" aria-labelledby="beneficios-title">
         <div class="beneficios-banner">
-            <span class="beneficios-sep-tag"><i class="fas fa-cheese"></i> Por qué elegirnos</span>
+            <span class="beneficios-sep-tag"><i data-ic="milk"></i> Por qué elegirnos</span>
             <h2 class="beneficios-titulo" id="beneficios-title">Beneficios</h2>
         </div>
         <div class="beneficios-grid">
             <div class="beneficio-card pastel-rosa">
-                <div class="beneficio-icono"><i class="fas fa-droplet" aria-hidden="true"></i></div>
+                <div class="beneficio-icono"><i data-ic="droplets"></i></div>
                 <h3>Ingredientes reales</h3>
                 <p>Yogurt natural, sin conservantes ni aditivos innecesarios.</p>
             </div>
             <div class="beneficio-card pastel-amarillo">
-                <div class="beneficio-icono"><i class="fas fa-award" aria-hidden="true"></i></div>
+                <div class="beneficio-icono"><i data-ic="clock"></i></div>
                 <h3>Fresco cada día</h3>
                 <p>Leche fresca y cultivos vivos en cada preparación artesanal.</p>
             </div>
             <div class="beneficio-card pastel-naranja">
-                <div class="beneficio-icono"><i class="fas fa-truck-fast" aria-hidden="true"></i></div>
+                <div class="beneficio-icono"><i data-ic="truck"></i></div>
                 <h3>Neiva y Tello</h3>
                 <p>Atendemos hogares, tiendas y cafeterías con entrega local en 24 horas.</p>
             </div>
             <div class="beneficio-card pastel-morado" id="distribuidores">
-                <div class="beneficio-icono"><i class="fab fa-whatsapp" aria-hidden="true"></i></div>
+                <div class="beneficio-icono"><i data-ic="message-circle"></i></div>
                 <h3>Mayoreo fácil</h3>
                 <p>Elige sabores y confirma por WhatsApp; te ayudamos con cantidades y presentaciones.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         PROCESO — cómo se hace (textos generales; pasos reales en js/product-info.js → proceso)
+         ========================================================= -->
+    <section class="sx sx-process" id="proceso" aria-labelledby="sx-process-title">
+        <div class="sx-shapes" aria-hidden="true"><i></i><i></i></div>
+        <div class="sx-wrap">
+            <div class="sx-head" data-rv>
+                <span class="sx-kicker"><i data-ic="hand-heart"></i> Hecho a mano</span>
+                <h2 id="sx-process-title">Así nace cada <em>botella</em></h2>
+                <p>Un proceso sencillo y cuidadoso, en pequeñas tandas, para que el sabor llegue como debe.</p>
+            </div>
+            <ol class="pc-steps" id="pc-steps">
+                <li class="pc-step" data-rv style="--i:0"><span class="pc-dot"><i data-ic="milk"></i></span><span class="pc-n">01</span><h3>Leche fresca</h3><p>Partimos de leche fresca, el punto de partida de todo buen yogurt.</p></li>
+                <li class="pc-step" data-rv style="--i:1"><span class="pc-dot"><i data-ic="flask-conical"></i></span><span class="pc-n">02</span><h3>Cultivos vivos</h3><p>Fermentamos con calma con cultivos vivos hasta lograr la textura cremosa.</p></li>
+                <li class="pc-step" data-rv style="--i:2"><span class="pc-dot"><i data-ic="cherry"></i></span><span class="pc-n">03</span><h3>Cada sabor</h3><p>Le damos su sabor: fresa, mora, mango, café y los demás de la casa.</p></li>
+                <li class="pc-step" data-rv style="--i:3"><span class="pc-dot"><i data-ic="snowflake"></i></span><span class="pc-n">04</span><h3>Envasado en frío</h3><p>Lo envasamos y lo mantenemos refrigerado hasta que llega a tus manos.</p></li>
+            </ol>
+            <div class="pc-line" aria-hidden="true"><i id="pc-line"></i></div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         EMPAQUE — la botella (solo lo que se ve en la foto; material y sello en js/product-info.js)
+         ========================================================= -->
+    <section class="sx sx-pack" id="empaque" aria-labelledby="sx-pack-title">
+        <div class="sx-wrap pk-grid">
+            <div class="pk-visual" data-rv>
+                <div class="pk-disc" aria-hidden="true"></div>
+                <div class="pk-bottle" id="pk-bottle">
+                    <img src="assets/products/yoguraso-fresa-500ml.webp" srcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w" sizes="(max-width: 860px) 52vw, 300px" alt="Botella de yogurt YoguraSo sabor fresa de 500 ml" width="640" height="1110" loading="lazy" decoding="async">
+                    <span class="pk-floor" aria-hidden="true"></span>
+                </div>
+                <span class="pk-pin" style="--x:12%;--y:8%" data-rv><b>Tapa</b> de rosca</span>
+                <span class="pk-pin pk-pin--r" style="--x:70%;--y:24%" data-rv><b>Asa</b> para servir</span>
+                <span class="pk-pin pk-pin--r" style="--x:68%;--y:60%" data-rv><b>Sellos</b> en la etiqueta</span>
+                <span class="pk-pin" style="--x:8%;--y:72%" data-rv><b>500 ml</b></span>
+            </div>
+            <div class="pk-copy">
+                <div class="sx-head sx-head--left" data-rv>
+                    <span class="sx-kicker"><i data-ic="package"></i> Empaque</span>
+                    <h2 id="sx-pack-title">Una botella pensada <em>para compartir</em></h2>
+                    <p>La misma botella para todos los sabores: cada uno con su color, para encontrar el tuyo de un vistazo en la nevera.</p>
+                </div>
+                <ul class="pk-list" id="pk-list">
+                    <li data-rv style="--i:1"><i data-ic="glass-water"></i><span><strong>Presentación</strong><small id="pk-sizes">500 ml</small></span></li>
+                    <li data-rv style="--i:2"><i data-ic="hand-platter"></i><span><strong>Con asa</strong><small>Fácil de tomar y servir en la mesa.</small></span></li>
+                    <li data-rv style="--i:3"><i data-ic="tag"></i><span><strong>Etiqueta por sabor</strong><small id="pk-seals">Color propio y sellos impresos en cada etiqueta.</small></span></li>
+                    <li data-rv style="--i:4"><i data-ic="lock-keyhole"></i><span><strong>Tapa de rosca</strong><small id="pk-cap">Ciérrala bien después de servir.</small></span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         CONSERVACIÓN — cifras reales en js/product-info.js (si están en null se muestra el texto general)
+         ========================================================= -->
+    <section class="sx sx-keep" id="conservacion" aria-labelledby="sx-keep-title">
+        <div class="sx-shapes" aria-hidden="true"><i></i><i></i></div>
+        <div class="sx-wrap">
+            <div class="sx-head" data-rv>
+                <span class="sx-kicker sx-kicker--ice"><i data-ic="refrigerator"></i> Conservación</span>
+                <h2 id="sx-keep-title">Frío, tapado y <em>a disfrutar</em></h2>
+                <p>Cuatro cuidados para que cada vaso sepa igual de rico que el primero.</p>
+            </div>
+            <div class="kp-grid">
+                <article class="kp-card" data-rv style="--i:0"><span class="kp-ico"><i data-ic="thermometer-snowflake"></i></span><h3>Siempre en la nevera</h3><p id="kp-temp">Guárdalo refrigerado desde que lo recibes. No lo dejes al sol ni fuera del frío.</p></article>
+                <article class="kp-card" data-rv style="--i:1"><span class="kp-ico"><i data-ic="calendar-check"></i></span><h3>Cerrado</h3><p id="kp-closed">Revisa la fecha de vencimiento impresa en el envase antes de abrirlo.</p></article>
+                <article class="kp-card" data-rv style="--i:2"><span class="kp-ico"><i data-ic="hourglass"></i></span><h3>Una vez abierto</h3><p id="kp-open">Tápalo bien, devuélvelo a la nevera y disfrútalo en pocos días.</p></article>
+                <article class="kp-card" data-rv style="--i:3"><span class="kp-ico"><i data-ic="shield-check"></i></span><h3>Utensilios limpios</h3><p>Sirve con vaso o cuchara limpios y evita beber directo de la botella.</p></article>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         CON QUÉ COMERLO — ideas para servir
+         ========================================================= -->
+    <section class="sx sx-pair" id="ideas" aria-labelledby="sx-pair-title">
+        <div class="sx-wrap">
+            <div class="sx-head" data-rv>
+                <span class="sx-kicker"><i data-ic="utensils-crossed"></i> Ideas para servir</span>
+                <h2 id="sx-pair-title">¿Con qué <em>lo acompañas?</em></h2>
+                <p>Solo, bien frío, ya es un gusto. Y si quieres más, estas combinaciones nunca fallan.</p>
+            </div>
+            <div class="pr-bento">
+                <article class="pr-card pr-card--xl" data-rv style="--i:0;--c:#BC1D29">
+                    <span class="pr-ico"><i data-ic="wheat"></i></span>
+                    <h3>Con granola o cereal</h3><p>El desayuno más rápido: un vaso de yogurt, un puñado de granola y listo.</p>
+                    <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="" width="320" height="555" loading="lazy" decoding="async" aria-hidden="true">
+                </article>
+                <article class="pr-card" data-rv style="--i:1;--c:#E3A008"><span class="pr-ico"><i data-ic="apple"></i></span><h3>Con fruta picada</h3><p>Banano, fresa o mango encima, para un plato fresco.</p></article>
+                <article class="pr-card" data-rv style="--i:2;--c:#74205A"><span class="pr-ico"><i data-ic="blend"></i></span><h3>En batidos</h3><p>Licúalo con fruta y hielo para un batido cremoso.</p></article>
+                <article class="pr-card" data-rv style="--i:3;--c:#55281A"><span class="pr-ico"><i data-ic="croissant"></i></span><h3>Con el algo</h3><p>Junto a un pan, una galleta o una arepa a media tarde.</p></article>
+                <article class="pr-card" data-rv style="--i:4;--c:#347A22"><span class="pr-ico"><i data-ic="ice-cream-bowl"></i></span><h3>En postres</h3><p>Como capa en un vaso con fruta y galleta triturada.</p></article>
+                            </div>
         </div>
     </section>
 

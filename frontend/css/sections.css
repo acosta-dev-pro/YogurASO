@@ -166,3 +166,129 @@
     .fl-card-hit, .fl-bottle, .fl-ring, .fl-shadow { transition: none; transform: none; }
     .fl-bottle, .fl-card-hit:hover .fl-bottle { transform: translateX(-50%); }
 }
+
+/* Beneficios (sección existente): íconos Lucide */
+.beneficios-grid .beneficio-icono [data-ic] svg { width: 24px; height: 24px; }
+.beneficios-sep-tag [data-ic] svg { width: 14px; height: 14px; vertical-align: -2px; }
+
+/* ======================= 3a. PROCESO ======================= */
+.sx-process { background: #FFFFFF; }
+.sx-process .sx-shapes i:nth-child(1) { --w: 340px; --bg: rgba(79, 174, 69, 0.10); top: 10%; left: -140px; }
+.sx-process .sx-shapes i:nth-child(2) { --w: 280px; --bg: rgba(229, 29, 42, 0.07); bottom: -80px; right: -60px; --t: 26s; }
+.pc-steps { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); margin: 0; padding: 0; list-style: none; }
+.pc-step { position: relative; padding: 22px 20px 24px; border-radius: 22px; background: var(--sx-cream); box-shadow: inset 0 0 0 1px var(--sx-line);
+    transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease, background-color 0.3s ease; }
+.pc-step:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(229, 29, 42, 0.28); background: #fff; }
+.pc-dot { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 18px; border-radius: 16px; background: #fff; color: var(--brand-red, #E51D2A);
+    box-shadow: 0 8px 18px -10px rgba(229, 29, 42, 0.5), inset 0 0 0 1px rgba(229, 29, 42, 0.14); font-size: 22px; }
+.pc-n { position: absolute; top: 22px; right: 20px; font: 600 28px/1 var(--font-display); color: rgba(23, 23, 23, 0.08); }
+.pc-step h3 { margin: 0 0 6px; font: 600 18px/1.2 var(--font-display); color: var(--sx-ink); }
+.pc-step p { margin: 0; font: 400 14px/1.55 var(--font-ui); color: var(--sx-muted); }
+.pc-line { position: relative; height: 2px; margin: 28px 4px 0; border-radius: 2px; background: rgba(23, 23, 23, 0.07); overflow: hidden; }
+.pc-line i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--brand-red, #E51D2A), #F2B90F, var(--brand-green, #4FAE45)); transform-origin: left; transform: scaleX(var(--p, 0)); }
+
+/* ======================= 3b. EMPAQUE ======================= */
+.sx-pack { background: linear-gradient(180deg, #FFF3E2 0%, #FFF8EC 100%); }
+.pk-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+.pk-visual { position: relative; aspect-ratio: 1 / 1.05; max-width: 480px; width: 100%; justify-self: center; perspective: 1000px; }
+.pk-disc { position: absolute; inset: 8% 6% 4%; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #F04A54 0%, #E51D2A 45%, #A8141F 100%);
+    box-shadow: 0 40px 80px -40px rgba(168, 20, 31, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
+.pk-disc::after { content: ""; position: absolute; inset: 7%; border-radius: 50%; border: 1px dashed rgba(255, 255, 255, 0.28); animation: sxSpin 60s linear infinite; }
+@keyframes sxSpin { to { transform: rotate(360deg); } }
+.pk-bottle { position: absolute; left: 50%; top: 2%; width: 52%; transform: translateX(-50%) rotateY(var(--pk-ry, 0deg)) translateY(var(--pk-y, 0px)); transform-style: preserve-3d; transition: transform 0.2s linear; }
+.pk-bottle img { position: relative; z-index: 1; display: block; width: 100%; height: auto; filter: drop-shadow(0 26px 22px rgba(60, 0, 8, 0.35)); }
+.pk-floor { position: absolute; left: 10%; right: 10%; bottom: -3%; height: 7%; border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 0, 6, 0.55), transparent); filter: blur(5px); }
+.pk-pin { position: absolute; left: var(--x); top: var(--y); z-index: 2; display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px 8px 10px;
+    border-radius: 999px; background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 10px 24px -14px rgba(23, 23, 23, 0.45), inset 0 0 0 1px rgba(23, 23, 23, 0.06);
+    font: 600 12.5px/1 var(--font-ui); color: var(--sx-muted); white-space: nowrap; }
+.pk-pin b { color: var(--sx-ink); font-weight: 800; }
+.pk-pin::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-red, #E51D2A); box-shadow: 0 0 0 4px rgba(229, 29, 42, 0.16); animation: sxPulse 2.4s ease-in-out infinite; }
+@keyframes sxPulse { 50% { box-shadow: 0 0 0 7px rgba(229, 29, 42, 0.05); } }
+.pk-pin[data-rv] { transition-delay: 0.35s; }
+.pk-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.pk-list li { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border-radius: 18px; background: rgba(255, 255, 255, 0.75); box-shadow: inset 0 0 0 1px var(--sx-line);
+    transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease; }
+.pk-list li:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px rgba(229, 29, 42, 0.25); }
+.pk-list li > i { flex: none; width: 38px; height: 38px; border-radius: 12px; background: rgba(229, 29, 42, 0.08); color: var(--brand-red, #E51D2A); font-size: 19px; }
+.pk-list strong { display: block; margin-bottom: 3px; font: 700 14px/1.25 var(--font-ui); color: var(--sx-ink); }
+.pk-list small { display: block; font: 400 13px/1.5 var(--font-ui); color: var(--sx-muted); }
+
+/* ======================= 3c. CONSERVACIÓN ======================= */
+.sx-keep { background: linear-gradient(180deg, #F2F7FB 0%, #FFFFFF 100%); }
+.sx-keep .sx-shapes i:nth-child(1) { --w: 360px; --bg: rgba(120, 170, 220, 0.18); top: -100px; right: 10%; }
+.sx-keep .sx-shapes i:nth-child(2) { --w: 240px; --bg: rgba(160, 200, 235, 0.16); bottom: 0; left: -60px; --t: 20s; }
+.sx-kicker--ice { background: rgba(43, 108, 176, 0.09); color: #2B6CB0; }
+.kp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 20px); }
+.kp-card { position: relative; padding: 22px 20px; border-radius: 22px; overflow: hidden;
+    background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    box-shadow: inset 0 0 0 1px rgba(43, 108, 176, 0.10), 0 18px 36px -28px rgba(43, 108, 176, 0.45);
+    transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease; }
+.kp-card::after { content: ""; position: absolute; right: -30px; top: -30px; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(circle, rgba(120, 170, 220, 0.22), transparent 70%); }
+.kp-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(43, 108, 176, 0.28), 0 18px 36px -28px rgba(43, 108, 176, 0.5); }
+.kp-ico { display: grid; place-items: center; width: 46px; height: 46px; margin-bottom: 16px; border-radius: 15px; background: #E9F2FB; color: #2B6CB0; font-size: 22px; }
+.kp-card h3 { margin: 0 0 6px; font: 600 17px/1.2 var(--font-display); color: var(--sx-ink); }
+.kp-card p { margin: 0; font: 400 13.5px/1.55 var(--font-ui); color: var(--sx-muted); }
+.kp-card p strong { color: var(--sx-ink); }
+
+/* ======================= 3d. CON QUÉ COMERLO ======================= */
+.sx-pair { background: #FFF8EC; }
+.pr-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(170px, auto); gap: clamp(12px, 1.6vw, 18px); }
+.pr-card { --c: #BC1D29; position: relative; overflow: hidden; padding: 20px; border-radius: 22px; background: #fff;
+    box-shadow: inset 0 0 0 1px var(--sx-line); transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease; }
+.pr-card::before { content: ""; position: absolute; inset: auto -30% -55% auto; width: 75%; aspect-ratio: 1; border-radius: 50%; background: color-mix(in oklab, var(--c), transparent 88%); transition: transform 0.6s var(--sx-ease); }
+.pr-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c), transparent 60%); }
+.pr-card:hover::before { transform: scale(1.25); }
+.pr-ico { position: relative; display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 14px; border-radius: 14px; font-size: 20px;
+    background: color-mix(in oklab, var(--c), transparent 88%); color: var(--c); }
+.pr-card h3 { position: relative; margin: 0 0 6px; font: 600 17px/1.2 var(--font-display); color: var(--sx-ink); }
+.pr-card p { position: relative; margin: 0; font: 400 13.5px/1.55 var(--font-ui); color: var(--sx-muted); }
+.pr-card--xl { grid-column: span 2; grid-row: span 2; padding: 28px; color: #fff;
+    background: radial-gradient(120% 80% at 20% 0%, color-mix(in oklab, var(--c), #fff 20%), transparent 60%), linear-gradient(160deg, var(--c), color-mix(in oklab, var(--c), #000 25%)); box-shadow: 0 30px 60px -36px var(--c); }
+.pr-card--xl::before { background: rgba(255, 255, 255, 0.08); width: 90%; }
+.pr-card--xl .pr-ico { background: rgba(255, 255, 255, 0.16); color: #fff; }
+.pr-card--xl h3 { color: #fff; font-size: clamp(22px, 2.2vw, 28px); max-width: 12ch; }
+.pr-card--xl p { color: rgba(255, 255, 255, 0.85); max-width: 26ch; font-size: 14.5px; }
+.pr-card--xl img { position: absolute; right: 6%; bottom: -6%; width: 34%; max-width: 190px; height: auto; transform: rotate(8deg); filter: drop-shadow(0 24px 22px rgba(0, 0, 0, 0.3)); transition: transform 0.6s var(--sx-ease); }
+.pr-card--xl:hover img { transform: rotate(4deg) translateY(-8px); }
+
+@media (max-width: 980px) {
+    .pc-steps, .kp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pk-grid { grid-template-columns: 1fr; }
+    .pr-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .pc-steps, .kp-grid, .pk-list { grid-template-columns: 1fr; }
+    .pc-line { display: none; }
+    .pk-pin { font-size: 11.5px; padding: 6px 10px 6px 8px; }
+    .pk-pin--r { left: auto; right: 0; }
+    .pr-card--xl { min-height: 300px; }
+    .pr-card--xl img { width: 38%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .pk-disc::after, .pk-pin::before { animation: none; }
+    .pk-bottle { transition: none; transform: translateX(-50%); }
+}
+
+/* Beneficios (sección existente) con el mismo lenguaje de las secciones nuevas */
+.beneficios { padding: var(--sx-pad) 0 !important; background: #FFFFFF !important; }
+.beneficios-banner { background: transparent !important; border: 0 !important; padding: 0 20px !important; margin: 0 auto clamp(32px, 4vw, 48px) !important; gap: 0 !important; }
+.beneficios-sep-tag {
+    gap: 7px; padding: 6px 12px 6px 10px !important; margin-bottom: 14px;
+    border-radius: 999px !important; background: rgba(229, 29, 42, 0.08) !important; color: var(--brand-red, #E51D2A) !important;
+    font: 800 11.5px/1 var(--font-ui) !important; letter-spacing: 0.08em !important;
+}
+.beneficios-sep-tag i[data-ic] { display: inline-grid !important; }
+.beneficios-titulo { font: 600 clamp(28px, 3.2vw, 40px)/1.08 var(--font-display) !important; color: var(--sx-ink) !important; letter-spacing: -0.01em !important; }
+.beneficios-grid { max-width: var(--sx-max) !important; width: min(var(--sx-max), 100% - 40px); padding: 0 !important; gap: clamp(12px, 1.6vw, 20px) !important; }
+.beneficios-grid .beneficio-card { padding: 22px 20px !important; min-height: 0 !important; }
+.beneficios-grid .beneficio-icono {
+    display: grid !important; place-items: center; width: 46px; height: 46px; margin-bottom: 16px !important;
+    border-radius: 15px; background: rgba(255, 255, 255, 0.75); box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.06);
+}
+.beneficios-grid .beneficio-icono [data-ic] svg { width: 22px; height: 22px; }
+.beneficios-grid .beneficio-card h3 { font: 600 17px/1.2 var(--font-display) !important; margin: 0 0 6px !important; }
+.beneficios-grid .beneficio-card p { font: 400 13.5px/1.55 var(--font-ui) !important; margin: 0 !important; }
+@media (max-width: 860px) { .beneficios-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
+@media (max-width: 480px) { .beneficios-grid { grid-template-columns: 1fr !important; } }

@@ -139,9 +139,48 @@
         });
     }
 
+
+    /* ---------- Datos reales (js/product-info.js) ---------- */
+    function setText(id, html) { var el = document.getElementById(id); if (el && html) el.innerHTML = html; }
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function applyInfo() {
+        var I = window.YOG_INFO || {};
+        if (I.presentaciones && I.presentaciones.length) setText('pk-sizes', esc(I.presentaciones.join(' · ')));
+        if (I.temperatura) setText('kp-temp', 'Guárdalo refrigerado entre <strong>' + esc(I.temperatura) + '</strong>. No lo dejes al sol ni fuera del frío.');
+        if (I.vidaUtilCerradoDias) setText('kp-closed', 'Cerrado y en la nevera dura hasta <strong>' + I.vidaUtilCerradoDias + ' días</strong>. Revisa siempre la fecha impresa.');
+        if (I.vidaUtilAbiertoDias) setText('kp-open', 'Tápalo bien, devuélvelo a la nevera y consúmelo en máximo <strong>' + I.vidaUtilAbiertoDias + ' días</strong>.');
+        if (I.selloSeguridad === true) setText('pk-cap', 'Con sello de seguridad. Ciérrala bien después de servir.');
+        if (I.materialEnvase) setText('pk-seals', 'Envase de ' + esc(I.materialEnvase) + ', con color propio por sabor.');
+        if (Array.isArray(I.proceso) && I.proceso.length) {
+            document.querySelectorAll('#pc-steps .pc-step').forEach(function (li, i) {
+                var st = I.proceso[i]; if (!st) return;
+                if (st.titulo) li.querySelector('h3').textContent = st.titulo;
+                if (st.texto) li.querySelector('p').textContent = st.texto;
+            });
+        }
+    }
+
+    /* ---------- Línea del proceso: se llena al bajar ---------- */
+    function initProcessLine() {
+        var line = document.getElementById('pc-line'), sec = document.getElementById('proceso');
+        if (!line || !sec) return;
+        if (reduce.matches) { line.style.setProperty('--p', 1); return; }
+        var ticking = false;
+        function upd() {
+            ticking = false;
+            var r = sec.getBoundingClientRect(), vh = window.innerHeight;
+            var p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height * 0.9)));
+            line.style.setProperty('--p', p.toFixed(3));
+        }
+        window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+        upd();
+    }
+
     function init() {
+        applyInfo();
         paintIcons();
         buildRail();
+        initProcessLine();
         watchReveal();
         document.dispatchEvent(new CustomEvent('yog:sections-ready'));
     }
