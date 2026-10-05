@@ -1136,3 +1136,38 @@
 }
 .v3-flavor-card strong { margin-top: 2px !important; font-size: 0.92rem !important; }
 
+/* HARD SHORT STAGE */
+.producto-card.card-v3 .producto-img-container,
+.productos-page-v3 .producto-card.card-v3 .producto-img-container,
+.v3-catalog .producto-card.card-v3 .producto-img-container,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-container,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-wrap {
+  height: 150px !important;
+  min-height: 150px !important;
+  max-height: 150px !important;
+  aspect-ratio: auto !important;
+  padding: 8px 8px 0 !important;
+}
+.producto-card.card-v3 .producto-img,
+.productos-page-v3 .producto-card.card-v3 .producto-img,
+.v3-catalog .producto-card.card-v3 .producto-img,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+  width: auto !important;
+  max-width: 112px !important;
+  max-height: 138px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+.v3-flavor-grid--featured .v3-flavor-card,
+.v3-flavor-card {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 8px 8px 10px !important;
+}
+.v3-flavor-card img,
+.v3-flavor-grid--featured .v3-flavor-card img {
+  width: auto !important;
+  max-width: 100px !important;
+  max-height: 120px !important;
+}
+
