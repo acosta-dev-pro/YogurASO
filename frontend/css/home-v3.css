@@ -899,3 +899,240 @@
 .producto-card.card-v3 .wish-btn i,
 .producto-card.card-v3 .wish-btn svg{color:#E51D2A!important;opacity:1!important;font-size:15px!important;}
 
+
+/* ========== COMPACT CARDS ~25% shorter (mockup density) ========== */
+.producto-card.card-v3 .producto-img-container,
+.productos-page-v3 .producto-card.card-v3 .producto-img-container,
+.v3-catalog .producto-card.card-v3 .producto-img-container {
+  aspect-ratio: 1 / 0.92 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: 190px !important;
+  padding: 12px 10px 4px !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.producto-card.card-v3 .producto-img,
+.productos-page-v3 .producto-card.card-v3 .producto-img,
+.v3-catalog .producto-card.card-v3 .producto-img,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+  width: min(70%, 140px) !important;
+  max-width: 140px !important;
+  max-height: 168px !important;
+  height: auto !important;
+  aspect-ratio: 320 / 555 !important;
+  object-fit: contain !important;
+  transform: none !important;
+  padding: 0 !important;
+}
+
+.producto-card.card-v3:hover .producto-img {
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+.producto-card.card-v3 .producto-info {
+  padding: 8px 12px 12px !important;
+  gap: 3px !important;
+  display: grid !important;
+}
+
+.producto-card.card-v3 h3 {
+  font-size: 1.02rem !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+}
+
+.producto-card.card-v3 .producto-categoria {
+  font-size: 11px !important;
+  margin: 0 !important;
+}
+
+.producto-card.card-v3 .producto-rating {
+  font-size: 11px !important;
+  gap: 4px !important;
+  margin: 0 !important;
+}
+
+.producto-card.card-v3 .producto-footer {
+  gap: 8px !important;
+  margin-top: 2px !important;
+}
+
+.producto-card.card-v3 .precio {
+  font-size: 1.05rem !important;
+  line-height: 1 !important;
+}
+
+.producto-card.card-v3 .qty-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.producto-card.card-v3 .qty {
+  height: 32px !important;
+}
+
+.producto-card.card-v3 .qty button {
+  width: 30px !important;
+  height: 32px !important;
+  font-size: 15px !important;
+}
+
+.producto-card.card-v3 .qty span {
+  min-width: 22px !important;
+  font-size: 12px !important;
+}
+
+.producto-card.card-v3 .btn-add {
+  min-height: 38px !important;
+  font-size: 12.5px !important;
+  gap: 6px !important;
+}
+
+.producto-card.card-v3 .wish-btn {
+  width: 30px !important;
+  height: 30px !important;
+  top: 8px !important;
+  right: 8px !important;
+}
+
+.producto-card.card-v3,
+.productos-grid:not(.productos-grid-horizontal) .producto-card {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.productos-page-v3 .productos-grid:not(.productos-grid-horizontal) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)) !important;
+  gap: 16px !important;
+}
+
+.v3-flavor-card {
+  padding: 14px 10px 12px !important;
+  min-height: 0 !important;
+}
+
+.v3-flavor-grid--featured .v3-flavor-card {
+  min-height: 0 !important;
+  padding: 14px 10px 12px !important;
+}
+
+.v3-flavor-card img,
+.v3-flavor-grid--featured .v3-flavor-card img {
+  width: min(68%, 120px) !important;
+  max-height: 150px !important;
+  height: auto !important;
+  aspect-ratio: 320 / 555 !important;
+  object-fit: contain !important;
+}
+
+.v3-flavor-card strong {
+  font-size: 0.95rem !important;
+  margin-top: 6px !important;
+}
+
+.v3-flavor-card small {
+  font-size: 11px !important;
+}
+
+.v3-ingredientes-card {
+  min-height: 0 !important;
+}
+
+.v3-sabores-board {
+  align-items: start !important;
+}
+
+
+/* FORCE QTY ROW + EXTRA COMPACT */
+.producto-card.card-v3 .qty {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  width: auto !important;
+  height: 32px !important;
+  flex: 0 0 auto !important;
+}
+.producto-card.card-v3 .qty button,
+.producto-card.card-v3 .qty span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  height: 32px !important;
+  min-height: 0 !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.producto-card.card-v3 .qty span {
+  width: auto !important;
+  min-width: 22px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+.producto-card.card-v3 .precio {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  line-height: 1.05 !important;
+}
+.producto-card.card-v3 .precio-antes {
+  display: inline !important;
+  font-size: 10px !important;
+  margin: 0 !important;
+}
+.producto-card.card-v3 .producto-img-container,
+.productos-page-v3 .producto-card.card-v3 .producto-img-container {
+  max-height: 168px !important;
+  aspect-ratio: 1 / 0.82 !important;
+  padding: 10px 8px 2px !important;
+}
+.producto-card.card-v3 .producto-img,
+.productos-page-v3 .producto-card.card-v3 .producto-img {
+  width: min(64%, 120px) !important;
+  max-width: 120px !important;
+  max-height: 148px !important;
+}
+
+/* COMPACT PASS 2 */
+.producto-card.card-v3 .qty {
+  overflow: visible !important;
+  min-width: 96px !important;
+  flex-shrink: 0 !important;
+}
+.producto-card.card-v3 .qty-row {
+  width: 100% !important;
+  flex-wrap: nowrap !important;
+}
+.producto-card.card-v3 .producto-info {
+  padding: 6px 12px 10px !important;
+  gap: 2px !important;
+}
+.producto-card.card-v3 .producto-footer {
+  gap: 6px !important;
+  margin-top: 0 !important;
+}
+.producto-card.card-v3 .btn-add {
+  min-height: 36px !important;
+  padding: 0 12px !important;
+}
+.v3-flavor-grid--featured .v3-flavor-card,
+.v3-flavor-card {
+  padding: 10px 8px 10px !important;
+  gap: 4px !important;
+}
+.v3-flavor-card img,
+.v3-flavor-grid--featured .v3-flavor-card img {
+  width: min(62%, 110px) !important;
+  max-height: 132px !important;
+}
+.v3-flavor-card strong { margin-top: 2px !important; font-size: 0.92rem !important; }
+

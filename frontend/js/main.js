@@ -575,8 +575,8 @@ function renderProducts() {
                     <p class="producto-categoria">500 ml · ${escapeHtml(p.categoria || 'Yogurt Artesanal')}</p>
                     <p class="producto-rating" aria-label="Valoración"><i class="fas fa-star" aria-hidden="true"></i> 4.9 <span>(120)</span></p>
                     <div class="producto-footer">
-                        ${precioHtml}
                         <div class="qty-row">
+                            ${precioHtml}
                             <div class="qty" data-qty-wrap>
                                 <button type="button" data-qty="-1" aria-label="Menos">−</button>
                                 <span data-qty-val>1</span>
@@ -597,7 +597,7 @@ function renderProducts() {
                         </button>
                     </div>
                 </div>
-            </article>
+                        </article>
         `;
     };
 

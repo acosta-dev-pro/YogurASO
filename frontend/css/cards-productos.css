@@ -159,3 +159,37 @@
   max-height: 220px !important;
 }
 
+
+/* Compact catalog cards — keep in sync with home-v3 compact block */
+.productos-grid:not(.productos-grid-horizontal) .producto-card {
+  min-height: 0 !important;
+  height: auto !important;
+}
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-container,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-wrap {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: 190px !important;
+  aspect-ratio: 1 / 0.92 !important;
+  padding: 12px 10px 4px !important;
+}
+.producto-card.card-v3 .producto-img-container,
+.productos-page-v3 .producto-card.card-v3 .producto-img-container {
+  aspect-ratio: 1 / 0.92 !important;
+  padding: 12px 10px 4px !important;
+  max-height: 190px !important;
+}
+.producto-card.card-v3 .producto-img,
+.productos-page-v3 .producto-card.card-v3 .producto-img,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+  width: min(70%, 140px) !important;
+  max-width: 140px !important;
+  max-height: 168px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+.v3-catalog .producto-card.card-v3 .producto-img {
+  width: min(68%, 130px) !important;
+  max-height: 155px !important;
+}
+
