@@ -1,22 +1,25 @@
 /* header.css — menú global de YoguraSo
-   Logo a la izquierda, menú en píldora al centro, lupa y carrito a la derecha.
-   Sobre el hero el menú es transparente (logo y iconos toman el color del sabor).
-   Al bajar, o en las páginas interiores, pasa a una barra crema con el logo rojo.
-   Reemplaza las reglas de `header` que quedan en styles.css. */
+   En el hero (arriba): transparente, sin barra flotante ni píldora blanca —
+   los links viven dentro del fondo del primer panel.
+   Al bajar (is-stuck) o en páginas interiores (--solid): barra crema flotante
+   con glass suave; ahí sí eleva. Logo izq., acciones der. (esparcidos). */
 
 .site-header {
     --hdr-fg: #fff;
-    --hdr-gutter: max(20px, calc((100vw - var(--s) * 100) / 2 + var(--s) * 5.6));
+    --hdr-gutter-l: max(18px, calc((100vw - var(--s) * 100) / 2 + var(--s) * 2.2));
+    --hdr-gutter-r: max(14px, calc((100vw - var(--s) * 100) / 2 + var(--s) * 1.6));
+    --hdr-gutter: var(--hdr-gutter-l);
     position: fixed;
     top: 0; left: 0; right: 0;
     width: 100%;
     transform: none;
     z-index: 200;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr);
     align-items: center;
-    gap: 16px;
-    padding: clamp(12px, 2.2svh, 24px) var(--hdr-gutter);
+    gap: 20px;
+    padding: clamp(14px, 2.4svh, 26px) var(--hdr-gutter-r) clamp(14px, 2.4svh, 26px) var(--hdr-gutter-l);
+    /* Integrado al hero: sin capa flotante */
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -24,25 +27,34 @@
     border-radius: 0;
     box-shadow: none;
     color: var(--hdr-fg);
-    transition: background-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft), padding 0.35s var(--ease-soft), color 0.5s var(--ease-soft);
+    transition: background-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft),
+                padding 0.35s var(--ease-soft), color 0.5s var(--ease-soft),
+                border-color 0.35s var(--ease-soft), top 0.35s var(--ease-soft),
+                left 0.35s var(--ease-soft), right 0.35s var(--ease-soft),
+                border-radius 0.35s var(--ease-soft), width 0.35s var(--ease-soft);
 }
 
-/* Estado "barra": al bajar en el inicio y siempre en las demás páginas */
+/* Al bajar / páginas interiores: sí flota y eleva */
 .site-header.is-stuck,
 .site-header--solid {
     --hdr-fg: var(--ink);
-    background: rgba(255, 247, 232, 0.9);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    backdrop-filter: blur(14px) saturate(140%);
-    box-shadow: 0 1px 0 rgba(23, 23, 23, 0.06), 0 10px 28px rgba(23, 23, 23, 0.06);
+    top: 12px; left: 14px; right: 14px;
+    width: auto;
+    padding: 8px var(--hdr-gutter-r) 8px var(--hdr-gutter-l);
+    background: rgba(255, 247, 232, 0.90);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(23, 23, 23, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 1px 3px rgba(23, 23, 23, 0.06), 0 12px 32px rgba(23, 23, 23, 0.10);
 }
-.site-header.is-stuck { padding-top: 10px; padding-bottom: 10px; }
 
 /* ---------- Logo ---------- */
 .site-header .brand-logo {
     position: relative;
     display: block;
     justify-self: start;
+    margin-left: -2px;
     width: clamp(108px, calc(var(--s) * 12.2), 190px);
     aspect-ratio: 3105 / 1119;
     flex-shrink: 0;
@@ -58,17 +70,16 @@
 .site-header .logo-blanco,
 .site-header .logo-oscuro { opacity: 0; }
 .site-header .logo-rojo { opacity: 0; }
-/* Sobre el hero: blanco (o oscuro en sabores claros) */
 body[data-hero-fg="light"] .site-header:not(.is-stuck) .logo-blanco { opacity: 1; }
 body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1; }
-/* Barra crema y páginas interiores: rojo */
 .site-header.is-stuck .logo-rojo,
 .site-header--solid .logo-rojo { opacity: 1; }
-/* Sin la clase de color (páginas sin hero) */
 .site-header--solid .logo-blanco,
 .site-header--solid .logo-oscuro { opacity: 0 !important; }
 
-/* ---------- Menú en píldora ---------- */
+/* ---------- Menú ----------
+   Sobre el hero: sin píldora blanca — links blancos dentro de la escena.
+   Stuck/solid: píldora crema/blanca compacta. */
 .site-header .nav {
     position: relative;
     display: flex;
@@ -82,13 +93,18 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     gap: 2px;
     list-style: none;
     margin: 0;
-    padding: 5px;
-    background: #fff;
+    padding: 4px;
+    background: transparent;
     border-radius: var(--radius-pill);
-    box-shadow: 0 8px 28px rgba(23, 23, 23, 0.14);
+    box-shadow: none;
+    transition: background-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft);
 }
 .site-header--solid #nav-items,
-.site-header.is-stuck #nav-items { box-shadow: 0 0 0 1px rgba(23, 23, 23, 0.08); }
+.site-header.is-stuck #nav-items {
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(23, 23, 23, 0.08);
+    padding: 5px;
+}
 .site-header #nav-items li {
     font-family: var(--font-display);
     font-size: 15px;
@@ -101,27 +117,52 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     display: block;
     padding: 9px clamp(14px, calc(var(--s) * 1.9), 26px);
     border-radius: var(--radius-pill);
-    color: var(--ink);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
     text-decoration: none;
     white-space: nowrap;
     position: relative;
-    transition: background-color 0.35s var(--ease-soft), color 0.35s var(--ease-soft);
+    transition: background-color 0.35s var(--ease-soft), color 0.35s var(--ease-soft), text-shadow 0.35s var(--ease-soft);
 }
 .site-header #nav-items li a::after { display: none; }
-.site-header #nav-items li:hover a { color: var(--nav-active, var(--brand-red)); }
+.site-header #nav-items li:hover a {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+}
 .site-header #nav-items li.active a {
-    background: var(--nav-active, var(--brand-red));
+    background: rgba(255, 255, 255, 0.22);
     color: #fff;
 }
 .site-header #nav-items li.active:hover a { color: #fff; }
 
-/* ---------- Lupa y carrito ---------- */
+/* Stuck / solid: links oscuros en píldora */
+.site-header.is-stuck #nav-items li a,
+.site-header--solid #nav-items li a {
+    color: var(--ink);
+    text-shadow: none;
+}
+.site-header.is-stuck #nav-items li:hover a,
+.site-header--solid #nav-items li:hover a {
+    color: var(--nav-active, var(--brand-red));
+    background: transparent;
+}
+.site-header.is-stuck #nav-items li.active a,
+.site-header--solid #nav-items li.active a {
+    background: var(--nav-active, var(--brand-red));
+    color: #fff;
+}
+.site-header.is-stuck #nav-items li.active:hover a,
+.site-header--solid #nav-items li.active:hover a { color: #fff; }
+
+/* ---------- Lupa, user, carrito (más a la derecha) ---------- */
 .site-header .icon-buttons {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     justify-self: end;
     margin: 0;
+    margin-right: -2px;
+    padding-right: 2px;
 }
 .site-header .icon-btn {
     position: relative;
@@ -160,16 +201,11 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     font-weight: 600;
     line-height: 1;
 }
-/* El contador se ve siempre, también en 0 */
 .site-header .cart-badge[hidden] { display: flex; }
 .site-header .cart-badge.badge-bounce { animation: badgeIn 0.4s var(--ease-out); }
 
-/* El menú de usuario sigue oculto en la barra (la cuenta está en el pie) */
 .site-header .user-menu { display: none !important; }
-
-/* Íconos Lucide del header: trazo fino y uniforme */
 .site-header .icon-btn svg.icon { stroke-width: 1.75; }
-/* Cuenta: ícono en escritorio; en el celular va como texto dentro del menú */
 .site-header #nav-items li.nav-account--mobile { display: none; }
 
 /* ---------- Botón del menú en celular ---------- */
@@ -179,7 +215,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     padding: 0 13px;
     border: 0;
     border-radius: 50%;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 6px 18px rgba(23, 23, 23, 0.14);
     cursor: pointer;
     flex-direction: column;
@@ -204,6 +240,12 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
         gap: 4px;
         padding: 12px 16px;
     }
+    .site-header.is-stuck,
+    .site-header--solid {
+        top: 8px; left: 10px; right: 10px;
+        padding: 8px 12px;
+        border-radius: 16px;
+    }
     .site-header .brand-logo { width: 118px; }
     .site-header--solid .brand-logo,
     .site-header.is-stuck .brand-logo { width: 108px; }
@@ -222,12 +264,24 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
         align-items: stretch;
         gap: 2px;
         padding: 8px;
+        background: #fff;
         border-radius: var(--radius);
+        box-shadow: 0 12px 32px rgba(23, 23, 23, 0.16);
         z-index: 220;
     }
     .site-header #nav-items.is-open { display: flex; animation: menuIn 0.22s var(--ease-out); }
     .site-header #nav-items li { font-size: 16px; }
-    .site-header #nav-items li a { padding: 12px 14px; border-radius: 12px; }
+    .site-header #nav-items li a {
+        padding: 12px 14px;
+        border-radius: 12px;
+        color: var(--ink);
+        text-shadow: none;
+    }
+    .site-header #nav-items li:hover a { color: var(--nav-active, var(--brand-red)); background: transparent; }
+    .site-header #nav-items li.active a {
+        background: var(--nav-active, var(--brand-red));
+        color: #fff;
+    }
 }
 
 @keyframes menuIn {

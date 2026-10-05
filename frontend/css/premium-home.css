@@ -438,3 +438,47 @@
   .productos-masonry .btn-ficha,
   .productos-masonry .btn-add { min-height: 32px; padding: 0 8px; font-size: 11px; }
 }
+
+/* ---------- FOOTER WHITE / CREAM (no black sides) ---------- */
+.footer-map-wrap,
+.site-footer {
+  background: #FFFDF8 !important;
+  color: #171717 !important;
+  box-shadow: none !important;
+}
+.site-footer {
+  border-top: 1px solid rgba(23, 23, 23, 0.08);
+}
+.footer-map-wrap {
+  width: 100%;
+  max-width: none;
+  padding: 28px 5% 20px;
+  margin: 0;
+}
+.footer-map-title { color: #171717 !important; }
+.footer-map {
+  background: #FBF3E6 !important;
+  border: 1px solid rgba(23, 23, 23, 0.06);
+}
+.footer-logo,
+.footer-col h4 { color: #171717 !important; }
+.footer-brand p,
+.footer-col ul li,
+.footer-col ul li a,
+.footer-bottom,
+.footer-bottom span { color: #5C554C !important; }
+.footer-col ul li a:hover { color: #E51D2A !important; }
+.footer-col ul li i { color: #E51D2A !important; }
+.footer-social a {
+  background: #F3E8D6 !important;
+  color: #171717 !important;
+  border: 1px solid rgba(23, 23, 23, 0.08) !important;
+}
+.footer-social a:hover {
+  background: #E51D2A !important;
+  color: #fff !important;
+}
+.footer-bottom {
+  border-top: 1px solid rgba(23, 23, 23, 0.08) !important;
+  background: #FFFDF8 !important;
+}

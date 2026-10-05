@@ -67,7 +67,7 @@ body[data-flavor="mango"]        { --hero-bg: #EC7F0A; --hero-floor: #F28C1B; --
 }
 .hero-mesh i:nth-child(1) {   /* luz detrás de la botella */
     width: calc(var(--s) * 46); height: calc(var(--s) * 46);
-    left: calc(50% + var(--s) * 2); top: calc(50% - var(--s) * 34);
+    left: calc(50% + var(--s) * 8); top: calc(50% - var(--s) * 34);
     background-color: color-mix(in srgb, var(--hero-bg) 60%, #fff);
     animation: meshA 24s ease-in-out infinite alternate;
 }
@@ -118,7 +118,7 @@ body[data-flavor="mango"]        { --hero-bg: #EC7F0A; --hero-floor: #F28C1B; --
 /* ---------- Texto (siempre blanco, no cambia con el sabor) ---------- */
 .hero-copy {
     position: absolute;
-    left: calc(var(--s) * 5.6);
+    left: calc(var(--s) * 3.2);
     top: 24.5%;
     z-index: 3;
     width: calc(var(--s) * 40);
@@ -151,7 +151,7 @@ body[data-flavor="mango"]        { --hero-bg: #EC7F0A; --hero-floor: #F28C1B; --
 .hero-lower { display: contents; }
 .hero-cta {
     position: absolute;
-    left: calc(var(--s) * 6.5);
+    left: calc(var(--s) * 4.0);
     top: 61.2%;
     z-index: 3;
     display: block;
@@ -246,13 +246,13 @@ body[data-flavor="mango"]        { --hero-bg: #EC7F0A; --hero-floor: #F28C1B; --
     transform: translateX(-50%);
 }
 .bottle--main {
-    left: calc(var(--s) * 60);
+    left: calc(var(--s) * 67);
     bottom: 7%;
     height: 77%;
     z-index: 3;
 }
 .bottle--second {
-    left: calc(var(--s) * 85.5);
+    left: calc(var(--s) * 92);
     bottom: 17%;
     height: 48%;
     z-index: 2;

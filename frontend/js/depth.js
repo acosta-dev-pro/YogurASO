@@ -30,7 +30,7 @@
 
     function el(tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; }
 
-    var DRIP_PATH = 'M0 0H1440V14H1366C1351.7 14 1356.1 44 1340 44C1323.9 44 1328.3 14 1314 14H1228C1207.1 14 1213.6 70 1190 70C1166.4 70 1172.9 14 1152 14H1070C1059.0 14 1062.4 30 1050 30C1037.6 30 1041.0 14 1030 14H910C893.5 14 898.6 54 880 54C861.4 54 866.5 14 850 14H759C745.8 14 749.9 40 735 40C720.1 40 724.2 14 711 14H600C578.0 14 584.8 76 560 76C535.2 76 542.0 14 520 14H442C429.9 14 433.6 32 420 32C406.4 32 410.1 14 398 14H284C265.3 14 271.1 62 250 62C228.9 62 234.7 14 216 14H116C101.7 14 106.1 36 90 36C73.9 36 78.3 14 64 14H0Z';
+    var DRIP_PATH = 'M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z';
 
     var sections = [];
     function build() {
@@ -48,13 +48,7 @@
                 return { node: s, d: o.d };
             });
             sec.insertBefore(deco, sec.firstChild);
-            if (DRIPS[id]) {
-                var drip = el('div', 'yg-drip'); drip.setAttribute('aria-hidden', 'true');
-                drip.innerHTML = '<svg viewBox="0 0 1440 80" preserveAspectRatio="none" focusable="false"><path fill="' + DRIPS[id] + '" d="' + DRIP_PATH + '"/></svg>' +
-                    '<i style="left:38.9%;top:93%;--dl:0s"></i><i style="left:82.6%;top:86%;--dl:-2.6s"></i><i style="left:17.4%;top:76%;--dl:-4.4s"></i>';
-                drip.querySelectorAll('i').forEach(function (d) { d.style.background = DRIPS[id]; });
-                sec.insertBefore(drip, deco.nextSibling);
-            }
+            /* Separadores: .yd (yogurt-drip) entre secciones — sin segundo goteo aqui. */
             /* Contenido que recibe la profundidad: hijos directos en el flujo (no decoraciones). */
             var content = Array.prototype.filter.call(sec.children, function (c) {
                 if (/\byg-(deco|drip)\b|\bsx-shapes\b|nosotros-bg-pattern/.test(c.className)) return false;

@@ -417,23 +417,23 @@ body.admin-page .admin-modal-content, .modal-content { border-radius: var(--bp-r
 
 /* ---------- Pie de página ---------- */
 .site-footer {
-    background: var(--bp-ink);
-    color: rgba(255, 247, 232, 0.78);
+    background: #FFFDF8;
+    color: #171717;
     border-top: 0;
     box-shadow: none !important;
     margin-top: 64px;
     border-radius: var(--bp-radius-lg) var(--bp-radius-lg) 0 0;
 }
-.footer-logo { font-weight: 700; font-size: 28px; color: var(--bp-cream); }
-.footer-brand p { color: rgba(255, 247, 232, 0.72); }
-.footer-col h4 { color: var(--bp-cream); font-family: var(--bp-font-title); font-weight: 600; letter-spacing: 0.08em; }
-.footer-col ul li, .footer-col ul li a { color: rgba(255, 247, 232, 0.78); }
+.footer-logo { font-weight: 700; font-size: 28px; color: #171717; }
+.footer-brand p { color: #5C554C; }
+.footer-col h4 { color: #171717; font-family: var(--bp-font-title); font-weight: 600; letter-spacing: 0.08em; }
+.footer-col ul li, .footer-col ul li a { color: #5C554C; }
 .footer-col ul li a { transition: color 0.3s var(--bp-ease), transform var(--bp-dur) var(--bp-ease); display: inline-block; }
-.footer-col ul li a:hover { color: #fff; transform: translateY(-2px); }
-.footer-col ul li i { color: var(--bp-green); }
-.footer-social a { background: rgba(255, 247, 232, 0.10); color: var(--bp-cream); border: 1px solid rgba(255, 247, 232, 0.14); transition: transform var(--bp-dur) var(--bp-ease), background-color 0.3s var(--bp-ease); }
+.footer-col ul li a:hover { color: var(--bp-red); transform: translateY(-2px); }
+.footer-col ul li i { color: var(--bp-red); }
+.footer-social a { background: rgba(255, 247, 232, 0.10); color: #171717; border: 1px solid rgba(255, 247, 232, 0.14); transition: transform var(--bp-dur) var(--bp-ease), background-color 0.3s var(--bp-ease); }
 .footer-social a:hover { background: var(--bp-red); color: #fff; transform: translateY(-4px); }
-.footer-bottom { border-top: 1px solid rgba(255, 247, 232, 0.14); color: rgba(255, 247, 232, 0.62); }
+.footer-bottom { border-top: 1px solid rgba(23, 23, 23, 0.08); color: #5C554C; background: #FFFDF8; }
 .footer-bottom span { color: inherit; }
 
 /* ---------- Legal (privacidad) y 404 ---------- */
