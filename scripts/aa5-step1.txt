@@ -1,1 +1,0 @@
-echo ubuntu123 | sudo -S mkdir -p /mnt/yoguraso
