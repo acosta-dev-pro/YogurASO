@@ -7,7 +7,7 @@
     <meta name="description" content="YogurASO elabora yogurt artesanal en Tello y Neiva, Huila. Pedidos al detal y mayoristas. Explora sabores y compra por WhatsApp.">
     <meta name="theme-color" content="#E51D2A">
     <meta name="robots" content="index, follow">
-    <link rel="preload" as="image" href="assets/products/yoguraso-fresa-500ml.webp" imagesrcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w" imagesizes="(max-width: 860px) 46vw, 26vw" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/products/yoguraso-fresa-500ml.webp" imagesrcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w" imagesizes="(max-width: 860px) 46vw, 23vw" fetchpriority="high">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <meta property="og:title" content="YogurASO · Yogurt Artesanal">
     <meta property="og:description" content="Yogurt artesanal del Huila. Mayoreo en Neiva y Tello.">
@@ -62,7 +62,7 @@
         </div>
     </header>
 
-    <section class="hero is-loading" id="hero" aria-label="Yogurt artesanal">
+    <section class="hero is-loading" id="hero" aria-roledescription="carrusel" aria-label="Sabores de yogurt artesanal">
         <div class="hero-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div class="hero-floor" aria-hidden="true"></div>
         <div class="hero-box">
@@ -71,44 +71,45 @@
                 <p class="hero-sub">El sabor natural<br>en cada momento</p>
             </div>
 
-            <div class="hero-stage">
+            <div class="hero-stage" id="hero-stage" tabindex="0" role="group" aria-roledescription="sabor" aria-label="Fresa. Usa las flechas izquierda y derecha para cambiar de sabor" aria-describedby="hero-live">
                 <div class="bottle bottle--main">
-                    <span class="bottle-shadow" aria-hidden="true"></span>
+                    <span class="bottle-shadow" aria-hidden="true"><i></i></span>
                     <div class="bottle-art">
-                        <div class="bottle-float">
-                            <img src="assets/products/yoguraso-fresa-500ml.webp"
-                                 srcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w"
-                                 sizes="(max-width: 860px) 46vw, 26vw"
-                                 alt="Yogurt artesanal de fresa, 500 ml" width="640" height="1110" fetchpriority="high" decoding="async" draggable="false">
-                        </div>
-                        <div class="bottle-reflect" aria-hidden="true">
-                            <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="" width="320" height="555" decoding="async" draggable="false">
-                        </div>
+                        <img class="bottle-img is-on"
+                             src="assets/products/yoguraso-fresa-500ml.webp"
+                             srcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w"
+                             sizes="(max-width: 860px) 46vw, 23vw"
+                             alt="Yogurt artesanal de fresa, 500 ml" width="640" height="1110" fetchpriority="high" decoding="async" draggable="false">
+                        <img class="bottle-img" alt="" width="640" height="1110" decoding="async" draggable="false" aria-hidden="true">
                     </div>
                 </div>
-                <button type="button" class="bottle bottle--second" aria-label="Ver el sabor Piña">
-                    <span class="bottle-shadow" aria-hidden="true"></span>
+                <div class="bottle bottle--second" aria-hidden="true">
+                    <span class="bottle-shadow"><i></i></span>
                     <div class="bottle-art">
-                        <div class="bottle-float">
-                            <img src="assets/products/yoguraso-pina-500ml-sm.webp" alt="" width="320" height="555" decoding="async" draggable="false">
-                        </div>
+                        <img class="bottle-img is-on" src="assets/products/yoguraso-pina-500ml-sm.webp" alt="" width="320" height="555" decoding="async" draggable="false">
+                        <img class="bottle-img" alt="" width="320" height="555" decoding="async" draggable="false">
                     </div>
-                </button>
+                </div>
             </div>
 
             <div class="hero-lower">
-                <a class="hero-cta" href="pages/productos.html">
-                    <span class="hero-cta-body">
-                        <span class="hero-cta-icon" aria-hidden="true"><img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="" width="320" height="555"></span>
-                        <span class="hero-cta-sep" aria-hidden="true"></span>
-                        <span class="hero-cta-text">
-                            <span class="hero-cta-eyebrow">Conoce nuestros</span>
-                            <span class="hero-cta-main">Sabores</span>
-                        </span>
-                        <span class="hero-cta-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 5.5 19.5 12 13 18.5"/></svg></span>
+            <a class="hero-cta" href="pages/productos.html">
+                <span class="hero-cta-body">
+                    <span class="hero-cta-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.2c-4.3-1.3-7.4-5.6-7.2-9.7.1-2.5 2-3.7 4-3.4 1.2.2 2.1.6 3.2.6s2-.4 3.2-.6c2-.3 3.9.9 4 3.4.2 4.1-2.9 8.4-7.2 9.7Z"/><path d="M8.6 8.2c.4-1.5 1.8-2.2 3.4-1.4 1.6-.8 3-.1 3.4 1.4"/><path d="M12 6.8V3.6c.9-.7 2-.9 3-.6"/><path d="M9.6 12.2h.01M14.4 12.2h.01M12 14.6h.01M9.9 16.9h.01M14.1 16.9h.01" stroke-width="2.2"/></svg></span>
+                    <span class="hero-cta-sep" aria-hidden="true"></span>
+                    <span class="hero-cta-text">
+                        <span class="hero-cta-eyebrow">Conoce nuestros</span>
+                        <span class="hero-cta-main">Sabores</span>
                     </span>
-                </a>
-                <div class="flavor-selector" id="flavor-selector" role="radiogroup" aria-label="Elige un sabor"></div>
+                    <span class="hero-cta-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                </span>
+            </a>
+
+            <button type="button" class="hero-pause" id="hero-pause" aria-label="Pausar el cambio automático de sabores" aria-pressed="false">
+                <svg class="hero-pause-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20.5"/><circle class="hero-pause-progress" cx="22" cy="22" r="20.5" pathLength="100"/></svg>
+                <svg class="hero-pause-icon is-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="7" y="5.5" width="3.2" height="13" rx="1.1"/><rect x="13.8" y="5.5" width="3.2" height="13" rx="1.1"/></svg>
+                <svg class="hero-pause-icon is-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.5 6.6a1.2 1.2 0 0 1 1.8-1l8.3 5.4a1.2 1.2 0 0 1 0 2l-8.3 5.4a1.2 1.2 0 0 1-1.8-1Z"/></svg>
+            </button>
             </div>
         </div>
         <p class="sr-only" id="hero-live" aria-live="polite"></p>
