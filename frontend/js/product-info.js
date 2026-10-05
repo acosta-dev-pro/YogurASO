@@ -4,6 +4,10 @@
    aparece solo en la ficha de cada sabor y en las secciones de conservación y empaque.
    No inventar cifras: vida útil, temperaturas, ingredientes y presentaciones deben venir del negocio. */
 window.YOG_INFO = {
+    // Muestra una etiqueta discreta "Por confirmar" junto a los datos que aún faltan (ficha y preguntas).
+    // Ponlo en false cuando ya no quieras que se vea en la web publicada.
+    marcarPendientes: true,
+
     // Presentaciones que se ven en las fotos (botella de 500 ml). Agrega otras si existen: '1 litro', '250 ml'...
     presentaciones: ['500 ml'],
 
@@ -19,6 +23,8 @@ window.YOG_INFO = {
 
     // Sellos que aparecen impresos en la etiqueta de las fotos. Confirmar que son correctos y que se pueden publicar.
     sellosEtiqueta: ['100% natural', 'Sin colorantes', 'Alto en proteína'],
+    // Cambia a true cuando confirmes que esos sellos son correctos y publicables.
+    sellosConfirmados: false,
 
     // Material del envase. Ej.: 'PET reciclable' o 'PEAD'. null = no se menciona el material.
     materialEnvase: null,
