@@ -233,6 +233,17 @@ function setupNavAccountLink() {
         }
     }
 
+    // Escritorio: la cuenta va como ícono en el header (#accountBtn); el enlace de texto queda solo para el menú del celular
+    const accountBtn = document.getElementById('accountBtn');
+    if (accountBtn) {
+        list.querySelector('[data-nav-account]')?.classList.add('nav-account--mobile');
+        if (isLoggedIn()) {
+            accountBtn.setAttribute('href', PROFILE_PATH);
+            accountBtn.setAttribute('aria-label', 'Mi perfil');
+            if (isProfilePage()) accountBtn.setAttribute('aria-current', 'page');
+        }
+    }
+
     const usuario = getUsuario();
     if (isLoggedIn() && usuario?.rol === 'admin' && !list.querySelector('[data-nav-admin]')) {
         const liAdmin = document.createElement('li');

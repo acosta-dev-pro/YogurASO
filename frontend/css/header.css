@@ -167,6 +167,11 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
 /* El menú de usuario sigue oculto en la barra (la cuenta está en el pie) */
 .site-header .user-menu { display: none !important; }
 
+/* Íconos Lucide del header: trazo fino y uniforme */
+.site-header .icon-btn svg.icon { stroke-width: 1.75; }
+/* Cuenta: ícono en escritorio; en el celular va como texto dentro del menú */
+.site-header #nav-items li.nav-account--mobile { display: none; }
+
 /* ---------- Botón del menú en celular ---------- */
 .nav-toggle {
     display: none;
@@ -205,6 +210,8 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     .site-header .nav { order: 3; justify-self: end; }
     .site-header .icon-buttons { order: 2; }
     .nav-toggle { display: flex; }
+    .site-header .icon-btn--account { display: none; }
+    .site-header #nav-items li.nav-account--mobile { display: block; }
     .site-header #nav-items {
         display: none;
         position: absolute;
