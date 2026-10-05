@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="css/cards-home.css">
     <link rel="stylesheet" href="css/cards-productos.css">
     <link rel="stylesheet" href="css/notice.css">
+    <link rel="stylesheet" href="css/sections.css">
     <meta property="og:image" content="assets/products/yoguraso-fresa-500ml.png">
 </head>
 <body data-flavor="fresa" data-hero-fg="light">
@@ -114,6 +115,31 @@
             </div>
         </div>
         <p class="sr-only" id="hero-live" aria-live="polite"></p>
+    </section>
+
+    <!-- =========================================================
+         SABORES — carrusel de tarjetas (js/sections.js arma las tarjetas desde flavors.js)
+         Estilos: css/sections.css
+         ========================================================= -->
+    <section class="sx sx-flavors" id="sabores" aria-labelledby="sx-flavors-title">
+        <div class="sx-shapes" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="sx-wrap">
+            <div class="sx-head sx-head--row">
+                <div data-rv>
+                    <span class="sx-kicker"><i data-ic="sparkles"></i> Nuestros sabores</span>
+                    <h2 id="sx-flavors-title">Un color para <em>cada antojo</em></h2>
+                    <p>Desliza y abre la ficha de cada sabor para ver cómo se conserva y con qué disfrutarlo.</p>
+                </div>
+                <div class="sx-rail-ctrl" data-rv style="--i:1">
+                    <button type="button" class="sx-round" id="sx-prev" aria-label="Sabores anteriores" aria-controls="sx-rail"><i data-ic="chevron-left"></i></button>
+                    <button type="button" class="sx-round" id="sx-next" aria-label="Más sabores" aria-controls="sx-rail"><i data-ic="chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="sx-rail" id="sx-rail" tabindex="0" role="region" aria-label="Carrusel de sabores, usa las flechas para desplazarte">
+                <ul class="sx-track" id="sx-track"></ul>
+            </div>
+            <div class="sx-progress" aria-hidden="true"><i id="sx-progress"></i></div>
+        </div>
     </section>
 
     <!-- =========================================================
@@ -316,5 +342,8 @@
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="js/hero.js"></script>
+    <script src="js/product-info.js"></script>
+    <script src="js/sections-icons.js"></script>
+    <script src="js/sections.js"></script>
 </body>
 </html>

@@ -1,0 +1,168 @@
+/* sections.css — secciones nuevas del inicio (debajo del hero).
+   Escala contenida y con aire: títulos 28–40 px, texto 15 px, bloques con 96 px de respiro.
+   Movimiento: fade + subida 14 px, 0,5 s, escalonado 80 ms, curva de Apple. Solo transform y opacity.
+   HTML en index.html (bloques .sx), lógica en js/sections.js, datos en js/product-info.js. */
+
+:root {
+    --sx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --sx-pad: clamp(64px, 8vw, 104px);
+    --sx-max: 1180px;
+    --sx-ink: #171717;
+    --sx-muted: #6A6259;
+    --sx-line: rgba(23, 23, 23, 0.08);
+    --sx-card: #FFFFFF;
+    --sx-cream: #FFF8EC;
+    --sx-cream-2: #FBEFDC;
+}
+
+.sx { position: relative; padding: var(--sx-pad) 0; overflow: clip; isolation: isolate; }
+.sx-wrap { position: relative; width: min(var(--sx-max), 100% - 40px); margin-inline: auto; }
+
+/* Encabezado de sección */
+.sx-head { max-width: 620px; margin: 0 auto clamp(32px, 4vw, 48px); text-align: center; }
+.sx-head--left { margin-left: 0; text-align: left; }
+.sx-head--row { max-width: none; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; text-align: left; }
+.sx-head--row > div:first-child { max-width: 560px; }
+.sx-kicker {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 12px 6px 10px; margin-bottom: 14px;
+    border-radius: 999px; background: rgba(229, 29, 42, 0.08); color: var(--brand-red, #E51D2A);
+    font: 800 11.5px/1 var(--font-ui); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.sx-kicker svg { width: 14px; height: 14px; }
+.sx-head h2 {
+    margin: 0 0 12px; color: var(--sx-ink);
+    font: 600 clamp(28px, 3.2vw, 40px)/1.08 var(--font-display); letter-spacing: -0.01em;
+}
+.sx-head h2 em { font-style: normal; color: var(--brand-red, #E51D2A); }
+.sx-head p { margin: 0; color: var(--sx-muted); font: 400 clamp(14.5px, 1.15vw, 16px)/1.6 var(--font-ui); }
+
+/* Íconos en línea */
+[data-ic] { display: inline-grid; place-items: center; font-style: normal; }
+[data-ic] svg, .sx-ic { width: 1em; height: 1em; }
+
+/* Revelado al hacer scroll */
+.sx [data-rv] { opacity: 0; transform: translateY(14px); }
+.sx [data-rv].is-in {
+    opacity: 1; transform: none;
+    transition: opacity 0.5s var(--sx-ease), transform 0.6s var(--sx-ease);
+    transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+/* Formas de fondo: gotas de yogurt desenfocadas que se mueven lento */
+.sx-shapes { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.sx-shapes i {
+    position: absolute; width: var(--w, 320px); aspect-ratio: 1; border-radius: 42% 58% 63% 37% / 45% 39% 61% 55%;
+    background: var(--bg, rgba(229, 29, 42, 0.08)); filter: blur(var(--b, 40px));
+    animation: sxBlob var(--t, 22s) ease-in-out infinite alternate;
+}
+@keyframes sxBlob {
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); border-radius: 42% 58% 63% 37% / 45% 39% 61% 55%; }
+    100% { transform: translate3d(var(--dx, 30px), var(--dy, -24px), 0) rotate(40deg); border-radius: 58% 42% 38% 62% / 55% 61% 39% 45%; }
+}
+
+/* Botones redondos (flechas) */
+.sx-round {
+    appearance: none; border: 0; cursor: pointer; flex: none;
+    width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+    color: var(--sx-ink); background: #fff; box-shadow: inset 0 0 0 1px var(--sx-line), 0 6px 14px -10px rgba(23, 23, 23, 0.4);
+    transition: transform 0.22s var(--sx-ease), background-color 0.22s ease, color 0.22s ease, opacity 0.2s ease, box-shadow 0.22s ease;
+}
+.sx-round svg { width: 18px; height: 18px; }
+.sx-round:hover { transform: translateY(-2px); background: var(--sx-ink); color: #fff; }
+.sx-round:disabled { opacity: 0.35; pointer-events: none; }
+
+/* Botón de texto con flecha */
+.sx-link {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px 0 20px;
+    border-radius: 999px; background: var(--sx-ink); color: #fff; text-decoration: none;
+    font: 700 13.5px/1 var(--font-ui);
+    transition: transform 0.22s var(--sx-ease), background-color 0.22s ease;
+}
+.sx-link svg { width: 16px; height: 16px; transition: transform 0.25s var(--sx-ease); }
+.sx-link:hover { transform: translateY(-3px); background: var(--brand-red, #E51D2A); }
+.sx-link:hover svg { transform: translateX(3px); }
+
+/* ======================= 2. CARRUSEL DE SABORES ======================= */
+.sx-flavors { background: linear-gradient(180deg, #FFF8EC 0%, #FFF3E2 100%); }
+.sx-flavors .sx-shapes i:nth-child(1) { --w: 380px; --bg: rgba(229, 29, 42, 0.10); top: -80px; left: -120px; --t: 24s; }
+.sx-flavors .sx-shapes i:nth-child(2) { --w: 300px; --bg: rgba(242, 185, 15, 0.14); bottom: -60px; right: 8%; --t: 19s; --dx: -40px; }
+.sx-flavors .sx-shapes i:nth-child(3) { --w: 220px; --bg: rgba(126, 36, 96, 0.08); top: 30%; right: -60px; --t: 27s; }
+.sx-rail-ctrl { display: flex; gap: 8px; }
+
+.sx-rail {
+    margin: 0 calc((100vw - min(var(--sx-max), 100vw - 40px)) / -2);
+    padding: 12px calc((100vw - min(var(--sx-max), 100vw - 40px)) / 2) 28px;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: calc((100vw - min(var(--sx-max), 100vw - 40px)) / 2);
+    scrollbar-width: none; cursor: grab;
+}
+.sx-rail::-webkit-scrollbar { display: none; }
+.sx-rail.is-drag { cursor: grabbing; scroll-snap-type: none; }
+.sx-rail.is-drag .fl-card { pointer-events: none; }
+.sx-track { display: flex; gap: clamp(14px, 1.6vw, 20px); margin: 0; padding: 0; list-style: none; width: max-content; }
+
+.fl-card { flex: none; width: clamp(208px, 20vw, 244px); scroll-snap-align: start; perspective: 900px; }
+.fl-card-hit {
+    --c: #BC1D29;
+    position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+    aspect-ratio: 4 / 5.8; padding: 18px; border-radius: 26px; overflow: hidden;
+    color: #fff; text-decoration: none; isolation: isolate;
+    background:
+        radial-gradient(120% 70% at 50% 0%, color-mix(in oklab, var(--c), #fff 22%) 0%, transparent 60%),
+        linear-gradient(180deg, var(--c) 0%, color-mix(in oklab, var(--c), #000 18%) 100%);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 22px 40px -26px color-mix(in oklab, var(--c), #000 40%);
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 0.5s var(--sx-ease), box-shadow 0.35s ease;
+}
+.fl-card-hit:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35) inset, 0 30px 50px -26px color-mix(in oklab, var(--c), #000 45%); }
+.fl-card.is-tilting .fl-card-hit { transition: transform 0.12s linear, box-shadow 0.35s ease; }
+.fl-mesh { position: absolute; inset: -20%; z-index: -1; pointer-events: none; opacity: 0.8;
+    background:
+        radial-gradient(circle at var(--mx, 30%) var(--my, 25%), rgba(255, 255, 255, 0.28), transparent 38%),
+        radial-gradient(circle at 80% 85%, color-mix(in oklab, var(--c), #000 30%), transparent 45%);
+    transition: opacity 0.4s ease;
+}
+.fl-ring { position: absolute; z-index: -1; left: 50%; top: 40%; width: 74%; aspect-ratio: 1; border-radius: 50%;
+    transform: translate(-50%, -50%); border: 1px solid rgba(255, 255, 255, 0.22);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+    transition: transform 0.6s var(--sx-ease);
+}
+.fl-card-hit:hover .fl-ring { transform: translate(-50%, -50%) scale(1.08); }
+.fl-num { position: absolute; top: 16px; left: 18px; font: 700 12px/1 var(--font-ui); letter-spacing: 0.12em; opacity: 0.75; }
+.fl-chip { position: absolute; top: 12px; right: 12px; padding: 6px 10px; border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); font: 700 11px/1 var(--font-ui); letter-spacing: 0.04em; }
+.fl-bottle { position: absolute; left: 50%; top: 6.5%; width: 50%; transform: translateX(-50%) translateZ(40px); transition: transform 0.6s var(--sx-ease); }
+.fl-bottle img { position: relative; z-index: 1; display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none;
+    filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.22)); }
+.fl-shadow { position: absolute; left: 12%; right: 12%; bottom: -5%; height: 9%; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.45), transparent); filter: blur(4px); transition: transform 0.6s var(--sx-ease), opacity 0.6s ease; }
+.fl-card-hit:hover .fl-bottle { transform: translateX(-50%) translateZ(40px) translateY(-8px) rotate(-3deg); }
+.fl-card-hit:hover .fl-shadow { transform: scale(0.85); opacity: 0.7; }
+.fl-meta { position: relative; display: grid; gap: 3px; transform: translateZ(24px); }
+.fl-name { font: 600 22px/1.05 var(--font-display); }
+.fl-sub { font: 600 12px/1.3 var(--font-ui); opacity: 0.82; }
+.fl-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; width: max-content;
+    font: 800 12px/1 var(--font-ui); letter-spacing: 0.02em; padding: 9px 12px 9px 14px; border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95); color: var(--c); transition: transform 0.25s var(--sx-ease), gap 0.25s var(--sx-ease); }
+.fl-go svg { width: 14px; height: 14px; }
+.fl-card-hit:hover .fl-go { gap: 9px; }
+
+.sx-progress { position: relative; height: 3px; margin-top: 4px; border-radius: 3px; background: rgba(23, 23, 23, 0.08); overflow: hidden; }
+.sx-progress i { position: absolute; inset: 0 auto 0 0; width: var(--pw, 30%); border-radius: 3px; background: var(--sx-ink);
+    transform: translateX(var(--px, 0%)); transition: transform 0.15s linear; }
+
+@media (max-width: 720px) {
+    .sx-head--row { flex-direction: column; align-items: flex-start; }
+    .sx-rail-ctrl { display: none; }
+    .fl-card { width: 64vw; max-width: 250px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sx [data-rv] { opacity: 1; transform: none; }
+    .sx-shapes i { animation: none; }
+    .fl-card-hit, .fl-bottle, .fl-ring, .fl-shadow { transition: none; transform: none; }
+    .fl-bottle, .fl-card-hit:hover .fl-bottle { transform: translateX(-50%); }
+}
