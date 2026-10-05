@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="css/hero.css">
     <link rel="stylesheet" href="css/cards-home.css">
     <link rel="stylesheet" href="css/cards-productos.css">
+    <link rel="stylesheet" href="css/notice.css">
     <meta property="og:image" content="assets/products/yoguraso-fresa-500ml.png">
 </head>
 <body data-flavor="fresa" data-hero-fg="light">
@@ -217,14 +218,7 @@
 
     <section class="footer-map-wrap" aria-labelledby="footer-map-title">
         <h2 class="footer-map-title" id="footer-map-title">ENCUÉNTRANOS</h2>
-        <div class="footer-map">
-            <iframe
-                title="Mapa de Tello, Huila — YogurASO"
-                src="https://maps.google.com/maps?q=Tello%2C%20Huila%2C%20Colombia&hl=es&z=13&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                allowfullscreen></iframe>
-        </div>
+        <div class="footer-map" data-consent-embed data-label="Mapa de Tello, Huila" data-title="Mapa de Tello, Huila — YogurASO" data-src="https://maps.google.com/maps?q=Tello%2C%20Huila%2C%20Colombia&amp;hl=es&amp;z=13&amp;output=embed"></div>
     </section>
 
     <!-- =========================================================
@@ -249,6 +243,7 @@
                     <li><a href="#beneficios">Beneficios</a></li>
                     <li><a href="pages/productos.html">Productos</a></li>
                     <li><a href="pages/privacidad.html">Datos personales</a></li>
+                    <li><a href="pages/privacidad.html#cookies" data-open-cookies>Preferencias de cookies</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -312,6 +307,7 @@
     <!-- Scripts: config ? utils ? carrito ? auth ? catálogo/cards -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/notice.js"></script>
     <script src="js/flavors.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/ui-motion.js"></script>
