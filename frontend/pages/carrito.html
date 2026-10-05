@@ -17,10 +17,11 @@
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/motion.css">
     <link rel="stylesheet" href="../css/brand-pages.css">
+    <link rel="stylesheet" href="../css/home-v3.css">
     <script src="../js/pages-motion.js"></script>
     <link rel="stylesheet" href="../css/notice.css">
 </head>
-<body class="cart-body">
+<body class="cart-body cart-float-page">
     <a class="skip-link" href="#main-content">Saltar al contenido</a>
     <header class="site-header site-header--solid" id="siteHeader">
         <a class="brand-logo" href="../index.html" aria-label="YoguraSo, ir al inicio">
@@ -30,8 +31,9 @@
             <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
                 <span></span><span></span><span></span>
             </button>
-            <ul id="nav-items">
+                        <ul id="nav-items">
                 <li><a href="productos.html">Sabores</a></li>
+                <li><a href="productos.html">Productos</a></li>
                 <li><a href="../index.html#nosotros">Nosotros</a></li>
                 <li><a href="../index.html#distribuidores">Distribuidores</a></li>
                 <li><a href="../index.html#contact">Contacto</a></li>
@@ -46,53 +48,23 @@
         </div>
     </header>
 
-    <main class="cart-page" id="main-content">
-        <p class="shop-cart-kicker"><a href="productos.html">Productos</a> / Carrito</p>
-
-        <section class="cart-items-section">
-            <div class="cart-page-heading">
-                <h1>Bolsa de compra</h1>
-                <button type="button" class="btn-clear-cart" id="btn-clear-cart" hidden>Vaciar bolsa</button>
-            </div>
-            <div id="cart-page-items">
-                <div class="cart-empty-state">
-                    <div class="cart-empty-icon" aria-hidden="true"><i class="fas fa-shopping-bag"></i></div>
-                    <p class="cart-empty-title">Tu carrito está vacío</p>
-                    <p class="cart-empty-text">Aún no agregaste yogures. Explora el catálogo y arma tu pedido fresco para Neiva o Tello.</p>
-                    <a class="cart-empty-cta" href="productos.html">Ver productos</a>
-                </div>
-            </div>
-        </section>
-
-        <aside class="cart-summary is-empty">
-            <h3>Resumen</h3>
-            <div class="summary-details">
-                <div class="summary-line">
-                    <span>Subtotal</span>
-                    <span id="subtotal">$0</span>
-                </div>
-                <div class="summary-line">
-                    <span>Entrega</span>
-                    <span>Por WhatsApp</span>
-                </div>
-                <hr>
-                <div class="summary-line total">
-                    <span>Total</span>
-                    <span id="total">$0</span>
-                </div>
-            </div>
-            <button type="button" id="btn-checkout" class="btn btn-primary btn-block cart-wa-btn">
-                <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                <span>Pedir por WhatsApp</span>
-            </button>
-            <a href="productos.html" class="btn-continue">Seguir comprando</a>
-            <ul class="shop-trust">
-                <li><i class="fas fa-snowflake" aria-hidden="true"></i><span>Producto fresco, elaborado a diario</span></li>
-                <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i><span>Entrega en Neiva y Tello</span></li>
-                <li><i class="fas fa-lock" aria-hidden="true"></i><span>Pedido confirmado por WhatsApp</span></li>
-            </ul>
-        </aside>
+    
+    <main id="main-content" class="container cart-float-only" style="padding:120px 20px 60px;max-width:720px;margin:0 auto;text-align:center">
+        <span class="v3-kicker">Carrito flotante</span>
+        <h1 class="v3-title" style="justify-self:center">Tu bolsa está en el ícono del carrito</h1>
+        <p class="v3-lead" style="margin:0 auto 22px">Abrimos el carrito flotante para que sigas comprando sin salir de la página.</p>
+        <button type="button" class="ys-pill" id="openFloatingCart">Abrir carrito<span class="ys-pill__arrow" aria-hidden="true">→</span></button>
+        <p style="margin-top:18px"><a href="productos.html" style="color:var(--brand-red);font-weight:700">Seguir viendo productos</a></p>
     </main>
+    <script>
+      document.getElementById('openFloatingCart')?.addEventListener('click', () => {
+        document.getElementById('cartBtn')?.click();
+      });
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => document.getElementById('cartBtn')?.click(), 350);
+      });
+    </script>
+
 <div class="overlay" id="cartOverlay"></div>
     <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito lateral">
         <div class="cart-header">
@@ -112,24 +84,23 @@
         </button>
     </aside>
 
-    <footer class="site-footer">
+        <footer id="contact" class="site-footer footer-v3">
         <div class="footer-inner">
             <div class="footer-brand">
-                <span class="footer-logo">YogurASO</span>
-                <p>Yogurt artesanal elaborado a diario<br>con ingredientes frescos y cultivos vivos.</p>
+                <span class="footer-logo" data-config="company-name">YogurASO</span>
+                <p data-config="company-tagline">Yogurt artesanal elaborado a diario<br>en Tello y Neiva, Huila</p>
                 <div class="footer-social">
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="https://wa.me/573001234567" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" data-config="instagram" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                    <a href="#" data-config="facebook" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                    <a href="#" data-config="whatsapp" data-wa-text="Hola YogurASO" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="footer-col">
                 <h4>Navegación</h4>
                 <ul>
                     <li><a href="../index.html">Inicio</a></li>
-                    <li><a href="../index.html#nosotros">Nosotros</a></li>
-                    <li><a href="../index.html#beneficios">Beneficios</a></li>
                     <li><a href="productos.html">Productos</a></li>
+                    <li><a href="../index.html#nosotros">Nosotros</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -137,20 +108,20 @@
                 <ul>
                     <li><a href="login.html">Iniciar sesión</a></li>
                     <li><a href="registro.html">Registrarse</a></li>
-                    <li><a href="carrito.html" aria-current="page">Mi carrito</a></li>
+                    <li><a href="perfil.html">Mi perfil</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Contacto</h4>
                 <ul>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Colombia</li>
-                    <li><i class="fas fa-envelope" aria-hidden="true"></i> hola@yoguraso.co</li>
-                    <li><i class="fab fa-whatsapp" aria-hidden="true"></i> +57 300 123 4567</li>
+                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span data-config="company-location">Tello y Neiva, Huila</span></li>
+                    <li><i class="fas fa-envelope" aria-hidden="true"></i> <span data-config="company-email">hola@yoguraso.co</span></li>
+                    <li><i class="fab fa-whatsapp" aria-hidden="true"></i> <span data-config="whatsapp-display">+57 300 123 4567</span></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <span>&copy; 2026 YogurASO &mdash; Todos los derechos reservados.</span>
+            <span>&copy; 2026 <span data-config="company-name">YogurASO</span> &mdash; Mayoreo en Neiva y Tello, Huila.</span>
         </div>
     </footer>
 
