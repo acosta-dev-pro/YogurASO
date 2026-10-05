@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="css/depth.css">
     <link rel="stylesheet" href="css/yogurt-drip.css">
     <link rel="stylesheet" href="css/premium-home.css">
+    <link rel="stylesheet" href="css/home-v3.css">
     <meta property="og:image" content="assets/products/yoguraso-fresa-500ml.png">
 </head>
 <body data-flavor="fresa" data-hero-fg="light">
@@ -52,6 +53,7 @@
             </button>
             <ul id="nav-items">
                 <li class="active"><a href="pages/productos.html">Sabores</a></li>
+                <li><a href="pages/productos.html">Productos</a></li>
                 <li><a href="#nosotros">Nosotros</a></li>
                 <li><a href="#distribuidores">Distribuidores</a></li>
                 <li><a href="#contact">Contacto</a></li>
@@ -120,351 +122,251 @@
         <p class="sr-only" id="hero-live" aria-live="polite"></p>
     </section>
 
-    <!-- =========================================================
-         SABORES — carrusel de tarjetas (js/sections.js arma las tarjetas desde flavors.js)
-         Estilos: css/sections.css
-         ========================================================= -->
-    <section class="sx sx-flavors" id="sabores" aria-labelledby="sx-flavors-title">
-        <div class="sx-shapes" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="sx-wrap">
-            <div class="sx-head sx-head--row">
-                <div data-rv>
-                    <span class="sx-kicker"><i data-ic="sparkles"></i> Nuestros sabores</span>
-                    <h2 id="sx-flavors-title">Un color para <em>cada antojo</em></h2>
-                    <p>Desliza y abre la ficha de cada sabor para ver cómo se conserva y con qué disfrutarlo.</p>
+    <!-- ========== HOME V3 — mockups 03/04/05 ========== -->
+    <section class="v3-sabores" id="sabores" aria-labelledby="v3-sabores-title">
+        <div class="v3-wrap">
+            <div class="v3-sabores__head">
+                <div>
+                    <span class="v3-kicker">Nuestros sabores</span>
+                    <h2 class="v3-title" id="v3-sabores-title">Un color para <em>cada antojo</em></h2>
+                    <p class="v3-lead">Yogurt artesanal, cremoso y lleno de sabor. Elige el tuyo.</p>
                 </div>
-                <div class="sx-rail-ctrl" data-rv style="--i:1">
-                    <button type="button" class="sx-round" id="sx-prev" aria-label="Sabores anteriores" aria-controls="sx-rail"><i data-ic="chevron-left"></i></button>
-                    <button type="button" class="sx-round" id="sx-next" aria-label="Más sabores" aria-controls="sx-rail"><i data-ic="chevron-right"></i></button>
+                <div class="v3-filters" role="tablist" aria-label="Filtros de sabores">
+                    <button type="button" class="v3-filter is-on" data-filter="all">Todos</button>
+                    <button type="button" class="v3-filter" data-filter="frutales">Frutales</button>
+                    <button type="button" class="v3-filter" data-filter="clasicos">Clásicos</button>
+                    <button type="button" class="v3-filter" data-filter="especiales">Especiales</button>
                 </div>
             </div>
-            <div class="sx-rail" id="sx-rail" tabindex="0" role="region" aria-label="Carrusel de sabores, usa las flechas para desplazarte">
-                <ul class="sx-track" id="sx-track"></ul>
-            </div>
-            <div class="sx-progress" aria-hidden="true"><i id="sx-progress"></i></div>
-        </div>
-    </section>
-
-
-    <div class="yd yd--cream" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         BENEFICIOS — cards informativas (.beneficio-card)
-         ========================================================= -->
-    <section id="beneficios" class="beneficios" aria-labelledby="beneficios-title">
-        <div class="beneficios-banner">
-            <span class="beneficios-sep-tag"><i data-ic="milk"></i> Por qué elegirnos</span>
-            <h2 class="beneficios-titulo" id="beneficios-title">Beneficios</h2>
-        </div>
-        <div class="beneficios-grid">
-            <div class="beneficio-card pastel-rosa">
-                <div class="beneficio-icono"><i data-ic="droplets"></i></div>
-                <h3>Ingredientes reales</h3>
-                <p>Yogurt natural, sin conservantes ni aditivos innecesarios.</p>
-            </div>
-            <div class="beneficio-card pastel-amarillo">
-                <div class="beneficio-icono"><i data-ic="clock"></i></div>
-                <h3>Fresco cada día</h3>
-                <p>Leche fresca y cultivos vivos en cada preparación artesanal.</p>
-            </div>
-            <div class="beneficio-card pastel-naranja">
-                <div class="beneficio-icono"><i data-ic="truck"></i></div>
-                <h3>Neiva y Tello</h3>
-                <p>Atendemos hogares, tiendas y cafeterías con entrega local en 24 horas.</p>
-            </div>
-            <div class="beneficio-card pastel-morado" id="distribuidores">
-                <div class="beneficio-icono"><i data-ic="message-circle"></i></div>
-                <h3>Mayoreo fácil</h3>
-                <p>Elige sabores y confirma por WhatsApp; te ayudamos con cantidades y presentaciones.</p>
+            <ul class="v3-flavor-grid" id="v3-flavor-grid">
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-fresa)" data-ficha="fresa">
+                    <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="Yogurt Fresa 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Fresa</strong><small>500 ml · Artesanal</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-pina)" data-ficha="pina">
+                    <img src="assets/products/yoguraso-pina-500ml-sm.webp" alt="Yogurt Piña 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Piña</strong><small>500 ml · Artesanal</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-mora)" data-ficha="mora">
+                    <img src="assets/products/yoguraso-mora-500ml-sm.webp" alt="Yogurt Mora 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Mora</strong><small>500 ml · Artesanal</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-melocoton)" data-ficha="melocoton">
+                    <img src="assets/products/yoguraso-melocoton-500ml-sm.webp" alt="Yogurt Melocotón 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Melocotón</strong><small>500 ml · Artesanal</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-frutos-rojos)" data-ficha="frutos-rojos">
+                    <img src="assets/products/yoguraso-frutos-rojos-500ml-sm.webp" alt="Yogurt Frutos rojos 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Frutos rojos</strong><small>500 ml · Artesanal</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="especiales" style="--wash:var(--wash-cafe)" data-ficha="cafe">
+                    <img src="assets/products/yoguraso-cafe-500ml-sm.webp" alt="Yogurt Café 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Café</strong><small>500 ml · Especial</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="especiales" style="--wash:var(--wash-guanabana)" data-ficha="guanabana">
+                    <img src="assets/products/yoguraso-guanabana-500ml-sm.webp" alt="Yogurt Guanábana 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Guanábana</strong><small>500 ml · Especial</small>
+                </a></li>
+                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-mango)" data-ficha="mango">
+                    <img src="assets/products/yoguraso-mango-500ml-sm.webp" alt="Yogurt Mango 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                    <strong>Mango</strong><small>500 ml · Artesanal</small>
+                </a></li>
+            </ul>
+            <div class="v3-sabores__more">
+                <a class="ys-pill" href="pages/productos.html">Ver más productos<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
             </div>
         </div>
     </section>
 
-
-    <div class="yd yd--white" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         PROCESO — cómo se hace (textos generales; pasos reales en js/product-info.js → proceso)
-         ========================================================= -->
-    <section class="sx sx-process" id="proceso" aria-labelledby="sx-process-title">
-        <div class="sx-shapes" aria-hidden="true"><i></i><i></i></div>
-        <div class="sx-wrap">
-            <div class="sx-head" data-rv>
-                <span class="sx-kicker"><i data-ic="hand-heart"></i> Hecho a mano</span>
-                <h2 id="sx-process-title">Así nace cada <em>botella</em></h2>
-                <p>Un proceso sencillo y cuidadoso, en pequeñas tandas, para que el sabor llegue como debe.</p>
+    <section class="v3-ingredientes" id="ingredientes" aria-labelledby="v3-ing-title">
+        <div class="v3-wrap v3-ingredientes__grid">
+            <div>
+                <span class="v3-kicker">Ingredientes</span>
+                <h2 class="v3-title" id="v3-ing-title">Ingredientes que hacen <em>la diferencia</em></h2>
+                <p class="v3-lead">Leche fresca, cultivos vivos y fruta real. Sin aditivos innecesarios: sabor limpio y textura cremosa.</p>
+                <div class="v3-feature-row">
+                    <div class="v3-feature"><i class="fas fa-leaf" aria-hidden="true"></i><span>100% Naturales</span></div>
+                    <div class="v3-feature"><i class="fas fa-flask" aria-hidden="true"></i><span>Sin colorantes</span></div>
+                    <div class="v3-feature"><i class="fas fa-dumbbell" aria-hidden="true"></i><span>Alto en proteína</span></div>
+                </div>
+                <a class="ys-pill" href="#nosotros">Nuestra historia<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
             </div>
-            <ol class="pc-steps" id="pc-steps">
-                <li class="pc-step" data-rv style="--i:0"><span class="pc-dot"><i data-ic="milk"></i></span><span class="pc-n">01</span><h3>Leche fresca</h3><p>Partimos de leche fresca, el punto de partida de todo buen yogurt.</p></li>
-                <li class="pc-step" data-rv style="--i:1"><span class="pc-dot"><i data-ic="flask-conical"></i></span><span class="pc-n">02</span><h3>Cultivos vivos</h3><p>Fermentamos con calma con cultivos vivos hasta lograr la textura cremosa.</p></li>
-                <li class="pc-step" data-rv style="--i:2"><span class="pc-dot"><i data-ic="cherry"></i></span><span class="pc-n">03</span><h3>Cada sabor</h3><p>Le damos su sabor: fresa, mora, mango, café y los demás de la casa.</p></li>
-                <li class="pc-step" data-rv style="--i:3"><span class="pc-dot"><i data-ic="snowflake"></i></span><span class="pc-n">04</span><h3>Envasado en frío</h3><p>Lo envasamos y lo mantenemos refrigerado hasta que llega a tus manos.</p></li>
+            <div class="v3-ingredientes__visual">
+                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="Botella YoguraSo Fresa" width="640" height="1110" loading="lazy" decoding="async">
+            </div>
+        </div>
+    </section>
+
+    <section class="v3-trio" aria-label="Momentos YoguraSo">
+        <div class="v3-wrap v3-trio__grid">
+            <article class="v3-mcard v3-mcard--llevalo">
+                <div>
+                    <span class="v3-kicker" style="background:rgba(255,255,255,.18);color:#fff">Llévalo</span>
+                    <h3>Llévalo contigo</h3>
+                    <p>Fresco, práctico y listo para cada momento del día.</p>
+                    <div class="v3-moments">
+                        <div class="v3-moment"><i class="fas fa-sun" aria-hidden="true"></i> En la mañana</div>
+                        <div class="v3-moment"><i class="fas fa-dumbbell" aria-hidden="true"></i> Después de entrenar</div>
+                        <div class="v3-moment"><i class="fas fa-mug-hot" aria-hidden="true"></i> En la tarde</div>
+                    </div>
+                </div>
+                <img class="v3-mcard__art" src="assets/marketing/mano-botella-fresa.png" alt="" width="400" height="500" loading="lazy" decoding="async" aria-hidden="true">
+            </article>
+            <article class="v3-mcard v3-mcard--cremoso">
+                <div>
+                    <span class="v3-kicker">Cremoso</span>
+                    <h3>Cremoso, natural y delicioso</h3>
+                    <p>El equilibrio perfecto entre textura y sabor real de fruta.</p>
+                </div>
+                <a class="ys-pill" href="pages/productos.html" style="align-self:start">Descubre más<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+            </article>
+            <article class="v3-mcard v3-mcard--proposito">
+                <div>
+                    <span class="v3-kicker" style="background:rgba(255,255,255,.18);color:#fff">Propósito</span>
+                    <h3>Una marca con propósito</h3>
+                    <p>Elaboramos a diario en Tello y Neiva para llevar frescura local a tu mesa.</p>
+                </div>
+                <a class="ys-pill ys-pill--light" href="#nosotros">Conoce más<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+            </article>
+        </div>
+    </section>
+
+    <section class="v3-proceso" id="proceso" aria-labelledby="v3-proceso-title">
+        <div class="v3-wrap">
+            <div class="v3-proceso__head">
+                <div>
+                    <span class="v3-kicker">Así lo hacemos</span>
+                    <h2 class="v3-title" id="v3-proceso-title">Un proceso responsable y de calidad</h2>
+                    <p class="v3-lead">Del origen a tu mesa: tandas pequeñas, cuidado en cada paso.</p>
+                </div>
+                <a class="ys-pill ys-pill--light" href="#empaque">Conoce más<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+            </div>
+            <ol class="v3-steps">
+                <li class="v3-step"><span class="v3-step__n">01</span><h3>Selección</h3><p>Fruta y leche fresca seleccionadas con cuidado.</p></li>
+                <li class="v3-step"><span class="v3-step__n">02</span><h3>Mezcla</h3><p>Integramos cultivos vivos para una base cremosa.</p></li>
+                <li class="v3-step"><span class="v3-step__n">03</span><h3>Fermentación</h3><p>Tiempo y temperatura justos para el sabor.</p></li>
+                <li class="v3-step"><span class="v3-step__n">04</span><h3>Envasado</h3><p>Botella práctica de 500 ml, lista para servir.</p></li>
+                <li class="v3-step"><span class="v3-step__n">05</span><h3>Control</h3><p>Revisión de frescura antes de salir.</p></li>
+                <li class="v3-step"><span class="v3-step__n">06</span><h3>Listo para ti</h3><p>Distribución local en Neiva y Tello.</p></li>
             </ol>
-            <div class="pc-line" aria-hidden="true"><i id="pc-line"></i></div>
         </div>
     </section>
 
-
-    <div class="yd yd--cream" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         EMPAQUE — la botella (solo lo que se ve en la foto; material y sello en js/product-info.js)
-         ========================================================= -->
-    <section class="sx sx-pack" id="empaque" aria-labelledby="sx-pack-title">
-        <div class="sx-wrap pk-grid">
-            <div class="pk-visual" data-rv>
-                <div class="pk-disc" aria-hidden="true"></div>
-                <div class="pk-bottle" id="pk-bottle">
-                    <img src="assets/products/yoguraso-fresa-500ml.webp" srcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w" sizes="(max-width: 860px) 52vw, 300px" alt="Botella de yogurt YoguraSo sabor fresa de 500 ml" width="640" height="1110" loading="lazy" decoding="async">
-                    <span class="pk-floor" aria-hidden="true"></span>
+    <section class="v3-envase" id="empaque" aria-labelledby="v3-envase-title">
+        <div class="v3-wrap v3-envase__grid">
+            <div class="v3-envase__stage">
+                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="Envase YoguraSo 500 ml" width="640" height="1110" loading="lazy" decoding="async">
+                <div class="v3-callouts" aria-hidden="true">
+                    <div class="v3-callout">Tapa hermética<small>Antiderrames</small></div>
+                    <div class="v3-callout">Agarre cómodo<small>Fácil de servir</small></div>
+                    <div class="v3-callout">Material resistente<small>Uso diario</small></div>
+                    <div class="v3-callout">Envase reciclable<small>Menos impacto</small></div>
                 </div>
-                <span class="pk-pin" style="--x:12%;--y:8%" data-rv><b>Tapa</b> de rosca</span>
-                <span class="pk-pin pk-pin--r" style="--x:70%;--y:24%" data-rv><b>Asa</b> para servir</span>
-                <span class="pk-pin pk-pin--r" style="--x:68%;--y:60%" data-rv><b>Sellos</b> en la etiqueta</span>
-                <span class="pk-pin" style="--x:8%;--y:72%" data-rv><b>500 ml</b></span>
             </div>
-            <div class="pk-copy">
-                <div class="sx-head sx-head--left" data-rv>
-                    <span class="sx-kicker"><i data-ic="package"></i> Empaque</span>
-                    <h2 id="sx-pack-title">Una botella pensada <em>para compartir</em></h2>
-                    <p>La misma botella para todos los sabores: cada uno con su color, para encontrar el tuyo de un vistazo en la nevera.</p>
-                </div>
-                <ul class="pk-list" id="pk-list">
-                    <li data-rv style="--i:1"><i data-ic="glass-water"></i><span><strong>Presentación</strong><small id="pk-sizes">500 ml</small></span></li>
-                    <li data-rv style="--i:2"><i data-ic="hand-platter"></i><span><strong>Con asa</strong><small>Fácil de tomar y servir en la mesa.</small></span></li>
-                    <li data-rv style="--i:3"><i data-ic="tag"></i><span><strong>Etiqueta por sabor</strong><small id="pk-seals">Color propio y sellos impresos en cada etiqueta.</small></span></li>
-                    <li data-rv style="--i:4"><i data-ic="lock-keyhole"></i><span><strong>Tapa de rosca</strong><small id="pk-cap">Ciérrala bien después de servir.</small></span></li>
+            <div class="v3-pack-card">
+                <span class="v3-kicker">Empaque</span>
+                <h3 id="v3-envase-title">Un envase pensado para mantener la frescura</h3>
+                <p>La misma botella para todos los sabores: asa, tapa de rosca y etiqueta con color propio.</p>
+                <ul class="v3-pack-list">
+                    <li><span><strong>Presentación 500 ml</strong><small>Ideal para compartir en casa o llevar.</small></span></li>
+                    <li><span><strong>Asa lateral</strong><small>Agarre cómodo al servir.</small></span></li>
+                    <li><span><strong>Tapa de rosca</strong><small>Ciérrala bien y vuelve a la nevera.</small></span></li>
+                    <li><span><strong>Etiqueta por sabor</strong><small>Encuentra el tuyo de un vistazo.</small></span></li>
                 </ul>
             </div>
         </div>
     </section>
 
-
-    <div class="yd yd--pack" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         CONSERVACIÓN — cifras reales en js/product-info.js (si están en null se muestra el texto general)
-         ========================================================= -->
-    <section class="sx sx-keep" id="conservacion" aria-labelledby="sx-keep-title">
-        <div class="sx-shapes" aria-hidden="true"><i></i><i></i></div>
-        <div class="sx-wrap">
-            <div class="sx-head" data-rv>
-                <span class="sx-kicker sx-kicker--ice"><i data-ic="refrigerator"></i> Conservación</span>
-                <h2 id="sx-keep-title">Frío, tapado y <em>a disfrutar</em></h2>
-                <p>Cuatro cuidados para que cada vaso sepa igual de rico que el primero.</p>
-            </div>
-            <div class="kp-grid">
-                <article class="kp-card" data-rv style="--i:0"><span class="kp-ico"><i data-ic="thermometer-snowflake"></i></span><h3>Siempre en la nevera</h3><p id="kp-temp">Guárdalo refrigerado desde que lo recibes. No lo dejes al sol ni fuera del frío.</p></article>
-                <article class="kp-card" data-rv style="--i:1"><span class="kp-ico"><i data-ic="calendar-check"></i></span><h3>Cerrado</h3><p id="kp-closed">Revisa la fecha de vencimiento impresa en el envase antes de abrirlo.</p></article>
-                <article class="kp-card" data-rv style="--i:2"><span class="kp-ico"><i data-ic="hourglass"></i></span><h3>Una vez abierto</h3><p id="kp-open">Tápalo bien, devuélvelo a la nevera y disfrútalo en pocos días.</p></article>
-                <article class="kp-card" data-rv style="--i:3"><span class="kp-ico"><i data-ic="shield-check"></i></span><h3>Utensilios limpios</h3><p>Sirve con vaso o cuchara limpios y evita beber directo de la botella.</p></article>
-            </div>
-        </div>
-    </section>
-
-
-    <div class="yd yd--ice" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         CON QUÉ COMERLO — ideas para servir
-         ========================================================= -->
-    <section class="sx sx-pair" id="ideas" aria-labelledby="sx-pair-title">
-        <div class="sx-wrap">
-            <div class="sx-head" data-rv>
-                <span class="sx-kicker"><i data-ic="utensils-crossed"></i> Ideas para servir</span>
-                <h2 id="sx-pair-title">¿Con qué <em>lo acompañas?</em></h2>
-                <p>Solo, bien frío, ya es un gusto. Y si quieres más, estas combinaciones nunca fallan.</p>
-            </div>
-            <div class="pr-bento">
-                <article class="pr-card pr-card--xl" data-rv style="--i:0;--c:#BC1D29">
-                    <span class="pr-ico"><i data-ic="wheat"></i></span>
-                    <h3>Con granola o cereal</h3><p>El desayuno más rápido: un vaso de yogurt, un puñado de granola y listo.</p>
-                    <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="" width="320" height="555" loading="lazy" decoding="async" aria-hidden="true">
-                </article>
-                <article class="pr-card" data-rv style="--i:1;--c:#E3A008"><span class="pr-ico"><i data-ic="apple"></i></span><h3>Con fruta picada</h3><p>Banano, fresa o mango encima, para un plato fresco.</p></article>
-                <article class="pr-card" data-rv style="--i:2;--c:#74205A"><span class="pr-ico"><i data-ic="blend"></i></span><h3>En batidos</h3><p>Licúalo con fruta y hielo para un batido cremoso.</p></article>
-                <article class="pr-card" data-rv style="--i:3;--c:#55281A"><span class="pr-ico"><i data-ic="croissant"></i></span><h3>Con el algo</h3><p>Junto a un pan, una galleta o una arepa a media tarde.</p></article>
-                <article class="pr-card" data-rv style="--i:4;--c:#347A22"><span class="pr-ico"><i data-ic="ice-cream-bowl"></i></span><h3>En postres</h3><p>Como capa en un vaso con fruta y galleta triturada.</p></article>
-                            </div>
-        </div>
-    </section>
-
-
-    <div class="yd yd--cream" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- SECCIÓN SOBRE NOSOTROS -->
-    <section id="nosotros" class="nosotros-section" aria-labelledby="nosotros-title">
-        <div class="sx-shapes" aria-hidden="true"><i></i><i></i></div>
-        <div class="nosotros-container">
-            <div class="nosotros-grid">
-                <div class="nosotros-content" data-rv>
-                    <span class="nosotros-badge"><i data-ic="hand-heart"></i> Sobre nosotros</span>
-                    <h2 class="nosotros-title" id="nosotros-title">YogurASO: <span>Pasión por la frescura natural</span></h2>
-                    <p class="nosotros-text">
-                        Elaboramos yogurt a diario con leche fresca y cultivos vivos. Creemos en un producto limpio:
-                        sin aditivos innecesarios, con sabor real y textura cremosa.
-                    </p>
-                    <p class="nosotros-text">
-                        Además del consumo familiar, atendemos <strong>pedidos mayoristas</strong> en Neiva y Tello:
-                        envases prácticos, sabores rotativos y acompañamiento para que tu negocio ofrezca frescura local.
-                    </p>
-                    <ul class="nosotros-chips" aria-label="Lo esencial">
-                        <li><i data-ic="sparkles"></i> Artesanal</li>
-                        <li><i data-ic="map-pin"></i> Neiva y Tello</li>
-                        <li><i data-ic="glass-water"></i> 500 ml</li>
-                    </ul>
-                    <div class="nosotros-actions">
-                        <a class="btn-primary ns-btn" href="pages/productos.html">Ver sabores</a>
-                        <a class="ns-btn ns-btn--ghost" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero un pedido mayorista en Neiva/Tello" target="_blank" rel="noopener">Mayoristas</a>
-                    </div>
+    <section class="v3-nosotros" id="nosotros" aria-labelledby="nosotros-title">
+        <div class="v3-wrap v3-nosotros__grid">
+            <div>
+                <span class="v3-kicker">Sobre nosotros</span>
+                <h2 class="v3-title" id="nosotros-title">YogurASO: <em>pasión por la frescura natural</em></h2>
+                <p class="v3-lead">Elaboramos yogurt a diario con leche fresca y cultivos vivos. Creemos en un producto limpio: sin aditivos innecesarios, con sabor real y textura cremosa.</p>
+                <p class="v3-lead" style="margin-top:12px">Además del consumo familiar, atendemos pedidos mayoristas en Neiva y Tello: envases prácticos, sabores rotativos y acompañamiento para tu negocio.</p>
+                <div class="v3-stats">
+                    <div class="v3-stat"><b>+4</b><span>Sabores frutales permanentes</span></div>
+                    <div class="v3-stat"><b>500 ml</b><span>Presentación familiar práctica</span></div>
+                    <div class="v3-stat"><b>100%</b><span>Ingredientes con sabor real</span></div>
                 </div>
-                <div class="nosotros-visual" data-rv style="--i:1">
-                    <div class="ns-stage">
-                        <div class="ns-disc" aria-hidden="true"></div>
-                        <img class="ns-bottle ns-bottle--main"
-                             src="assets/products/yoguraso-fresa-500ml.webp"
-                             srcset="assets/products/yoguraso-fresa-500ml-sm.webp 320w, assets/products/yoguraso-fresa-500ml.webp 640w"
-                             sizes="(max-width: 860px) 42vw, 220px"
-                             alt="Botella de yogurt YogurASO sabor fresa, 500 ml"
-                             width="640" height="1110" loading="lazy" decoding="async">
-                        <img class="ns-bottle ns-bottle--side"
-                             src="assets/products/yoguraso-mango-500ml-sm.webp"
-                             alt="" width="320" height="555" loading="lazy" decoding="async" aria-hidden="true">
-                        <img class="ns-bottle ns-bottle--side2"
-                             src="assets/products/yoguraso-guanabana-500ml-sm.webp"
-                             alt="" width="320" height="555" loading="lazy" decoding="async" aria-hidden="true">
-                        <div class="ns-process-card">
-                            <span class="ns-process-kicker"><i data-ic="flask-conical"></i> Preparación</span>
-                            <h3>Yogurt a diario</h3>
-                            <p>Leche fresca, cultivos vivos y tandas pequeñas. Así nace cada botella.</p>
-                        </div>
-                    </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px">
+                    <a class="ys-pill" href="pages/productos.html">Ver sabores<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+                    <a class="ys-pill ys-pill--ghost" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero un pedido mayorista en Neiva/Tello" target="_blank" rel="noopener">Mayoristas</a>
                 </div>
             </div>
+            <div class="v3-nosotros__visual">
+                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="YoguraSo artesanal" width="640" height="1110" loading="lazy" decoding="async">
+            </div>
         </div>
     </section>
 
-
-
-    <div class="yd yd--blush" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         PRODUCTOS DESTACADOS — masonry Pinterest (botellas locales)
-         ========================================================= -->
-    <section id="main-content" class="productos-catalogo productos-catalogo--pin" aria-label="Nuestros yogures">
-        <div class="productos-header" data-rv>
-            <span class="productos-kicker"><i data-ic="sparkles"></i> Elaborado a diario</span>
-            <h2>Nuestros Yogures</h2>
-            <p class="productos-subtitle">Cada sabor con su botella. Leche fresca, cultivos vivos y color propio.</p>
-        </div>
-        <div id="productos-container" class="productos-masonry" aria-live="polite">
-            <p class="cargando">Cargando la frescura del campo...</p>
-        </div>
-        <p class="home-rail-hint">
-            <a class="btn-full-catalog" href="pages/productos.html">Ver catálogo completo</a>
-        </p>
-    </section>
-
-
-
-    <div class="yd yd--white" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
-
-    <!-- =========================================================
-         PREGUNTAS FRECUENTES — respuestas con datos reales en js/product-info.js
-         ========================================================= -->
-    <section class="sx sx-faq" id="faq" aria-labelledby="sx-faq-title">
-        <div class="sx-wrap fq-grid">
-            <div class="fq-side">
-                <div class="sx-head sx-head--left" data-rv>
-                    <span class="sx-kicker"><i data-ic="circle-help"></i> Preguntas frecuentes</span>
-                    <h2 id="sx-faq-title">Lo que más <em>nos preguntan</em></h2>
-                    <p>Si no encuentras tu respuesta, escríbenos y te contestamos por WhatsApp.</p>
+    <section class="v3-info" aria-label="Más de YoguraSo">
+        <div class="v3-wrap v3-info__grid">
+            <article class="v3-info-card">
+                <span class="v3-kicker">Ingredientes reales</span>
+                <h3>Lo mejor de la naturaleza</h3>
+                <p>Frutas seleccionadas, leche de calidad y cultivos vivos en cada botella.</p>
+                <div class="v3-icon-row">
+                    <span><i class="fas fa-apple-whole" aria-hidden="true"></i> Frutas</span>
+                    <span><i class="fas fa-ban" aria-hidden="true"></i> Sin colorantes</span>
+                    <span><i class="fas fa-heart" aria-hidden="true"></i> Proteína</span>
                 </div>
-                <a class="fq-cta" data-rv style="--i:1" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, tengo una pregunta" target="_blank" rel="noopener">
-                    <span class="fq-cta-ico"><i data-ic="message-circle"></i></span>
-                    <span><strong>Escríbenos</strong><small>Respondemos por WhatsApp</small></span>
-                    <i data-ic="arrow-right"></i>
-                </a>
-            </div>
-            <div class="fq-list" id="fq-list">
-                <details class="fq-item" data-rv style="--i:0" open><summary><span>¿Cómo hago un pedido?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p>Elige tus sabores, agrégalos al carrito y pulsa <strong>Comprar por WhatsApp</strong>. Se abre el chat con el resumen de tu pedido y ahí acordamos la entrega y el pago.</p></div></details>
-                <details class="fq-item" data-rv style="--i:1"><summary><span>¿Venden al por mayor?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p>Sí. Atendemos tiendas, cafeterías y negocios en Neiva y Tello. Escríbenos y te ayudamos con cantidades, sabores y presentaciones.</p></div></details>
-                <details class="fq-item" data-rv style="--i:2"><summary><span>¿Hasta dónde entregan?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p>Atendemos Neiva y Tello, en el Huila. Cuéntanos tu dirección por WhatsApp y te confirmamos si llegamos a tu zona.</p></div></details>
-                <details class="fq-item" data-rv style="--i:3"><summary><span>¿Cuánto dura el yogurt?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p id="fq-life">Cerrado y en la nevera, hasta la fecha de vencimiento impresa en el envase. Una vez abierto, tápalo bien y disfrútalo en pocos días.</p></div></details>
-                <details class="fq-item" data-rv style="--i:4"><summary><span>¿Cómo lo conservo?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p id="fq-keep">Siempre refrigerado, bien tapado y lejos del sol. Sírvelo con vaso o cuchara limpios.</p></div></details>
-                <details class="fq-item" data-rv style="--i:5"><summary><span>¿Qué ingredientes tiene?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p id="fq-ingr">Lo elaboramos con leche fresca y cultivos vivos, y cada etiqueta trae el detalle de su sabor. Si tienes una alergia o una dieta especial, escríbenos antes de pedir.</p></div></details>
-                <details class="fq-item" data-rv style="--i:6"><summary><span>¿Puedo pagar en la página?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p>Por ahora no. La página arma tu pedido y lo confirmas por WhatsApp, donde te indicamos cómo pagar.</p></div></details>
-                <details class="fq-item" data-rv style="--i:7"><summary><span>¿Siempre hay todos los sabores?</span><i data-ic="plus"></i></summary>
-                    <div class="fq-a"><p>Los sabores pueden rotar. Pregúntanos por WhatsApp cuáles tenemos disponibles hoy.</p></div></details>
-            </div>
+            </article>
+            <article class="v3-info-card">
+                <span class="v3-kicker">Día a día</span>
+                <h3>Diseñado para tu rutina</h3>
+                <p>Resistente, fácil de usar y pensado para conservar la frescura en la nevera.</p>
+                <div class="v3-icon-row">
+                    <span>Resistente</span><span>Fácil de usar</span><span>Familiar</span>
+                </div>
+            </article>
+            <article class="v3-info-card">
+                <span class="v3-kicker">Compromiso</span>
+                <h3>Disfruta hoy, cuida mañana</h3>
+                <p>Envase reciclable y menor impacto: frescura local con mirada al futuro.</p>
+                <div class="v3-icon-row">
+                    <span><i class="fas fa-recycle" aria-hidden="true"></i> Reciclable</span>
+                    <span>Menos impacto</span>
+                </div>
+            </article>
         </div>
     </section>
 
+    <section class="v3-catalog" id="main-content" aria-label="Nuestros yogures">
+        <div class="v3-wrap">
+            <div style="margin-bottom:22px">
+                <span class="v3-kicker">Elaborado a diario</span>
+                <h2 class="v3-title">Nuestros yogures</h2>
+                <p class="v3-lead">Cada sabor con su botella. Agrega al carrito o abre la ficha.</p>
+            </div>
+            <div id="productos-container" class="productos-masonry" aria-live="polite">
+                <p class="cargando">Cargando la frescura del campo...</p>
+            </div>
+            <p class="home-rail-hint">
+                <a class="ys-pill" href="pages/productos.html">Ver catálogo completo<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+            </p>
+        </div>
+    </section>
 
-    <div class="yd yd--faq" aria-hidden="true">
-        <svg viewBox="0 0 1440 20" preserveAspectRatio="none" focusable="false">
-            <path class="yd-fill" d="M0 0H1440V5Q1380 16 1320 5Q1260 16 1200 5Q1140 16 1080 5Q1020 16 960 5Q900 16 840 5Q780 16 720 5Q660 16 600 5Q540 16 480 5Q420 16 360 5Q300 16 240 5Q180 16 120 5Q60 16 0 5Z"/>
-        </svg>
-        
-    </div>
+    <section class="v3-dist" id="distribuidores" aria-labelledby="v3-dist-title">
+        <div class="v3-wrap v3-dist__inner">
+            <div class="v3-dist__copy">
+                <div class="v3-dist__ico" aria-hidden="true"><i class="fas fa-truck"></i></div>
+                <div>
+                    <h2 id="v3-dist-title" class="sr-only">Distribuidores</h2>
+                    <p><strong>¿Quieres distribuir YoguraSo?</strong> Lleva nuestros productos a más personas y sé parte de esta comunidad en Neiva y Tello.</p>
+                </div>
+            </div>
+            <a class="ys-pill ys-pill--light" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero distribuir sus yogures" target="_blank" rel="noopener">Contáctanos<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+        </div>
+    </section>
 
     <section class="footer-map-wrap" aria-labelledby="footer-map-title">
         <h2 class="footer-map-title" id="footer-map-title">ENCUÉNTRANOS</h2>
         <div class="footer-map" data-consent-embed data-label="Mapa de Tello, Huila" data-title="Mapa de Tello, Huila — YogurASO" data-src="https://maps.google.com/maps?q=Tello%2C%20Huila%2C%20Colombia&amp;hl=es&amp;z=13&amp;output=embed"></div>
     </section>
 
-    <!-- =========================================================
-         FOOTER — contacto, redes y navegación
-         Datos de empresa vienen de config.js (data-config)
-         ========================================================= -->
-    <footer id="contact" class="site-footer">
+    <footer id="contact" class="site-footer footer-v3">
         <div class="footer-inner">
             <div class="footer-brand">
                 <span class="footer-logo" data-config="company-name">YogurASO</span>
@@ -479,8 +381,9 @@
                 <h4>Navegación</h4>
                 <ul>
                     <li><a href="index.html">Inicio</a></li>
-                    <li><a href="#beneficios">Beneficios</a></li>
                     <li><a href="pages/productos.html">Productos</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#distribuidores">Distribuidores</a></li>
                     <li><a href="pages/privacidad.html">Datos personales</a></li>
                     <li><a href="pages/privacidad.html#cookies" data-open-cookies>Preferencias de cookies</a></li>
                 </ul>
@@ -490,7 +393,7 @@
                 <ul>
                     <li><a href="pages/login.html">Iniciar sesión</a></li>
                     <li><a href="pages/registro.html">Registrarse</a></li>
-                    <li><a href="pages/carrito.html">Mi carrito</a></li>
+                    <li><a href="pages/perfil.html">Mi perfil</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -502,13 +405,11 @@
                 </ul>
             </div>
         </div>
-
         <div class="footer-bottom">
             <span>&copy; 2026 <span data-config="company-name">YogurASO</span> &mdash; Mayoreo en Neiva y Tello, Huila.</span>
         </div>
     </footer>
 
-    <!-- Botón flotante de WhatsApp (número en config.js) -->
     <a href="#"
        class="whatsapp-float"
        data-config="whatsapp"
@@ -519,10 +420,6 @@
         <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </a>
 
-    <!-- =========================================================
-         SIDEBAR DEL CARRITO (diseño: .cart-sidebar)
-         Lógica: cart.js | Checkout: WhatsApp
-         ========================================================= -->
 <div class="overlay" id="cartOverlay"></div>
     <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
@@ -561,5 +458,6 @@
     <script src="js/ficha.js"></script>
     <script src="js/depth.js"></script>
     <script src="js/yogurt-drip.js"></script>
+    <script src="js/components/home-filters.js"></script>
 </body>
 </html>

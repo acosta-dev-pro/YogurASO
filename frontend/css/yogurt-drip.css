@@ -1,44 +1,24 @@
-/* yogurt-drip.css — labio crema discreto entre secciones (bajo el hero).
-   Borde cóncavo suave tipo scallop, bajo (~16–22 px). Sin banda gruesa ni gotas caóticas. */
-
+/* yogurt-drip.css — separador cóncavo discreto entre secciones */
 :root {
-  --yd-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --yd-cream: #FFF8EC;
-  --yd-shadow: rgba(120, 72, 20, 0.06);
+  --yd-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --yd-cream: #FFF8F4;
 }
-
 .yd {
   position: relative;
   z-index: 2;
-  height: clamp(14px, 1.6vw, 22px);
+  height: clamp(16px, 2vw, 24px);
   margin: -1px 0;
   pointer-events: none;
   overflow: hidden;
   line-height: 0;
   background: transparent;
 }
-.yd svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 2px 3px var(--yd-shadow));
-}
+.yd svg { display: block; width: 100%; height: 100%; filter: none; }
 .yd-fill { fill: var(--yd-from, var(--yd-cream)); }
-
-/* Sin gotas animadas: el labio basta */
-.yd-drops { display: none !important; }
-
-.yd--cream { --yd-from: #FFF3E2; }
+.yd-drops { display: none; }
+.yd--cream { --yd-from: #FFF8F4; }
 .yd--white { --yd-from: #FFFFFF; }
 .yd--blush { --yd-from: #FFF5F2; }
 .yd--ice { --yd-from: #F3F7FB; }
-.yd--faq { --yd-from: #FFF8EC; }
+.yd--faq { --yd-from: #FFF8F4; }
 .yd--pack { --yd-from: #FFFFFF; }
-
-@media (max-width: 860px) {
-  .yd { height: clamp(12px, 3.2vw, 18px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .yd svg { filter: none; }
-}
