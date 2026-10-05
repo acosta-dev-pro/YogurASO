@@ -154,7 +154,7 @@ body { overflow-x: hidden; }
     text-align: left;
     margin: 0 0 24px;
 }
-.profile-header h1 span { color: #E08888; }
+.profile-header h1 span { color: #E51D2A; }
 .profile-card {
     padding: 28px 32px !important;
     border-radius: 20px !important;
@@ -256,7 +256,7 @@ body { overflow-x: hidden; }
 }
 .profile-modal input:focus,
 .profile-modal input:focus-visible {
-    border-color: #E08888 !important;
+    border-color: #E51D2A !important;
     box-shadow: none !important;
     outline: none !important;
 }
@@ -279,7 +279,7 @@ body { overflow-x: hidden; }
 /* ===== CART PAGE ===== */
 body.cart-body {
     background:
-        radial-gradient(ellipse 50% 40% at 90% 0%, rgba(224, 136, 136, 0.12), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 90% 0%, rgba(229, 29, 42, 0.12), transparent 55%),
         radial-gradient(ellipse 40% 35% at 0% 100%, rgba(255, 214, 227, 0.35), transparent 50%),
         #FFF9F6;
 }
@@ -304,7 +304,7 @@ body.cart-body {
 }
 
 .cart-page .shop-cart-kicker a {
-    color: #E08888;
+    color: #E51D2A;
     text-decoration: none;
 }
 
@@ -418,7 +418,7 @@ body.cart-body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #E08888;
+    color: #E51D2A;
     font-size: 22px;
 }
 
@@ -573,7 +573,7 @@ body.cart-body {
 }
 
 .cart-page .shop-trust i {
-    color: #E08888;
+    color: #E51D2A;
     width: 16px;
     margin-top: 2px;
     flex-shrink: 0;
@@ -607,7 +607,7 @@ body.cart-body {
     height: 64px;
     border-radius: 20px;
     background: #FFD6E3;
-    color: #CF7373;
+    color: #C91522;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -656,7 +656,7 @@ body.cart-body {
     margin-top: 6px;
     padding: 14px 24px;
     border-radius: 14px;
-    background: #E08888;
+    background: #E51D2A;
     color: #fff !important;
     text-decoration: none !important;
     font-size: 14px;
@@ -675,7 +675,7 @@ body.cart-body {
 }
 
 .cart-empty-cta:hover {
-    background: #CF7373;
+    background: #C91522;
     color: #fff !important;
 }
 
@@ -858,9 +858,9 @@ body.cart-body {
     flex-shrink: 0;
     width: 42px;
     height: 42px;
-    border: 1px solid rgba(224, 136, 136, 0.2);
+    border: 1px solid rgba(229, 29, 42, 0.2);
     background: #fff;
-    color: #E08888;
+    color: #E51D2A;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08);
@@ -877,7 +877,7 @@ body.cart-body {
     min-width: 240px;
     padding: 12px 28px;
     border-radius: 999px;
-    background: #E08888;
+    background: #E51D2A;
     color: #fff !important;
     text-decoration: none !important;
     font-size: 14px;
@@ -950,8 +950,8 @@ body.cart-body {
     cursor: pointer;
 }
 .chip.is-on {
-    background: #E08888;
-    border-color: #E08888;
+    background: #E51D2A;
+    border-color: #E51D2A;
     color: #fff;
 }
 .productos-grid {
@@ -976,7 +976,7 @@ body.cart-body {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #E08888;
+    background: #E51D2A;
     display: block;
     margin: 0 auto;
     animation: spin-pulse 0.8s ease-in-out infinite;
@@ -1079,7 +1079,7 @@ body.cart-body {
 .size-chip strong { display: block; font-size: 13px; }
 .size-chip span { font-size: 11px; color: #8A8580; }
 .size-chip.is-on {
-    border-color: #E08888;
+    border-color: #E51D2A;
     background: #FFF5F2;
     box-shadow: 0 0 0 3px rgba(233,69,69,0.12);
 }
@@ -1111,12 +1111,12 @@ body.cart-body {
 .inspect-qty span { min-width: 18px; text-align: center; font-weight: 800; }
 .inspect-pricebox { text-align: right; }
 .inspect-unit { display: block; font-size: 11px; color: #8A8580; }
-.inspect-pricebox strong { font-size: 22px; color: #E08888; }
+.inspect-pricebox strong { font-size: 22px; color: #E51D2A; }
 .inspect-add {
     width: 100%;
     border: none;
     border-radius: 14px;
-    background: #E08888;
+    background: #E51D2A;
     color: #fff;
     padding: 12px;
     font-weight: 800;
@@ -1201,7 +1201,7 @@ body.cart-body {
     font-size: 13px;
     color: #5C5854;
 }
-.order-preview-total strong { font-size: 18px; color: #E08888; }
+.order-preview-total strong { font-size: 18px; color: #E51D2A; }
 .order-preview-actions {
     display: flex;
     gap: 8px;

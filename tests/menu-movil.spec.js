@@ -9,5 +9,5 @@ test('en celular el menú se abre con el botón', async ({ page }) => {
   await expect(toggle).toBeVisible();
   await toggle.click();
   await expect(page.locator('#nav-items')).toHaveClass(/is-open/);
-  await expect(page.getByRole('link', { name: 'Productos' }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Sabores' }).first()).toBeVisible();
 });

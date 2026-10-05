@@ -1,0 +1,541 @@
+/* hero.css — portada con selector de sabores (mockup: docs/design/reference/mockup-hero.png)
+   Fondo sólido que cambia con cada sabor, botella grande al centro-derecha,
+   la del siguiente sabor más pequeña atrás, sombra de contacto y mesa del mismo tono.
+
+   Medidas: --s es 1 % del ancho en una pantalla 16:9 (ver brand.css), así el hero escala
+   igual en cualquier monitor. El ancho de diseño es calc(var(--s) * 100). */
+
+/* ---------- Tokens por sabor ----------
+   --hero-bg    fondo sólido
+   --hero-floor mesa (un tono más claro)
+   --hero-ink   acento oscuro: botón activo, texto del ticket, flecha
+   --hero-fg    color del texto sobre el fondo (blanco o tinta según contraste) */
+body[data-flavor="fresa"] {
+    --hero-bg: #BC1D29; --hero-floor: #D12430; --hero-ink: #B3141F; --hero-fg: #fff;
+}
+body[data-flavor="pina"] {
+    --hero-bg: #E8AB0A; --hero-floor: #F2BB1E; --hero-ink: #8A5200; --hero-fg: #2E1D00;
+}
+body[data-flavor="mora"] {
+    --hero-bg: #74205A; --hero-floor: #83286A; --hero-ink: #6A1A52; --hero-fg: #fff;
+}
+body[data-flavor="melocoton"] {
+    --hero-bg: #D9570F; --hero-floor: #E5681E; --hero-ink: #A93D05; --hero-fg: #fff;
+}
+body[data-flavor="frutos-rojos"] {
+    --hero-bg: #A8143A; --hero-floor: #B91E47; --hero-ink: #9A0F32; --hero-fg: #fff;
+}
+body[data-flavor="cafe"] {
+    --hero-bg: #55281A; --hero-floor: #653424; --hero-ink: #4A2010; --hero-fg: #fff;
+}
+body[data-flavor="guanabana"] {
+    --hero-bg: #347A22; --hero-floor: #418A2D; --hero-ink: #2B6A19; --hero-fg: #fff;
+}
+body[data-flavor="mango"] {
+    --hero-bg: #F08A0C; --hero-floor: #F89A22; --hero-ink: #9C4E00; --hero-fg: #2E1600;
+}
+body[data-flavor] { --nav-active: var(--hero-ink); }
+
+/* ---------- Estructura ---------- */
+.hero {
+    --t-color: 0.6s;
+    position: relative;
+    isolation: isolate;
+    height: 100svh;
+    min-height: 560px;
+    max-height: 1200px;
+    overflow: hidden;
+    color: var(--hero-fg);
+    background-color: var(--hero-bg);
+    transition: background-color var(--t-color) var(--ease-soft), color 0.6s var(--ease-soft);
+}
+.hero-box {
+    position: absolute;
+    top: 0; bottom: 0; left: 50%;
+    width: calc(var(--s) * 100);
+    transform: translateX(-50%);
+}
+
+/* Malla de degradados: manchas grandes y desenfocadas en tonos del sabor activo.
+   Solo se mueven con transform; el color cambia con la misma transición que el fondo. */
+.hero-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.hero-mesh i {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    opacity: 0.5;
+    /* borde difuso con máscara en vez de filter: blur (mucho más barato al cambiar de color) */
+    -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+    will-change: transform;
+    transition: background-color var(--t-color) var(--ease-soft);
+}
+.hero-mesh i:nth-child(1) {   /* luz detrás de la botella */
+    width: calc(var(--s) * 44); height: calc(var(--s) * 44);
+    left: calc(50% + var(--s) * 4); top: -6%;
+    background-color: color-mix(in srgb, var(--hero-bg) 62%, #fff);
+    animation: meshA 24s ease-in-out infinite alternate;
+}
+.hero-mesh i:nth-child(2) {   /* sombra profunda arriba a la izquierda */
+    width: calc(var(--s) * 40); height: calc(var(--s) * 40);
+    left: calc(50% - var(--s) * 58); top: -22%;
+    background-color: color-mix(in srgb, var(--hero-bg) 60%, #000);
+    animation: meshB 30s ease-in-out infinite alternate;
+}
+.hero-mesh i:nth-child(3) {   /* tono vecino a la derecha */
+    width: calc(var(--s) * 34); height: calc(var(--s) * 34);
+    right: calc(50% - var(--s) * 56); top: 26%;
+    background-color: color-mix(in srgb, var(--hero-bg) 55%, var(--hero-ink));
+    animation: meshC 27s ease-in-out infinite alternate;
+}
+.hero-mesh i:nth-child(4) {   /* brillo suave sobre la mesa */
+    width: calc(var(--s) * 38); height: calc(var(--s) * 22);
+    left: calc(50% - var(--s) * 16); bottom: 4%;
+    background-color: color-mix(in srgb, var(--hero-floor) 55%, #fff);
+    opacity: 0.38;
+    animation: meshD 32s ease-in-out infinite alternate;
+}
+@keyframes meshA { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(calc(var(--s) * -5), calc(var(--s) * 4), 0) scale(1.18); } }
+@keyframes meshB { from { transform: translate3d(0, 0, 0) scale(1.1); } to { transform: translate3d(calc(var(--s) * 7), calc(var(--s) * 3), 0) scale(0.92); } }
+@keyframes meshC { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(calc(var(--s) * -4), calc(var(--s) * -5), 0) scale(1.15); } }
+@keyframes meshD { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(calc(var(--s) * 6), 0, 0) scale(1.12); } }
+
+/* Mesa */
+.hero-floor {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    top: 78%;
+    background-color: var(--hero-floor);
+    transition: background-color var(--t-color) var(--ease-soft);
+    z-index: 0;
+}
+.hero-floor::before {          /* luz en el borde de la mesa */
+    content: "";
+    position: absolute; left: 0; right: 0; top: 0; height: 3px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.28) 20%, rgba(255, 255, 255, 0.28) 80%, transparent);
+    filter: blur(1px);
+}
+.hero-floor::after {           /* oscurece suave hacia abajo */
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.12));
+}
+
+/* ---------- Texto ---------- */
+.hero-copy {
+    position: absolute;
+    left: calc(var(--s) * 5.7);
+    top: 24%;
+    z-index: 3;
+    width: calc(var(--s) * 40);
+}
+.hero-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(var(--s) * 7.6);
+    line-height: 0.86;
+    letter-spacing: -0.01em;
+    color: var(--hero-fg);
+}
+.hero-title span { display: block; }
+.hero-sub {
+    margin: calc(var(--s) * 1.5) 0 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: calc(var(--s) * 2.3);
+    line-height: 1.12;
+    max-width: 14em;
+    color: var(--hero-fg);
+}
+
+/* Botón tipo ticket */
+.hero-cta {
+    position: absolute;
+    left: calc(var(--s) * 6.5);
+    top: 61.3%;
+    z-index: 3;
+    display: block;
+    width: calc(var(--s) * 32.9);
+    text-decoration: none;
+    filter: drop-shadow(0 calc(var(--s) * 1) calc(var(--s) * 1.6) rgba(0, 0, 0, 0.22));
+    transition: transform 0.25s var(--ease-out);
+}
+.hero-cta:hover { transform: translateY(-4px) scale(1.01); }
+.hero-cta:active { transform: scale(0.99); }
+.hero-cta:focus-visible { outline-color: #fff; outline-offset: 6px; border-radius: calc(var(--s) * 2.4); }
+.hero-cta-body {
+    --notch: calc(var(--s) * 1.15);
+    display: flex;
+    align-items: center;
+    height: calc(var(--s) * 9.9);
+    padding: 0 calc(var(--s) * 2.1) 0 calc(var(--s) * 2.4);
+    gap: calc(var(--s) * 1.4);
+    background: var(--cream);
+    border-radius: calc(var(--s) * 2.4);
+    -webkit-mask:
+        radial-gradient(circle var(--notch) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--notch) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+    mask:
+        radial-gradient(circle var(--notch) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--notch) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+}
+.hero-cta-icon {
+    position: relative;
+    flex: none;
+    width: calc(var(--s) * 4.8);
+    height: calc(var(--s) * 4.8);
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.06);
+}
+.hero-cta-icon img {
+    position: absolute;
+    width: 190%; max-width: none; height: auto;
+    left: -45%; top: -168%;
+}
+.hero-cta-sep {
+    flex: none;
+    width: 1px;
+    height: 52%;
+    background: var(--hero-ink);
+    opacity: 0.35;
+    transition: background-color var(--t-color) var(--ease-soft);
+}
+.hero-cta-text { flex: 1; min-width: 0; display: flex; flex-direction: column; color: var(--hero-ink); transition: color var(--t-color) var(--ease-soft); }
+.hero-cta-eyebrow {
+    font-family: var(--font-ui);
+    font-weight: 800;
+    font-size: calc(var(--s) * 1.15);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+.hero-cta-main {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(var(--s) * 3.4);
+    line-height: 1;
+    margin-top: calc(var(--s) * 0.3);
+}
+.hero-cta-arrow {
+    flex: none;
+    display: grid; place-items: center;
+    width: calc(var(--s) * 4.5);
+    height: calc(var(--s) * 4.5);
+    border-radius: 50%;
+    background: var(--hero-ink);
+    color: #fff;
+    transition: background-color var(--t-color) var(--ease-soft), transform 0.25s var(--ease-out);
+}
+.hero-cta-arrow svg { width: 46%; height: 46%; }
+.hero-cta:hover .hero-cta-arrow { transform: translateX(3px); }
+
+/* ---------- Botellas ---------- */
+.hero-stage { position: absolute; inset: 0; z-index: 1; touch-action: pan-y; perspective: 1400px; user-select: none; -webkit-user-select: none; }
+.hero-stage img { pointer-events: none; -webkit-user-drag: none; user-select: none; }
+.bottle {
+    position: absolute;
+    aspect-ratio: 640 / 1110;
+    margin: 0; padding: 0;
+    border: 0;
+    background: none;
+    transform: translateX(-50%);
+}
+.bottle--main {
+    left: calc(var(--s) * 60);
+    bottom: 6.6%;
+    height: calc(var(--s) * 43.5);
+    z-index: 3;
+}
+.bottle--second {
+    left: calc(var(--s) * 85.7);
+    bottom: 17.2%;
+    height: calc(var(--s) * 26.9);
+    z-index: 2;
+    cursor: pointer;
+    transition: transform 0.3s var(--ease-out);
+}
+.bottle--second:hover { transform: translateX(-50%) translateY(-8px); }
+.bottle--second:focus-visible { outline-color: #fff; outline-offset: 8px; border-radius: 20px; }
+.bottle-art {
+    position: absolute; inset: 0; will-change: transform, opacity;
+    /* inclinación leve con el cursor (la mueve hero.js; sin cursor queda en 0) */
+    rotate: 0 1 0 calc(var(--tilt-x, 0) * 1deg);
+}
+.bottle-float {                 /* flotación leve; la sombra respira al mismo ritmo */
+    position: absolute; inset: 0;
+    rotate: 1 0 0 calc(var(--tilt-y, 0) * 1deg);
+    animation: bottleFloat 7s ease-in-out infinite;
+}
+.bottle--second .bottle-float { animation-duration: 8.5s; animation-delay: -3s; }
+.bottle-float img { display: block; width: 100%; height: 100%; object-fit: contain; }
+@keyframes bottleFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-1.2%) rotate(0.35deg); }
+}
+@keyframes shadowBreath {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.94); opacity: 0.82; }
+}
+.bottle-shadow { animation: shadowBreath 7s ease-in-out infinite; }
+.bottle--second .bottle-shadow { animation-duration: 8.5s; animation-delay: -3s; }
+
+/* Sombras: contacto nítido + sombra larga difusa. Son negros translúcidos
+   con multiply, así toman el tono de la mesa en cada sabor. */
+.bottle-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    pointer-events: none;
+}
+.bottle-shadow::before,
+.bottle-shadow::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+}
+.bottle-shadow::before {       /* contacto */
+    width: 94%; height: calc(var(--s) * 1.5);
+    bottom: calc(var(--s) * -0.5);
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.28) 55%, rgba(0, 0, 0, 0) 100%);
+    filter: blur(calc(var(--s) * 0.35));
+}
+.bottle-shadow::after {        /* sombra larga */
+    width: 190%; height: calc(var(--s) * 4.2);
+    bottom: calc(var(--s) * -2);
+    transform: translateX(-46%);
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0) 100%);
+    filter: blur(calc(var(--s) * 1.1));
+}
+.bottle--second .bottle-shadow::before { height: calc(var(--s) * 1); }
+.bottle--second .bottle-shadow::after { height: calc(var(--s) * 2.6); bottom: calc(var(--s) * -1.2); }
+
+/* Reflejo tenue en la mesa */
+.bottle-reflect {
+    position: absolute;
+    left: 0; top: 100%;
+    width: 100%; height: 100%;
+    margin-top: calc(var(--s) * -0.1);
+    transform: scaleY(-1);
+    opacity: 0.16;
+    -webkit-mask-image: linear-gradient(to top, #000, transparent 30%);
+    mask-image: linear-gradient(to top, #000, transparent 30%);
+    filter: blur(1.5px);
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+.bottle-reflect img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* ---------- Selector de sabores (píldoras, sin flechas) ---------- */
+.hero-lower { display: contents; }
+.flavor-selector {
+    position: absolute;
+    left: calc(var(--s) * 6.5);
+    bottom: 6.6%;
+    z-index: 4;
+    max-width: calc(var(--s) * 44);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-pill);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.flavor-selector::-webkit-scrollbar { display: none; }
+.flavor-pill {
+    --dot: #ccc;
+    flex: none;
+    display: grid;
+    grid-template-columns: auto 0fr;
+    align-items: center;
+    height: 40px;
+    padding: 0 5px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--hero-ink);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: grid-template-columns 0.4s var(--ease-out), background-color 0.35s var(--ease-soft), padding 0.4s var(--ease-out);
+}
+.flavor-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--dot);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+    transition: transform 0.3s var(--ease-out);
+}
+.flavor-name {
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+.flavor-pill:hover .flavor-dot { transform: translateY(-2px) scale(1.06); }
+.flavor-pill[aria-checked="true"] {
+    grid-template-columns: auto 1fr;
+    padding: 0 16px 0 5px;
+    background: #fff;
+}
+.flavor-pill[aria-checked="true"] .flavor-name { opacity: 1; padding-left: 9px; transition-delay: 0.1s; }
+.flavor-pill[aria-checked="true"] .flavor-dot { box-shadow: none; }
+.flavor-pill:focus-visible { outline-color: #fff; outline-offset: 2px; }
+.flavor-pill[aria-checked="true"]:focus-visible { outline-color: var(--hero-ink); }
+
+/* ---------- Entrada de la portada (una sola secuencia) ---------- */
+@keyframes heroIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+}
+@keyframes bottleIn {
+    from { opacity: 0; transform: translateY(18px) scale(0.95); }
+    to { opacity: 1; transform: none; }
+}
+.hero.is-loading .hero-title,
+.hero.is-loading .hero-sub,
+.hero.is-loading .hero-cta,
+.hero.is-loading .flavor-selector { opacity: 0; }
+.hero:not(.is-loading) .hero-title,
+.hero:not(.is-loading) .hero-sub,
+.hero:not(.is-loading) .hero-cta,
+.hero:not(.is-loading) .flavor-selector { animation: heroIn 0.5s var(--ease-out) backwards; }
+.hero:not(.is-loading) .hero-sub { animation-delay: 0.1s; }
+.hero:not(.is-loading) .hero-cta { animation-delay: 0.2s; }
+.hero:not(.is-loading) .flavor-selector { animation-delay: 0.3s; }
+.hero:not(.is-loading) .bottle--main .bottle-art,
+.hero:not(.is-loading) .bottle--main .bottle-reflect { animation: bottleIn 0.6s var(--ease-out) 0.1s backwards; }
+.hero:not(.is-loading) .bottle--second .bottle-art { animation: bottleIn 0.6s var(--ease-out) 0.25s backwards; }
+
+/* ---------- Tabletas y celulares: otro diseño, no el de escritorio encogido ---------- */
+@media (max-width: 860px), (max-aspect-ratio: 1/1) {
+    .hero {
+        --s: min(1vw, 1.78svh);
+        height: auto;
+        max-height: none;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+    }
+    .hero-box {
+        position: relative;
+        left: auto; top: auto; bottom: auto;
+        width: 100%;
+        transform: none;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: 84px;
+    }
+    .hero-floor { display: none; }
+    .hero-copy { display: contents; }
+    .hero-title {
+        order: 1;
+        padding: 0 22px;
+        font-size: clamp(2.9rem, 14.5vw, 5.6rem);
+        line-height: 0.92;
+    }
+    .hero-sub {
+        order: 2;
+        padding: 0 22px;
+        margin-top: 12px;
+        font-size: clamp(1.1rem, 4.8vw, 1.6rem);
+    }
+    .hero-stage {
+        order: 3;
+        position: relative;
+        inset: auto;
+        height: clamp(290px, 43svh, 540px);
+        margin-top: 4px;
+    }
+    .hero-stage::before {     /* mesa */
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: 0; height: 21%;
+        background-color: var(--hero-floor);
+        transition: background-color var(--t-color) var(--ease-soft);
+    }
+    .hero-stage::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: calc(21% - 2px); height: 3px;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.28) 20%, rgba(255, 255, 255, 0.28) 80%, transparent);
+        filter: blur(1px);
+    }
+    .bottle--main { left: 42%; bottom: 8%; height: 86%; }
+    .bottle--second { left: 78%; bottom: 14%; height: 52%; }
+    .bottle-shadow::before { height: 14px; bottom: -5px; filter: blur(3px); }
+    .bottle-shadow::after { height: 30px; bottom: -14px; filter: blur(10px); }
+    .bottle--second .bottle-shadow::before { height: 9px; }
+    .bottle--second .bottle-shadow::after { height: 20px; bottom: -9px; }
+
+    .hero-lower {
+        display: flex;
+        order: 4;
+        flex: 1;
+        flex-direction: column;
+        gap: 18px;
+        padding: 6px 0 calc(88px + env(safe-area-inset-bottom));
+        background-color: var(--hero-floor);
+        transition: background-color var(--t-color) var(--ease-soft);
+    }
+    .hero-cta {
+        position: relative;
+        left: auto; top: auto;
+        width: auto;
+        margin: 0 22px;
+        filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.2));
+    }
+    .hero-cta-body {
+        --notch: 10px;
+        height: 84px;
+        padding: 0 16px 0 18px;
+        gap: 14px;
+        border-radius: 22px;
+    }
+    .hero-cta-icon { width: 48px; height: 48px; }
+    .hero-cta-eyebrow { font-size: 0.72rem; }
+    .hero-cta-main { font-size: 1.75rem; margin-top: 2px; }
+    .hero-cta-arrow { width: 42px; height: 42px; }
+    .flavor-selector {
+        position: relative;
+        left: auto; bottom: auto;
+        max-width: none;
+        margin: 0 22px;
+        scroll-snap-type: x proximity;
+    }
+    .flavor-pill { scroll-snap-align: center; }
+}
+
+@media (max-width: 400px) {
+    .hero-cta-text .hero-cta-eyebrow { font-size: 0.66rem; letter-spacing: 0.06em; }
+}
+
+/* Portada baja (laptops con poco alto): botellas y textos escalan por altura gracias a --s */
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .hero { --t-color: 0.01ms; }
+    .hero *, .hero *::before, .hero *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: 0.01ms !important;
+    }
+    .bottle-float, .bottle-shadow, .hero-mesh i { animation: none !important; }
+    .bottle-art, .bottle-float { rotate: none; }
+    .hero-cta:hover { transform: none; }
+    .bottle--second:hover { transform: translateX(-50%); }
+}

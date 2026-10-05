@@ -165,19 +165,15 @@ function ensureStoreNav() {
     const list = document.getElementById('nav-items');
     if (!list) return;
 
-    const home = isInPages ? '../index.html' : 'index.html';
+    const home = isInPages ? '../index.html' : '';
     const products = isInPages ? 'productos.html' : 'pages/productos.html';
-    const contact = isInPages ? '../index.html#contact' : '#contact';
 
+    // Menú de la marca: Sabores, Nosotros, Distribuidores y Contacto (el logo lleva al inicio)
     const wanted = [
-        {
-            key: 'inicio',
-            href: home,
-            label: 'Inicio',
-            match: (href) => (/index\.html/i.test(href) && !/#/.test(href)) || href === '/' || href === ''
-        },
-        { key: 'productos', href: products, label: 'Productos', match: (href) => /productos\.html/i.test(href) },
-        { key: 'contacto', href: contact, label: 'Contacto', match: (href) => /#contact/i.test(href) }
+        { key: 'sabores', href: products, label: 'Sabores', match: (href) => /productos\.html/i.test(href) },
+        { key: 'nosotros', href: `${home}#nosotros`, label: 'Nosotros', match: (href) => /#nosotros/i.test(href) },
+        { key: 'distribuidores', href: `${home}#distribuidores`, label: 'Distribuidores', match: (href) => /#distribuidores/i.test(href) },
+        { key: 'contacto', href: `${home}#contact`, label: 'Contacto', match: (href) => /#contact/i.test(href) }
     ];
 
     // Quitar Inventario/Usuarios del menú global (van en admin-subnav)
@@ -212,14 +208,8 @@ function ensureStoreNav() {
             a.closest('li')?.classList.add('active');
         }
     } else if (/^index\.html$/i.test(pageName) || pageName === '' || pageName === '/') {
-        const a = [...list.querySelectorAll('a')].find((el) => {
-            const href = el.getAttribute('href') || '';
-            return /index\.html/i.test(href) && !/#/.test(href);
-        });
-        if (a) {
-            a.setAttribute('aria-current', 'page');
-            a.closest('li')?.classList.add('active');
-        }
+        const a = [...list.querySelectorAll('a')].find((el) => /productos\.html/i.test(el.getAttribute('href') || ''));
+        a?.closest('li')?.classList.add('active');
     }
 }
 

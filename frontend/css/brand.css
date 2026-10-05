@@ -1,0 +1,92 @@
+/* brand.css — tokens de marca y tipografía (cargar después de styles.css)
+   Colores y fuentes de YoguraSo. Las hojas viejas leen estos tokens (--brand-main, --font-ui...),
+   así todas las páginas toman el mismo rojo y las mismas fuentes sin cambiar su estructura. */
+
+:root {
+    /* Marca */
+    --brand-red: #E51D2A;
+    --brand-red-dark: #C91522;
+    --brand-red-soft: #F04A54;
+    --brand-green: #4FAE45;
+    --cream: #FFF7E8;
+    --white: #FFFFFF;
+    --ink: #171717;
+
+    /* Alias que ya usaban las hojas anteriores */
+    --brand-main: var(--brand-red);
+    --brand-deep: var(--brand-red-dark);
+    --brand-warm: var(--brand-red-soft);
+    --surface: #FFF8EC;
+    --surface-soft: #FFF1DC;
+    --text-main: var(--ink);
+    --text-muted: #5E5850;
+    --border: rgba(23, 23, 23, 0.09);
+    --shadow-sm: 0 1px 2px rgba(23, 23, 23, 0.05);
+    --shadow-md: 0 8px 24px rgba(23, 23, 23, 0.08);
+    --shadow-lg: 0 16px 40px rgba(23, 23, 23, 0.10);
+
+    /* Radios */
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --radius-pill: 999px;
+
+    /* Tipografía: dos familias, Fredoka para títulos y Nunito Sans para lectura */
+    --font-display: "Fredoka", "Nunito Sans", system-ui, sans-serif;
+    --font-brand: "Fredoka", "Nunito Sans", system-ui, sans-serif;
+    --font-ui: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    /* Curvas de movimiento */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Unidad de diseño del hero: 1 unidad = 1 % del ancho en una pantalla 16:9 */
+    --s: min(1vw, 1.78svh);
+}
+
+body {
+    font-family: var(--font-ui);
+    color: var(--text-main);
+    background: var(--surface);
+}
+
+h1, h2, h3 { font-family: var(--font-display); }
+button, input, select, textarea { font-family: inherit; }
+
+/* Anclas: dejan espacio para el menú fijo */
+[id] { scroll-margin-top: 96px; }
+
+/* Foco visible en todo el sitio */
+:focus-visible {
+    outline: 3px solid var(--brand-red);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* Fondo de las páginas interiores: crema plano, sin manchas de colores */
+body { background-image: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
+
+/* Botón de silencio (solo existe cuando hay sonidos registrados, ver js/sound.js) */
+.sound-toggle {
+    position: fixed; left: 18px; bottom: 18px; z-index: 150;
+    width: 44px; height: 44px; padding: 0;
+    display: grid; place-items: center;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.78);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(23, 23, 23, 0.1);
+    border-radius: 50%;
+    cursor: pointer;
+}
+.sound-toggle svg { width: 22px; height: 22px; }
+.sound-toggle[data-state="on"] .off, .sound-toggle[data-state="off"] .on { display: none; }

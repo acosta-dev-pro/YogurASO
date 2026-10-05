@@ -60,7 +60,7 @@ body.admin-page .admin-header {
 }
 
 body.admin-page .admin-header h1 {
-    font-family: "Plus Jakarta Sans", "OpenSans-Bold", sans-serif !important;
+    font-family: var(--font-ui);
     font-size: 32px !important;
     font-weight: 800;
     letter-spacing: -0.04em;
@@ -75,14 +75,14 @@ body.admin-page .admin-subtitle {
 }
 
 body.admin-page .btn-primary {
-    background: #E08888 !important;
+    background: #E51D2A !important;
     box-shadow: none !important;
     border-radius: 12px !important;
     padding: 12px 18px !important;
     font-size: 14px !important;
 }
 
-body.admin-page .btn-primary:hover { background: #CF7373 !important; }
+body.admin-page .btn-primary:hover { background: #C91522 !important; }
 
 body.admin-page .btn-secondary {
     background: #f4f4f6 !important;
@@ -270,7 +270,7 @@ body.admin-page .admin-modal textarea:focus,
 body.admin-page .admin-modal input:focus-visible,
 body.admin-page .admin-modal select:focus-visible,
 body.admin-page .admin-modal textarea:focus-visible {
-    border-color: #E08888 !important;
+    border-color: #E51D2A !important;
     box-shadow: none !important;
     outline: none !important;
     transform: none !important;
@@ -291,7 +291,7 @@ body.admin-page .admin-modal .image-upload-area {
 
 body.admin-page .admin-modal .image-upload-area:hover,
 body.admin-page .admin-modal .image-upload-area.drag-over {
-    border-color: #E08888 !important;
+    border-color: #E51D2A !important;
     background: #fff !important;
     box-shadow: none !important;
 }
@@ -374,13 +374,13 @@ body.admin-page .admin-price-preview-badge {
     margin-bottom: 10px;
     padding: 4px 10px;
     border-radius: 999px;
-    background: #E08888;
+    background: #E51D2A;
     color: #fff;
     font-size: 11px;
     font-weight: 800;
 }
 
-body.admin-page .admin-price-preview-badge.badge-nuevo { background: #E08888; }
+body.admin-page .admin-price-preview-badge.badge-nuevo { background: #E51D2A; }
 body.admin-page .admin-price-preview-badge.badge-oferta { background: #c45b2d; }
 body.admin-page .admin-price-preview-badge.badge-descuento { background: #b42318; }
 body.admin-page .admin-price-preview-badge.badge-destacado { background: #1c1c1f; }
@@ -400,7 +400,7 @@ body.admin-page .admin-price-preview-row.is-final strong {
 }
 
 body.admin-page .admin-price-preview-row.is-final strong.is-sale {
-    color: #E08888;
+    color: #E51D2A;
 }
 
 body.admin-page .admin-price-preview-label {
@@ -598,7 +598,7 @@ body.admin-page .admin-sheet thead th.sortable:hover {
 body.admin-page .admin-sheet thead th.sortable.is-sorted::after {
     margin-left: 6px;
     font-size: 10px;
-    color: #E08888;
+    color: #E51D2A;
 }
 
 body.admin-page .admin-sheet thead th.sortable.is-sorted[data-dir="asc"]::after { content: "▲"; }

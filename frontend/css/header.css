@@ -1,82 +1,234 @@
-/* header.css — barra de arriba + menú en celular
-   El look del header (pill, logo, iconos) sigue en styles.css.
-   Acá solo está el botón de las tres rayas y el menú desplegable. */
+/* header.css — menú global de YoguraSo
+   Logo a la izquierda, menú en píldora al centro, lupa y carrito a la derecha.
+   Sobre el hero el menú es transparente (logo y iconos toman el color del sabor).
+   Al bajar, o en las páginas interiores, pasa a una barra crema con el logo rojo.
+   Reemplaza las reglas de `header` que quedan en styles.css. */
 
-.nav {
-    position: relative;
+.site-header {
+    --hdr-fg: #fff;
+    --hdr-gutter: max(20px, calc((100vw - var(--s) * 100) / 2 + var(--s) * 5.6));
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    transform: none;
+    z-index: 200;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: clamp(12px, 2.2svh, 24px) var(--hdr-gutter);
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--hdr-fg);
+    transition: background-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft), padding 0.35s var(--ease-soft), color 0.5s var(--ease-soft);
 }
 
+/* Estado "barra": al bajar en el inicio y siempre en las demás páginas */
+.site-header.is-stuck,
+.site-header--solid {
+    --hdr-fg: var(--ink);
+    background: rgba(255, 247, 232, 0.9);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 1px 0 rgba(23, 23, 23, 0.06), 0 10px 28px rgba(23, 23, 23, 0.06);
+}
+.site-header.is-stuck { padding-top: 10px; padding-bottom: 10px; }
+
+/* ---------- Logo ---------- */
+.site-header .brand-logo {
+    position: relative;
+    display: block;
+    justify-self: start;
+    width: clamp(108px, calc(var(--s) * 12.2), 190px);
+    aspect-ratio: 3105 / 1119;
+    flex-shrink: 0;
+}
+.site-header--solid .brand-logo,
+.site-header.is-stuck .brand-logo { width: clamp(104px, 9vw, 140px); }
+.site-header .brand-logo img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    transition: opacity 0.45s var(--ease-soft);
+}
+.site-header .logo-blanco,
+.site-header .logo-oscuro { opacity: 0; }
+.site-header .logo-rojo { opacity: 0; }
+/* Sobre el hero: blanco (o oscuro en sabores claros) */
+body[data-hero-fg="light"] .site-header:not(.is-stuck) .logo-blanco { opacity: 1; }
+body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1; }
+/* Barra crema y páginas interiores: rojo */
+.site-header.is-stuck .logo-rojo,
+.site-header--solid .logo-rojo { opacity: 1; }
+/* Sin la clase de color (páginas sin hero) */
+.site-header--solid .logo-blanco,
+.site-header--solid .logo-oscuro { opacity: 0 !important; }
+
+/* ---------- Menú en píldora ---------- */
+.site-header .nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 10px;
+}
+.site-header #nav-items {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+    background: #fff;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 8px 28px rgba(23, 23, 23, 0.14);
+}
+.site-header--solid #nav-items,
+.site-header.is-stuck #nav-items { box-shadow: 0 0 0 1px rgba(23, 23, 23, 0.08); }
+.site-header #nav-items li {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--ink);
+    cursor: auto;
+}
+.site-header #nav-items li a {
+    display: block;
+    padding: 9px clamp(14px, calc(var(--s) * 1.9), 26px);
+    border-radius: var(--radius-pill);
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    position: relative;
+    transition: background-color 0.35s var(--ease-soft), color 0.35s var(--ease-soft);
+}
+.site-header #nav-items li a::after { display: none; }
+.site-header #nav-items li:hover a { color: var(--nav-active, var(--brand-red)); }
+.site-header #nav-items li.active a {
+    background: var(--nav-active, var(--brand-red));
+    color: #fff;
+}
+.site-header #nav-items li.active:hover a { color: #fff; }
+
+/* ---------- Lupa y carrito ---------- */
+.site-header .icon-buttons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-self: end;
+    margin: 0;
+}
+.site-header .icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(46px, calc(var(--s) * 3.4), 54px); aspect-ratio: 1;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    color: var(--hdr-fg);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s var(--ease-out), background-color 0.2s, color 0.35s var(--ease-soft);
+}
+.site-header .icon-btn:hover { background: rgba(255, 255, 255, 0.18); color: var(--hdr-fg); transform: translateY(-2px) scale(1.04); }
+.site-header--solid .icon-btn:hover,
+.site-header.is-stuck .icon-btn:hover { background: rgba(23, 23, 23, 0.06); }
+.site-header .icon-btn:active { transform: scale(0.96); }
+.site-header .icon-btn svg { width: clamp(26px, calc(var(--s) * 2.2), 34px); height: auto; aspect-ratio: 1; display: block; }
+.site-header .icon-btn:focus-visible { outline-color: currentColor; }
+
+.site-header .cart-badge {
+    position: absolute;
+    top: 1px; right: 0;
+    min-width: 19px; height: 19px;
+    padding: 0 4px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ink);
+    color: #fff;
+    border: 0;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+}
+/* El contador se ve siempre, también en 0 */
+.site-header .cart-badge[hidden] { display: flex; }
+.site-header .cart-badge.badge-bounce { animation: badgeIn 0.4s var(--ease-out); }
+
+/* El menú de usuario sigue oculto en la barra (la cuenta está en el pie) */
+.site-header .user-menu { display: none !important; }
+
+/* ---------- Botón del menú en celular ---------- */
 .nav-toggle {
     display: none;
-    width: 40px;
-    height: 40px;
-    padding: 10px 9px;
-    border: 1px solid var(--border, #eee);
+    width: 46px; height: 46px;
+    padding: 0 13px;
+    border: 0;
     border-radius: 50%;
     background: #fff;
+    box-shadow: 0 6px 18px rgba(23, 23, 23, 0.14);
     cursor: pointer;
     flex-direction: column;
     justify-content: center;
     gap: 5px;
 }
-
 .nav-toggle span {
     display: block;
     height: 2px;
     width: 100%;
-    background: var(--text-main, #1f1630);
+    background: var(--ink);
     border-radius: 2px;
+    transition: transform 0.25s var(--ease-out), opacity 0.2s;
 }
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-@media screen and (max-width: 768px) {
-    .nav-toggle {
-        display: flex;
-        order: 3;
+@media screen and (max-width: 860px) {
+    .site-header {
+        grid-template-columns: 1fr auto auto;
+        gap: 4px;
+        padding: 12px 16px;
     }
-
-    header .icon-buttons {
-        order: 2;
-        margin-left: auto;
-    }
-
-    header {
-        flex-wrap: wrap;
-        border-radius: 22px;
-        overflow: visible;
-    }
-
-    #nav-items {
+    .site-header .brand-logo { width: 118px; }
+    .site-header--solid .brand-logo,
+    .site-header.is-stuck .brand-logo { width: 108px; }
+    .site-header .nav { order: 3; justify-self: end; }
+    .site-header .icon-buttons { order: 2; }
+    .nav-toggle { display: flex; }
+    .site-header #nav-items {
         display: none;
         position: absolute;
-        top: calc(100% + 10px);
+        top: calc(100% + 12px);
         right: 0;
-        left: auto;
-        min-width: 180px;
+        min-width: 210px;
         flex-direction: column;
         align-items: stretch;
-        gap: 0;
+        gap: 2px;
         padding: 8px;
-        background: #fff;
-        border: none;
-        border-radius: 16px;
-        box-shadow: none;
+        border-radius: var(--radius);
         z-index: 220;
     }
+    .site-header #nav-items.is-open { display: flex; animation: menuIn 0.22s var(--ease-out); }
+    .site-header #nav-items li { font-size: 16px; }
+    .site-header #nav-items li a { padding: 12px 14px; border-radius: 12px; }
+}
 
-    #nav-items.is-open {
-        display: flex;
-    }
+@keyframes menuIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+}
 
-    #nav-items li {
-        font-size: 14px;
-    }
-
-    #nav-items li a {
-        display: block;
-        padding: 10px 12px;
-    }
-
-    #nav-items li a::after {
-        display: none;
-    }
+@media (prefers-reduced-motion: reduce) {
+    .site-header, .site-header * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    .site-header .icon-btn:hover { transform: none; }
 }

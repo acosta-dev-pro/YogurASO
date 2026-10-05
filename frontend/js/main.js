@@ -421,7 +421,7 @@ function renderProducts() {
         const colorFondo = /^#[0-9A-Fa-f]{6}$/.test(p.color_fondo || '') ? p.color_fondo : '#FFF8F4';
 
         return `
-            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" style="--producto-card-bg:${colorFondo};animation-delay:${Math.min(index * 0.04, 0.28)}s">
+            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" style="--producto-card-bg:${colorFondo};animation-delay:${Math.min(index * 0.09, 0.63)}s">
                 <div class="producto-img-container">
                     ${badgeHtml(p, sinStock)}
                     ${mediaHtml}
