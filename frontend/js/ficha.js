@@ -29,7 +29,7 @@
         return '' +
         '<div class="fc-art">' +
             '<span class="fc-mesh" aria-hidden="true"></span><span class="fc-ring" aria-hidden="true"></span>' +
-            '<img class="fc-bottle" src="' + base + '.webp" srcset="' + base + '-sm.webp 320w, ' + base + '.webp 640w" sizes="(max-width: 760px) 40vw, 260px" alt="' + esc(f.alt) + '" width="640" height="1110" decoding="async">' +
+            '<img class="fc-bottle" src="' + base + '.webp" srcset="' + base + '-sm.webp 320w, ' + base + '.webp 640w" sizes="(max-width: 760px) 30vw, 200px" alt="' + esc(f.alt) + '" width="640" height="1110" decoding="async">' +
             '<span class="fc-floor" aria-hidden="true"></span>' +
         '</div>' +
         '<div class="fc-body">' +

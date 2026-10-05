@@ -125,8 +125,8 @@
             var hit = card.firstElementChild, r = hit.getBoundingClientRect();
             var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
             card.classList.add('is-tilting');
-            hit.style.setProperty('--ry', ((px - 0.5) * 10).toFixed(2) + 'deg');
-            hit.style.setProperty('--rx', ((0.5 - py) * 8).toFixed(2) + 'deg');
+            hit.style.setProperty('--ry', ((px - 0.5) * 6).toFixed(2) + 'deg');
+            hit.style.setProperty('--rx', ((0.5 - py) * 5).toFixed(2) + 'deg');
             hit.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
             hit.style.setProperty('--my', (py * 100).toFixed(1) + '%');
         });

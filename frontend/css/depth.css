@@ -3,17 +3,18 @@
    html.yg-3d = escritorio con mouse · html.yg-2d = celular/táctil · html.yg-still = movimiento reducido. */
 
 .yg-host { position: relative; isolation: isolate; overflow: clip; }
-.yg-3d .yg-host { perspective: 1500px; perspective-origin: 50% 10%; }
+.yg-3d .yg-host { perspective: 2200px; perspective-origin: 50% 10%; }
 .yg-3d .yg-z { transform-origin: 50% 0; will-change: transform; }
 .yg-3d .yg-host:not(.yg-live) .yg-z { will-change: auto; }
 
 .yg-deco { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.yg-s { position: absolute; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); will-change: transform; }
+/* Formas al 85 % del tamaño base (perspectiva más alejada); en celular al 55 %. */
+.yg-s { position: absolute; width: calc(var(--s) * 0.85); height: calc(var(--s) * 0.85); margin: calc(var(--s) * -0.425) 0 0 calc(var(--s) * -0.425); will-change: transform; }
 .yg-s > b { position: absolute; inset: 0; display: block; transform: rotate(var(--r)); }
 .yg-live .yg-s > b { animation: ygFloat var(--dur, 12s) var(--dl, 0s) ease-in-out infinite; }
 @keyframes ygFloat {
     0%, 100% { transform: rotate(var(--r)) translate3d(0, 0, 0) scale(1); }
-    50% { transform: rotate(calc(var(--r) + 9deg)) translate3d(0, -10px, 0) scale(1.04); }
+    50% { transform: rotate(calc(var(--r) + 6deg)) translate3d(0, -7px, 0) scale(1.03); }
 }
 
 /* Tonos: cremas lechosos con un toque de fruta */
@@ -28,7 +29,7 @@
     background:
         radial-gradient(38% 30% at 32% 26%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%),
         radial-gradient(90% 90% at 70% 80%, var(--b), var(--a) 62%);
-    box-shadow: inset -10px -14px 26px -8px var(--sh), inset 6px 8px 14px -6px #fff, 0 26px 40px -26px var(--sh);
+    box-shadow: inset -8px -12px 22px -8px var(--sh), inset 5px 7px 12px -6px #fff, 0 20px 32px -22px var(--sh);
 }
 /* Remolino: la cucharada con un pliegue cremoso encima */
 .yg-swirl > b { border-radius: 46% 54% 42% 58% / 58% 44% 56% 42%; }
@@ -48,7 +49,7 @@
 .yg-live .yg-drop > b { animation-name: ygFloatDrop; }
 @keyframes ygFloatDrop {
     0%, 100% { transform: rotate(calc(var(--r) + 45deg)) translate3d(0, 0, 0); }
-    50% { transform: rotate(calc(var(--r) + 45deg)) translate3d(-7px, -7px, 0); }
+    50% { transform: rotate(calc(var(--r) + 45deg)) translate3d(-5px, -5px, 0); }
 }
 
 /* Burbujas / salpicadura de gotitas */
@@ -61,20 +62,20 @@
 .yg-bubbles > b i:nth-child(5) { width: 6%; height: 6%; left: 84%; top: 22%; }
 
 /* Goteo en el borde superior */
-.yg-drip { position: absolute; left: 0; right: 0; top: 0; height: clamp(34px, 5.5vw, 80px); z-index: 0; pointer-events: none; }
+.yg-drip { position: absolute; left: 0; right: 0; top: 0; height: clamp(28px, 4.4vw, 64px); z-index: 0; pointer-events: none; }
 .yg-drip svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 6px 6px rgba(120, 72, 20, 0.06)); }
-.yg-drip i { position: absolute; top: 72%; width: 9px; height: 12px; margin-left: -4.5px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; opacity: 0; }
+.yg-drip i { position: absolute; top: 72%; width: 8px; height: 10px; margin-left: -4px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; opacity: 0; }
 .yg-live .yg-drip i { animation: ygFall 6.5s var(--dl, 0s) cubic-bezier(0.55, 0, 0.8, 0.4) infinite; }
 @keyframes ygFall {
     0%, 55% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.6, 0.6); }
     62% { opacity: 1; transform: translate3d(0, 2px, 0) scale(1, 1.15); }
-    100% { opacity: 0; transform: translate3d(0, 120px, 0) scale(0.85, 1.25); }
+    100% { opacity: 0; transform: translate3d(0, 96px, 0) scale(0.85, 1.25); }
 }
 
 /* Celular / táctil: 2D, formas más pequeñas y solo las esenciales */
 .yg-2d .yg-nm { display: none; }
 @media (max-width: 860px) {
-    .yg-s { width: calc(var(--s) * 0.62); height: calc(var(--s) * 0.62); margin: calc(var(--s) * -0.31) 0 0 calc(var(--s) * -0.31); }
+    .yg-s { width: calc(var(--s) * 0.55); height: calc(var(--s) * 0.55); margin: calc(var(--s) * -0.275) 0 0 calc(var(--s) * -0.275); }
 }
 
 /* Movimiento reducido: todo quieto */

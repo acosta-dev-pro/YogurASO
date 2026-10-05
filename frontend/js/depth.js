@@ -95,17 +95,18 @@
             var r = o.sec.getBoundingClientRect();
             var c = ((r.top + r.height / 2) - vh / 2) / (vh / 2 + r.height / 2); // -1 (arriba) … 1 (abajo)
             if (c > 1.2 || c < -1.2) continue;
-            var k = mode === '3d' ? 1 : 0.45;
+            var k = mode === '3d' ? 1 : 0.4;
             for (var j = 0; j < o.shapes.length; j++) {
                 var sh = o.shapes[j], d = sh.d;
-                var ty = c * d * 90 * k, tx = mode === '3d' ? cx * d * 14 : 0, ry = mode === '3d' ? cy * d * 10 : 0;
-                sh.node.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + (ty + ry).toFixed(1) + 'px,0) rotate(' + (c * d * 8).toFixed(2) + 'deg)';
+                var ty = c * d * 62 * k, tx = mode === '3d' ? cx * d * 9 : 0, ry = mode === '3d' ? cy * d * 6 : 0;
+                sh.node.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + (ty + ry).toFixed(1) + 'px,0) rotate(' + (c * d * 5).toFixed(2) + 'deg)';
             }
             if (mode === '3d') {
                 var e = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.62)));
                 if (e < 1) {
                     var q = 1 - easeOut(e);
-                    var tf = 'translate3d(0,' + (q * 34).toFixed(1) + 'px,' + (-q * 110).toFixed(1) + 'px) rotateX(' + (q * 9).toFixed(2) + 'deg)';
+                    /* Inclinación sutil: máx. 5° y 60 px hacia el fondo (antes 9° y 110 px). */
+                    var tf = 'translate3d(0,' + (q * 22).toFixed(1) + 'px,' + (-q * 60).toFixed(1) + 'px) rotateX(' + (q * 5).toFixed(2) + 'deg)';
                     for (var m = 0; m < o.content.length; m++) o.content[m].style.transform = tf;
                     o.flat = false;
                 } else if (!o.flat) {
