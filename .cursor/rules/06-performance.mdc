@@ -1,0 +1,15 @@
+---
+description: Rendimiento y peso de la web.
+globs: src/**,public/**
+alwaysApply: false
+---
+
+# Rendimiento
+
+- Imágenes de producto: PNG transparente optimizado y, cuando se pueda, WebP/AVIF. Define `width` y `height`. `loading="lazy"` fuera de la primera pantalla. La imagen principal del hero se precarga.
+- Ninguna imagen sobre ~300 KB sin justificarlo.
+- Fuentes: solo Fredoka y Nunito Sans, con `swap`; mejor autoalojadas en WOFF2.
+- Divide el código por ruta. Three.js, sonido y el panel admin no se cargan fuera de donde se usan.
+- Evita saltos de diseño: reserva el espacio de imágenes y del hero.
+- No instales una librería para algo que se resuelve con 10 líneas.
+- Mide con Lighthouse y el tamaño del bundle antes de dar una fase por terminada.

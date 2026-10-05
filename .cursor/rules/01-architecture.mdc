@@ -1,0 +1,16 @@
+---
+description: Estructura de carpetas y capas del proyecto.
+globs: src/**,app/**,supabase/**
+alwaysApply: false
+---
+
+# Arquitectura
+
+- Carpetas objetivo: ver `docs/architecture/TARGET_ARCHITECTURE.md`. No inventes carpetas nuevas sin actualizar ese documento.
+- `components/ui` = piezas sin lógica de negocio. `features/*` = lógica por funcionalidad. `lib/*` = acceso a servicios y utilidades. `data/*` = sabores y textos del sitio.
+- Los sabores son **datos**, nunca ramas `if (sabor === ...)` repartidas por componentes.
+- Un módulo, una responsabilidad. Si un archivo pasa de ~250 líneas, divídelo.
+- Nada de estado global en `window`. Usa estado de React, contexto o un repositorio en `lib/`.
+- El acceso a Supabase vive solo en `src/lib/supabase/`. Los componentes no llaman a Supabase directamente.
+- No dupliques lógica: antes de escribir una función, busca si ya existe.
+- Mueve archivos con `git mv` para conservar la historia.

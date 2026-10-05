@@ -1,0 +1,21 @@
+---
+description: Contexto de YoguraSo y orden de trabajo. Léela siempre.
+alwaysApply: true
+---
+
+# YoguraSo: contexto
+
+- Marca: **YoguraSo** (no "YogurASO"). Yogurt artesanal del Huila, presentación de 500 ml; 1 litro vendrá después.
+- Hoy: HTML/CSS/JS en `frontend/`, API Express en `backend/`, PostgreSQL en `database/`.
+- Destino: React + TypeScript + Vite en `src/`, Supabase en `supabase/`.
+- El pedido sale por WhatsApp. No hay pasarela de pagos y no se inventa una.
+- El usuario es aprendiz y habla español: explica simple, textos de interfaz y documentos en español.
+
+## Orden obligatorio
+Respaldo, auditoría, mapa, aprobación, sistema de diseño, hero, productos, responsive, movimiento, Supabase, RLS, paridad, pruebas, retiro de lo viejo, rendimiento, SEO.
+
+## Antes de editar
+1. Lee `docs/architecture/YOGURASO_PROJECT_MAP_V2.md` y `docs/design/PLAN_MAESTRO_REDISENO.md`.
+2. Comprueba la rama con `git branch`. Se trabaja en `redesign/yoguraso-v2`, nunca en `main`.
+3. No hagas `git push` ni subas a GitHub sin que el usuario lo pida con esas palabras.
+4. No borres archivos sin mapearlos primero; lo borrado se anota en `docs/architecture/ELIMINADOS.md`.

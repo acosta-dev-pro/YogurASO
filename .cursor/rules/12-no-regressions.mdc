@@ -1,0 +1,15 @@
+---
+description: Cómo no romper lo que ya funciona.
+alwaysApply: true
+---
+
+# Sin regresiones
+
+- No rompas la funcionalidad existente: catálogo, carrito, mensaje de WhatsApp, cuentas, perfil, recuperación, admin.
+- Node/Express **no se retira** hasta que la prueba de paridad pase. Mientras tanto, `backend/`, `database/` y `frontend/js/api.js` no se tocan.
+- No borres archivos sin mapearlos ni sin evidencia de que no se usan (búsqueda de referencias).
+- No hagas reescrituras completas sin un commit de punto de recuperación antes.
+- No cambies la arquitectura sin explicar el impacto y registrar un ADR en `docs/decisions/`.
+- No inventes precios, información nutricional, reseñas ni calificaciones.
+- No dejes TODO críticos sin documentar.
+- Si algo no está claro, pregunta en vez de adivinar.

@@ -1,0 +1,15 @@
+---
+description: Pruebas con Playwright y verificación.
+globs: tests/**,playwright.config.js
+alwaysApply: false
+---
+
+# Pruebas
+
+- Playwright es la herramienta. Los flujos críticos tienen su prueba: inicio, productos, carrito, autenticación, admin, responsive y accesibilidad.
+- Una función no está terminada hasta que su flujo pasa en `npm test`.
+- Pruebas que describen lo que ve la persona: `getByRole`, `getByLabel`, `getByText`. Evita selectores de clases CSS.
+- Comprueba escritorio (1280) y móvil (390).
+- Mantén las pruebas existentes en verde; si una falla por el rediseño, actualízala y explica por qué en el commit.
+- Antes de cerrar una fase: `npm run build` y `npm test`.
+- No uses datos de producción en las pruebas.

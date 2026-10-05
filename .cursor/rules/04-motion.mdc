@@ -1,0 +1,16 @@
+---
+description: Animación y movimiento.
+globs: src/**/*.tsx,src/lib/motion/**
+alwaysApply: false
+---
+
+# Movimiento
+
+- Una animación debe comunicar entrada, estado, relación o respuesta. Si no, no se hace.
+- Entrada de grupos: opacidad 0 a 1 y desplazamiento 16 px a 0, 0,35 a 0,5 s, escalonado de 80 a 120 ms.
+- El fondo del hero **no salta**: cruce suave o interpolación de color.
+- Botones al pasar el cursor: subir 2 px y escala 1,01. Tarjetas: subir 4 px, imagen a 1,02.
+- Interfaz con Framer Motion. GSAP solo para líneas de tiempo o scroll complejos, y nunca las dos para lo mismo.
+- Respeta `prefers-reduced-motion`: reduce o desactiva.
+- Sonido: nunca automático, nunca en hover, con botón de silencio. La carpeta `public/sounds/` se crea solo si se aprueba.
+- 3D: opcional en escritorio, con respaldo 2D obligatorio en móvil y con movimiento reducido. No cargar Three.js en páginas que no lo usan.
