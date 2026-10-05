@@ -1,63 +1,81 @@
-/* brand.css — tokens de marca y tipografía (cargar después de styles.css)
-   Colores y fuentes de YoguraSo. Las hojas viejas leen estos tokens (--brand-main, --font-ui...),
-   así todas las páginas toman el mismo rojo y las mismas fuentes sin cambiar su estructura. */
+/* brand.css — tokens YoguraSo v3 (mockups definitivos)
+   Soft reds/pinks, cream surfaces, pill UI, Emil ease-out. */
 
 :root {
-    /* Marca */
     --brand-red: #E51D2A;
     --brand-red-dark: #C91522;
+    --brand-red-deep: #B01824;
     --brand-red-soft: #F04A54;
+    --brand-pink: #FFE4E8;
+    --brand-pink-soft: #FFF1F3;
+    --brand-blush: #FDF5F5;
     --brand-green: #4FAE45;
-    --cream: #FFF7E8;
+    --cream: #FFF8F4;
+    --cream-deep: #FFF1E6;
     --white: #FFFFFF;
     --ink: #171717;
+    --ink-soft: #3A3330;
 
-    /* Alias que ya usaban las hojas anteriores */
     --brand-main: var(--brand-red);
     --brand-deep: var(--brand-red-dark);
     --brand-warm: var(--brand-red-soft);
-    --surface: #FFF8EC;
-    --surface-soft: #FFF1DC;
+    --surface: var(--cream);
+    --surface-soft: var(--brand-blush);
     --text-main: var(--ink);
-    --text-muted: #5E5850;
-    --border: rgba(23, 23, 23, 0.09);
-    --shadow-sm: 0 1px 2px rgba(23, 23, 23, 0.05);
-    --shadow-md: 0 8px 24px rgba(23, 23, 23, 0.08);
-    --shadow-lg: 0 16px 40px rgba(23, 23, 23, 0.10);
+    --text-muted: #6B635C;
+    --border: rgba(23, 23, 23, 0.08);
 
-    /* Radios */
-    --radius-sm: 10px;
-    --radius: 16px;
+    /* Soft elevation (mockup shadows) */
+    --shadow-xs: 0 1px 2px rgba(23, 23, 23, 0.04);
+    --shadow-sm: 0 1px 3px rgba(23, 23, 23, 0.06), 0 1px 2px rgba(23, 23, 23, 0.04);
+    --shadow-md: 0 8px 24px rgba(229, 29, 42, 0.08), 0 2px 8px rgba(23, 23, 23, 0.04);
+    --shadow-lg: 0 16px 40px rgba(229, 29, 42, 0.10), 0 4px 12px rgba(23, 23, 23, 0.05);
+    --shadow-card: 0 10px 28px rgba(180, 40, 50, 0.08);
+
+    --radius-sm: 12px;
+    --radius: 18px;
     --radius-lg: 24px;
     --radius-xl: 32px;
     --radius-pill: 999px;
 
-    /* Tipografía: dos familias, Fredoka para títulos y Nunito Sans para lectura */
     --font-display: "Fredoka", "Nunito Sans", system-ui, sans-serif;
     --font-brand: "Fredoka", "Nunito Sans", system-ui, sans-serif;
     --font-ui: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-    /* Curvas de movimiento */
-    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    /* Emil Kowalski motion */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --dur-press: 140ms;
+    --dur-ui: 220ms;
+    --dur-panel: 320ms;
 
-    /* Unidad de diseño del hero: 1 unidad = 1 % del ancho en una pantalla 16:9 */
+    /* Flavor washes (product cards) */
+    --wash-fresa: #FFE8EC;
+    --wash-pina: #FFF4D6;
+    --wash-mora: #F3E8F5;
+    --wash-melocoton: #FFE9D9;
+    --wash-frutos-rojos: #FFE4EA;
+    --wash-cafe: #F3E8DE;
+    --wash-guanabana: #EAF6E4;
+    --wash-mango: #FFF0D4;
+
     --s: min(1vw, 1.78svh);
+    --page-max: 1120px;
 }
 
 body {
     font-family: var(--font-ui);
     color: var(--text-main);
     background: var(--surface);
+    background-image: none;
 }
 
 h1, h2, h3 { font-family: var(--font-display); }
 button, input, select, textarea { font-family: inherit; }
 
-/* Anclas: dejan espacio para el menú fijo */
 [id] { scroll-margin-top: 96px; }
 
-/* Foco visible en todo el sitio */
 :focus-visible {
     outline: 3px solid var(--brand-red);
     outline-offset: 3px;
@@ -69,14 +87,52 @@ button, input, select, textarea { font-family: inherit; }
     overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-/* Fondo de las páginas interiores: crema plano, sin manchas de colores */
-body { background-image: none; }
+/* Pill CTA system */
+.ys-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 8px 0 22px;
+    border: none;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #fff;
+    background: var(--brand-red);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-press) var(--ease-out),
+                background var(--dur-ui) var(--ease-out),
+                box-shadow var(--dur-ui) var(--ease-out);
+}
+.ys-pill:hover { background: var(--brand-red-dark); box-shadow: var(--shadow-md); }
+.ys-pill:active { transform: scale(0.97); }
+.ys-pill__arrow {
+    display: grid; place-items: center;
+    width: 34px; height: 34px; margin-left: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+}
+.ys-pill--light {
+    color: var(--brand-red);
+    background: #fff;
+}
+.ys-pill--light .ys-pill__arrow { background: var(--brand-pink); color: var(--brand-red); }
+.ys-pill--ghost {
+    color: var(--brand-red);
+    background: transparent;
+    border: 1.5px solid rgba(229, 29, 42, 0.28);
+    padding-inline: 22px;
+}
 
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    .ys-pill { transition: none; }
+    .ys-pill:active { transform: none; }
 }
 
-/* Botón de silencio (solo existe cuando hay sonidos registrados, ver js/sound.js) */
 .sound-toggle {
     position: fixed; left: 18px; bottom: 18px; z-index: 150;
     width: 44px; height: 44px; padding: 0;
@@ -87,6 +143,8 @@ body { background-image: none; }
     border: 1px solid rgba(23, 23, 23, 0.1);
     border-radius: 50%;
     cursor: pointer;
+    transition: transform var(--dur-press) var(--ease-out);
 }
+.sound-toggle:active { transform: scale(0.97); }
 .sound-toggle svg { width: 22px; height: 22px; }
 .sound-toggle[data-state="on"] .off, .sound-toggle[data-state="off"] .on { display: none; }
