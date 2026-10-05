@@ -86,11 +86,11 @@
 }
 
 .productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
-    transform: scale(1.18);
+    transform: none;
 }
 
 .productos-grid:not(.productos-grid-horizontal) .producto-card:hover .producto-img {
-    transform: scale(1.24);
+    transform: translateY(-3px) scale(1.02);
 }
 
 @media screen and (max-width: 640px) {
@@ -111,10 +111,51 @@
     }
 
     .productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
-        transform: scale(1.2);
+        transform: none;
     }
 
     .productos-grid:not(.productos-grid-horizontal) .producto-card:hover .producto-img {
-        transform: scale(1.25);
+        transform: translateY(-3px) scale(1.02);
     }
 }
+
+/* FIX bottle contain */
+.producto-card .producto-img {
+  width: auto !important;
+  max-width: 78%;
+  height: auto !important;
+  max-height: 92%;
+  aspect-ratio: 320 / 555;
+  object-fit: contain !important;
+  padding: 0 !important;
+}
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-container,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img-wrap {
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 1 / 1.05;
+  display: grid;
+  place-items: center;
+}
+
+
+/* FIX product card bottle size to match mockup density */
+.producto-card.card-v3 .producto-img-container,
+.productos-page-v3 .producto-card.card-v3 .producto-img-container {
+  aspect-ratio: 1 / 1.12 !important;
+  padding: 22px 16px 10px !important;
+}
+.producto-card.card-v3 .producto-img,
+.productos-page-v3 .producto-card.card-v3 .producto-img,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+  width: min(86%, 210px) !important;
+  max-width: 210px !important;
+  max-height: 280px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+.v3-catalog .producto-card.card-v3 .producto-img {
+  width: min(78%, 170px) !important;
+  max-height: 220px !important;
+}
+

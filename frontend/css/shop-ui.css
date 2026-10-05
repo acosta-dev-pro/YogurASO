@@ -1250,3 +1250,6 @@ body.cart-body {
 .toast-error .toast-message strong { color: #9A3B3B !important; }
 .toast-warning .toast-message strong { color: #92400E !important; }
 .toast-info .toast-message strong { color: #1E3A8A !important; }
+
+/* card-v3 override height */
+.producto-card.card-v3{height:auto!important;min-height:0!important;}

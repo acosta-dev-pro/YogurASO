@@ -677,3 +677,225 @@
 }
 .fc [data-fc-qty] span { min-width: 28px; text-align: center; font-weight: 700; }
 .fc-btn-solid { width: 100%; justify-content: space-between; padding-inline: 18px; }
+
+
+/* FIX: never stretch bottle assets (HTML width/height attrs otherwise force tall height) */
+.v3-ingredientes__visual img,
+.v3-envase__stage img,
+.v3-nosotros__visual img,
+.fc-bottle,
+.v3-flavor-card img,
+.v3-mcard__art,
+.producto-card .producto-img,
+.producto-card.card-v3 .producto-img {
+  height: auto !important;
+  max-height: 100%;
+  object-fit: contain !important;
+  object-position: center bottom;
+}
+
+.v3-ingredientes__visual img,
+.v3-envase__stage img,
+.v3-nosotros__visual img {
+  width: min(52%, 280px) !important;
+  max-height: min(72vh, 520px) !important;
+  aspect-ratio: 640 / 1110;
+}
+
+.v3-ingredientes__visual,
+.v3-envase__stage,
+.v3-nosotros__visual {
+  min-height: 420px !important;
+  aspect-ratio: 4 / 5;
+  place-items: end center;
+  padding: 28px 18px 18px;
+}
+
+.v3-mcard__art {
+  width: min(52%, 210px) !important;
+  max-width: 210px !important;
+  height: auto !important;
+  max-height: 78% !important;
+  object-fit: contain !important;
+  right: -2% !important;
+  bottom: 0 !important;
+}
+
+.fc-bottle {
+  width: min(78%, 260px) !important;
+  max-height: min(58vh, 460px) !important;
+  aspect-ratio: 640 / 1110;
+}
+
+.fc-chips {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+}
+.fc-chip {
+  display: grid !important;
+  place-items: center !important;
+  gap: 8px !important;
+  text-align: center !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 14px 10px !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  border: 1px solid rgba(229,29,42,0.12) !important;
+  box-shadow: var(--shadow-xs) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--brand-red-deep) !important;
+  line-height: 1.2 !important;
+}
+.fc-chip i { font-size: 18px; color: var(--brand-red); }
+
+.fc-art {
+  min-height: 460px;
+  aspect-ratio: 4 / 5.2;
+  align-content: center;
+}
+
+.producto-card.card-v3 .producto-img-container {
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 1 / 1.05 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 18px 12px 8px !important;
+}
+.producto-card.card-v3 .producto-img {
+  width: min(72%, 168px) !important;
+  height: auto !important;
+  max-height: 240px !important;
+  aspect-ratio: 320 / 555 !important;
+  transform: none !important;
+  padding: 0 !important;
+}
+.producto-card.card-v3:hover .producto-img { transform: translateY(-4px) scale(1.03) !important; }
+
+.v3-feature, .v3-moment {
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 18px !important;
+  place-content: center !important;
+}
+.v3-moments { grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+.v3-moment { flex-direction: column !important; text-align: center !important; justify-content: center !important; background: #fff !important; color: var(--brand-red-deep) !important; }
+.v3-moment i { color: var(--brand-red); font-size: 18px; }
+
+/* Home sabores denser like mockup 03: 4 featured + ingredients wide */
+.v3-sabores-board {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr 1.15fr 1.15fr 1.15fr 1.55fr;
+  gap: 14px;
+  align-items: stretch;
+}
+.v3-sabores-intro {
+  padding: 22px 18px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.v3-sabores-intro .v3-title { font-size: 1.35rem; margin: 0; }
+.v3-sabores-intro .v3-lead { font-size: 0.88rem; margin: 0; }
+.v3-sabores-intro .v3-filters { flex-direction: column; align-items: stretch; }
+.v3-sabores-intro .v3-filter { width: 100%; justify-content: center; }
+.v3-flavor-grid--featured {
+  display: contents;
+}
+.v3-flavor-grid--featured > li { list-style: none; }
+.v3-flavor-grid--featured .v3-flavor-card {
+  height: 100%;
+  min-height: 320px;
+  justify-content: space-between;
+  padding: 18px 12px 16px;
+}
+.v3-flavor-grid--featured .v3-flavor-card img {
+  width: min(78%, 150px);
+  max-height: 210px;
+  aspect-ratio: 320/555;
+  height: auto;
+  object-fit: contain;
+}
+.v3-ingredientes-card {
+  border-radius: 28px;
+  background: linear-gradient(160deg, #FFF8F4, #FFE8EC);
+  box-shadow: var(--shadow-card);
+  padding: 22px 18px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}
+.v3-ingredientes-card .v3-title { font-size: 1.2rem; margin: 0; }
+.v3-ingredientes-card .v3-feature-row { margin: 0; }
+.v3-ingredientes-card img {
+  position: absolute; right: -8%; bottom: -4%;
+  width: min(46%, 150px); height: auto; max-height: 70%;
+  object-fit: contain; aspect-ratio: 640/1110;
+  filter: drop-shadow(0 12px 18px rgba(180,30,40,0.2));
+  pointer-events: none;
+}
+@media (max-width: 1100px) {
+  .v3-sabores-board { grid-template-columns: 1fr 1fr; }
+  .v3-sabores-intro, .v3-ingredientes-card { grid-column: 1 / -1; }
+  .v3-flavor-grid--featured { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .v3-flavor-grid--featured { grid-template-columns: repeat(2,1fr); }
+  .v3-moments { grid-template-columns: 1fr !important; }
+  .fc-chips { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
+
+
+/* FIX product card bottle size to match mockup density */
+.producto-card.card-v3 .producto-img-container,
+.productos-page-v3 .producto-card.card-v3 .producto-img-container {
+  aspect-ratio: 1 / 1.12 !important;
+  padding: 22px 16px 10px !important;
+}
+.producto-card.card-v3 .producto-img,
+.productos-page-v3 .producto-card.card-v3 .producto-img,
+.productos-grid:not(.productos-grid-horizontal) .producto-card .producto-img {
+  width: min(86%, 210px) !important;
+  max-width: 210px !important;
+  max-height: 280px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+.v3-catalog .producto-card.card-v3 .producto-img {
+  width: min(78%, 170px) !important;
+  max-height: 220px !important;
+}
+
+
+.producto-card.card-v3 .wish-btn i{color:var(--brand-red);font-size:14px;}
+.producto-card.card-v3 .wish-btn .far.fa-heart:before{content:"\f004";}
+
+
+/* FIX larger bottles in catalog cards */
+.productos-page-v3 .productos-grid:not(.productos-grid-horizontal){
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)) !important;
+  gap: 22px !important;
+  max-width: 1180px !important;
+}
+.productos-page-v3 .producto-card.card-v3 .producto-img-container{
+  aspect-ratio: 1 / 1.18 !important;
+  padding: 28px 10px 12px !important;
+}
+.productos-page-v3 .producto-card.card-v3 .producto-img{
+  width: min(92%, 230px) !important;
+  max-width: 230px !important;
+  max-height: 310px !important;
+}
+.producto-card.card-v3 .wish-btn{
+  background:#fff !important;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.producto-card.card-v3 .wish-btn i,
+.producto-card.card-v3 .wish-btn svg{color:#E51D2A!important;opacity:1!important;font-size:15px!important;}
+
