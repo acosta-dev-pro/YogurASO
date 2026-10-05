@@ -125,74 +125,50 @@
     <!-- ========== HOME V3 — mockups 03/04/05 ========== -->
     <section class="v3-sabores" id="sabores" aria-labelledby="v3-sabores-title">
         <div class="v3-wrap">
-            <div class="v3-sabores__head">
-                <div>
+            <div class="v3-sabores-board" id="v3-flavor-grid">
+                <aside class="v3-sabores-intro">
                     <span class="v3-kicker">Nuestros sabores</span>
-                    <h2 class="v3-title" id="v3-sabores-title">Un color para <em>cada antojo</em></h2>
+                    <h2 class="v3-title" id="v3-sabores-title">Nuestros Sabores</h2>
                     <p class="v3-lead">Yogurt artesanal, cremoso y lleno de sabor. Elige el tuyo.</p>
-                </div>
-                <div class="v3-filters" role="tablist" aria-label="Filtros de sabores">
-                    <button type="button" class="v3-filter is-on" data-filter="all">Todos</button>
-                    <button type="button" class="v3-filter" data-filter="frutales">Frutales</button>
-                    <button type="button" class="v3-filter" data-filter="clasicos">Clásicos</button>
-                    <button type="button" class="v3-filter" data-filter="especiales">Especiales</button>
-                </div>
-            </div>
-            <ul class="v3-flavor-grid" id="v3-flavor-grid">
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-fresa)" data-ficha="fresa">
-                    <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="Yogurt Fresa 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Fresa</strong><small>500 ml · Artesanal</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-pina)" data-ficha="pina">
-                    <img src="assets/products/yoguraso-pina-500ml-sm.webp" alt="Yogurt Piña 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Piña</strong><small>500 ml · Artesanal</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-mora)" data-ficha="mora">
-                    <img src="assets/products/yoguraso-mora-500ml-sm.webp" alt="Yogurt Mora 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Mora</strong><small>500 ml · Artesanal</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-melocoton)" data-ficha="melocoton">
-                    <img src="assets/products/yoguraso-melocoton-500ml-sm.webp" alt="Yogurt Melocotón 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Melocotón</strong><small>500 ml · Artesanal</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-frutos-rojos)" data-ficha="frutos-rojos">
-                    <img src="assets/products/yoguraso-frutos-rojos-500ml-sm.webp" alt="Yogurt Frutos rojos 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Frutos rojos</strong><small>500 ml · Artesanal</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="especiales" style="--wash:var(--wash-cafe)" data-ficha="cafe">
-                    <img src="assets/products/yoguraso-cafe-500ml-sm.webp" alt="Yogurt Café 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Café</strong><small>500 ml · Especial</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="especiales" style="--wash:var(--wash-guanabana)" data-ficha="guanabana">
-                    <img src="assets/products/yoguraso-guanabana-500ml-sm.webp" alt="Yogurt Guanábana 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Guanábana</strong><small>500 ml · Especial</small>
-                </a></li>
-                <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-mango)" data-ficha="mango">
-                    <img src="assets/products/yoguraso-mango-500ml-sm.webp" alt="Yogurt Mango 500 ml" width="320" height="555" loading="lazy" decoding="async">
-                    <strong>Mango</strong><small>500 ml · Artesanal</small>
-                </a></li>
-            </ul>
-            <div class="v3-sabores__more">
-                <a class="ys-pill" href="pages/productos.html">Ver más productos<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
-            </div>
-        </div>
-    </section>
-
-    <section class="v3-ingredientes" id="ingredientes" aria-labelledby="v3-ing-title">
-        <div class="v3-wrap v3-ingredientes__grid">
-            <div>
-                <span class="v3-kicker">Ingredientes</span>
-                <h2 class="v3-title" id="v3-ing-title">Ingredientes que hacen <em>la diferencia</em></h2>
-                <p class="v3-lead">Leche fresca, cultivos vivos y fruta real. Sin aditivos innecesarios: sabor limpio y textura cremosa.</p>
-                <div class="v3-feature-row">
-                    <div class="v3-feature"><i class="fas fa-leaf" aria-hidden="true"></i><span>100% Naturales</span></div>
-                    <div class="v3-feature"><i class="fas fa-flask" aria-hidden="true"></i><span>Sin colorantes</span></div>
-                    <div class="v3-feature"><i class="fas fa-dumbbell" aria-hidden="true"></i><span>Alto en proteína</span></div>
-                </div>
-                <a class="ys-pill" href="#nosotros">Nuestra historia<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
-            </div>
-            <div class="v3-ingredientes__visual">
-                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="Botella YoguraSo Fresa" width="640" height="1110" loading="lazy" decoding="async">
+                    <div class="v3-filters" role="tablist" aria-label="Filtros de sabores">
+                        <button type="button" class="v3-filter is-on" data-filter="all">Todos</button>
+                        <button type="button" class="v3-filter" data-filter="frutales">Frutales</button>
+                        <button type="button" class="v3-filter" data-filter="clasicos">Clásicos</button>
+                        <button type="button" class="v3-filter" data-filter="especiales">Especiales</button>
+                    </div>
+                    <a class="ys-pill" href="pages/productos.html" style="margin-top:auto">Ver catálogo<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+                </aside>
+                <ul class="v3-flavor-grid v3-flavor-grid--featured">
+                    <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-fresa)" data-ficha="fresa">
+                        <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="Yogurt Fresa 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                        <strong>Fresa</strong><small>500 ml · Artesanal</small>
+                    </a></li>
+                    <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-pina)" data-ficha="pina">
+                        <img src="assets/products/yoguraso-pina-500ml-sm.webp" alt="Yogurt Piña 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                        <strong>Piña</strong><small>500 ml · Artesanal</small>
+                    </a></li>
+                    <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-mora)" data-ficha="mora">
+                        <img src="assets/products/yoguraso-mora-500ml-sm.webp" alt="Yogurt Mora 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                        <strong>Mora</strong><small>500 ml · Artesanal</small>
+                    </a></li>
+                    <li><a class="v3-flavor-card" href="pages/productos.html" data-cat="frutales" style="--wash:var(--wash-melocoton)" data-ficha="melocoton">
+                        <img src="assets/products/yoguraso-melocoton-500ml-sm.webp" alt="Yogurt Melocotón 500 ml" width="320" height="555" loading="lazy" decoding="async">
+                        <strong>Melocotón</strong><small>500 ml · Artesanal</small>
+                    </a></li>
+                </ul>
+                <article class="v3-ingredientes-card" id="ingredientes" aria-labelledby="v3-ing-title">
+                    <div>
+                        <span class="v3-kicker">Ingredientes</span>
+                        <h2 class="v3-title" id="v3-ing-title">Ingredientes que hacen la diferencia</h2>
+                    </div>
+                    <div class="v3-feature-row">
+                        <div class="v3-feature"><i class="fas fa-leaf" aria-hidden="true"></i><span>100% Naturales</span></div>
+                        <div class="v3-feature"><i class="fas fa-flask" aria-hidden="true"></i><span>Sin colorantes</span></div>
+                        <div class="v3-feature"><i class="fas fa-dumbbell" aria-hidden="true"></i><span>Alto en proteína</span></div>
+                    </div>
+                    <a class="ys-pill" href="#nosotros">Nuestra historia<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
+                    <img src="assets/products/yoguraso-fresa-500ml-sm.webp" alt="" width="320" height="555" loading="lazy" decoding="async" aria-hidden="true">
+                </article>
             </div>
         </div>
     </section>
@@ -255,7 +231,7 @@
     <section class="v3-envase" id="empaque" aria-labelledby="v3-envase-title">
         <div class="v3-wrap v3-envase__grid">
             <div class="v3-envase__stage">
-                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="Envase YoguraSo 500 ml" width="640" height="1110" loading="lazy" decoding="async">
+                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="Envase YoguraSo 500 ml" width="640" height="1110" style="height:auto;object-fit:contain" loading="lazy" decoding="async">
                 <div class="v3-callouts" aria-hidden="true">
                     <div class="v3-callout">Tapa hermética<small>Antiderrames</small></div>
                     <div class="v3-callout">Agarre cómodo<small>Fácil de servir</small></div>
@@ -295,7 +271,7 @@
                 </div>
             </div>
             <div class="v3-nosotros__visual">
-                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="YoguraSo artesanal" width="640" height="1110" loading="lazy" decoding="async">
+                <img src="assets/products/yoguraso-fresa-500ml.webp" alt="YoguraSo artesanal" width="640" height="1110" style="height:auto;object-fit:contain" loading="lazy" decoding="async">
             </div>
         </div>
     </section>

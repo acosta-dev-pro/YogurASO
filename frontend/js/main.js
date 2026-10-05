@@ -137,12 +137,13 @@ function getFilteredProducts() {
             const cat = String(p.categoria || '');
             if (cat === want) return true;
             const slug = matchFlavorSlug(p) || p.slug || '';
-            const map = {
-                fresa: 'Frutales', pina: 'Frutales', mora: 'Frutales', melocoton: 'Frutales',
-                mango: 'Frutales', 'frutos-rojos': 'Frutales',
-                cafe: 'Especiales', guanabana: 'Especiales'
+            const groups = {
+                Frutales: ['fresa','pina','mora','melocoton','mango','frutos-rojos'],
+                'Clásicos': ['fresa','pina','mora','melocoton'],
+                Especiales: ['cafe','guanabana']
             };
-            return map[slug] === want;
+            if (groups[want]) return groups[want].includes(String(slug));
+            return false;
         });
     }
 
@@ -183,8 +184,8 @@ function fillCategoryOptions(products) {
             { id: 'Clásicos', label: 'Clásicos' },
             { id: 'Especiales', label: 'Especiales' }
         ];
-        const usePreset = !cats.length || cats.every((c) => !['Frutales','Clásicos','Especiales'].includes(c));
-        const list = usePreset ? preset : [{ id: 'all', label: 'Todos' }, ...cats.map((c) => ({ id: c, label: c }))];
+        // Always show mockup filter set (Todos/Frutales/Clásicos/Especiales)
+        const list = preset;
         chips.innerHTML = list.map((c) => {
             const on = active === c.id ? 'is-on' : '';
             return `<button type="button" class="chip ${on}" data-cat="${escapeHtml(c.id)}">${escapeHtml(c.label)}</button>`;
@@ -566,7 +567,7 @@ function renderProducts() {
             <article class="producto-card card-v3 ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" style="--producto-card-bg:${wash};animation-delay:${Math.min(index * 0.06, 0.48)}s">
                 <div class="producto-img-container">
                     ${badgeHtml(p, sinStock)}
-                    <button type="button" class="wish-btn" aria-label="Favorito" data-wish="${escapeHtml(p.id)}"><i class="far fa-heart" aria-hidden="true"></i></button>
+                    <button type="button" class="wish-btn" aria-label="Favorito" data-wish="${escapeHtml(p.id)}"><i class="fas fa-heart" aria-hidden="true"></i></button>
                     ${mediaHtml}
                 </div>
                 <div class="producto-info">
