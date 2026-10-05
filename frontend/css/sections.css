@@ -5,7 +5,7 @@
    HTML en index.html (bloques .sx), lógica en js/sections.js, datos en js/product-info.js. */
 
 :root {
-    --sx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --sx-ease: cubic-bezier(0.23, 1, 0.32, 1);
     --sx-pad: clamp(64px, 8vw, 104px);
     --sx-max: 1080px;
     --sx-ink: #171717;
@@ -43,11 +43,11 @@
 [data-ic] svg, .sx-ic { width: 1em; height: 1em; }
 
 /* Revelado al hacer scroll */
-.sx [data-rv] { opacity: 0; transform: translateY(14px); }
+.sx [data-rv] { opacity: 0; transform: translateY(10px); }
 .sx [data-rv].is-in {
     opacity: 1; transform: none;
-    transition: opacity 0.5s var(--sx-ease), transform 0.6s var(--sx-ease);
-    transition-delay: calc(var(--i, 0) * 80ms);
+    transition: opacity 0.4s var(--sx-ease), transform 0.4s var(--sx-ease);
+    transition-delay: calc(var(--i, 0) * 60ms);
 }
 
 /* Formas de fondo: gotas de yogurt desenfocadas que se mueven lento */
@@ -72,6 +72,7 @@
 }
 .sx-round svg { width: 17px; height: 17px; }
 .sx-round:hover { transform: translateY(-2px); background: var(--sx-ink); color: #fff; }
+.sx-round:active { transform: scale(0.97); }
 .sx-round:disabled { opacity: 0.35; pointer-events: none; }
 
 /* Botón de texto con flecha */

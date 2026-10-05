@@ -62,7 +62,7 @@
 .yg-bubbles > b i:nth-child(5) { width: 6%; height: 6%; left: 84%; top: 22%; }
 
 /* Goteo en el borde superior */
-.yg-drip { position: absolute; left: 0; right: 0; top: 0; height: clamp(28px, 4.4vw, 64px); z-index: 0; pointer-events: none; }
+.yg-drip { position: absolute; left: 0; right: 0; top: 0; height: clamp(40px, 5.5vw, 78px); z-index: 0; pointer-events: none; }
 .yg-drip svg { display: block; width: 100%; height: 100%; filter: drop-shadow(0 6px 6px rgba(120, 72, 20, 0.06)); }
 .yg-drip i { position: absolute; top: 72%; width: 8px; height: 10px; margin-left: -4px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; opacity: 0; }
 .yg-live .yg-drip i { animation: ygFall 6.5s var(--dl, 0s) cubic-bezier(0.55, 0, 0.8, 0.4) infinite; }

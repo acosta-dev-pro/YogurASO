@@ -30,7 +30,7 @@
         });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }) : null;
     function watchReveal(root) {
-        (root || document).querySelectorAll('.sx [data-rv]:not(.is-in)').forEach(function (el) {
+        (root || document).querySelectorAll('.sx [data-rv]:not(.is-in), #nosotros [data-rv]:not(.is-in), .productos-catalogo [data-rv]:not(.is-in)').forEach(function (el) {
             if (!io || reduce.matches) el.classList.add('is-in'); else io.observe(el);
         });
     }

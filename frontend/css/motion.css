@@ -3,27 +3,27 @@
    Hover: 200 a 300 ms. Cambios grandes: 400 a 600 ms. Se anima transform y opacity. */
 
 @keyframes revealIn {
-    from { opacity: 0; transform: translateY(14px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: none; }
 }
 
 /* Revelado al hacer scroll (main.js pone --i = posición dentro de su grupo) */
-.reveal-start { opacity: 0; transform: translateY(14px); transition: none; }
+.reveal-start { opacity: 0; transform: translateY(10px); transition: none; }
 .reveal-show {
     opacity: 1; transform: none;
-    animation: revealIn 0.45s var(--ease-out) backwards;
-    animation-delay: calc(var(--i, 0) * 90ms);
+    animation: revealIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
 }
 
 /* Tarjetas de producto del catálogo: entrada escalonada (máx. 8 pasos) */
-.producto-card:not(.producto-skeleton) { animation: revealIn 0.45s var(--ease-out) backwards; }
+.producto-card:not(.producto-skeleton) { animation: revealIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) backwards; }
 /* El retraso de cada tarjeta lo pone main.js (90 ms por tarjeta, máx. 0,63 s) */
 
 /* Tarjetas: sube 4 px, el borde de 1 px se ilumina, sin sombra grande */
 .producto-card, .beneficio-card, .pastel-card {
     transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-soft), border-color 0.28s var(--ease-soft);
 }
-.producto-card:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px rgba(229, 29, 42, 0.35), 0 6px 14px rgba(23, 23, 23, 0.05); }
+.producto-card:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px rgba(229, 29, 42, 0.28), 0 1px 3px rgba(0,0,0,0.08), 0 8px 16px rgba(23,23,23,0.06); }
 .beneficios-grid .beneficio-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.16) !important; }
 .producto-card .producto-img { transition: transform 0.4s var(--ease-out); }
 .producto-card:hover .producto-img { transform: scale(1.02); }
@@ -33,7 +33,7 @@
     transition: transform 0.22s var(--ease-out), background-color 0.22s var(--ease-soft), box-shadow 0.22s var(--ease-soft);
 }
 .btn-primary:hover, .btn-add:hover, .btn-add-cart:hover, .btn-full-catalog:hover { transform: translateY(-4px); }
-.btn-primary:active, .btn-add:active, .btn-add-cart:active, .btn-full-catalog:active { transform: translateY(-1px) scale(0.99); }
+.btn-primary:active, .btn-add:active, .btn-add-cart:active, .btn-full-catalog:active, .checkout-btn:active, .sx-round:active, .sx-link:active, .fq-cta:active, .ns-btn:active { transform: scale(0.97); }
 
 /* Menús desplegables: bajan 8 px con fade de 150 ms */
 .user-dropdown { transform: translateY(-8px); transition: opacity 0.15s ease, transform 0.15s var(--ease-out), visibility 0.15s; }

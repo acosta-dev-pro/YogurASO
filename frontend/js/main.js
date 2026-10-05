@@ -42,7 +42,7 @@ let filters = { q: '', categoria: 'all', sort: 'default' };
 
 /** Animaciones al hacer scroll (beneficios, nosotros, etc.) */
 function aplicarAnimacionesEntrada() {
-    const revealItems = document.querySelectorAll('.beneficio-card, .pastel-card, .nosotros-content, .nosotros-images, .section-title');
+    const revealItems = document.querySelectorAll('.beneficio-card, .pastel-card, .nosotros-content, .nosotros-visual, .ns-process-card, .section-title, .productos-masonry .producto-card');
     if (!revealItems.length || !('IntersectionObserver' in window)) return;
 
     const observer = new IntersectionObserver((entries) => {
@@ -177,10 +177,39 @@ function bindAddButtons(container) {
     if (container.dataset.boundAdd) return;
     container.dataset.boundAdd = '1';
     container.addEventListener('click', (e) => {
+        if (e.target.closest('[data-ficha], .btn-ficha')) return;
+        const addBtn = e.target.closest('.btn-add');
         const card = e.target.closest('.producto-card');
         if (!card || card.classList.contains('producto-skeleton')) return;
         e.preventDefault();
-        openInspect(card.dataset.id);
+        const p = allProducts.find((x) => String(x.id) === String(card.dataset.id));
+        if (p?.local_only || String(card.dataset.id || '').startsWith('local-')) {
+            const slug = card.dataset.slug || matchFlavorSlug(p || {}) || '';
+            if (addBtn && window.Cart && p) {
+                window.Cart.addToCart({
+                    id: p.id,
+                    lineId: `${p.id}::500`,
+                    nombre: p.nombre,
+                    tamano: '500 ml',
+                    precio: Number(p.precio) || 0,
+                    imagen_url: bottleUrlFor(p),
+                    stock: p.stock,
+                    cantidad: 1
+                });
+                return;
+            }
+            if (slug && window.YogFicha) {
+                window.YogFicha.open(slug, card);
+                return;
+            }
+        }
+        if (addBtn || !container.classList.contains('productos-masonry')) {
+            openInspect(card.dataset.id);
+        } else if (card.dataset.slug && window.YogFicha) {
+            window.YogFicha.open(card.dataset.slug, card);
+        } else {
+            openInspect(card.dataset.id);
+        }
     });
 }
 
@@ -379,6 +408,51 @@ function closeInspect() {
     inspectState.product = null;
 }
 
+
+/** Sabores locales (botellas) cuando el backend no trae productos o la imagen es vieja. */
+const FLAVOR_WASH = {
+    fresa: '#FFE6EA', pina: '#FFF4CC', mora: '#F3E0EE', melocoton: '#FFE6D6',
+    'frutos-rojos': '#FFE0E8', cafe: '#F0E6DF', guanabana: '#E7F4E2', mango: '#FFE9CF'
+};
+
+function flavorCatalog() {
+    const flavors = window.YOGUR_FLAVORS || [];
+    return flavors.map((f, i) => ({
+        id: `local-${f.slug}`,
+        nombre: `Yogurt ${f.nombre}`,
+        categoria: 'Yogurt artesanal · 500 ml',
+        precio: 0,
+        descuento: 0,
+        stock: 99,
+        color_fondo: FLAVOR_WASH[f.slug] || '#FFF8F4',
+        imagen_url: `assets/products/yoguraso-${f.slug}-500ml-sm.webp`,
+        slug: f.slug,
+        local_only: true
+    }));
+}
+
+function matchFlavorSlug(p) {
+    const flavors = window.YOGUR_FLAVORS || [];
+    const slug = String(p.slug || p.sabor || '').toLowerCase();
+    if (slug && flavors.some((f) => f.slug === slug)) return slug;
+    const name = String(p.nombre || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    for (const f of flavors) {
+        const n = f.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const s = f.slug.replace(/-/g, ' ');
+        if (name.includes(n) || name.includes(s) || name.includes(f.slug)) return f.slug;
+    }
+    return '';
+}
+
+function bottleUrlFor(p) {
+    const slug = matchFlavorSlug(p);
+    if (slug) return `assets/products/yoguraso-${slug}-500ml-sm.webp`;
+    const url = String(p.imagen_url || '');
+    if (/yoguraso-[\w-]+-500ml/i.test(url)) return url;
+    return url;
+}
+
 /**
  * AQUÍ SE ARMAN Y SE PINTAN LAS CARDS DE PRODUCTO
  * Cada card: imagen, badges (Nuevo / Sin stock), nombre, precio, botón Agregar.
@@ -386,8 +460,15 @@ function closeInspect() {
 function renderProducts() {
     const container = document.getElementById('productos-container');
     if (!container) return;
+    const isHomeMasonry = Boolean(container.classList.contains('productos-masonry'));
 
-    const products = getFilteredProducts();
+    let products = getFilteredProducts();
+    if (!products.length && (isHomeMasonry || !document.getElementById('catalog-search'))) {
+        allProducts = flavorCatalog();
+        filters = { q: '', categoria: 'all', sort: 'default' };
+        products = getFilteredProducts();
+    }
+
     const countEl = document.getElementById('catalog-count');
     if (countEl) {
         countEl.textContent = products.length === 1
@@ -410,18 +491,28 @@ function renderProducts() {
     const cardHtml = (p, index) => {
         const sinStock = Number(p.stock) <= 0;
         const venta = salePrice(p);
-        const tieneImagen = Boolean(String(p.imagen_url || '').trim());
+        const slug = matchFlavorSlug(p) || p.slug || '';
+        const bottle = bottleUrlFor(p);
+        const tieneImagen = Boolean(String(bottle || '').trim());
         const mediaHtml = tieneImagen
-            ? `<img src="${escapeHtml(p.imagen_url)}" alt="${escapeHtml(p.nombre)}" class="producto-img" loading="lazy">`
+            ? `<img src="${escapeHtml(bottle)}" alt="${escapeHtml(p.nombre)}" class="producto-img" loading="lazy" decoding="async" width="320" height="555">`
             : IMG_PLACEHOLDER_HTML;
 
-        const precioHtml = p.descuento > 0
-            ? `<span class="precio"><s class="precio-antes">${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
-            : `<span class="precio" aria-label="Precio">${formatCOP(venta)}</span>`;
-        const colorFondo = /^#[0-9A-Fa-f]{6}$/.test(p.color_fondo || '') ? p.color_fondo : '#FFF8F4';
+        const wash = FLAVOR_WASH[slug] || (/^#[0-9A-Fa-f]{6}$/.test(p.color_fondo || '') ? p.color_fondo : '#FFF8F4');
+        const askPrice = p.local_only || !Number(p.precio);
+        const precioHtml = askPrice
+            ? `<span class="precio is-ask">Consultar</span>`
+            : (p.descuento > 0
+                ? `<span class="precio"><s class="precio-antes">${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
+                : `<span class="precio" aria-label="Precio">${formatCOP(venta)}</span>`);
+
+        const fichaBtn = (isHomeMasonry && slug)
+            ? `<button type="button" class="btn-ficha" data-ficha="${escapeHtml(slug)}" aria-label="Ver ficha de ${escapeHtml(p.nombre)}">Ver ficha</button>`
+            : '';
+        const addLabel = sinStock ? 'Sin stock' : (askPrice ? 'Pedir' : '<i class="fas fa-plus" aria-hidden="true"></i> Agregar');
 
         return `
-            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" style="--producto-card-bg:${colorFondo};animation-delay:${Math.min(index * 0.09, 0.63)}s">
+            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" style="--producto-card-bg:${wash};animation-delay:${Math.min(index * 0.06, 0.48)}s">
                 <div class="producto-img-container">
                     ${badgeHtml(p, sinStock)}
                     ${mediaHtml}
@@ -430,20 +521,23 @@ function renderProducts() {
                     <div class="producto-name-row">
                         <h3>${escapeHtml(p.nombre)}</h3>
                     </div>
-                    <p class="producto-categoria">${escapeHtml(p.categoria || 'Yogur')}</p>
+                    <p class="producto-categoria">${escapeHtml(p.categoria || 'Yogurt artesanal')}</p>
                     <div class="producto-footer">
                         ${precioHtml}
-                        <button type="button"
-                                class="btn-add"
-                                ${sinStock ? 'disabled' : ''}
-                                data-id="${escapeHtml(p.id)}"
-                                data-nombre="${escapeHtml(p.nombre)}"
-                                data-precio="${escapeHtml(p.precio)}"
-                                data-imagen="${escapeHtml(p.imagen_url || '')}"
-                                data-stock="${escapeHtml(p.stock)}"
-                                aria-label="${sinStock ? 'Sin stock' : `Agregar ${escapeHtml(p.nombre)} al carrito`}">
-                            ${sinStock ? 'Sin stock' : '<i class="fas fa-plus" aria-hidden="true"></i> Agregar'}
-                        </button>
+                        <div class="pin-actions">
+                            ${fichaBtn}
+                            <button type="button"
+                                    class="btn-add"
+                                    ${sinStock ? 'disabled' : ''}
+                                    data-id="${escapeHtml(p.id)}"
+                                    data-nombre="${escapeHtml(p.nombre)}"
+                                    data-precio="${escapeHtml(p.precio)}"
+                                    data-imagen="${escapeHtml(bottle || '')}"
+                                    data-stock="${escapeHtml(p.stock)}"
+                                    aria-label="${sinStock ? 'Sin stock' : `Pedir ${escapeHtml(p.nombre)}`}">
+                                ${addLabel}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </article>
@@ -454,6 +548,15 @@ function renderProducts() {
     delete container.dataset.cloned;
     bindProductImageFallbacks(container);
     bindAddButtons(container);
+
+    container.querySelectorAll('[data-ficha]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const slug = btn.getAttribute('data-ficha');
+            if (slug && window.YogFicha) window.YogFicha.open(slug, btn);
+        });
+    });
     setupHomeRail();
 }
 
@@ -500,9 +603,30 @@ async function cargarProductos() {
 
     try {
         allProducts = await fetchProducts();
+        if (!Array.isArray(allProducts) || !allProducts.length) {
+            allProducts = flavorCatalog();
+        } else {
+            // Preferir botella recortada si el nombre/sabor coincide
+            allProducts = allProducts.map((p) => {
+                const bottle = bottleUrlFor(p);
+                const slug = matchFlavorSlug(p);
+                return {
+                    ...p,
+                    imagen_url: bottle || p.imagen_url,
+                    color_fondo: p.color_fondo || FLAVOR_WASH[slug] || p.color_fondo,
+                    slug: p.slug || slug
+                };
+            });
+        }
         fillCategoryOptions(allProducts);
         renderProducts();
     } catch {
+        allProducts = flavorCatalog();
+        if (allProducts.length) {
+            fillCategoryOptions(allProducts);
+            renderProducts();
+            return;
+        }
         container.innerHTML = '<p class="catalog-error">Error al cargar productos. ¿El backend está corriendo?</p>';
         toast('Error al cargar productos', 'error');
     }

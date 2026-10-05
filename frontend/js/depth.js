@@ -26,7 +26,7 @@
         faq:          [{ t: 'swirl', x: -5, y: 78, s: 150, d: 0.9, c: 'cream', r: -18, m: 1 }, { t: 'drop', x: 30, y: 92, s: 26, d: 1.6, c: 'pink' }]
     };
     /* Goteo de yogurt en el borde superior: color de la sección anterior escurriendo sobre esta. */
-    var DRIPS = { empaque: '#FFFFFF', ideas: '#FFFFFF', 'main-content': '#FFFFFF' };
+    var DRIPS = { beneficios: '#FFF3E2', proceso: '#FFFFFF', empaque: '#FFF8EC', conservacion: '#FFFFFF', ideas: '#F3F7FB', nosotros: '#FFF8EC', 'main-content': '#FFF8F4', faq: '#FFFFFF' };
 
     function el(tag, cls) { var n = document.createElement(tag); if (cls) n.className = cls; return n; }
 
