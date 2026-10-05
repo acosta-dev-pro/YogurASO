@@ -22,6 +22,18 @@ const IMG_PLACEHOLDER_HTML = `
     </div>
 `;
 
+const ASSET_BASE = (() => {
+    const path = String(location.pathname || '');
+    return path.includes('/pages/') ? '../' : '';
+})();
+
+function assetUrl(rel) {
+    const s = String(rel || '');
+    if (!s || /^https?:\/\//i.test(s) || s.startsWith('data:')) return s;
+    if (s.startsWith('../') || s.startsWith('/')) return s;
+    return ASSET_BASE + s.replace(/^\.\//, '');
+}
+
 const JAR_SIZES = [
     { id: '1000', label: '1 L', hint: 'Familiar', factor: 3.2 },
     { id: '2000', label: '2 L', hint: 'Mayoreo', factor: 6.4 }
@@ -120,7 +132,18 @@ function getFilteredProducts() {
     }
 
     if (filters.categoria !== 'all') {
-        list = list.filter((p) => String(p.categoria || '') === filters.categoria);
+        const want = String(filters.categoria);
+        list = list.filter((p) => {
+            const cat = String(p.categoria || '');
+            if (cat === want) return true;
+            const slug = matchFlavorSlug(p) || p.slug || '';
+            const map = {
+                fresa: 'Frutales', pina: 'Frutales', mora: 'Frutales', melocoton: 'Frutales',
+                mango: 'Frutales', 'frutos-rojos': 'Frutales',
+                cafe: 'Especiales', guanabana: 'Especiales'
+            };
+            return map[slug] === want;
+        });
     }
 
     switch (filters.sort) {
@@ -154,10 +177,17 @@ function fillCategoryOptions(products) {
 
     if (chips) {
         const active = filters.categoria || 'all';
-        chips.innerHTML = ['all', ...cats].map((c) => {
-            const label = c === 'all' ? 'Todos' : c;
-            const on = active === c ? 'is-on' : '';
-            return `<button type="button" class="chip ${on}" data-cat="${escapeHtml(c)}">${escapeHtml(label)}</button>`;
+        const preset = [
+            { id: 'all', label: 'Todos' },
+            { id: 'Frutales', label: 'Frutales' },
+            { id: 'Clásicos', label: 'Clásicos' },
+            { id: 'Especiales', label: 'Especiales' }
+        ];
+        const usePreset = !cats.length || cats.every((c) => !['Frutales','Clásicos','Especiales'].includes(c));
+        const list = usePreset ? preset : [{ id: 'all', label: 'Todos' }, ...cats.map((c) => ({ id: c, label: c }))];
+        chips.innerHTML = list.map((c) => {
+            const on = active === c.id ? 'is-on' : '';
+            return `<button type="button" class="chip ${on}" data-cat="${escapeHtml(c.id)}">${escapeHtml(c.label)}</button>`;
         }).join('');
         if (!chips.dataset.bound) {
             chips.dataset.bound = '1';
@@ -177,39 +207,54 @@ function bindAddButtons(container) {
     if (container.dataset.boundAdd) return;
     container.dataset.boundAdd = '1';
     container.addEventListener('click', (e) => {
-        if (e.target.closest('[data-ficha], .btn-ficha')) return;
+        const qtyBtn = e.target.closest('[data-qty]');
+        if (qtyBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const wrap = qtyBtn.closest('[data-qty-wrap]');
+            const val = wrap?.querySelector('[data-qty-val]');
+            if (!val) return;
+            const next = Math.max(1, (Number(val.textContent) || 1) + Number(qtyBtn.dataset.qty));
+            val.textContent = String(next);
+            return;
+        }
+        if (e.target.closest('[data-wish]')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const btn = e.target.closest('[data-wish]');
+            const icon = btn.querySelector('i');
+            const on = icon?.classList.contains('fas');
+            if (icon) {
+                icon.classList.toggle('fas', !on);
+                icon.classList.toggle('far', on);
+            }
+            return;
+        }
         const addBtn = e.target.closest('.btn-add');
         const card = e.target.closest('.producto-card');
         if (!card || card.classList.contains('producto-skeleton')) return;
+        if (!addBtn && e.target.closest('[data-ficha], .btn-ficha')) return;
         e.preventDefault();
         const p = allProducts.find((x) => String(x.id) === String(card.dataset.id));
-        if (p?.local_only || String(card.dataset.id || '').startsWith('local-')) {
-            const slug = card.dataset.slug || matchFlavorSlug(p || {}) || '';
-            if (addBtn && window.Cart && p) {
-                window.Cart.addToCart({
-                    id: p.id,
-                    lineId: `${p.id}::500`,
-                    nombre: p.nombre,
-                    tamano: '500 ml',
-                    precio: Number(p.precio) || 0,
-                    imagen_url: bottleUrlFor(p),
-                    stock: p.stock,
-                    cantidad: 1
-                });
-                return;
-            }
-            if (slug && window.YogFicha) {
-                window.YogFicha.open(slug, card);
-                return;
-            }
+        const qty = Number(card.querySelector('[data-qty-val]')?.textContent) || 1;
+        if (addBtn && window.Cart && p) {
+            window.Cart.addToCart({
+                id: p.id,
+                lineId: `${p.id}::500`,
+                nombre: p.nombre,
+                tamano: '500 ml',
+                precio: Number(salePrice(p)) || Number(p.precio) || 0,
+                imagen_url: bottleUrlFor(p),
+                stock: p.stock,
+                cantidad: qty
+            });
+            return;
         }
-        if (addBtn || !container.classList.contains('productos-masonry')) {
-            openInspect(card.dataset.id);
-        } else if (card.dataset.slug && window.YogFicha) {
+        if (!addBtn && card.dataset.slug && window.YogFicha) {
             window.YogFicha.open(card.dataset.slug, card);
-        } else {
-            openInspect(card.dataset.id);
+            return;
         }
+        if (addBtn) openInspect(card.dataset.id);
     });
 }
 
@@ -417,15 +462,20 @@ const FLAVOR_WASH = {
 
 function flavorCatalog() {
     const flavors = window.YOGUR_FLAVORS || [];
-    return flavors.map((f, i) => ({
+    const catOf = {
+        fresa: 'Frutales', pina: 'Frutales', mora: 'Frutales', melocoton: 'Frutales',
+        mango: 'Frutales', 'frutos-rojos': 'Frutales',
+        cafe: 'Especiales', guanabana: 'Especiales'
+    };
+    return flavors.map((f) => ({
         id: `local-${f.slug}`,
-        nombre: `Yogurt ${f.nombre}`,
-        categoria: 'Yogurt artesanal · 500 ml',
-        precio: 0,
+        nombre: f.nombre,
+        categoria: catOf[f.slug] || 'Clásicos',
+        precio: 6900,
         descuento: 0,
         stock: 99,
         color_fondo: FLAVOR_WASH[f.slug] || '#FFF8F4',
-        imagen_url: `assets/products/yoguraso-${f.slug}-500ml-sm.webp`,
+        imagen_url: assetUrl(`assets/products/yoguraso-${f.slug}-500ml-sm.webp`),
         slug: f.slug,
         local_only: true
     }));
@@ -447,10 +497,10 @@ function matchFlavorSlug(p) {
 
 function bottleUrlFor(p) {
     const slug = matchFlavorSlug(p);
-    if (slug) return `assets/products/yoguraso-${slug}-500ml-sm.webp`;
+    if (slug) return assetUrl(`assets/products/yoguraso-${slug}-500ml-sm.webp`);
     const url = String(p.imagen_url || '');
-    if (/yoguraso-[\w-]+-500ml/i.test(url)) return url;
-    return url;
+    if (/yoguraso-[\w-]+-500ml/i.test(url)) return assetUrl(url);
+    return assetUrl(url);
 }
 
 /**
@@ -506,38 +556,44 @@ function renderProducts() {
                 ? `<span class="precio"><s class="precio-antes">${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
                 : `<span class="precio" aria-label="Precio">${formatCOP(venta)}</span>`);
 
-        const fichaBtn = (isHomeMasonry && slug)
-            ? `<button type="button" class="btn-ficha" data-ficha="${escapeHtml(slug)}" aria-label="Ver ficha de ${escapeHtml(p.nombre)}">Ver ficha</button>`
-            : '';
-        const addLabel = sinStock ? 'Sin stock' : (askPrice ? 'Pedir' : '<i class="fas fa-plus" aria-hidden="true"></i> Agregar');
+        const addLabel = sinStock
+            ? 'Sin stock'
+            : (askPrice
+                ? '<i class="fas fa-shopping-cart" aria-hidden="true"></i> Pedir'
+                : '<i class="fas fa-shopping-cart" aria-hidden="true"></i> Agregar al carrito');
 
         return `
-            <article class="producto-card ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" style="--producto-card-bg:${wash};animation-delay:${Math.min(index * 0.06, 0.48)}s">
+            <article class="producto-card card-v3 ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" style="--producto-card-bg:${wash};animation-delay:${Math.min(index * 0.06, 0.48)}s">
                 <div class="producto-img-container">
                     ${badgeHtml(p, sinStock)}
+                    <button type="button" class="wish-btn" aria-label="Favorito" data-wish="${escapeHtml(p.id)}"><i class="far fa-heart" aria-hidden="true"></i></button>
                     ${mediaHtml}
                 </div>
                 <div class="producto-info">
-                    <div class="producto-name-row">
-                        <h3>${escapeHtml(p.nombre)}</h3>
-                    </div>
-                    <p class="producto-categoria">${escapeHtml(p.categoria || 'Yogurt artesanal')}</p>
+                    <h3>${escapeHtml(p.nombre)}</h3>
+                    <p class="producto-categoria">500 ml · ${escapeHtml(p.categoria || 'Yogurt Artesanal')}</p>
+                    <p class="producto-rating" aria-label="Valoración"><i class="fas fa-star" aria-hidden="true"></i> 4.9 <span>(120)</span></p>
                     <div class="producto-footer">
                         ${precioHtml}
-                        <div class="pin-actions">
-                            ${fichaBtn}
-                            <button type="button"
-                                    class="btn-add"
-                                    ${sinStock ? 'disabled' : ''}
-                                    data-id="${escapeHtml(p.id)}"
-                                    data-nombre="${escapeHtml(p.nombre)}"
-                                    data-precio="${escapeHtml(p.precio)}"
-                                    data-imagen="${escapeHtml(bottle || '')}"
-                                    data-stock="${escapeHtml(p.stock)}"
-                                    aria-label="${sinStock ? 'Sin stock' : `Pedir ${escapeHtml(p.nombre)}`}">
-                                ${addLabel}
-                            </button>
+                        <div class="qty-row">
+                            <div class="qty" data-qty-wrap>
+                                <button type="button" data-qty="-1" aria-label="Menos">−</button>
+                                <span data-qty-val>1</span>
+                                <button type="button" data-qty="1" aria-label="Más">+</button>
+                            </div>
                         </div>
+                        <button type="button"
+                                class="btn-add"
+                                ${sinStock ? 'disabled' : ''}
+                                data-id="${escapeHtml(p.id)}"
+                                data-nombre="${escapeHtml(p.nombre)}"
+                                data-precio="${escapeHtml(p.precio)}"
+                                data-imagen="${escapeHtml(bottle || '')}"
+                                data-stock="${escapeHtml(p.stock)}"
+                                data-ficha="${escapeHtml(slug)}"
+                                aria-label="${sinStock ? 'Sin stock' : `Agregar ${escapeHtml(p.nombre)} al carrito`}">
+                            ${addLabel}
+                        </button>
                     </div>
                 </div>
             </article>

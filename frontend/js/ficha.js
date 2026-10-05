@@ -3,6 +3,8 @@
    Lo que no está confirmado se muestra con texto general; nunca se inventan cifras. */
 (function () {
     'use strict';
+    var ASSET_BASE = (String(location.pathname || '').indexOf('/pages/') >= 0) ? '../' : '';
+    function assetUrl(rel) { var s = String(rel || ''); if (!s || /^https?:/i.test(s)) return s; if (s.indexOf('../') === 0 || s.charAt(0) === '/') return s; return ASSET_BASE + s; }
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     var FL = window.YOGUR_FLAVORS || [];
     var I = window.YOG_INFO || {};
@@ -18,32 +20,34 @@
 
     function content(f) {
         var d = (I.sabores && I.sabores[f.slug]) || {};
-        var ingr = d.ingredientes || I.ingredientesBase;
         var sizes = (I.presentaciones && I.presentaciones.length) ? I.presentaciones : ['500 ml'];
-        var base = 'assets/products/yoguraso-' + f.slug + '-500ml';
-        var keep = [
-            I.temperatura ? 'Refrigerado entre ' + esc(I.temperatura) + '.' : 'Siempre refrigerado, lejos del sol.',
-            I.vidaUtilCerradoDias ? 'Cerrado: hasta ' + I.vidaUtilCerradoDias + ' días en la nevera.' : 'Cerrado: hasta la fecha impresa en el envase.',
-            I.vidaUtilAbiertoDias ? 'Abierto: consúmelo en máximo ' + I.vidaUtilAbiertoDias + ' días.' : 'Abierto: bien tapado y en pocos días.'
-        ];
+        var base = assetUrl('assets/products/yoguraso-' + f.slug + '-500ml');
+        var lead = d.nota || ('El equilibrio perfecto entre cremosidad y el sabor natural de ' + f.nombre.toLowerCase() + '.');
+        var price = 6900;
         return '' +
         '<div class="fc-art">' +
-            '<span class="fc-mesh" aria-hidden="true"></span><span class="fc-ring" aria-hidden="true"></span>' +
-            '<img class="fc-bottle" src="' + base + '.webp" srcset="' + base + '-sm.webp 320w, ' + base + '.webp 640w" sizes="(max-width: 760px) 30vw, 200px" alt="' + esc(f.alt) + '" width="640" height="1110" decoding="async">' +
-            '<span class="fc-floor" aria-hidden="true"></span>' +
+            '<span class="fc-badge-pop"><i class="fas fa-heart" aria-hidden="true"></i> Más popular</span>' +
+            '<img class="fc-bottle" src="' + base + '.webp" srcset="' + base + '-sm.webp 320w, ' + base + '.webp 640w" sizes="(max-width: 760px) 42vw, 220px" alt="' + esc(f.alt) + '" width="640" height="1110" decoding="async">' +
         '</div>' +
         '<div class="fc-body">' +
-            '<span class="fc-kicker">Yogurt artesanal</span>' +
+            '<div class="fc-top"><span class="fc-kicker">Yogurt Artesanal</span>' +
+            '<button type="button" class="fc-wish" aria-label="Favorito"><i class="far fa-heart" aria-hidden="true"></i></button></div>' +
             '<h2 class="fc-title" id="fc-title">' + esc(f.nombre) + '</h2>' +
-            (d.nota ? '<p class="fc-lead">' + esc(d.nota) + '</p>' : '<p class="fc-lead">Cremoso, bien frío y con el sabor de ' + esc(f.nombre.toLowerCase()) + ' que te gusta.</p>') +
-            '<div class="fc-chips">' + sizes.map(function (s) { return '<span class="fc-chip">' + ic('glass-water') + esc(s) + '</span>'; }).join('') + '</div>' +
-            ((I.sellosEtiqueta && I.sellosEtiqueta.length) ? '<div class="fc-block"><h3>' + ic('tag') + 'En la etiqueta' + pend(!I.sellosConfirmados) + '</h3><ul class="fc-seals">' + I.sellosEtiqueta.map(function (s) { return '<li>' + ic('check') + esc(s) + '</li>'; }).join('') + '</ul></div>' : '') +
-            '<div class="fc-block"><h3>' + ic('leaf') + 'Ingredientes' + pend(!(ingr && ingr.length)) + '</h3><p>' + (ingr && ingr.length ? esc(ingr.join(', ')) + '.' : 'Leche fresca y cultivos vivos. El detalle de cada sabor está en su etiqueta.') + '</p></div>' +
-            '<div class="fc-block"><h3>' + ic('snowflake') + 'Conservación' + pend(!(I.temperatura && I.vidaUtilCerradoDias && I.vidaUtilAbiertoDias)) + '</h3><ul class="fc-list">' + keep.map(function (k) { return '<li>' + k + '</li>'; }).join('') + '</ul></div>' +
-            '<div class="fc-block"><h3>' + ic('utensils-crossed') + 'Ideas para servir</h3><p>Solo y bien frío, con granola, con fruta picada o en un batido.</p></div>' +
+            '<p class="fc-lead">' + esc(lead) + '</p>' +
+            '<div class="fc-chips">' +
+                '<span class="fc-chip"><i class="fas fa-leaf" aria-hidden="true"></i> 100% Natural</span>' +
+                '<span class="fc-chip"><i class="fas fa-flask" aria-hidden="true"></i> Sin Colorantes</span>' +
+                '<span class="fc-chip"><i class="fas fa-dumbbell" aria-hidden="true"></i> Alto en Proteína</span>' +
+            '</div>' +
+            '<div class="fc-price-row">' +
+                '<div><strong class="fc-price">$' + Number(price).toLocaleString('es-CO') + '</strong>' +
+                '<small class="fc-spec">' + esc(sizes[0]) + ' · Yogurt Artesanal</small></div>' +
+                '<div class="qty" data-fc-qty><button type="button" data-d="-1" aria-label="Menos">−</button><span data-v>1</span><button type="button" data-d="1" aria-label="Más">+</button></div>' +
+            '</div>' +
             '<div class="fc-actions">' +
-                '<a class="fc-btn fc-btn-solid" href="' + wa('Hola YogurASO, quiero pedir yogurt de ' + f.nombre) + '" target="_blank" rel="noopener">' + ic('message-circle') + 'Pedir por WhatsApp</a>' +
-                '<a class="fc-btn fc-btn-ghost" href="pages/productos.html">Ver catálogo ' + ic('arrow-right') + '</a>' +
+                '<button type="button" class="fc-btn fc-btn-solid" data-fc-add data-slug="' + esc(f.slug) + '" data-nombre="' + esc(f.nombre) + '">' +
+                    '<i class="fas fa-shopping-cart" aria-hidden="true"></i> Agregar al carrito <span class="ys-pill__arrow" aria-hidden="true">→</span>' +
+                '</button>' +
             '</div>' +
         '</div>';
     }
@@ -110,6 +114,34 @@
         setTimeout(function () { dlg.close(); if (opener && opener.focus) opener.focus({ preventScroll: true }); }, reduce.matches ? 0 : 260);
     }
     window.YogFicha = { open: open, close: close };
+
+    document.addEventListener('click', function (e) {
+        var qty = e.target.closest('[data-fc-qty] [data-d]');
+        if (qty) {
+            var wrap = qty.closest('[data-fc-qty]');
+            var v = wrap.querySelector('[data-v]');
+            if (v) v.textContent = String(Math.max(1, (Number(v.textContent) || 1) + Number(qty.dataset.d)));
+            return;
+        }
+        var add = e.target.closest('[data-fc-add]');
+        if (!add || !window.Cart) return;
+        var slug = add.getAttribute('data-slug');
+        var nombre = add.getAttribute('data-nombre') || slug;
+        var qtyEl = dlg && dlg.querySelector('[data-fc-qty] [data-v]');
+        var cantidad = qtyEl ? (Number(qtyEl.textContent) || 1) : 1;
+        var base = assetUrl('assets/products/yoguraso-' + slug + '-500ml-sm.webp');
+        window.Cart.addToCart({
+            id: 'local-' + slug,
+            lineId: 'local-' + slug + '::500',
+            nombre: nombre,
+            tamano: '500 ml',
+            precio: 6900,
+            imagen_url: base,
+            stock: 99,
+            cantidad: cantidad
+        });
+        close();
+    });
 
     /* ---------- Preguntas frecuentes: datos reales + apertura suave ---------- */
     function faq() {
