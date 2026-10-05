@@ -238,13 +238,26 @@
 .productos-catalogo--pin .productos-kicker svg { width: 13px; height: 13px; }
 
 .productos-masonry {
-  columns: 4;
-  column-gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
   width: 100%;
 }
 .productos-masonry .producto-card,
 .productos-masonry .producto-skeleton {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+.productos-masonry .producto-card,
+.productos-masonry .producto-skeleton {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
   break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
   margin: 0 0 14px;
   width: 100% !important;
   max-width: none !important;
@@ -269,6 +282,8 @@
   place-items: end center;
   min-height: 180px;
   padding: 18px 12px 8px;
+  overflow: hidden;
+  border-radius: 18px 18px 0 0;
   background:
     radial-gradient(90% 70% at 50% 18%, color-mix(in oklab, var(--producto-card-bg, #FFF8F4), #fff 35%), transparent 70%),
     var(--producto-card-bg, #FFF8F4) !important;
@@ -310,7 +325,20 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 8px;
+}
+.productos-masonry .pin-actions {
+  width: 100%;
+  margin-left: 0 !important;
+  display: flex;
+  gap: 6px;
+}
+.productos-masonry .pin-actions .btn-ficha,
+.productos-masonry .pin-actions .btn-add {
+  flex: 1;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
 }
 .productos-masonry .precio {
   font: 800 13px/1 var(--font-ui);
@@ -363,9 +391,8 @@
 .productos-catalogo--pin .btn-full-catalog:hover { transform: translateY(-3px); background: #E51D2A; }
 .productos-catalogo--pin .btn-full-catalog:active { transform: scale(0.97); }
 
-@media (max-width: 1100px) { .productos-masonry { columns: 3; } }
-@media (max-width: 760px) { .productos-masonry { columns: 2; column-gap: 10px; } }
-@media (max-width: 420px) { .productos-masonry { columns: 1; } }
+@media (max-width: 1100px) { .productos-masonry { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .productos-masonry { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
 
 /* Beneficios: sombra suave + densidad */
 .beneficios-grid .beneficio-card {
@@ -397,4 +424,17 @@
 }
 @media (prefers-reduced-motion: reduce) {
   #nosotros [data-rv], .productos-catalogo [data-rv] { opacity: 1; transform: none; }
+}
+
+/* denser mobile masonry */
+@media (max-width: 760px) {
+  .productos-masonry .producto-img-container { min-height: 140px !important; padding: 12px 8px 4px; }
+  .productos-masonry .producto-card:nth-child(3n) .producto-img-container,
+  .productos-masonry .producto-card:nth-child(3n+1) .producto-img-container,
+  .productos-masonry .producto-card:nth-child(3n+2) .producto-img-container { min-height: 140px; }
+  .productos-masonry .producto-img { max-height: 120px !important; max-width: 70% !important; }
+  .productos-masonry .producto-info { padding: 10px 10px 12px !important; }
+  .productos-masonry .producto-info h3 { font-size: 14px !important; }
+  .productos-masonry .btn-ficha,
+  .productos-masonry .btn-add { min-height: 32px; padding: 0 8px; font-size: 11px; }
 }
