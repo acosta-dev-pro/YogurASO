@@ -549,7 +549,7 @@ function renderProducts() {
             : IMG_PLACEHOLDER_HTML;
 
         const wash = FLAVOR_WASH[slug] || (/^#[0-9A-Fa-f]{6}$/.test(p.color_fondo || '') ? p.color_fondo : '#FFF8F4');
-        const askPrice = p.local_only || !Number(p.precio);
+        const askPrice = !Number(p.precio);
         const precioHtml = askPrice
             ? `<span class="precio is-ask">Consultar</span>`
             : (p.descuento > 0
