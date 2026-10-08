@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="css/sections.css">
     <link rel="stylesheet" href="css/premium-home.css">
     <link rel="stylesheet" href="css/home-v3.css">
+    <link rel="stylesheet" href="css/proceso-3d.css">
     <meta property="og:image" content="assets/products/yoguraso-fresa-500ml.png">
 </head>
 <body data-flavor="fresa" data-hero-fg="light">
@@ -244,24 +245,38 @@
     </section>
 
     <!-- ========== HOME V3 — mockups 03/04/05 ========== -->
-    <section class="v3-proceso" id="proceso" aria-labelledby="v3-proceso-title">
-        <div class="v3-wrap">
-            <div class="v3-proceso__head">
-                <div>
-                    <span class="v3-kicker">Así lo hacemos</span>
-                    <h2 class="v3-title" id="v3-proceso-title">Un proceso responsable y de calidad</h2>
-                    <p class="v3-lead">Del origen a tu mesa: tandas pequeñas, cuidado en cada paso.</p>
+    <section class="p3d" id="proceso" aria-labelledby="v3-proceso-title" data-p3d>
+        <div class="p3d__sticky">
+            <div class="p3d__wrap">
+                <div class="p3d__head" data-p3d-layer="0.15">
+                    <span class="p3d__eyebrow">Así lo hacemos</span>
+                    <h2 class="p3d__title" id="v3-proceso-title">Un proceso responsable y de calidad</h2>
+                    <p class="p3d__lead">Del origen a tu mesa: tandas pequeñas, cuidado en cada paso.</p>
+                    <a class="p3d__more" href="#empaque">Conoce más<span aria-hidden="true">→</span></a>
                 </div>
-                <a class="ys-pill ys-pill--light" href="#empaque">Conoce más<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
             </div>
-            <ol class="v3-steps">
-                <li class="v3-step"><span class="v3-step__n">01</span><h3>Selección</h3><p>Fruta y leche fresca seleccionadas con cuidado.</p></li>
-                <li class="v3-step"><span class="v3-step__n">02</span><h3>Mezcla</h3><p>Integramos cultivos vivos para una base cremosa.</p></li>
-                <li class="v3-step"><span class="v3-step__n">03</span><h3>Fermentación</h3><p>Tiempo y temperatura justos para el sabor.</p></li>
-                <li class="v3-step"><span class="v3-step__n">04</span><h3>Envasado</h3><p>Botella práctica de 500 ml, lista para servir.</p></li>
-                <li class="v3-step"><span class="v3-step__n">05</span><h3>Control</h3><p>Revisión de frescura antes de salir.</p></li>
-                <li class="v3-step"><span class="v3-step__n">06</span><h3>Listo para ti</h3><p>Distribución local en Neiva y Tello.</p></li>
-            </ol>
+            <div class="p3d__stage" data-p3d-stage>
+                <div class="p3d__scene" data-p3d-scene>
+                    <div class="p3d__floor" aria-hidden="true"></div>
+                    <div class="p3d__ring p3d__ring--back" aria-hidden="true"></div>
+                    <div class="p3d__ring p3d__ring--front" aria-hidden="true"></div>
+                    <div class="p3d__fruit p3d__fruit--far p3d__f1" data-p3d-layer="-0.35" aria-hidden="true"><img src="assets/img/proceso/fresa.webp" alt="" width="236" height="276" loading="lazy" decoding="async"></div>
+                    <div class="p3d__fruit p3d__fruit--far p3d__f2" data-p3d-layer="-0.3" aria-hidden="true"><img src="assets/img/proceso/mora.webp" alt="" width="370" height="227" loading="lazy" decoding="async"></div>
+                    <div class="p3d__fruit p3d__fruit--far p3d__f3" data-p3d-layer="-0.35" aria-hidden="true"><img src="assets/img/proceso/mango.webp" alt="" width="334" height="272" loading="lazy" decoding="async"></div>
+                    <div class="p3d__bottle" data-p3d-layer="0.25"><img src="assets/products/yoguraso-fresa-500ml.webp" alt="Botella YoguraSo de fresa 500 ml" width="640" height="1110" loading="lazy" decoding="async"></div>
+                    <div class="p3d__fruit p3d__fruit--mid p3d__f4" data-p3d-layer="0.5" aria-hidden="true"><img src="assets/img/proceso/fresa-mitad.webp" alt="" width="235" height="235" loading="lazy" decoding="async"></div>
+                    <div class="p3d__fruit p3d__fruit--near p3d__f5" data-p3d-layer="0.9" aria-hidden="true"><img src="assets/img/proceso/pina.webp" alt="" width="520" height="359" loading="lazy" decoding="async"></div>
+                    <div class="p3d__fruit p3d__fruit--near p3d__f6" data-p3d-layer="0.8" aria-hidden="true"><img src="assets/img/proceso/fresa.webp" alt="" width="236" height="276" loading="lazy" decoding="async"></div>
+                    <ol class="p3d__steps" data-p3d-steps>
+                        <li class="p3d__step"><span class="p3d__dot">01</span><div class="p3d__txt"><h3>Selección</h3><p>Fruta y leche fresca seleccionadas con cuidado.</p></div></li>
+                        <li class="p3d__step"><span class="p3d__dot">02</span><div class="p3d__txt"><h3>Mezcla</h3><p>Integramos cultivos vivos para una base cremosa.</p></div></li>
+                        <li class="p3d__step"><span class="p3d__dot">03</span><div class="p3d__txt"><h3>Fermentación</h3><p>Tiempo y temperatura justos para el sabor.</p></div></li>
+                        <li class="p3d__step"><span class="p3d__dot">04</span><div class="p3d__txt"><h3>Envasado</h3><p>Botella práctica de 500 ml, lista para servir.</p></div></li>
+                        <li class="p3d__step"><span class="p3d__dot">05</span><div class="p3d__txt"><h3>Control</h3><p>Revisión de frescura antes de salir.</p></div></li>
+                        <li class="p3d__step"><span class="p3d__dot">06</span><div class="p3d__txt"><h3>Listo para ti</h3><p>Distribución local en Neiva y Tello.</p></div></li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -484,5 +499,6 @@
     <script src="js/sections.js"></script>
     <script src="js/ficha.js"></script>
     <script src="js/components/home-filters.js"></script>
+    <script src="js/proceso-3d.js" defer></script>
 </body>
 </html>

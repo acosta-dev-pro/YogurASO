@@ -1,0 +1,90 @@
+/* =========================================================
+   PROCESO 3D — escena con botella y órbita de pasos
+   Base (sin JS / móvil): lista vertical. JS añade .is-3d en >=768px.
+   ========================================================= */
+.p3d {
+    --p3d-bg: #A3131E;
+    --p3d-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    background: radial-gradient(120% 90% at 60% 70%, #B5161F 0%, var(--p3d-bg) 55%, #8E0F19 100%);
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 64px 0 56px;
+}
+.p3d__wrap { width: min(1240px, 100% - 40px); margin: 0 auto; position: relative; z-index: 10; }
+.p3d__head { max-width: 520px; }
+.p3d__eyebrow { display: inline-block; font-weight: 800; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: #FFC9C5; }
+.p3d__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(32px, 4.2vw, 48px); line-height: 1.04; letter-spacing: -.015em; margin: 10px 0 0; color: #fff; }
+.p3d__lead { color: rgba(255,255,255,.8); font-size: 17px; line-height: 1.45; margin: 12px 0 0; }
+.p3d__more { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; color: #fff; font-weight: 800; font-size: 16px; text-decoration: none; border-bottom: 1.5px solid rgba(255,255,255,.4); padding-bottom: 4px; transition: border-color .3s var(--p3d-ease); }
+.p3d__more span { display: inline-block; transition: transform .3s var(--p3d-ease); }
+.p3d__more:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 4px; }
+@media (hover: hover) {
+    .p3d__more:hover { border-color: #fff; }
+    .p3d__more:hover span { transform: translateX(4px); }
+}
+
+/* ---------- Base / móvil ---------- */
+.p3d__stage { position: relative; width: min(1240px, 100% - 40px); margin: 24px auto 0; }
+.p3d__scene { position: relative; }
+.p3d__floor, .p3d__ring { display: none; }
+.p3d__bottle { position: relative; z-index: 4; width: 170px; margin: 0 auto; }
+.p3d__bottle img { display: block; width: 100%; height: auto; transform: rotate(-6deg); filter: drop-shadow(-12px 28px 22px rgba(50,0,6,.5)) drop-shadow(0 6px 6px rgba(50,0,6,.3)); }
+.p3d__fruit { position: absolute; z-index: 5; pointer-events: none; }
+.p3d__fruit img { display: block; width: 100%; height: auto; }
+.p3d__fruit--far img { filter: blur(2.5px) drop-shadow(0 10px 10px rgba(50,0,6,.3)); opacity: .9; }
+.p3d__fruit--mid img { filter: drop-shadow(-8px 18px 14px rgba(50,0,6,.45)); }
+.p3d__fruit--near img { filter: drop-shadow(-12px 28px 20px rgba(50,0,6,.45)); }
+/* móvil: solo dos frutas */
+.p3d__f1, .p3d__f2, .p3d__f3, .p3d__f5 { display: none; }
+.p3d__f4 { width: 76px; top: 10px; left: calc(50% + 50px); transform: rotate(18deg); }
+.p3d__f6 { width: 70px; top: 200px; left: calc(50% - 130px); transform: rotate(-20deg); }
+
+.p3d__steps { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 18px; position: relative; z-index: 6; }
+.p3d__step { display: flex; gap: 14px; align-items: flex-start; }
+.p3d__dot { flex: 0 0 44px; height: 44px; border-radius: 50%; background: #fff; color: #E51D2A; display: grid; place-items: center; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 16px; box-shadow: 0 10px 24px rgba(50,0,6,.35); transition: background-color .4s var(--p3d-ease), color .4s var(--p3d-ease), box-shadow .4s var(--p3d-ease); }
+.p3d__txt h3 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 21px; line-height: 1.08; margin: 2px 0 0; color: #fff; }
+.p3d__txt p { font-size: 14.5px; line-height: 1.4; color: rgba(255,255,255,.82); margin: 5px 0 0; }
+
+/* ---------- Escena 3D (>=768px, activada por JS) ---------- */
+@media (min-width: 768px) {
+    .p3d.is-3d { padding: 0; }
+    .p3d.is-3d .p3d__sticky { position: relative; height: 860px; }
+    .p3d.is-3d .p3d__wrap { padding-top: 72px; }
+    .p3d.is-3d .p3d__head { width: min(500px, 42vw); }
+    .p3d.is-3d .p3d__stage { position: absolute; inset: 0; width: 100%; max-width: 1440px; margin: 0 auto; perspective: 1400px; }
+    .p3d.is-3d .p3d__scene { position: absolute; inset: 0; will-change: transform; }
+    .p3d.is-3d .p3d__floor { display: block; position: absolute; left: var(--cx); top: var(--cy); width: calc(var(--rx) * 1.7); height: calc(var(--rx) * 1.7); margin: calc(var(--rx) * -.85) 0 0 calc(var(--rx) * -.85); border-radius: 50%; transform: rotateX(72deg); background: radial-gradient(circle, rgba(70,0,8,.34) 0 32%, rgba(70,0,8,0) 62%); z-index: 1; }
+    .p3d.is-3d .p3d__ring { display: block; position: absolute; left: calc(var(--cx) - var(--rx)); top: calc(var(--cy) - var(--ry)); width: calc(var(--rx) * 2); height: calc(var(--ry) * 2); border-radius: 50%; pointer-events: none; }
+    .p3d.is-3d .p3d__ring--back { border: 1.5px dashed rgba(255,255,255,.3); z-index: 2; }
+    .p3d.is-3d .p3d__ring--front { border: 2px solid rgba(255,255,255,.7); z-index: 6; clip-path: inset(50% 0 0 0); }
+    .p3d.is-3d .p3d__bottle { position: absolute; z-index: 4; width: auto; margin: 0; height: 500px; left: var(--cx); top: calc(var(--cy) - 455px); transform: translateX(-50%); }
+    .p3d.is-3d .p3d__bottle img { height: 100%; width: auto; filter: drop-shadow(-18px 40px 30px rgba(50,0,6,.5)) drop-shadow(0 6px 6px rgba(50,0,6,.3)); }
+    .p3d.is-3d .p3d__fruit { display: block; will-change: transform; }
+    .p3d.is-3d .p3d__f1 { width: 88px;  left: 86%; top: 290px; transform: rotate(-24deg); z-index: 1; }
+    .p3d.is-3d .p3d__f2 { width: 124px; left: 77%; top: 150px; transform: rotate(14deg); z-index: 1; }
+    .p3d.is-3d .p3d__f3 { width: 74px;  left: 34%; top: 330px; transform: rotate(-20deg); z-index: 1; }
+    .p3d.is-3d .p3d__f4 { width: 130px; left: calc(var(--cx) + 120px); top: 200px; transform: rotate(18deg); z-index: 5; }
+    .p3d.is-3d .p3d__f5 { width: 210px; left: calc(var(--cx) - var(--rx) - 250px); top: calc(var(--cy) + 110px); transform: rotate(-12deg); z-index: 8; }
+    .p3d.is-3d .p3d__f6 { width: 120px; left: calc(var(--cx) + var(--rx) + 30px); top: calc(var(--cy) + 140px); transform: rotate(26deg); z-index: 8; }
+    .p3d.is-3d .p3d__fruit > img { transform: translate3d(var(--px, 0px), var(--py, 0px), 0); transition: transform .9s var(--p3d-ease); }
+
+    .p3d.is-3d .p3d__steps { position: absolute; inset: 0; margin: 0; display: block; z-index: auto; pointer-events: none; }
+    .p3d.is-3d .p3d__step { position: absolute; left: 0; top: 0; width: 240px; pointer-events: auto; cursor: default; will-change: transform, opacity; transform-origin: 22px 22px; }
+    .p3d.is-3d .p3d__step.is-left { flex-direction: row-reverse; text-align: right; transform-origin: 218px 22px; }
+    .p3d.is-3d .p3d__step.is-back .p3d__dot { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.6); box-shadow: none; }
+    .p3d.is-3d .p3d__step.is-active .p3d__dot { background: #171717; color: #fff; border: 0; box-shadow: 0 0 0 8px rgba(255,255,255,.14), 0 14px 30px rgba(50,0,6,.4); }
+}
+@media (min-width: 768px) and (max-width: 1100px) {
+    .p3d.is-3d .p3d__sticky { height: 960px; }
+    .p3d.is-3d .p3d__head { width: min(560px, 100%); }
+    .p3d.is-3d .p3d__step { width: 170px; }
+    .p3d.is-3d .p3d__step.is-left { transform-origin: 148px 22px; }
+    .p3d.is-3d .p3d__f1, .p3d.is-3d .p3d__f3 { display: none; }
+    .p3d.is-3d .p3d__txt p { font-size: 13px; }
+    .p3d.is-3d .p3d__bottle { height: 430px; top: calc(var(--cy) - 395px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .p3d *, .p3d *::before, .p3d *::after { transition: none !important; }
+}
