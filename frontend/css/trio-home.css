@@ -1,0 +1,129 @@
+/* =========================================================
+   TRÍO "Llévalo / Cremoso / Propósito" (debajo del collage)
+   Mismo ancho, gutter y radio que .fcol (collage "Fruta real").
+   ========================================================= */
+.ytrio {
+    --yt-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --yt-r: 16px;              /* = --fcol-r */
+    --yt-gap: 13px;            /* = --fcol-gap */
+    --yt-pad: clamp(18px, 1.6vw, 24px);
+    --yt-fresa: #C91F2B;       /* rojo del hero (sabor fresa) */
+    --yt-fresa-floor: #B31722;
+    background: #FFF8F4;       /* continúa el fondo del collage */
+    padding: 0 0 clamp(40px, 7vh, 64px);
+}
+.ytrio__wrap {
+    width: min(1240px, 100% - 40px);   /* = .fcol__wrap */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--yt-gap);
+}
+.ytrio__card {
+    position: relative; overflow: hidden; isolation: isolate;
+    container-type: inline-size;
+    min-height: clamp(260px, 40vh, 300px);
+    border-radius: var(--yt-r);
+    padding: var(--yt-pad);
+    display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
+    color: #fff;
+}
+.ytrio__body { position: relative; z-index: 2; }
+.ytrio__k {
+    display: inline-flex; align-items: center; min-height: 26px; padding: 0 11px;
+    border-radius: 999px; background: rgba(255,255,255,.18); color: #fff;
+    font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+}
+.ytrio__card h3 {
+    font-family: 'Fredoka', sans-serif; font-weight: 600;
+    font-size: clamp(20px, 1.75vw, 24px); line-height: 1.12; letter-spacing: -.01em;
+    margin: 10px 0 6px; color: inherit;
+}
+.ytrio__card p { margin: 0; font-size: 14px; line-height: 1.45; opacity: .92; }
+.ytrio__cta { position: relative; z-index: 2; min-height: 44px; font-size: 14px; }
+.ytrio__cta .ys-pill__arrow { width: 30px; height: 30px; }
+
+/* ---------- 1. Llévalo: mano sosteniendo la botella desde la esquina ---------- */
+.ytrio__card--llevalo { background: linear-gradient(155deg, #E51D2A 0%, #B01824 100%); justify-content: flex-start; }
+.ytrio__card--llevalo .ytrio__body { max-width: calc(54cqw - var(--yt-pad)); }
+.ytrio__chips {
+    list-style: none; margin: 14px 0 0; padding: 0;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
+}
+.ytrio__chips li {
+    display: inline-flex; align-items: center; gap: 7px;
+    min-height: 30px; padding: 0 12px 0 10px; border-radius: 999px;
+    background: #fff; color: #B01824;
+    font-size: 12px; font-weight: 800; line-height: 1; white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(80, 0, 8, .14);
+}
+.ytrio__chips i { font-size: 12px; color: #E51D2A; width: 14px; text-align: center; }
+.ytrio__hand {
+    position: absolute; z-index: 1; pointer-events: none;
+    width: 60cqw; height: auto;
+    right: -10cqw; bottom: -8cqw;
+    filter: drop-shadow(-10px 14px 18px rgba(70, 0, 6, .28));
+    transform-origin: 85% 100%;
+}
+
+/* ---------- 2. Cremoso: mismo contenedor rosado, botón a la derecha ---------- */
+.ytrio__card--cremoso { background: #FFF8F4; color: var(--ink, #171717); box-shadow: var(--shadow-md); }
+.ytrio__card--cremoso .ytrio__k { background: var(--brand-pink, #FFE4E8); color: var(--brand-red, #E51D2A); }
+.ytrio__card--cremoso h3 { color: var(--brand-red-deep, #B01824); }
+.ytrio__card--cremoso p { color: #6B635C; opacity: 1; }
+.ytrio__card--cremoso .ytrio__cta { align-self: flex-end; }
+
+/* ---------- 3. Propósito: demo sólido con botella de fresa ---------- */
+.ytrio__card--proposito { background: var(--yt-fresa); }
+.ytrio__card--proposito .ytrio__body { max-width: calc(60cqw - var(--yt-pad)); }
+.ytrio__card--proposito p { opacity: .9; }
+.ytrio__card--proposito .ytrio__cta { align-self: flex-start; }
+.ytrio__stage {
+    position: absolute; z-index: 1; top: 0; bottom: 0; right: 2cqw; width: 40cqw;
+    display: grid; place-items: end center; pointer-events: none;
+}
+.ytrio__stage::before {          /* disco sólido detrás de la botella */
+    content: ''; position: absolute; left: 50%; bottom: -18%;
+    width: 120%; aspect-ratio: 1; border-radius: 50%;
+    background: var(--yt-fresa-floor); transform: translateX(-50%);
+}
+.ytrio__bottle {
+    position: relative; display: block;
+    height: 82%; width: auto; max-width: 88%; object-fit: contain;
+    margin-bottom: 6%;
+    filter: drop-shadow(0 14px 16px rgba(60, 0, 6, .32));
+    transform: rotate(4deg); transform-origin: 50% 100%;
+}
+
+@media (hover: hover) {
+    .ytrio__hand, .ytrio__bottle { transition: transform .6s var(--yt-ease); }
+    .ytrio__card--llevalo:hover .ytrio__hand { transform: translate(-4px, -6px) rotate(-2deg); }
+    .ytrio__card--proposito:hover .ytrio__bottle { transform: translateY(-6px) rotate(2deg); }
+}
+
+/* Laptop estrecha / tablet: Llévalo a lo ancho, los otros dos debajo */
+@media (max-width: 1099px) {
+    .ytrio__wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ytrio__card--llevalo { grid-column: 1 / -1; min-height: 250px; }
+    .ytrio__card--llevalo .ytrio__body { max-width: calc(60cqw - var(--yt-pad)); }
+    .ytrio__card--llevalo .ytrio__chips { flex-direction: row; flex-wrap: wrap; }
+    .ytrio__hand { width: 30cqw; right: -3cqw; bottom: -8cqw; }
+    .ytrio__card { min-height: 250px; }
+}
+/* Móvil: una columna */
+@media (max-width: 640px) {
+    .ytrio__wrap { grid-template-columns: 1fr; gap: 14px; }
+    .ytrio__card { min-height: 0; }
+    .ytrio__card--llevalo { min-height: 290px; }
+    .ytrio__card--llevalo .ytrio__body { max-width: calc(60cqw - var(--yt-pad)); }
+    .ytrio__card--llevalo .ytrio__chips { flex-direction: column; flex-wrap: nowrap; }
+    .ytrio__hand { width: 56cqw; right: -12cqw; bottom: -12cqw; }
+    .ytrio__card--cremoso { min-height: 200px; }
+    .ytrio__card--proposito { min-height: 280px; }
+    .ytrio__stage { width: 40cqw; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ytrio__hand, .ytrio__bottle { transition: none !important; }
+    .ytrio__card--llevalo:hover .ytrio__hand { transform: none; }
+    .ytrio__card--proposito:hover .ytrio__bottle { transform: rotate(4deg); }
+}
