@@ -126,7 +126,7 @@ function setupFooterAuthLinks() {
     const logged = isLoggedIn();
     const usuario = getUsuario();
 
-    document.querySelectorAll('.site-footer a[href*="login.html"], .site-footer a[href*="registro.html"]').forEach((link) => {
+    document.querySelectorAll('.site-footer a[href*="login.html"], .site-footer a[href*="registro.html"], [data-ysf] a[href*="login.html"], [data-ysf] a[href*="registro.html"]').forEach((link) => {
         const item = link.closest('li') || link;
         if (logged) {
             item.remove();
@@ -135,7 +135,7 @@ function setupFooterAuthLinks() {
 
     if (!logged) return;
 
-    const cuentaList = Array.from(document.querySelectorAll('.site-footer .footer-col')).find((col) => {
+    const cuentaList = document.querySelector('[data-ysf-account]') || Array.from(document.querySelectorAll('.site-footer .footer-col')).find((col) => {
         const title = col.querySelector('h4')?.textContent || '';
         return /cuenta/i.test(title);
     })?.querySelector('ul');
