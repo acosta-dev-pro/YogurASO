@@ -214,14 +214,20 @@
     width: 100%;
     padding: 12px 14px 16px;
 }
+/* nombre del sabor: Nunito Sans como el texto del recuadro gris del post IG / FAQ
+   (body + !important: brand-pages.css fuerza Fredoka en h3 en las páginas internas) */
+body .hp-card__name,
+body .hp-card__name a {
+    font-family: var(--font-ui, 'Nunito Sans'), -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
 .hp-card__name {
     margin: 0;
-    font-family: var(--font-display, 'Fredoka', sans-serif);
     font-size: 1.08rem;
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
 }
+.hp-card__name a { font-weight: inherit; }
 .hp-card__name a {
     color: inherit;
     text-decoration: none;

@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Productos · encabezado (opción F de Juan, sin botella)
+   Banda gris = mismo gris del recuadro del post IG (.showcase-gray-box, #F3F4F6).
+   Tipografía = sistema de Empaque / post IG:
+   eyebrow Nunito Sans 800 · título Fredoka 600 / -.015em · lead Nunito Sans.
+   A la derecha cuelga del header una cinta pastel con punta redondeada
+   (el mismo gesto de la pestaña roja del logo). Sin botella de mostrario.
+   Se carga al final de productos.html: pisa home-v3.css y brand-pages.css.
+   ========================================================================== */
+.productos-page-v3 .shop-hero {
+    position: relative;
+    overflow: visible;
+    padding: 104px 0 58px;
+    background: #F3F4F6;
+    color: #171717;
+}
+.productos-page-v3 .shop-hero__inner { position: relative; z-index: 1; }
+
+/* cinta pastel colgante (decorativa, sin producto) */
+.productos-page-v3 .shop-hero::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: calc((100% - min(100% - 40px, var(--page-max, 1120px))) / 2 + 36px);
+    width: 176px;
+    height: calc(100% + 26px);
+    border-radius: 0 0 24px 24px;
+    background: var(--fondo-claro-fresa, #F4CBCF);
+    box-shadow: 0 10px 24px -14px rgba(23, 23, 23, .25);
+    pointer-events: none;
+}
+
+.productos-page-v3 .shop-hero .shop-hero__kicker {
+    margin: 0;
+    max-width: none;
+    opacity: 1;
+    color: #E51D2A;
+    font: 800 11.5px/1.2 'Nunito Sans', sans-serif;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+}
+.productos-page-v3 .shop-hero h1 {
+    margin: 8px 0;
+    color: #171717;
+    font-family: 'Fredoka', sans-serif !important;
+    font-weight: 600;
+    font-size: clamp(28px, 2.75vw, 35px);
+    line-height: 1.08;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+}
+.productos-page-v3 .shop-hero h1 + p {
+    margin: 0;
+    max-width: 40ch;
+    opacity: 1;
+    color: #6A6259;
+    font: 400 14.5px/1.5 'Nunito Sans', sans-serif;
+    text-wrap: pretty;
+}
+
+/* barra de filtros: transparente bajo la banda, deja libre la cinta */
+.productos-page-v3 .catalog-toolbar-v3 {
+    margin: 22px auto 0;
+    width: min(100% - 40px, var(--page-max, 1120px));
+    padding: 0 236px 0 0;
+    gap: 10px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.productos-page-v3 .catalog-chips { padding: 0; gap: 6px; }
+.productos-page-v3 .chip {
+    min-height: 32px;
+    padding: 0 14px;
+    border: 0;
+    background: #F3F4F6;
+    color: #374151;
+    font: 700 12.5px/1 'Nunito Sans', sans-serif;
+    font-family: 'Nunito Sans', sans-serif !important; /* brand-pages.css fuerza Fredoka con !important */
+    letter-spacing: .01em;
+}
+.productos-page-v3 .chip.is-on { background: #171717; color: #fff; }
+.productos-page-v3 #catalog-search,
+.productos-page-v3 #filtro-orden {
+    min-height: 32px !important;
+    font: 600 12.5px 'Nunito Sans', sans-serif;
+}
+.productos-page-v3 #catalog-search { min-width: 150px !important; }
+.productos-page-v3 .catalog-count { font: 600 12.5px 'Nunito Sans', sans-serif !important; }
+.productos-page-v3 .productos-catalogo { padding-top: 46px; }
+
+/* tablet: la cinta se angosta */
+@media (max-width: 1024px) {
+    .productos-page-v3 .shop-hero::after { width: 128px; right: 32px; height: calc(100% - 12px); }
+    .productos-page-v3 .catalog-toolbar-v3 { padding-right: 0; }
+}
+/* móvil: sin cinta; banda gris limpia */
+@media (max-width: 720px) {
+    .productos-page-v3 .shop-hero { padding: 92px 0 32px; }
+    .productos-page-v3 .shop-hero::after { display: none; }
+    .productos-page-v3 .catalog-toolbar-v3 { margin-top: 16px; }
+    .productos-page-v3 .productos-catalogo { padding-top: 28px; }
+}
