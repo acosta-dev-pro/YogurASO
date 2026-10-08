@@ -6,8 +6,10 @@
 
 .site-header {
     --hdr-fg: #fff;
-    --hdr-gutter-l: var(--hero-gutter, clamp(24px, 4vw, 56px));
-    --hdr-gutter-r: var(--hero-gutter, clamp(24px, 4vw, 56px));
+    /* Header ancho y abierto: márgenes laterales propios (ya no los del hero),
+       logo pegado a la izquierda, menú + acciones a la derecha. */
+    --hdr-gutter-l: clamp(16px, 2.5vw, 40px);
+    --hdr-gutter-r: clamp(16px, 2.5vw, 40px);
     --hdr-gutter: var(--hdr-gutter-l);
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -117,7 +119,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 .site-header--solid .brand-badge-container {
     position: absolute;
     top: 0;
-    left: var(--hdr-gutter-l, clamp(20px, 4.5vw, 56px));
+    left: 0; /* el enlace del logo ya está en el margen izquierdo; antes se sumaba dos veces */
     width: 120px;
     height: 66px;
     background: var(--brand-red, #E51D2A);
@@ -314,6 +316,11 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 .site-header.is-stuck #nav-items li.active:hover a {
     background: #ffffff;
     color: #000000;
+}
+
+/* Escritorio: menú junto a las acciones, a la derecha */
+@media screen and (min-width: 861px) {
+    .site-header .nav { margin-left: auto; }
 }
 
 /* ---------- Lupa, usuario, carrito (derecha) ---------- */

@@ -26,8 +26,17 @@
 <body>
     <a class="skip-link" href="#texto">Saltar al texto</a>
     <header class="site-header site-header--solid" id="siteHeader">
-        <a class="brand-logo" href="../index.html" aria-label="YoguraSo, ir al inicio">
-            <img class="logo-rojo" src="../assets/brand/logo-primary.svg" alt="YoguraSo" width="3105" height="1119">
+        <a class="brand-logo" href="../index.html" id="brandLogoBtn" aria-label="YoguraSo, ir al inicio">
+            <span class="brand-badge-container">
+                <span class="brand-badge">
+                    <img class="logo-blanco" src="../assets/brand/logo-white.svg" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-oscuro" src="../assets/brand/logo-dark.svg" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-rojo" src="../assets/brand/logo-primary.svg" alt="YoguraSo" width="3105" height="1119">
+                </span>
+                <span class="brand-pull-tab" aria-hidden="true">
+                    <svg class="pull-tab-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                </span>
+            </span>
         </a>
         <nav class="nav" aria-label="Principal">
             <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-items">
