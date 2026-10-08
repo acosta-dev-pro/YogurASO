@@ -86,7 +86,8 @@
     }
     function render(dir) {
         var f = FL[idx], card = dlg.querySelector('#fc-card');
-        dlg.style.setProperty('--c', COLORS[f.slug] || f.dot);
+        dlg.style.setProperty('--c', COLORS[f.slug] || f.dot); // accent (botones / labels)
+        dlg.style.setProperty('--flavor-bg', 'var(--bg-' + f.slug + ')'); // panel tras la botella
         dlg.querySelector('.fc-count').textContent = (idx + 1) + ' / ' + FL.length;
         var paint = function () {
             card.innerHTML = content(f);

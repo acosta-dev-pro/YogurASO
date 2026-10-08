@@ -37,7 +37,6 @@
     window.YogReveal = watchReveal;
 
     /* ---------- Carrusel de sabores ---------- */
-    var COLORS = { fresa: '#BC1D29', pina: '#E3A008', mora: '#74205A', melocoton: '#D9570F', 'frutos-rojos': '#A8143A', cafe: '#55281A', guanabana: '#347A22', mango: '#EC7F0A' };
     var INFO = window.YOG_INFO || {};
     var size = (INFO.presentaciones && INFO.presentaciones[0]) || '500 ml';
 
@@ -48,7 +47,7 @@
         track.innerHTML = flavors.map(function (f, i) {
             var base = 'assets/products/yoguraso-' + f.slug + '-500ml';
             return '<li class="fl-card" data-rv style="--i:' + Math.min(i, 5) + '">' +
-                '<a class="fl-card-hit" href="pages/productos.html" data-ficha="' + f.slug + '" style="--c:' + (COLORS[f.slug] || f.dot) + '" aria-label="Ver ficha de ' + f.nombre + '">' +
+                '<a class="fl-card-hit" href="pages/productos.html" data-ficha="' + f.slug + '" data-flavor="' + f.slug + '" style="--c:var(--bg-' + f.slug + ')" aria-label="Ver ficha de ' + f.nombre + '">' +
                     '<span class="fl-mesh" aria-hidden="true"></span><span class="fl-ring" aria-hidden="true"></span>' +
                     '<span class="fl-num" aria-hidden="true">' + String(i + 1).padStart(2, '0') + '</span>' +
                     '<span class="fl-chip">' + size + '</span>' +

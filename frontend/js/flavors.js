@@ -1,6 +1,6 @@
 /**
  * flavors.js — Sabores del hero (solo los que tienen foto de producto).
- * Los colores de fondo de cada sabor viven en css/hero.css (tokens por [data-flavor]).
+ * Fondos pastel por sabor: --bg-<sabor> en css/brand.css (hero, cards, ficha, rail).
  * Aquí solo va lo que cambia el contenido: nombre, texto alternativo y color del punto del selector.
  * El orden define cuál es el "siguiente" sabor que se ve atrás.
  */

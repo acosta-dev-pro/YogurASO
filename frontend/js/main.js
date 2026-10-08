@@ -455,11 +455,11 @@ function closeInspect() {
 }
 
 
-/** Sabores locales (botellas) cuando el backend no trae productos o la imagen es vieja. */
-const FLAVOR_WASH = {
-    fresa: '#FFE6EA', pina: '#FFF4CC', mora: '#F3E0EE', melocoton: '#FFE6D6',
-    'frutos-rojos': '#FFE0E8', cafe: '#F0E6DF', guanabana: '#E7F4E2', mango: '#FFE9CF'
-};
+/** Fondo pastel del sabor: referencia CSS --bg-<sabor> (brand.css), sin hex duplicado. */
+function flavorBgVar(slug) {
+    const s = String(slug || '');
+    return /^[a-z0-9-]+$/.test(s) ? `var(--bg-${s})` : 'var(--cream, #FFF8F4)';
+}
 
 function flavorCatalog() {
     const flavors = window.YOGUR_FLAVORS || [];
@@ -475,7 +475,7 @@ function flavorCatalog() {
         precio: 6900,
         descuento: 0,
         stock: 99,
-        color_fondo: FLAVOR_WASH[f.slug] || '#FFF8F4',
+        color_fondo: flavorBgVar(f.slug),
         imagen_url: assetUrl(`assets/products/yoguraso-${f.slug}-500ml-sm.webp`),
         slug: f.slug,
         local_only: true
@@ -549,7 +549,9 @@ function renderProducts() {
             ? `<img src="${escapeHtml(bottle)}" alt="${escapeHtml(p.nombre)}" class="producto-img" loading="lazy" decoding="async" width="320" height="555">`
             : IMG_PLACEHOLDER_HTML;
 
-        const wash = FLAVOR_WASH[slug] || (/^#[0-9A-Fa-f]{6}$/.test(p.color_fondo || '') ? p.color_fondo : '#FFF8F4');
+        const wash = (String(p.color_fondo || '').startsWith('var(') ? p.color_fondo : null)
+            || (slug ? flavorBgVar(slug) : null)
+            || 'var(--cream, #FFF8F4)';
         const askPrice = !Number(p.precio);
         const precioHtml = askPrice
             ? `<span class="precio is-ask">Consultar</span>`
@@ -657,7 +659,7 @@ function normalizeProducts(list) {
         return {
             ...p,
             imagen_url: bottle || p.imagen_url,
-            color_fondo: p.color_fondo || FLAVOR_WASH[slug] || p.color_fondo,
+            color_fondo: (String(p.color_fondo || '').startsWith('var(') ? p.color_fondo : null) || (slug ? flavorBgVar(slug) : p.color_fondo),
             slug: p.slug || slug
         };
     });

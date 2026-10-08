@@ -51,15 +51,27 @@
     --dur-ui: 220ms;
     --dur-panel: 320ms;
 
-    /* Flavor washes (product cards) */
-    --wash-fresa: #FFE8EC;
-    --wash-pina: #FFF4D6;
-    --wash-mora: #F3E8F5;
-    --wash-melocoton: #FFE9D9;
-    --wash-frutos-rojos: #FFE4EA;
-    --wash-cafe: #F3E8DE;
-    --wash-guanabana: #EAF6E4;
-    --wash-mango: #FFF0D4;
+    /* Flavor panel backgrounds (pastel, ~88-92% lightness).
+       Surfaces behind product images / flavor panels only.
+       Accents (dots, buttons, prices) keep strong brand colors. */
+    --bg-fresa: #F4CBCF;
+    --bg-pina: #F5E6A6;
+    --bg-mora: #E6CEE3;
+    --bg-melocoton: #F7D4B4;
+    --bg-frutos-rojos: #F2CBD4;
+    --bg-cafe: #E5D3C4;
+    --bg-guanabana: #D4E8C9;
+    --bg-mango: #F5DDB0;
+
+    /* Legacy near-white washes -> alias to pastel panels */
+    --wash-fresa: var(--bg-fresa);
+    --wash-pina: var(--bg-pina);
+    --wash-mora: var(--bg-mora);
+    --wash-melocoton: var(--bg-melocoton);
+    --wash-frutos-rojos: var(--bg-frutos-rojos);
+    --wash-cafe: var(--bg-cafe);
+    --wash-guanabana: var(--bg-guanabana);
+    --wash-mango: var(--bg-mango);
 
     --s: min(1vw, 1.78svh);
     --page-max: 1120px;

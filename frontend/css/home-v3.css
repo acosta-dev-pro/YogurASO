@@ -69,7 +69,7 @@
   display: flex; flex-direction: column; align-items: center;
   padding: 22px 14px 18px;
   border-radius: 28px;
-  background: var(--wash, var(--wash-fresa));
+  background: var(--wash, var(--bg-fresa, var(--wash-fresa)));
   box-shadow: var(--shadow-card);
   text-decoration: none; color: inherit;
   transition: transform var(--dur-ui) var(--ease-out), box-shadow var(--dur-ui) var(--ease-out);

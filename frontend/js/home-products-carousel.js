@@ -21,37 +21,20 @@ const escapeHtml = (v) => window.YogurUtils?.escapeHtml?.(v)
 const formatCOP = (n) => window.YogurUtils?.formatCOP?.(n) || `$${Number(n || 0).toLocaleString('es-CO')}`;
 
 const PRODUCT_PAGE = 'pages/productos.html';
-const FALLBACK_COLOR = '#E51D2A'; // --brand-red
 const AUTO_MS = 5600;
 const IDLE_AFTER_TOUCH_MS = 9000;
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-/* ---------- color helpers (usa el color "dot" de flavors.js) ---------- */
-function hexToRgb(hex) {
-    const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
-    if (!m) return null;
-    const n = parseInt(m[1], 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-function luminance([r, g, b]) {
-    const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
-    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
-}
-const contrast = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-const toHex = (rgb) => `#${rgb.map((c) => Math.round(c).toString(16).padStart(2, '0')).join('')}`;
-
-/** Color del sabor + tono de texto sobre el panel + tinta legible sobre blanco. */
+/* ---------- panel color: CSS --bg-<sabor> (brand.css), never a hardcoded hex ---------- */
 function flavorTheme(slug) {
-    const flavor = (window.YOGUR_FLAVORS || []).find((f) => f.slug === slug);
-    const color = hexToRgb(flavor?.dot) ? flavor.dot : FALLBACK_COLOR;
-    const rgb = hexToRgb(color);
-    const tone = luminance(rgb) > 0.4 ? 'light' : 'dark';
-    let ink = rgb;
-    for (let i = 0; i < 12 && contrast(luminance(ink), 1) < 4.6; i += 1) {
-        ink = ink.map((c) => c * 0.88);
-    }
-    return { color, tone, ink: toHex(ink) };
+    const s = String(slug || '');
+    const safe = /^[a-z0-9-]+$/.test(s) ? s : '';
+    return {
+        color: safe ? `var(--bg-${safe})` : 'var(--brand-pink, #FFE4E8)',
+        tone: 'light', // pastel panels → dark text
+        ink: 'var(--ink, #171717)'
+    };
 }
 
 /* ---------- markup ---------- */

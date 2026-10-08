@@ -1,6 +1,6 @@
 /* hero.css — portada YoguraSo (mockup: docs/design/reference/mockup-hero.png)
    Reglas del diseño:
-   - Fondo de escenario de producto sólido, vibrante y saturado por sabor.
+   - Fondo de escenario pastel por sabor (tokens --bg-* de brand.css).
    - Mesa de estudio integrada con horizonte suave y reflejo realista de botellas.
    - Columna izquierda limpia con título, subtítulo, texto promocional y ticket CTA.
    - Carrusel físico 3D de 3 slots con transición fluida. */
@@ -10,25 +10,56 @@
     --s: clamp(10px, 1.1vw, 16px);
 }
 
-/* ---------- Tokens por sabor (vibrantes y puros) ----------
-   --hero-bg    pared de fondo sólida y saturada
-   --hero-floor mesa de estudio integrada
-   --hero-ink   acento oscuro del botón ticket */
+/* ---------- Tokens por sabor (pastel profesional via --bg-* de brand.css) ----------
+   --hero-bg    pared de fondo pastel del sabor (var(--bg-<sabor>))
+   --hero-floor mesa un tono mas profundo del mismo pastel
+   --hero-ink   tinta oscura tintada (texto legible sobre pastel)
+   --hero-fg    texto del hero = tinta oscura */
 body[data-flavor] {
-    --hero-fg: #fff;
-    --hero-ts: 0 1px 2px rgba(0, 0, 0, 0.14), 0 8px 28px rgba(0, 0, 0, 0.12);
+    --hero-fg: var(--hero-ink);
+    --hero-ts: none;
     --nav-active: var(--hero-ink);
 }
-body[data-flavor="fresa"]        { --hero-bg: #C91F2B; --hero-floor: #B31722; --hero-ink: #8F0E17; }
-body[data-flavor="pina"]         { --hero-bg: #E89E00; --hero-floor: #D99000; --hero-ink: #754B00;
-                                   --hero-ts: 0 1px 2px rgba(90, 45, 0, 0.35), 0 6px 22px rgba(90, 45, 0, 0.28); }
-body[data-flavor="mora"]         { --hero-bg: #6B1D53; --hero-floor: #5D1446; --hero-ink: #3F092E; }
-body[data-flavor="melocoton"]    { --hero-bg: #D9560F; --hero-floor: #C64906; --hero-ink: #8A2D00; }
-body[data-flavor="frutos-rojos"] { --hero-bg: #A31238; --hero-floor: #910D2F; --hero-ink: #65051E; }
-body[data-flavor="cafe"]         { --hero-bg: #522518; --hero-floor: #451D12; --hero-ink: #2C1008; }
-body[data-flavor="guanabana"]    { --hero-bg: #2E731B; --hero-floor: #256314; --hero-ink: #144009; }
-body[data-flavor="mango"]        { --hero-bg: #E87A00; --hero-floor: #D66D00; --hero-ink: #7A3700;
-                                   --hero-ts: 0 1px 2px rgba(90, 35, 0, 0.35), 0 6px 22px rgba(90, 35, 0, 0.26); }
+body[data-flavor="fresa"] {
+    --hero-bg: var(--bg-fresa);
+    --hero-floor: color-mix(in srgb, var(--bg-fresa) 86%, #8F0E17);
+    --hero-ink: #8F0E17;
+}
+body[data-flavor="pina"] {
+    --hero-bg: var(--bg-pina);
+    --hero-floor: color-mix(in srgb, var(--bg-pina) 86%, #754B00);
+    --hero-ink: #754B00;
+}
+body[data-flavor="mora"] {
+    --hero-bg: var(--bg-mora);
+    --hero-floor: color-mix(in srgb, var(--bg-mora) 86%, #3F092E);
+    --hero-ink: #3F092E;
+}
+body[data-flavor="melocoton"] {
+    --hero-bg: var(--bg-melocoton);
+    --hero-floor: color-mix(in srgb, var(--bg-melocoton) 86%, #8A2D00);
+    --hero-ink: #8A2D00;
+}
+body[data-flavor="frutos-rojos"] {
+    --hero-bg: var(--bg-frutos-rojos);
+    --hero-floor: color-mix(in srgb, var(--bg-frutos-rojos) 86%, #65051E);
+    --hero-ink: #65051E;
+}
+body[data-flavor="cafe"] {
+    --hero-bg: var(--bg-cafe);
+    --hero-floor: color-mix(in srgb, var(--bg-cafe) 86%, #2C1008);
+    --hero-ink: #2C1008;
+}
+body[data-flavor="guanabana"] {
+    --hero-bg: var(--bg-guanabana);
+    --hero-floor: color-mix(in srgb, var(--bg-guanabana) 86%, #144009);
+    --hero-ink: #144009;
+}
+body[data-flavor="mango"] {
+    --hero-bg: var(--bg-mango);
+    --hero-floor: color-mix(in srgb, var(--bg-mango) 86%, #7A3700);
+    --hero-ink: #7A3700;
+}
 
 /* ---------- Estructura del Hero ---------- */
 .hero {
@@ -144,9 +175,9 @@ body[data-flavor="mango"]        { --hero-bg: #E87A00; --hero-floor: #D66D00; --
     font-size: clamp(3.6rem, 5.8vw, 6.5rem);
     line-height: 0.88;
     letter-spacing: -0.035em;
-    color: #fff;
+    color: var(--hero-fg);
     text-shadow: var(--hero-ts);
-    transition: text-shadow var(--t-color) var(--ease-soft);
+    transition: color var(--t-color) var(--ease-soft), text-shadow var(--t-color) var(--ease-soft);
     will-change: transform;
     transform-origin: center center;
     z-index: 2;
@@ -163,9 +194,9 @@ body[data-flavor="mango"]        { --hero-bg: #E87A00; --hero-floor: #D66D00; --
     font-weight: 400;
     font-size: clamp(1.25rem, 1.8vw, 2rem);
     line-height: 1.2;
-    color: #fff;
+    color: var(--hero-fg);
     text-shadow: var(--hero-ts);
-    transition: text-shadow var(--t-color) var(--ease-soft);
+    transition: color var(--t-color) var(--ease-soft), text-shadow var(--t-color) var(--ease-soft);
 }
 .hero-promo-desc {
     margin: clamp(8px, 1.2vh, 14px) 0 0;
@@ -173,7 +204,7 @@ body[data-flavor="mango"]        { --hero-bg: #E87A00; --hero-floor: #D66D00; --
     font-weight: 400;
     font-size: clamp(0.92rem, 1.1vw, 1.08rem);
     line-height: 1.45;
-    color: rgba(255, 255, 255, 0.94);
+    color: color-mix(in srgb, var(--hero-fg) 78%, transparent);
     max-width: 24em;
     text-shadow: var(--hero-ts);
 }
