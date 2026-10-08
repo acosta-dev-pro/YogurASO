@@ -81,7 +81,7 @@
 .ytrio__card--proposito {
     --yt-sabor: var(--hero-bg, var(--yt-fresa));
     --yt-sabor-disc: color-mix(in srgb, var(--yt-sabor) 84%, #000);
-    --yt-ink: #fff;
+    --yt-ink: color-mix(in srgb, var(--hero-ink, #3a1c00) 45%, #000); /* default dark: pasteles */
     background-color: var(--yt-sabor);
     color: var(--yt-ink);
     transition: background-color .7s var(--yt-ease), color .5s var(--yt-ease);

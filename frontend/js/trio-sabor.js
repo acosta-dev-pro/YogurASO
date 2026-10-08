@@ -3,6 +3,7 @@
  * Escucha el evento `yg:flavorchange` (hero.js → setTheme) y, al cargar,
  * lee body[data-flavor]. Colores: tokens --hero-bg de css/hero.css.
  * Botellas: assets/products/yoguraso-<slug>-500ml.webp (mismo origen que hero.js).
+ * Tras pasteles (--bg-* en brand.css), el fondo es claro: tinta oscura.
  */
 (function () {
     'use strict';
@@ -14,6 +15,7 @@
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var pending = null;
     var busy = false;
+    var probe = null;
 
     function known(slug) {
         var list = window.YOGUR_FLAVORS;
@@ -24,12 +26,30 @@
         return null;
     }
 
-    /* Contraste WCAG del blanco sobre el color del sabor (token --hero-bg del hero). */
-    function whiteContrast(hex) {
-        var m = /^#?([0-9a-f]{6})$/i.exec((hex || '').trim());
-        if (!m) return 21;
-        var n = parseInt(m[1], 16);
-        var ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (v) {
+    /** Resuelve var(--hero-bg) a rgb() (getPropertyValue no expande custom props). */
+    function resolvedHeroBg() {
+        if (!probe) {
+            probe = document.createElement('span');
+            probe.setAttribute('aria-hidden', 'true');
+            probe.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;background-color:var(--hero-bg,#F4CBCF)';
+            document.body.appendChild(probe);
+        }
+        return getComputedStyle(probe).backgroundColor || '';
+    }
+
+    /** Contraste WCAG del blanco sobre un color css (hex o rgb/rgba). */
+    function whiteContrast(cssColor) {
+        var r, g, b, m;
+        m = /^#?([0-9a-f]{6})$/i.exec((cssColor || '').trim());
+        if (m) {
+            var n = parseInt(m[1], 16);
+            r = (n >> 16) & 255; g = (n >> 8) & 255; b = n & 255;
+        } else {
+            m = /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i.exec(cssColor || '');
+            if (!m) return 1; /* sin color legible → asumir claro → tinta oscura */
+            r = +m[1]; g = +m[2]; b = +m[3];
+        }
+        var ch = [r, g, b].map(function (v) {
             v /= 255;
             return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
         });
@@ -39,8 +59,8 @@
 
     function paint(flavor) {
         card.dataset.sabor = flavor.slug;
-        var bg = getComputedStyle(document.body).getPropertyValue('--hero-bg');
-        card.dataset.ink = whiteContrast(bg) < 3 ? 'dark' : 'light';
+        /* Pasteles: blanco sobre --hero-bg casi nunca pasa; default dark. */
+        card.dataset.ink = whiteContrast(resolvedHeroBg()) < 3 ? 'dark' : 'light';
         if (!bottle) return;
         bottle.src = base + flavor.slug + '-500ml.webp';
         bottle.alt = flavor.alt || ('Yogurt artesanal de ' + flavor.nombre + ', 500 ml');
