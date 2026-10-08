@@ -1,13 +1,16 @@
 /* ysf-contacto.css: sección "Contacto" del home (scope .ysc), justo antes del footer.
    Tipografía de #empaque: eyebrow Nunito Sans 800 / 11.5px / .2em, título Fredoka 600,
-   textos Nunito Sans 400 e ítems con negrita 800 y borde rojo de 2px.
+   textos Nunito Sans 400 e ítems con negrita 800. Sin rojo: todo neutro; el único
+   color es el botón verde de WhatsApp.
    Solo se anima transform/opacity con cubic-bezier(.23,1,.32,1). */
 .ysc{
-  --ysc-red:var(--brand-red,#E51D2A);
   --ysc-ink:var(--ink,#171717);
+  --ysc-ink2:#3A3330;
+  --ysc-wa:#25D366;
+  --ysc-wa-hover:#1EBE5D;
   --ysc-muted:#6A6259;
-  --ysc-line:rgba(23,23,23,.12);
-  --ysc-field:#FFFCFA;
+  --ysc-line:rgba(23,23,23,.14);
+  --ysc-field:#fff;
   --ysc-max:var(--page-max,1120px);
   --ysc-ease:cubic-bezier(.23,1,.32,1);
   --ysc-body:"Nunito Sans",sans-serif;
@@ -27,13 +30,13 @@
 }
 
 /* Encabezado (#empaque) */
-.ysc .ysc-eyebrow{display:inline-block;font:800 11.5px/1.2 var(--ysc-body);letter-spacing:.2em;text-transform:uppercase;color:var(--ysc-red)}
+.ysc .ysc-eyebrow{display:inline-block;font:800 11.5px/1.2 var(--ysc-body);letter-spacing:.2em;text-transform:uppercase;color:var(--ysc-muted)}
 .ysc .ysc-title{margin:6px 0 6px;font:600 clamp(24px,2.35vw,31px)/1.08 "Fredoka",sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
 .ysc .ysc-lead{max-width:44ch;color:var(--ysc-muted);font-size:14.5px;line-height:1.5}
 
 /* Datos (llamadas de #empaque) */
 .ysc-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 18px;margin-top:20px}
-.ysc-detail{padding-left:11px;border-left:2px solid var(--ysc-red);min-width:0}
+.ysc-detail{min-width:0}
 .ysc-detail b{display:block;font-size:15px;font-weight:800;line-height:22px;color:var(--ysc-ink)}
 .ysc-detail span,.ysc-detail .ysc-link{font-size:12.5px;line-height:1.35;color:var(--ysc-muted)}
 .ysc-link{position:relative;display:inline-block;color:var(--ysc-muted);text-decoration:none;overflow-wrap:anywhere}
@@ -42,34 +45,34 @@
 .ysc-link:hover::after{transform:scaleX(1);transform-origin:left}
 .ysc-arrow{display:inline-block;margin-left:4px;transition:transform .45s var(--ysc-ease)}
 .ysc-link:hover .ysc-arrow{transform:translate(2px,-2px)}
-.ysc a:focus-visible,.ysc button:focus-visible{outline:2px solid var(--ysc-red);outline-offset:3px;border-radius:6px}
+.ysc :focus-visible{outline:2px solid var(--ysc-ink);outline-offset:3px}
+.ysc a:focus-visible{border-radius:6px}
 
 /* Formulario */
-.ysc-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 14px;margin-top:24px;padding-top:22px;border-top:1px solid var(--ysc-line)}
-.ysc-field{display:grid;gap:6px;min-width:0}
+.ysc-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}
+.ysc-field{display:grid;gap:5px;min-width:0}
 .ysc-field--full{grid-column:1/-1}
 .ysc-field label{font-size:12.5px;font-weight:800;color:var(--ysc-ink)}
 .ysc-opt{font-weight:400;color:var(--ysc-muted)}
 .ysc-field input,.ysc-field textarea{
-  width:100%;margin:0;padding:11px 14px;border:1px solid var(--ysc-line);border-radius:14px;
+  width:100%;margin:0;padding:10px 12px;border:1px solid var(--ysc-line);border-radius:10px;
   background:var(--ysc-field);color:var(--ysc-ink);font:400 14.5px/1.4 var(--ysc-body);
   -webkit-appearance:none;appearance:none;
 }
-.ysc-field textarea{resize:vertical;min-height:104px}
-.ysc-field input:focus,.ysc-field textarea:focus{outline:none;border-color:var(--ysc-ink);box-shadow:0 0 0 3px rgba(23,23,23,.08);background:#fff}
-.ysc-field [aria-invalid="true"]{border-color:#B01824;box-shadow:0 0 0 3px rgba(229,29,42,.12)}
-.ysc-err{color:#B01824;font-size:12.5px;font-weight:800;line-height:1.35}
+.ysc-field textarea{resize:vertical;min-height:96px}
+.ysc-field input:focus,.ysc-field textarea:focus{outline:none;border-color:var(--ysc-ink);box-shadow:0 0 0 1px var(--ysc-ink)}
+.ysc-field [aria-invalid="true"]{border-color:var(--ysc-ink2);border-style:dashed}
+.ysc-err{color:var(--ysc-ink2);font-size:12.5px;font-weight:800;line-height:1.35}
 .ysc-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:2px}
 .ysc-submit{
-  display:inline-flex;align-items:center;gap:10px;min-height:46px;padding:0 20px 0 16px;
-  border:0;border-radius:999px;background:var(--ysc-red);color:#fff;
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px 0 16px;
+  border:0;border-radius:999px;background:var(--ysc-wa);color:#fff;
   font:800 14px/1 var(--ysc-body);cursor:pointer;
-  box-shadow:0 10px 22px -12px rgba(229,29,42,.7);
   transition:transform .3s var(--ysc-ease);
 }
+.ysc-submit:hover{background:var(--ysc-wa-hover)}
 .ysc-submit svg{width:17px;height:17px;fill:currentColor}
-.ysc-submit-arrow{transition:transform .5s var(--ysc-ease)}
-.ysc-submit:hover .ysc-submit-arrow{transform:translateX(4px)}
+.ysc-submit-arrow{display:none}
 .ysc-submit:active{transform:scale(.97)}
 .ysc-note{color:var(--ysc-muted);font-size:12.5px}
 .ysc-status{grid-column:1/-1;font-size:12.5px;font-weight:800;color:var(--ysc-ink)}
@@ -89,15 +92,15 @@
   background:repeating-linear-gradient(0deg,transparent 0 31px,rgba(23,23,23,.04) 31px 32px),
     repeating-linear-gradient(90deg,transparent 0 31px,rgba(23,23,23,.04) 31px 32px),#FAF6F3;
 }
-.ysc-map .nt-ico-lg{width:30px;height:30px}
+.ysc-map .nt-ico-lg{width:30px;height:30px;color:var(--ysc-ink2)}
 .ysc-map .nt-embed-ph strong{font:600 17px/1.2 "Fredoka",sans-serif}
 .ysc-map .nt-btn{min-height:38px;padding:0 16px;border-radius:999px;font:800 13px/1 var(--ysc-body);cursor:pointer;transition:transform .3s var(--ysc-ease)}
-.ysc-map .nt-btn-solid{background:var(--ysc-red);border:1px solid var(--ysc-red);color:#fff}
+.ysc-map .nt-btn-solid{background:var(--ysc-ink);border:1px solid var(--ysc-ink);color:#fff}
 .ysc-map .nt-btn-ghost{background:#fff;border:1px solid rgba(23,23,23,.16);color:var(--ysc-ink)}
 .ysc-map .nt-btn:active{transform:scale(.97)}
 .ysc-map-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px;padding:12px 18px;border-top:1px solid rgba(23,23,23,.08);font-size:13px}
 .ysc-map-place{display:flex;align-items:center;gap:7px;font-weight:800}
-.ysc-map-place svg{width:15px;height:15px;fill:none;stroke:var(--ysc-red);stroke-width:1.9;stroke-linejoin:round}
+.ysc-map-place svg{width:15px;height:15px;fill:none;stroke:var(--ysc-ink2);stroke-width:1.9;stroke-linejoin:round}
 
 /* Entrada: solo con .ysc--js; el estado oculto es instantáneo y la entrada anima */
 .ysc--js .ysc-rv{opacity:0;transform:translate3d(0,16px,0)}
