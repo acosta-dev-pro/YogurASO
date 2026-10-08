@@ -471,19 +471,17 @@
         var scale = pxScale();
         var sY = window.scrollY || window.pageYOffset || 0;
         var sX = window.scrollX || window.pageXOffset || 0;
-        var wasWrapHidden = showcaseBottleWrap.style.visibility === 'hidden';
-        if (wasWrapHidden) showcaseBottleWrap.style.visibility = '';
         var tr = showcaseBottleWrap.getBoundingClientRect();
-        if (wasWrapHidden) showcaseBottleWrap.style.visibility = 'hidden';
         if (tr.width > 2 && tr.height > 2) targetDoc = docBox(tr, sX, sY, scale);
 
         winHeight = window.innerHeight;
         var boxR = showcaseRedBox.getBoundingClientRect();
         var boxCenterDoc = boxR.top / scale + sY + (boxR.height / scale) / 2;
         var endCss = boxCenterDoc - (winHeight / scale) * 0.5;
-        var startCss = endCss - (winHeight / scale) * 1.35;
-        rangeStart = startCss;
-        rangeEnd = Math.max(rangeStart + 1, endCss);
+        var track = (winHeight / scale) * 0.85;
+        rangeEnd = Math.max(1, endCss);
+        rangeStart = Math.max(0, rangeEnd - track);
+        if (travelBottle) delete travelBottle.dataset.sized;
     }
 
     var ticking = false;
@@ -492,8 +490,6 @@
             requestAnimationFrame(function () {
                 var sY = window.scrollY || window.pageYOffset || 0;
                 var sX = window.scrollX || window.pageXOffset || 0;
-                measureLanding();
-                if (sY <= rangeStart) measureHeroMetrics();
 
                 // Barra sólida (header) apenas la página se mueve: cualquier scroll > 0
                 // la activa y vuelve a transparente solo en el tope (scrollY 0).
@@ -518,9 +514,12 @@
                 if (!prefersReduced && heroDoc && targetDoc && rangeEnd > rangeStart) {
                     var span = rangeEnd - rangeStart;
                     var p = Math.max(0, Math.min(1, (sY - rangeStart) / span));
-                    // ease-out, sin rebote: cubic-bezier(0.23, 1, 0.32, 1) muestreada
-                    var u = 1 - p;
-                    var e = 1 - u * u * u;
+                    // Encoge antes de caer: en un portátil corto la botella grande
+                    // se salía por abajo. ease-out, sin rebote.
+                    var moveT = Math.max(0, (p - 0.22) / 0.78);
+                    var scaleT = Math.min(1, p / 0.42);
+                    var eMove = 1 - Math.pow(1 - moveT, 3);
+                    var eScale = 1 - Math.pow(1 - scaleT, 3);
 
                     if (p <= 0.001) {
                         if (bottleMain) bottleMain.style.visibility = '';
@@ -540,18 +539,26 @@
                         if (bottleMain) bottleMain.style.visibility = 'hidden';
                         if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
 
-                        var curDocX = heroDoc.left + (targetDoc.left - heroDoc.left) * e;
-                        var curDocY = heroDoc.top + (targetDoc.top - heroDoc.top) * e;
-                        var curW = heroDoc.width + (targetDoc.width - heroDoc.width) * e;
-                        var curH = heroDoc.height + (targetDoc.height - heroDoc.height) * e;
+                        var curDocX = heroDoc.left + (targetDoc.left - heroDoc.left) * eMove;
+                        var curDocY = heroDoc.top + (targetDoc.top - heroDoc.top) * eMove;
+                        var curW = heroDoc.width + (targetDoc.width - heroDoc.width) * eScale;
+                        var curH = heroDoc.height + (targetDoc.height - heroDoc.height) * eScale;
                         var viewX = curDocX - sX;
                         var viewY = curDocY - sY;
+                        var zoom = pxScale();
+                        var visualBottom = (viewY + curH) * zoom;
+                        var limit = winHeight - 6;
+                        if (visualBottom > limit) viewY -= (visualBottom - limit) / zoom;
+                        if (viewY * zoom < 6) viewY = 6 / zoom;
                         var sx = targetDoc.width > 0 ? curW / targetDoc.width : 1;
                         var sy = targetDoc.height > 0 ? curH / targetDoc.height : 1;
 
-                        travelBottle.style.width = targetDoc.width.toFixed(2) + 'px';
-                        travelBottle.style.height = targetDoc.height.toFixed(2) + 'px';
-                        travelBottle.style.transformOrigin = '0 0';
+                        if (travelBottle.dataset.sized !== '1') {
+                            travelBottle.style.width = targetDoc.width.toFixed(2) + 'px';
+                            travelBottle.style.height = targetDoc.height.toFixed(2) + 'px';
+                            travelBottle.style.transformOrigin = '0 0';
+                            travelBottle.dataset.sized = '1';
+                        }
                         travelBottle.style.transform = 'translate3d(' + viewX.toFixed(2) + 'px, ' + viewY.toFixed(2) + 'px, 0) scale(' + sx.toFixed(4) + ', ' + sy.toFixed(4) + ')';
                         travelBottle.classList.add('is-active');
 
