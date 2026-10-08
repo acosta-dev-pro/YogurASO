@@ -291,30 +291,6 @@
   filter: drop-shadow(0 18px 26px rgba(0,0,0,0.28));
 }
 
-/* ========== INFO CARDS (mockup 05 bottom) ========== */
-.v3-info {
-  padding: 0 0 clamp(36px, 5vw, 56px);
-  background: var(--cream);
-}
-.v3-info__grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-}
-.v3-info-card {
-  padding: 24px; border-radius: 24px;
-  background: #fff; box-shadow: var(--shadow-sm);
-}
-.v3-info-card h3 { margin: 10px 0 8px; color: var(--brand-red-deep); font-size: 1.2rem; }
-.v3-info-card p { margin: 0 0 16px; color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; }
-.v3-icon-row {
-  display: flex; flex-wrap: wrap; gap: 8px;
-}
-.v3-icon-row span {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 10px; border-radius: 999px;
-  background: var(--brand-pink-soft);
-  color: var(--brand-red-deep); font-size: 11px; font-weight: 700;
-}
-
 /* ========== DISTRIBUIDORES BAR (mockup 03) ========== */
 .v3-dist {
   margin: 0 0 0;
@@ -626,7 +602,7 @@
   .v3-flavor-grid, .v3-catalog #productos-container.productos-masonry,
   .v3-catalog .productos-masonry,
   .productos-page-v3 .productos-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .v3-trio__grid, .v3-info__grid, .v3-steps { grid-template-columns: repeat(2, 1fr); }
+  .v3-trio__grid, .v3-steps { grid-template-columns: repeat(2, 1fr); }
   .v3-steps .v3-step:nth-child(n+5) { display: none; }
   .v3-ingredientes__grid, .v3-envase__grid, .v3-nosotros__grid { grid-template-columns: 1fr; }
   .footer-v3 .footer-inner { grid-template-columns: 1fr 1fr; }
@@ -634,7 +610,7 @@
   .fc-art { min-height: 240px; }
 }
 @media (max-width: 640px) {
-  .v3-flavor-grid, .v3-trio__grid, .v3-info__grid,
+  .v3-flavor-grid, .v3-trio__grid,
   .v3-catalog #productos-container.productos-masonry,
   .v3-catalog .productos-masonry,
   .productos-page-v3 .productos-grid { grid-template-columns: 1fr !important; }
