@@ -2,7 +2,7 @@
 
 body.profile-page {
     background:
-        radial-gradient(ellipse 42% 30% at 100% 0%, rgba(229, 29, 42, 0.12), transparent 60%),
+        radial-gradient(ellipse 42% 30% at 100% 0%, color-mix(in srgb, var(--rojo-marca) 12%, transparent), transparent 60%),
         radial-gradient(ellipse 38% 25% at 0% 12%, rgba(102, 142, 108, 0.08), transparent 62%),
         #f7f8f5;
     min-height: 100vh;

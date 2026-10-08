@@ -125,7 +125,7 @@
   overflow: hidden;
 }
 .v3-ingredientes__visual img {
-  width: min(58%, 220px); filter: drop-shadow(0 18px 28px rgba(180,30,40,0.22));
+  width: min(58%, 220px); filter: drop-shadow(0 18px 28px color-mix(in srgb, var(--rojo-marca-deep) 22%, transparent));
 }
 
 /* ========== MARKETING TRIO (mockup 03) ========== */
@@ -144,7 +144,7 @@
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .v3-mcard--llevalo {
-  background: linear-gradient(155deg, #E51D2A 0%, #B01824 100%);
+  background: linear-gradient(155deg, var(--rojo-marca) 0%, var(--rojo-marca-deep) 100%);
 }
 .v3-mcard--cremoso {
   background: #FFF8F4; color: var(--ink);
@@ -230,7 +230,7 @@
 }
 .v3-envase__stage img {
   width: min(46%, 210px);
-  filter: drop-shadow(0 20px 30px rgba(180,30,40,0.2));
+  filter: drop-shadow(0 20px 30px color-mix(in srgb, var(--rojo-marca-deep) 20%, transparent));
 }
 .v3-callouts {
   position: absolute; inset: 0; pointer-events: none;
@@ -283,7 +283,7 @@
 .v3-stat span { color: var(--text-muted); font-size: 13px; }
 .v3-nosotros__visual {
   position: relative; min-height: 360px; border-radius: 32px; overflow: hidden;
-  background: linear-gradient(150deg, #E51D2A, #C91522);
+  background: linear-gradient(150deg, var(--rojo-marca), var(--rojo-marca-hover));
   display: grid; place-items: center;
 }
 .v3-nosotros__visual img {
@@ -390,7 +390,7 @@
   box-shadow: var(--shadow-lg); min-height: 420px;
 }
 .fc-art {
-  position: relative; background: var(--c, #E51D2A);
+  position: relative; background: var(--c, var(--rojo-marca));
   display: grid; place-items: center; padding: 28px 16px;
 }
 .fc-art .fc-mesh, .fc-art .fc-ring { display: none; }
@@ -454,7 +454,7 @@
 .productos-page-v3 .shop-hero {
   position: relative; overflow: hidden;
   padding: 120px 0 56px;
-  background: linear-gradient(135deg, #E51D2A 0%, #C91522 55%, #A81420 100%);
+  background: linear-gradient(135deg, var(--rojo-marca) 0%, var(--rojo-marca-hover) 55%, var(--rojo-marca-deep) 100%);
   color: #fff;
 }
 .productos-page-v3 .shop-hero__inner {
@@ -583,11 +583,11 @@
 .auth-card, .shop-auth-wrap .auth-card {
   border-radius: 24px !important;
   box-shadow: var(--shadow-md) !important;
-  border: 1px solid rgba(229,29,42,0.06) !important;
+  border: 1px solid color-mix(in srgb, var(--rojo-marca) 6%, transparent) !important;
 }
 .shop-auth-promo {
   border-radius: 24px !important;
-  background: linear-gradient(155deg, #E51D2A, #B01824) !important;
+  background: linear-gradient(155deg, var(--rojo-marca), var(--rojo-marca-deep)) !important;
 }
 
 @media (max-width: 1020px) {
@@ -709,7 +709,7 @@
   padding: 14px 10px !important;
   border-radius: 18px !important;
   background: #fff !important;
-  border: 1px solid rgba(229,29,42,0.12) !important;
+  border: 1px solid color-mix(in srgb, var(--rojo-marca) 12%, transparent) !important;
   box-shadow: var(--shadow-xs) !important;
   font-size: 12px !important;
   font-weight: 700 !important;
@@ -804,7 +804,7 @@
   position: absolute; right: -8%; bottom: -4%;
   width: min(46%, 150px); height: auto; max-height: 70%;
   object-fit: contain; aspect-ratio: 640/1110;
-  filter: drop-shadow(0 12px 18px rgba(180,30,40,0.2));
+  filter: drop-shadow(0 12px 18px color-mix(in srgb, var(--rojo-marca-deep) 20%, transparent));
   pointer-events: none;
 }
 @media (max-width: 1100px) {
@@ -865,7 +865,7 @@
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 .producto-card.card-v3 .wish-btn i,
-.producto-card.card-v3 .wish-btn svg{color:#E51D2A!important;opacity:1!important;font-size:15px!important;}
+.producto-card.card-v3 .wish-btn svg{color:var(--rojo-marca)!important;opacity:1!important;font-size:15px!important;}
 
 
 /* ========== COMPACT CARDS ~25% shorter (mockup density) ========== */

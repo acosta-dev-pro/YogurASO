@@ -2,10 +2,17 @@
    Soft reds/pinks, cream surfaces, pill UI, Emil ease-out. */
 
 :root {
-    --brand-red: #E51D2A;
-    --brand-red-dark: #C91522;
-    --brand-red-deep: #B01824;
-    --brand-red-soft: #F04A54;
+    /* ROJO ÚNICO DE MARCA = rojo de fondo de fresa (--bg-fresa): más opaco y clarito,
+       pero fuerte. Todo acento rojo del sitio sale de aquí; hover/pressed/deep se
+       derivan oscureciéndolo (no es otra familia de rojo). */
+    --rojo-marca: #C3343E;
+    --rojo-marca-hover: color-mix(in srgb, var(--rojo-marca) 86%, #000);
+    --rojo-marca-deep: color-mix(in srgb, var(--rojo-marca) 82%, #000);
+    --rojo-marca-soft: color-mix(in srgb, var(--rojo-marca) 84%, #fff);
+    --brand-red: var(--rojo-marca);
+    --brand-red-dark: var(--rojo-marca-hover);
+    --brand-red-deep: var(--rojo-marca-deep);
+    --brand-red-soft: var(--rojo-marca-soft);
     --brand-pink: #FFE4E8;
     --brand-pink-soft: #FFF1F3;
     --brand-blush: #FDF5F5;
@@ -154,7 +161,7 @@ button, input, select, textarea { font-family: inherit; }
 .ys-pill--ghost {
     color: var(--brand-red);
     background: transparent;
-    border: 1.5px solid rgba(229, 29, 42, 0.28);
+    border: 1.5px solid color-mix(in srgb, var(--rojo-marca) 28%, transparent);
     padding-inline: 22px;
 }
 

@@ -75,14 +75,14 @@ body.admin-page .admin-subtitle {
 }
 
 body.admin-page .btn-primary {
-    background: #E51D2A !important;
+    background: var(--rojo-marca) !important;
     box-shadow: none !important;
     border-radius: 12px !important;
     padding: 12px 18px !important;
     font-size: 14px !important;
 }
 
-body.admin-page .btn-primary:hover { background: #C91522 !important; }
+body.admin-page .btn-primary:hover { background: var(--rojo-marca-hover) !important; }
 
 body.admin-page .btn-secondary {
     background: #f4f4f6 !important;
@@ -270,7 +270,7 @@ body.admin-page .admin-modal textarea:focus,
 body.admin-page .admin-modal input:focus-visible,
 body.admin-page .admin-modal select:focus-visible,
 body.admin-page .admin-modal textarea:focus-visible {
-    border-color: #E51D2A !important;
+    border-color: var(--rojo-marca) !important;
     box-shadow: none !important;
     outline: none !important;
     transform: none !important;
@@ -291,7 +291,7 @@ body.admin-page .admin-modal .image-upload-area {
 
 body.admin-page .admin-modal .image-upload-area:hover,
 body.admin-page .admin-modal .image-upload-area.drag-over {
-    border-color: #E51D2A !important;
+    border-color: var(--rojo-marca) !important;
     background: #fff !important;
     box-shadow: none !important;
 }
@@ -374,15 +374,15 @@ body.admin-page .admin-price-preview-badge {
     margin-bottom: 10px;
     padding: 4px 10px;
     border-radius: 999px;
-    background: #E51D2A;
+    background: var(--rojo-marca);
     color: #fff;
     font-size: 11px;
     font-weight: 800;
 }
 
-body.admin-page .admin-price-preview-badge.badge-nuevo { background: #E51D2A; }
+body.admin-page .admin-price-preview-badge.badge-nuevo { background: var(--rojo-marca); }
 body.admin-page .admin-price-preview-badge.badge-oferta { background: #c45b2d; }
-body.admin-page .admin-price-preview-badge.badge-descuento { background: #b42318; }
+body.admin-page .admin-price-preview-badge.badge-descuento { background: var(--rojo-marca-deep); }
 body.admin-page .admin-price-preview-badge.badge-destacado { background: #1c1c1f; }
 
 body.admin-page .admin-price-preview-row {
@@ -400,7 +400,7 @@ body.admin-page .admin-price-preview-row.is-final strong {
 }
 
 body.admin-page .admin-price-preview-row.is-final strong.is-sale {
-    color: #E51D2A;
+    color: var(--rojo-marca);
 }
 
 body.admin-page .admin-price-preview-label {
@@ -465,13 +465,13 @@ body.admin-page .btn-activate {
 body.admin-page .btn-delete-permanent {
     border: 1px solid #e7b4b4;
     background: #fff7f7;
-    color: #9f3030;
+    color: var(--rojo-marca-deep);
     border-radius: 12px;
 }
 
 body.admin-page .btn-delete-permanent:hover {
-    border-color: #b42318;
-    background: #b42318;
+    border-color: var(--rojo-marca-deep);
+    background: var(--rojo-marca-deep);
     color: #fff;
 }
 
@@ -598,7 +598,7 @@ body.admin-page .admin-sheet thead th.sortable:hover {
 body.admin-page .admin-sheet thead th.sortable.is-sorted::after {
     margin-left: 6px;
     font-size: 10px;
-    color: #E51D2A;
+    color: var(--rojo-marca);
 }
 
 body.admin-page .admin-sheet thead th.sortable.is-sorted[data-dir="asc"]::after { content: "▲"; }

@@ -122,7 +122,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     left: 0; /* el enlace del logo ya está en el margen izquierdo; antes se sumaba dos veces */
     width: 120px;
     height: 66px;
-    background: var(--brand-red, #E51D2A);
+    background: var(--brand-red, var(--rojo-marca));
     /* Corte tipo Bookmark / Guardado de Instagram/Facebook */
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%);
     display: flex;
@@ -194,7 +194,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 /* Efecto de jalar al pasar cursor (hover) y clic (active) */
 .site-header.is-stuck .brand-badge-container:hover,
 .site-header--solid .brand-badge-container:hover {
-    background: #cc1622;
+    background: var(--rojo-marca-hover);
     transform: translateY(3px) scaleY(1.05);
 }
 .site-header.is-stuck .brand-badge-container:hover .pull-tab-arrow,
@@ -432,7 +432,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 .site-header--solid .icon-btn:hover,
 .site-header.is-stuck .icon-btn:hover {
     background: rgba(23, 23, 23, 0.06);
-    color: var(--brand-red, #E51D2A);
+    color: var(--brand-red, var(--rojo-marca));
 }
 
 .site-header .cart-badge {
@@ -441,7 +441,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     min-width: 18px; height: 18px;
     padding: 0 4px;
     display: flex; align-items: center; justify-content: center;
-    background: var(--brand-red, #E51D2A);
+    background: var(--brand-red, var(--rojo-marca));
     color: #fff;
     border: 0;
     border-radius: var(--radius-pill);
@@ -539,9 +539,9 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
         color: var(--ink) !important;
         text-shadow: none;
     }
-    .site-header #nav-items li:hover a { color: var(--brand-red, #E51D2A) !important; background: #FFF0F2 !important; }
+    .site-header #nav-items li:hover a { color: var(--brand-red, var(--rojo-marca)) !important; background: #FFF0F2 !important; }
     .site-header #nav-items li.active a {
-        background: var(--brand-red, #E51D2A) !important;
+        background: var(--brand-red, var(--rojo-marca)) !important;
         color: #fff !important;
     }
 }

@@ -125,7 +125,7 @@
 .nt-pref input:checked + .nt-switch { background: #2F9E55; }
 .nt-pref input:checked + .nt-switch::after { transform: translateX(16px); }
 .nt-pref input:disabled + .nt-switch { opacity: 0.55; }
-.nt-pref input:focus-visible + .nt-switch { outline: 3px solid var(--brand-red, #E51D2A); outline-offset: 2px; }
+.nt-pref input:focus-visible + .nt-switch { outline: 3px solid var(--brand-red, var(--rojo-marca)); outline-offset: 2px; }
 
 /* ---------- Toasts ---------- */
 .nt-stack {
@@ -150,7 +150,7 @@
 @keyframes ntOut { to { opacity: 0; transform: translateY(-6px) scale(0.98); } }
 .nt-toast-ico { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 11px; }
 .nt-success .nt-toast-ico { background: #E8F6EC; color: #1F7A3A; }
-.nt-error .nt-toast-ico { background: #FDECEC; color: #C0282F; }
+.nt-error .nt-toast-ico { background: #FDECEC; color: var(--rojo-marca); }
 .nt-warning .nt-toast-ico { background: #FFF3DD; color: #A55A00; }
 .nt-info .nt-toast-ico { background: #EEF1F6; color: #3B4A63; }
 .nt-toast-body { flex: 1; display: grid; gap: 1px; min-width: 0; }
@@ -168,7 +168,7 @@
     background: currentColor; opacity: 0.18; transform-origin: left;
     animation: ntBar var(--nt-dur, 2800ms) linear both;
 }
-.nt-success .nt-toast-bar { color: #1F7A3A; } .nt-error .nt-toast-bar { color: #C0282F; }
+.nt-success .nt-toast-bar { color: #1F7A3A; } .nt-error .nt-toast-bar { color: var(--rojo-marca); }
 .nt-warning .nt-toast-bar { color: #A55A00; } .nt-info .nt-toast-bar { color: #3B4A63; }
 .nt-toast.is-paused .nt-toast-bar { animation-play-state: paused; }
 @keyframes ntBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
@@ -186,13 +186,13 @@
     position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px;
     padding: 24px; text-align: center; color: var(--ink, #171717);
     background:
-        radial-gradient(circle at 25% 30%, rgba(229, 29, 42, 0.10), transparent 45%),
+        radial-gradient(circle at 25% 30%, color-mix(in srgb, var(--rojo-marca) 10%, transparent), transparent 45%),
         radial-gradient(circle at 75% 70%, rgba(79, 174, 69, 0.12), transparent 45%),
         repeating-linear-gradient(0deg, transparent 0 31px, rgba(23, 23, 23, 0.04) 31px 32px),
         repeating-linear-gradient(90deg, transparent 0 31px, rgba(23, 23, 23, 0.04) 31px 32px),
         #FBF3E6;
 }
-.nt-embed-ph .nt-ico-lg { color: var(--brand-red, #E51D2A); }
+.nt-embed-ph .nt-ico-lg { color: var(--brand-red, var(--rojo-marca)); }
 .nt-embed-ph p { margin: 0; display: grid; gap: 4px; max-width: 34ch; }
 .nt-embed-ph strong { font: 600 17px/1.2 var(--font-display); }
 .nt-embed-ph span { font: 400 13px/1.5 var(--font-ui); color: #6E665C; }

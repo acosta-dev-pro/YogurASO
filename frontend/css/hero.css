@@ -22,8 +22,8 @@ body[data-flavor] {
 }
 body[data-flavor="fresa"] {
     --hero-bg: var(--bg-fresa);
-    --hero-floor: #B33039;
-    --hero-ink: #8F0E17;
+    --hero-floor: var(--rojo-marca-hover);
+    --hero-ink: var(--rojo-marca-deep);
 }
 body[data-flavor="pina"] {
     --hero-bg: var(--bg-pina);
@@ -587,7 +587,7 @@ body[data-flavor="mango"] {
 
 .showcase-title em {
     font-style: normal;
-    color: #E51D2A;
+    color: var(--rojo-marca);
 }
 
 /* Contenedor en gris sólido plano sin marco */
@@ -648,7 +648,7 @@ body[data-flavor="mango"] {
 }
 
 .insta-btn-icon.is-active {
-    color: #ED4956;
+    color: var(--rojo-marca);
 }
 
 .insta-btn-icon:hover {
@@ -687,7 +687,7 @@ body[data-flavor="mango"] {
     font-size: 0.94rem;
     font-weight: 700;
     padding: 0.6em 1.35em;
-    background-color: #BF0426;
+    background-color: var(--rojo-marca);
     text-decoration: none;
     border: none;
     border-radius: 0.5em;
@@ -705,7 +705,7 @@ body[data-flavor="mango"] {
     width: 0;
     top: 0;
     left: 0;
-    background: linear-gradient(135deg, rgba(33,33,33,1) 0%, rgba(33,33,33,1) 50%, rgba(150,4,31,1) 50%, rgba(191,4,38,1) 60%);
+    background: linear-gradient(135deg, rgba(33,33,33,1) 0%, rgba(33,33,33,1) 50%, var(--rojo-marca-deep) 50%, var(--rojo-marca) 60%);
     border-radius: 0 0 0.5em 0;
     box-shadow: 0.2em 0.2em 0.2em rgba(0, 0, 0, 0.3);
     transition: 0.3s;
@@ -748,7 +748,7 @@ body[data-flavor="mango"] {
 }
 
 .ys-text-btn:hover {
-    color: #BF0426;
+    color: var(--rojo-marca);
 }
 
 .ys-text-btn:hover .ys-text-arrow {
@@ -769,7 +769,7 @@ body[data-flavor="mango"] {
     width: 100%;
     height: clamp(450px, 58vh, 520px);
     border-radius: 20px;
-    background: var(--hero-bg, #BF0426);
+    background: var(--hero-bg, var(--rojo-marca));
     overflow: hidden;
     display: flex;
     align-items: center;

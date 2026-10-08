@@ -28,7 +28,7 @@
 .sx-kicker {
     display: inline-flex; align-items: center; gap: 7px;
     padding: 5px 11px 5px 9px; margin-bottom: 12px;
-    border-radius: 999px; background: rgba(229, 29, 42, 0.08); color: var(--brand-red, #E51D2A);
+    border-radius: 999px; background: color-mix(in srgb, var(--rojo-marca) 8%, transparent); color: var(--brand-red, var(--rojo-marca));
     font: 800 10.5px/1 var(--font-ui); letter-spacing: 0.08em; text-transform: uppercase;
 }
 .sx-kicker svg { width: 13px; height: 13px; }
@@ -36,7 +36,7 @@
     margin: 0 0 10px; color: var(--sx-ink);
     font: 600 clamp(24px, 2.6vw, 34px)/1.1 var(--font-display); letter-spacing: -0.01em;
 }
-.sx-head h2 em { font-style: normal; color: var(--brand-red, #E51D2A); }
+.sx-head h2 em { font-style: normal; color: var(--brand-red, var(--rojo-marca)); }
 .sx-head p { margin: 0; color: var(--sx-muted); font: 400 clamp(14px, 1vw, 15px)/1.6 var(--font-ui); }
 
 /* Íconos en línea */
@@ -55,7 +55,7 @@
 .sx-shapes { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .sx-shapes i {
     position: absolute; width: var(--w, 320px); aspect-ratio: 1; border-radius: 42% 58% 63% 37% / 45% 39% 61% 55%;
-    background: var(--bg, rgba(229, 29, 42, 0.08)); filter: blur(var(--b, 40px));
+    background: var(--bg, color-mix(in srgb, var(--rojo-marca) 8%, transparent)); filter: blur(var(--b, 40px));
     animation: sxBlob var(--t, 22s) ease-in-out infinite alternate; will-change: transform;
 }
 @keyframes sxBlob {
@@ -84,12 +84,12 @@
     transition: transform 0.22s var(--sx-ease), background-color 0.22s ease;
 }
 .sx-link svg { width: 16px; height: 16px; transition: transform 0.25s var(--sx-ease); }
-.sx-link:hover { transform: translateY(-3px); background: var(--brand-red, #E51D2A); }
+.sx-link:hover { transform: translateY(-3px); background: var(--brand-red, var(--rojo-marca)); }
 .sx-link:hover svg { transform: translateX(3px); }
 
 /* ======================= 2. CARRUSEL DE SABORES ======================= */
 .sx-flavors { background: linear-gradient(180deg, #FFF8EC 0%, #FFF3E2 100%); }
-.sx-flavors .sx-shapes i:nth-child(1) { --w: 320px; --bg: rgba(229, 29, 42, 0.10); top: -80px; left: -120px; --t: 24s; }
+.sx-flavors .sx-shapes i:nth-child(1) { --w: 320px; --bg: color-mix(in srgb, var(--rojo-marca) 10%, transparent); top: -80px; left: -120px; --t: 24s; }
 .sx-flavors .sx-shapes i:nth-child(2) { --w: 250px; --bg: rgba(242, 185, 15, 0.14); bottom: -60px; right: 8%; --t: 19s; --dx: -40px; }
 .sx-flavors .sx-shapes i:nth-child(3) { --w: 190px; --bg: rgba(126, 36, 96, 0.08); top: 30%; right: -60px; --t: 27s; }
 .sx-rail-ctrl { display: flex; gap: 8px; }
@@ -177,26 +177,26 @@
 /* ======================= 3a. PROCESO ======================= */
 .sx-process { background: #FFFFFF; }
 .sx-process .sx-shapes i:nth-child(1) { --w: 290px; --bg: rgba(79, 174, 69, 0.10); top: 10%; left: -140px; }
-.sx-process .sx-shapes i:nth-child(2) { --w: 240px; --bg: rgba(229, 29, 42, 0.07); bottom: -80px; right: -60px; --t: 26s; }
+.sx-process .sx-shapes i:nth-child(2) { --w: 240px; --bg: color-mix(in srgb, var(--rojo-marca) 7%, transparent); bottom: -80px; right: -60px; --t: 26s; }
 .pc-steps { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 1.8vw, 24px); margin: 0; padding: 0; list-style: none; }
 .pc-step { position: relative; padding: 18px 18px 20px; border-radius: 20px; background: var(--sx-cream); box-shadow: inset 0 0 0 1px var(--sx-line);
     transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease, background-color 0.3s ease; }
-.pc-step:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(229, 29, 42, 0.28); background: #fff; }
-.pc-dot { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 14px; border-radius: 13px; background: #fff; color: var(--brand-red, #E51D2A);
-    box-shadow: 0 8px 18px -10px rgba(229, 29, 42, 0.5), inset 0 0 0 1px rgba(229, 29, 42, 0.14); font-size: 19px; }
+.pc-step:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rojo-marca) 28%, transparent); background: #fff; }
+.pc-dot { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 14px; border-radius: 13px; background: #fff; color: var(--brand-red, var(--rojo-marca));
+    box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--rojo-marca) 50%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--rojo-marca) 14%, transparent); font-size: 19px; }
 .pc-n { position: absolute; top: 18px; right: 18px; font: 600 24px/1 var(--font-display); color: rgba(23, 23, 23, 0.08); }
 .pc-step h3 { margin: 0 0 5px; font: 600 16px/1.2 var(--font-display); color: var(--sx-ink); }
 .pc-step p { margin: 0; font: 400 13px/1.55 var(--font-ui); color: var(--sx-muted); }
 .pc-line { position: relative; height: 2px; margin: 24px 4px 0; border-radius: 2px; background: rgba(23, 23, 23, 0.07); overflow: hidden; }
-.pc-line i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--brand-red, #E51D2A), #F2B90F, var(--brand-green, #4FAE45)); transform-origin: left; transform: scaleX(var(--p, 0)); }
+.pc-line i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--brand-red, var(--rojo-marca)), #F2B90F, var(--brand-green, #4FAE45)); transform-origin: left; transform: scaleX(var(--p, 0)); }
 
 /* ======================= 3b. EMPAQUE ======================= */
 .sx-pack { background: linear-gradient(180deg, #FFF3E2 0%, #FFF8EC 100%); }
 .pk-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 6.5vw, 96px); align-items: center; }
 .pk-visual { position: relative; aspect-ratio: 1 / 1.05; max-width: 390px; width: 100%; justify-self: center; perspective: 1000px; }
 .pk-disc { position: absolute; inset: 8% 6% 4%; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #F04A54 0%, #E51D2A 45%, #A8141F 100%);
-    box-shadow: 0 32px 64px -34px rgba(168, 20, 31, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
+    background: radial-gradient(circle at 35% 30%, var(--rojo-marca-soft) 0%, var(--rojo-marca) 45%, var(--rojo-marca-deep) 100%);
+    box-shadow: 0 32px 64px -34px color-mix(in srgb, var(--rojo-marca-deep) 70%, transparent), inset 0 2px 0 rgba(255, 255, 255, 0.2); }
 .pk-disc::after { content: ""; position: absolute; inset: 7%; border-radius: 50%; border: 1px dashed rgba(255, 255, 255, 0.28); animation: sxSpin 60s linear infinite; }
 @keyframes sxSpin { to { transform: rotate(360deg); } }
 .pk-bottle { position: absolute; left: 50%; top: 2%; width: 52%; transform: translateX(-50%) rotateY(var(--pk-ry, 0deg)) translateY(var(--pk-y, 0px)); transform-style: preserve-3d; transition: transform 0.2s linear; }
@@ -207,14 +207,14 @@
     box-shadow: 0 10px 24px -14px rgba(23, 23, 23, 0.45), inset 0 0 0 1px rgba(23, 23, 23, 0.06);
     font: 600 11.5px/1 var(--font-ui); color: var(--sx-muted); white-space: nowrap; }
 .pk-pin b { color: var(--sx-ink); font-weight: 800; }
-.pk-pin::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--brand-red, #E51D2A); box-shadow: 0 0 0 4px rgba(229, 29, 42, 0.16); animation: sxPulse 2.4s ease-in-out infinite; }
-@keyframes sxPulse { 50% { box-shadow: 0 0 0 7px rgba(229, 29, 42, 0.05); } }
+.pk-pin::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--brand-red, var(--rojo-marca)); box-shadow: 0 0 0 4px color-mix(in srgb, var(--rojo-marca) 16%, transparent); animation: sxPulse 2.4s ease-in-out infinite; }
+@keyframes sxPulse { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--rojo-marca) 5%, transparent); } }
 .pk-pin[data-rv] { transition-delay: 0.35s; }
 .pk-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
 .pk-list li { display: flex; gap: 11px; align-items: flex-start; padding: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.75); box-shadow: inset 0 0 0 1px var(--sx-line);
     transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease; }
-.pk-list li:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px rgba(229, 29, 42, 0.25); }
-.pk-list li > i { flex: none; width: 34px; height: 34px; border-radius: 11px; background: rgba(229, 29, 42, 0.08); color: var(--brand-red, #E51D2A); font-size: 17px; }
+.pk-list li:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rojo-marca) 25%, transparent); }
+.pk-list li > i { flex: none; width: 34px; height: 34px; border-radius: 11px; background: color-mix(in srgb, var(--rojo-marca) 8%, transparent); color: var(--brand-red, var(--rojo-marca)); font-size: 17px; }
 .pk-list strong { display: block; margin-bottom: 2px; font: 700 13.5px/1.25 var(--font-ui); color: var(--sx-ink); }
 .pk-list small { display: block; font: 400 12.5px/1.5 var(--font-ui); color: var(--sx-muted); }
 
@@ -238,7 +238,7 @@
 /* ======================= 3d. CON QUÉ COMERLO ======================= */
 .sx-pair { background: #FFF8EC; }
 .pr-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(148px, auto); gap: clamp(12px, 1.4vw, 16px); }
-.pr-card { --c: #BC1D29; position: relative; overflow: hidden; padding: 18px; border-radius: 20px; background: #fff;
+.pr-card { --c: var(--rojo-marca); position: relative; overflow: hidden; padding: 18px; border-radius: 20px; background: #fff;
     box-shadow: inset 0 0 0 1px var(--sx-line); transition: transform 0.3s var(--sx-ease), box-shadow 0.3s ease; }
 .pr-card::before { content: ""; position: absolute; inset: auto -30% -55% auto; width: 75%; aspect-ratio: 1; border-radius: 50%; background: color-mix(in oklab, var(--c), transparent 88%); transition: transform 0.6s var(--sx-ease); }
 .pr-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c), transparent 60%); }
@@ -281,7 +281,7 @@
 .beneficios-banner { background: transparent !important; border: 0 !important; padding: 0 20px !important; margin: 0 auto clamp(28px, 3.4vw, 44px) !important; gap: 0 !important; }
 .beneficios-sep-tag {
     gap: 7px; padding: 5px 11px 5px 9px !important; margin-bottom: 12px;
-    border-radius: 999px !important; background: rgba(229, 29, 42, 0.08) !important; color: var(--brand-red, #E51D2A) !important;
+    border-radius: 999px !important; background: color-mix(in srgb, var(--rojo-marca) 8%, transparent) !important; color: var(--brand-red, var(--rojo-marca)) !important;
     font: 800 10.5px/1 var(--font-ui) !important; letter-spacing: 0.08em !important;
 }
 .beneficios-sep-tag i[data-ic] { display: inline-grid !important; }
@@ -313,13 +313,13 @@
 .fq-cta:hover > i:last-child { transform: translateX(3px); }
 .fq-list { display: grid; gap: 8px; }
 .fq-item { border-radius: 16px; background: var(--sx-cream); box-shadow: inset 0 0 0 1px var(--sx-line); transition: background-color 0.3s ease, box-shadow 0.3s ease; }
-.fq-item.is-open { background: #fff; box-shadow: inset 0 0 0 1px rgba(229, 29, 42, 0.22), 0 14px 28px -22px rgba(60, 20, 10, 0.35); }
+.fq-item.is-open { background: #fff; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rojo-marca) 22%, transparent), 0 14px 28px -22px rgba(60, 20, 10, 0.35); }
 .fq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 16px 15px 20px; cursor: pointer; list-style: none;
     font: 700 14px/1.35 var(--font-ui); color: var(--sx-ink); border-radius: 16px; }
 .fq-item summary::-webkit-details-marker { display: none; }
 .fq-item summary > i { flex: none; width: 30px; height: 30px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 1px var(--sx-line); font-size: 15px;
     transition: transform 0.35s var(--sx-ease), background-color 0.3s ease, color 0.3s ease; }
-.fq-item.is-open summary > i { transform: rotate(45deg); background: var(--brand-red, #E51D2A); color: #fff; box-shadow: none; }
+.fq-item.is-open summary > i { transform: rotate(45deg); background: var(--brand-red, var(--rojo-marca)); color: #fff; box-shadow: none; }
 .fq-item summary:hover > i { box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.25); }
 .fq-a { overflow: hidden; }
 .fq-a p { margin: 0; padding: 0 20px 18px; max-width: 60ch; font: 400 13.5px/1.65 var(--font-ui); color: var(--sx-muted); }
@@ -327,7 +327,7 @@
 
 /* ======================= 4b. FICHA AMPLIADA (dialog) ======================= */
 html.fc-lock { overflow: hidden; }
-.fc { --c: #BC1D29; position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: clamp(12px, 3vw, 40px);
+.fc { --c: var(--rojo-marca); position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: clamp(12px, 3vw, 40px);
     border: 0; background: transparent; display: none; place-items: center; overflow: auto; color: var(--sx-ink); }
 .fc[open] { display: grid; }
 .fc::backdrop { background: rgba(20, 12, 8, 0.0); -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0); transition: background-color 0.3s ease, backdrop-filter 0.3s ease; }

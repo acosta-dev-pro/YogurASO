@@ -8,7 +8,7 @@
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     var FL = window.YOGUR_FLAVORS || [];
     var I = window.YOG_INFO || {};
-    var COLORS = { fresa: '#BC1D29', pina: '#E3A008', mora: '#74205A', melocoton: '#D9570F', 'frutos-rojos': '#A8143A', cafe: '#55281A', guanabana: '#347A22', mango: '#EC7F0A' };
+    var COLORS = { fresa: 'var(--rojo-marca)', pina: '#E3A008', mora: '#74205A', melocoton: '#D9570F', 'frutos-rojos': '#A8143A', cafe: '#55281A', guanabana: '#347A22', mango: '#EC7F0A' };
     var ic = function (n) { return window.YogIcon ? window.YogIcon(n) : ''; };
     function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
     function pend(isPending) { return (isPending && I.marcarPendientes !== false) ? '<span class="pend" title="Dato pendiente de confirmar por YogurASO">Por confirmar</span>' : ''; }

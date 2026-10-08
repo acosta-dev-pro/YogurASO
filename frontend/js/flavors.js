@@ -5,7 +5,7 @@
  * El orden define cuál es el "siguiente" sabor que se ve atrás.
  */
 window.YOGUR_FLAVORS = [
-    { slug: 'fresa',        nombre: 'Fresa',        dot: '#D9202E', alt: 'Yogurt artesanal de fresa, 500 ml' },
+    { slug: 'fresa',        nombre: 'Fresa',        dot: 'var(--rojo-marca)', alt: 'Yogurt artesanal de fresa, 500 ml' },
     { slug: 'pina',         nombre: 'Piña',         dot: '#F2B90F', alt: 'Yogurt artesanal de piña, 500 ml' },
     { slug: 'mora',         nombre: 'Mora',         dot: '#7E2460', alt: 'Yogurt artesanal de mora, 500 ml' },
     { slug: 'melocoton',    nombre: 'Melocotón',    dot: '#EE6A22', alt: 'Yogurt artesanal de melocotón, 500 ml' },

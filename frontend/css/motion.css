@@ -23,7 +23,7 @@
 .producto-card, .beneficio-card, .pastel-card {
     transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-soft), border-color 0.28s var(--ease-soft);
 }
-.producto-card:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px rgba(229, 29, 42, 0.28), 0 1px 3px rgba(0,0,0,0.08), 0 8px 16px rgba(23,23,23,0.06); }
+.producto-card:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px color-mix(in srgb, var(--rojo-marca) 28%, transparent), 0 1px 3px rgba(0,0,0,0.08), 0 8px 16px rgba(23,23,23,0.06); }
 .beneficios-grid .beneficio-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.16) !important; }
 .producto-card .producto-img { transition: transform 0.4s var(--ease-out); }
 .producto-card:hover .producto-img { transform: scale(1.02); }

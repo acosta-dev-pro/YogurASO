@@ -39,9 +39,9 @@
     box-shadow: 0 2px 8px rgba(23, 23, 26, 0.18);
 }
 
-.producto-card .badge-nuevo { background: #E51D2A; }
+.producto-card .badge-nuevo { background: var(--rojo-marca); }
 .producto-card .badge-oferta { background: #c45b2d; }
-.producto-card .badge-descuento { background: #b42318; }
+.producto-card .badge-descuento { background: var(--rojo-marca-deep); }
 .producto-card .badge-destacado { background: #17171a; }
 .producto-card .badge-stock {
     top: auto;
@@ -59,7 +59,7 @@
 
 .producto-card .btn-add,
 .producto-card .btn-add-cart {
-    background: var(--brand-main, #E51D2A);
+    background: var(--brand-main, var(--rojo-marca));
     color: #fff;
     border: none;
     border-radius: 999px;

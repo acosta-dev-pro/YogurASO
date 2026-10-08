@@ -7,7 +7,7 @@
   --ysf-w2:rgba(255,255,255,.72);
   --ysf-w3:rgba(255,255,255,.6);
   --ysf-line:rgba(255,255,255,.1);
-  --ysf-red:var(--brand-red,#E51D2A);
+  --ysf-red:var(--brand-red,var(--rojo-marca));
   --ysf-max:var(--page-max,1120px);
   --ysf-ease:cubic-bezier(.23,1,.32,1);
   --ysf-body:"Nunito Sans",sans-serif;

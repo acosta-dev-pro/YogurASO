@@ -20,7 +20,7 @@
     margin: 0;
     max-width: none;
     opacity: 1;
-    color: #E51D2A;
+    color: var(--rojo-marca);
     font: 800 11.5px/1.2 'Nunito Sans', sans-serif;
     letter-spacing: .2em;
     text-transform: uppercase;
