@@ -485,9 +485,10 @@
                 var sY = window.scrollY || window.pageYOffset || 0;
                 var sX = window.scrollX || window.pageXOffset || 0;
 
-                // Barra fijada (header) al salir del Hero
+                // Barra sólida (header) apenas la página se mueve: cualquier scroll > 0
+                // la activa y vuelve a transparente solo en el tope (scrollY 0).
                 if (header) {
-                    header.classList.toggle('is-stuck', sY > (winHeight * 0.5));
+                    header.classList.toggle('is-stuck', sY > 0);
                 }
 
                 // Pausar carrusel del hero cuando esté fuera de pantalla

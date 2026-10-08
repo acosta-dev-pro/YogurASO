@@ -41,9 +41,11 @@
 .site-header.is-stuck,
 .site-header--solid {
     --hdr-fg: #1F1630;
+    /* relleno vertical de la barra sólida; la tirita del logo lo compensa (ver abajo) */
+    --hdr-solid-pad-y: 4px;
     top: 0; left: 0; right: 0;
     width: 100%;
-    padding: 4px var(--hdr-gutter-r) 4px var(--hdr-gutter-l);
+    padding: var(--hdr-solid-pad-y) var(--hdr-gutter-r) var(--hdr-solid-pad-y) var(--hdr-gutter-l);
     min-height: 46px;
     background: rgba(255, 248, 238, 0.94);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
@@ -118,10 +120,14 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 .site-header.is-stuck .brand-badge-container,
 .site-header--solid .brand-badge-container {
     position: absolute;
-    top: 0;
+    /* Pegada al borde superior de la pantalla: el enlace del logo arranca debajo del
+       padding-top de la barra, así que se sube exactamente ese relleno (antes quedaba
+       un hueco de 4px en escritorio y 6px en móvil). Se alarga lo mismo para que la
+       punta y el logo queden donde estaban. */
+    top: calc(-1 * var(--hdr-solid-pad-y, 0px));
     left: 0; /* el enlace del logo ya está en el margen izquierdo; antes se sumaba dos veces */
     width: 120px;
-    height: 66px;
+    height: calc(66px + var(--hdr-solid-pad-y, 0px));
     background: var(--brand-red, var(--rojo-marca));
     /* Corte tipo Bookmark / Guardado de Instagram/Facebook */
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%);
@@ -129,7 +135,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 5px;
+    padding-top: calc(5px + var(--hdr-solid-pad-y, 0px));
     gap: 1px;
     cursor: pointer;
     z-index: 100;
@@ -195,7 +201,8 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 .site-header.is-stuck .brand-badge-container:hover,
 .site-header--solid .brand-badge-container:hover {
     background: var(--rojo-marca-hover);
-    transform: translateY(3px) scaleY(1.05);
+    /* se estira hacia abajo sin despegarse del borde superior (origin arriba, sin translateY) */
+    transform: scaleY(1.08);
 }
 .site-header.is-stuck .brand-badge-container:hover .pull-tab-arrow,
 .site-header--solid .brand-badge-container:hover .pull-tab-arrow {
@@ -203,7 +210,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 }
 .site-header.is-stuck .brand-badge-container:active,
 .site-header--solid .brand-badge-container:active {
-    transform: translateY(7px) scaleY(1.12);
+    transform: scaleY(1.2);
     transition-duration: 0.06s;
 }
 
@@ -508,14 +515,19 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     }
     .site-header.is-stuck,
     .site-header--solid {
+        --hdr-solid-pad-y: 6px;
         top: 0; left: 0; right: 0;
-        padding: 6px 14px;
+        padding: var(--hdr-solid-pad-y) 14px;
         min-height: 42px;
         border-radius: 0;
     }
     .site-header .brand-badge { width: 110px; }
     .site-header--solid .brand-badge-container,
-    .site-header.is-stuck .brand-badge-container { width: 94px; height: 56px; padding-top: 4px; }
+    .site-header.is-stuck .brand-badge-container {
+        width: 94px;
+        height: calc(56px + var(--hdr-solid-pad-y, 0px));
+        padding-top: calc(4px + var(--hdr-solid-pad-y, 0px));
+    }
     .site-header--solid .brand-badge,
     .site-header.is-stuck .brand-badge { width: 82px; height: 28px; }
     .site-header--solid .brand-badge img,
