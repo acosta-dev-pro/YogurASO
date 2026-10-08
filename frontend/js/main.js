@@ -249,11 +249,15 @@ function bindAddButtons(container) {
                 }
                 return;
             }
-            const hpOpen = e.target.closest('[data-hp-open]');
-            if (hpOpen && hpCard.dataset.slug && window.YogFicha) {
-                e.preventDefault();
-                window.YogFicha.open(hpCard.dataset.slug, hpOpen);
-                return;
+            // Clic en cualquier parte de la tarjeta (fuera de botones) abre la ficha flotante.
+            const slug = hpCard.dataset.slug;
+            if (slug && window.YogFicha?.open && !e.target.closest('button, input, select, textarea')) {
+                const p = allProducts.find((x) => String(x.id) === String(hpCard.dataset.id));
+                const opener = hpCard.querySelector('.hp-card__name [data-hp-open]') || hpCard;
+                if (window.YogFicha.open(slug, opener, p ? catalogEntry(p, slug) : null) !== false) {
+                    e.preventDefault();
+                    return;
+                }
             }
         }
         const qtyBtn = e.target.closest('[data-qty]');
@@ -530,6 +534,21 @@ function flavorCatalog() {
     }));
 }
 
+/** Producto listo para la ficha flotante (js/ficha-modal.js): mismo precio, id y stock que la tarjeta. */
+function catalogEntry(p, slug) {
+    return { ...p, slug: slug || matchFlavorSlug(p) || p.slug, precio_venta: salePrice(p) };
+}
+
+/** Deja los productos a mano de la ficha flotante: window.YogCatalog.bySlug[slug]. */
+function registerCatalog(list) {
+    const reg = window.YogCatalog || (window.YogCatalog = { bySlug: {} });
+    (list || []).forEach((p) => {
+        const slug = matchFlavorSlug(p) || p.slug;
+        if (slug && !reg.bySlug[slug]) reg.bySlug[slug] = catalogEntry(p, slug);
+    });
+    return list;
+}
+
 function matchFlavorSlug(p) {
     const flavors = window.YOGUR_FLAVORS || [];
     const slug = String(p.slug || p.sabor || '').toLowerCase();
@@ -781,9 +800,9 @@ function normalizeProducts(list) {
 export async function loadCatalogProducts() {
     try {
         const list = await fetchProducts();
-        return Array.isArray(list) && list.length ? normalizeProducts(list) : flavorCatalog();
+        return registerCatalog(Array.isArray(list) && list.length ? normalizeProducts(list) : flavorCatalog());
     } catch {
-        return flavorCatalog();
+        return registerCatalog(flavorCatalog());
     }
 }
 
@@ -804,10 +823,11 @@ async function cargarProductos() {
         } else {
             allProducts = normalizeProducts(allProducts);
         }
+        registerCatalog(allProducts);
         fillCategoryOptions(allProducts);
         renderProducts();
     } catch {
-        allProducts = flavorCatalog();
+        allProducts = registerCatalog(flavorCatalog());
         if (allProducts.length) {
             fillCategoryOptions(allProducts);
             renderProducts();

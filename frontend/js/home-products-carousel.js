@@ -7,7 +7,7 @@
  *    termina fuera de la copia del medio, se salta en silencio a la
  *    misma tarjeta de la copia del medio (mismo contenido, sin salto visible).
  *  - La tarjeta centrada recibe .is-active (panel de color del sabor).
- *  - Carrito: window.Cart.addToCart (cart.js). Ficha: window.YogFicha (ficha.js).
+ *  - Carrito: window.Cart.addToCart (cart.js). Ficha flotante: window.YogFicha (ficha-modal.js).
  *  - No intercepta la rueda vertical: el scroll de la página sigue normal.
  * Estilos: css/home-products.css
  */
@@ -343,13 +343,14 @@ function initCarousel(products) {
             });
             return;
         }
-        const open = e.target.closest('[data-hp-open]');
-        if (open) {
+        // Clic en cualquier parte de la tarjeta (fuera de botones) abre la ficha flotante.
+        if (!e.target.closest('button, input, select, textarea')) {
             const slug = card.dataset.slug;
             const isFlavor = (window.YOGUR_FLAVORS || []).some((f) => f.slug === slug);
             if (slug && isFlavor && window.YogFicha?.open) {
                 e.preventDefault();
-                window.YogFicha.open(slug, open);
+                const opener = card.querySelector('.hp-card__name [data-hp-open]') || card;
+                window.YogFicha.open(slug, opener, { ...p, slug, precio_venta: salePrice(p) });
             }
             // si no hay ficha para ese producto, el enlace sigue a productos.html
         }
