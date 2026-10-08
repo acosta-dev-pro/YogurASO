@@ -75,8 +75,31 @@
 .ytrio__card--cremoso p { color: #6B635C; opacity: 1; }
 .ytrio__card--cremoso .ytrio__cta { align-self: flex-end; }
 
-/* ---------- 3. Propósito: demo sólido con botella de fresa ---------- */
-.ytrio__card--proposito { background: var(--yt-fresa); }
+/* ---------- 3. Propósito: toma el sabor activo del hero (js/trio-sabor.js) ----------
+   Color: token --hero-bg / --hero-floor de css/hero.css (body[data-flavor]).
+   Respaldo: rojo fresa si el hero no ha definido sabor. */
+.ytrio__card--proposito {
+    --yt-sabor: var(--hero-bg, var(--yt-fresa));
+    --yt-sabor-disc: color-mix(in srgb, var(--yt-sabor) 84%, #000);
+    --yt-ink: #fff;
+    background-color: var(--yt-sabor);
+    color: var(--yt-ink);
+    transition: background-color .7s var(--yt-ease), color .5s var(--yt-ease);
+}
+/* Sabores claros (p. ej. piña): texto oscuro del mismo tono para contraste */
+.ytrio__card--proposito[data-ink="dark"] {
+    --yt-ink: color-mix(in srgb, var(--hero-ink, #3a1c00) 45%, #000);
+}
+.ytrio__card--proposito[data-ink="dark"] .ytrio__k { background: rgba(0,0,0,.12); color: var(--yt-ink); }
+.ytrio__card--proposito[data-ink="dark"] p { opacity: 1; }
+.ytrio__card--proposito .ytrio__k,
+.ytrio__card--proposito .ys-pill--light,
+.ytrio__card--proposito .ys-pill__arrow { transition: background-color .5s var(--yt-ease), color .5s var(--yt-ease); }
+.ytrio__card--proposito .ys-pill--light { color: color-mix(in srgb, var(--yt-sabor) 70%, #000); }
+.ytrio__card--proposito .ys-pill--light .ys-pill__arrow {
+    background: color-mix(in srgb, var(--yt-sabor) 16%, #fff);
+    color: color-mix(in srgb, var(--yt-sabor) 70%, #000);
+}
 .ytrio__card--proposito .ytrio__body { max-width: calc(60cqw - var(--yt-pad)); }
 .ytrio__card--proposito p { opacity: .9; }
 .ytrio__card--proposito .ytrio__cta { align-self: flex-start; }
@@ -84,21 +107,25 @@
     position: absolute; z-index: 1; top: 0; bottom: 0; right: 2cqw; width: 40cqw;
     display: grid; place-items: end center; pointer-events: none;
 }
-.ytrio__stage::before {          /* disco sólido detrás de la botella */
+.ytrio__stage::before {          /* disco sólido detrás de la botella, un tono más oscuro */
     content: ''; position: absolute; left: 50%; bottom: -18%;
     width: 120%; aspect-ratio: 1; border-radius: 50%;
-    background: var(--yt-fresa-floor); transform: translateX(-50%);
+    background-color: var(--yt-sabor-disc); transform: translateX(-50%);
+    transition: background-color .7s var(--yt-ease);
 }
 .ytrio__bottle {
     position: relative; display: block;
     height: 82%; width: auto; max-width: 88%; object-fit: contain;
     margin-bottom: 6%;
-    filter: drop-shadow(0 14px 16px rgba(60, 0, 6, .32));
+    filter: drop-shadow(0 14px 16px rgba(30, 10, 0, .3));
     transform: rotate(4deg); transform-origin: 50% 100%;
+    transition: opacity .32s var(--yt-ease), transform .6s var(--yt-ease);
 }
+/* Fundido del cambio de sabor: sale bajando un poco, entra subiendo */
+.ytrio__bottle.is-swapping { opacity: 0; transform: translateY(10px) rotate(4deg) scale(.96); transition-duration: .3s, .3s; }
 
 @media (hover: hover) {
-    .ytrio__hand, .ytrio__bottle { transition: transform .6s var(--yt-ease); }
+    .ytrio__hand { transition: transform .6s var(--yt-ease); }
     .ytrio__card--llevalo:hover .ytrio__hand { transform: translate(-4px, -6px) rotate(-2deg); }
     .ytrio__card--proposito:hover .ytrio__bottle { transform: translateY(-6px) rotate(2deg); }
 }
@@ -125,7 +152,10 @@
     .ytrio__stage { width: 40cqw; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .ytrio__hand, .ytrio__bottle { transition: none !important; }
+    .ytrio__hand, .ytrio__bottle,
+    .ytrio__card--proposito, .ytrio__stage::before,
+    .ytrio__card--proposito .ytrio__k, .ytrio__card--proposito .ys-pill--light,
+    .ytrio__card--proposito .ys-pill__arrow { transition: none !important; }
     .ytrio__card--llevalo:hover .ytrio__hand { transform: none; }
     .ytrio__card--proposito:hover .ytrio__bottle { transform: rotate(4deg); }
 }

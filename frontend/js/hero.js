@@ -115,6 +115,7 @@
             if (c) themeMeta.content = c;
         }
         updateShowcaseFlavor(flavor);
+        document.dispatchEvent(new CustomEvent('yg:flavorchange', { detail: { flavor: flavor } }));
     }
 
     var lastStepTime = 0;
