@@ -318,9 +318,18 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     color: #000000;
 }
 
-/* Escritorio: menú junto a las acciones, a la derecha */
+/* Escritorio: 3 columnas (1fr auto 1fr). Logo a la izquierda, menú centrado
+   en la pantalla sin importar el ancho del logo o de los íconos, acciones a la derecha.
+   Los márgenes laterales son iguales (--hdr-gutter-l = --hdr-gutter-r), así que el
+   centro de la columna del medio es el centro del viewport. Móvil sin cambios. */
 @media screen and (min-width: 861px) {
-    .site-header .nav { margin-left: auto; }
+    .site-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+    .site-header .brand-logo { justify-self: start; }
+    .site-header .nav { justify-self: center; }
+    .site-header .icon-buttons { justify-self: end; }
 }
 
 /* ---------- Lupa, usuario, carrito (derecha) ---------- */
