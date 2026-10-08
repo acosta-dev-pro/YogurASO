@@ -17,6 +17,8 @@
     var N = steps.length, STEP = 360 / N;
     var TURN_MS = 16000, SPEED = -360 / TURN_MS; // grados/ms (negativo: cada paso pasa al frente en orden 01, 02, 03…)
     var HALF = 15; // mitad del punto numerado (se mide en measure)
+    var PAD = 8;   // relleno de la tarjeta del paso hasta el punto
+    var BY = 0.6;  // la órbita cruza la botella al 60% de su alto: los pasos la rodean
     var geo = { cx: 0, cy: 0, rx: 0, ry: 0 };
     var rot = 180, vel = 0, hoverIdx = -1, active = -1;
     var tilt = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -28,9 +30,11 @@
         var head = root.querySelector('.p3d__head');
         var hr = head ? head.getBoundingClientRect() : null;
         var wide = w >= 1100;
-        var stepW = steps[0].offsetWidth || 158;
+        var stepW = steps[0].offsetWidth || 168;
         var dot = steps[0].querySelector('.p3d__dot');
         HALF = dot && dot.offsetWidth ? dot.offsetWidth / 2 : 15;
+        PAD = dot ? (parseFloat(getComputedStyle(steps[0]).paddingTop) || 0) : 8;
+        var stepH = steps[0].offsetHeight || 64;
         var bottle = root.querySelector('.p3d__bottle');
         var bh = bottle ? bottle.offsetHeight : 260;
         var L, R, top;
@@ -41,11 +45,15 @@
             L = 20; R = w - 20; top = hr ? (hr.bottom - sr.top + 8) : 0;
         }
         geo.cx = (L + R) / 2;
-        geo.rx = Math.max(150, Math.min((R - L) / 2 - stepW - 8, 330));
-        geo.ry = Math.min(geo.rx * 0.3, 92);
-        // centra verticalmente: desde la tapa de la botella hasta el texto del paso frontal
-        var content = bh * 0.91 + geo.ry + 58;
-        geo.cy = top + Math.max(10, (h - top - content) / 2) + bh * 0.91;
+        geo.rx = Math.max(170, Math.min((R - L) / 2 - stepW * 0.75, 300));
+        geo.ry = Math.min(geo.rx * 0.26, 74);
+        // centra verticalmente: desde la tapa de la botella hasta la tarjeta del paso frontal
+        var below = Math.max(bh * (1 - BY) + 8, geo.ry + stepH - PAD - HALF);
+        var content = bh * BY + below;
+        var bt = top + Math.max(8, (h - top - content) / 2);
+        geo.cy = bt + bh * BY;
+        stage.style.setProperty('--bt', bt.toFixed(1) + 'px');
+        stage.style.setProperty('--gy', (bt + bh * 0.91).toFixed(1) + 'px');
         stage.style.setProperty('--cx', geo.cx.toFixed(1) + 'px');
         stage.style.setProperty('--cy', geo.cy.toFixed(1) + 'px');
         stage.style.setProperty('--rx', geo.rx.toFixed(1) + 'px');
@@ -65,11 +73,12 @@
             var back = s < -0.05;
             if (el._l !== left) { el.classList.toggle('is-left', left); el._l = left; }
             if (el._b !== back) { el.classList.toggle('is-back', back); el._b = back; }
-            var sc = 0.84 + depth * 0.16;
-            var ox = left ? (el.offsetWidth - HALF) : HALF;
-            el.style.transform = 'translate3d(' + (x - ox).toFixed(1) + 'px,' + (y - HALF).toFixed(1) + 'px,0) scale(' + sc.toFixed(3) + ')';
-            el.style.opacity = (0.45 + depth * 0.55).toFixed(3);
-            el.style.zIndex = s > 0.05 ? 7 : 3;
+            var sc = 0.8 + depth * 0.2;
+            var ox = left ? (el.offsetWidth - PAD - HALF) : (PAD + HALF);
+            el.style.transform = 'translate3d(' + (x - ox).toFixed(1) + 'px,' + (y - PAD - HALF).toFixed(1) + 'px,0) scale(' + sc.toFixed(3) + ')';
+            el.style.opacity = (0.4 + depth * 0.6).toFixed(3);
+            // delante de la botella (z 4) en la mitad frontal, detrás en la trasera
+            el.style.zIndex = s > 0 ? 7 + Math.round(s * 4) : 3;
             if (s > best) { best = s; bestI = i; }
         }
         var act = hoverIdx >= 0 ? hoverIdx : bestI;

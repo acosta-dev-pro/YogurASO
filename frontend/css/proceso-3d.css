@@ -52,7 +52,7 @@
    Toda la sección cabe en un viewport: alto = min(560px, 88vh, 100vh - header). */
 .p3d { scroll-margin-top: 72px; }
 @media (min-width: 768px) {
-    .p3d.is-3d { padding: 0; --bh: clamp(200px, 38vh, 290px); }
+    .p3d.is-3d { padding: 0; --bh: clamp(290px, 53vh, 410px); } /* botella ~1.4x más grande */
     .p3d.is-3d .p3d__sticky { position: relative; height: min(560px, 88vh, calc(100vh - 72px)); min-height: 460px; }
     .p3d.is-3d .p3d__wrap { height: 100%; display: flex; align-items: center; pointer-events: none; }
     .p3d.is-3d .p3d__head { width: min(370px, 28vw); pointer-events: auto; }
@@ -62,31 +62,33 @@
     .p3d.is-3d .p3d__more { font-size: 14px; margin-top: 14px; }
     .p3d.is-3d .p3d__stage { position: absolute; inset: 0; width: 100%; max-width: 1440px; margin: 0 auto; perspective: 1400px; }
     .p3d.is-3d .p3d__scene { position: absolute; inset: 0; will-change: transform; }
-    .p3d.is-3d .p3d__floor { display: block; position: absolute; left: var(--cx); top: var(--cy); width: calc(var(--rx) * 1.7); height: calc(var(--rx) * 1.7); margin: calc(var(--rx) * -.85) 0 0 calc(var(--rx) * -.85); border-radius: 50%; transform: rotateX(72deg); background: radial-gradient(circle, rgba(70,0,8,.34) 0 32%, rgba(70,0,8,0) 62%); z-index: 1; }
+    .p3d.is-3d .p3d__floor { display: block; position: absolute; left: var(--cx); top: var(--gy); width: calc(var(--rx) * 1.7); height: calc(var(--rx) * 1.7); margin: calc(var(--rx) * -.85) 0 0 calc(var(--rx) * -.85); border-radius: 50%; transform: rotateX(72deg); background: radial-gradient(circle, rgba(70,0,8,.34) 0 32%, rgba(70,0,8,0) 62%); z-index: 1; }
     .p3d.is-3d .p3d__ring { display: block; position: absolute; left: calc(var(--cx) - var(--rx)); top: calc(var(--cy) - var(--ry)); width: calc(var(--rx) * 2); height: calc(var(--ry) * 2); border-radius: 50%; pointer-events: none; }
-    .p3d.is-3d .p3d__ring--back { border: 1.5px dashed rgba(255,255,255,.3); z-index: 2; }
-    .p3d.is-3d .p3d__ring--front { border: 2px solid rgba(255,255,255,.7); z-index: 6; clip-path: inset(50% 0 0 0); }
-    .p3d.is-3d .p3d__bottle { position: absolute; z-index: 4; width: auto; margin: 0; height: var(--bh); left: var(--cx); top: calc(var(--cy) - var(--bh) * .91); transform: translateX(-50%); }
+    /* Mismo trazo punteado en toda la elipse: mitad trasera detrás de la botella, mitad delantera encima */
+    .p3d.is-3d .p3d__ring--back, .p3d.is-3d .p3d__ring--front { border: 1.5px dashed rgba(255,255,255,.5); }
+    .p3d.is-3d .p3d__ring--back { z-index: 2; clip-path: inset(0 0 50% 0); }
+    .p3d.is-3d .p3d__ring--front { z-index: 6; clip-path: inset(50% 0 0 0); }
+    .p3d.is-3d .p3d__bottle { position: absolute; z-index: 4; width: auto; margin: 0; height: var(--bh); left: var(--cx); top: var(--bt); transform: translateX(-50%); }
     .p3d.is-3d .p3d__bottle img { height: 100%; width: auto; filter: drop-shadow(-10px 24px 18px rgba(50,0,6,.5)) drop-shadow(0 4px 4px rgba(50,0,6,.3)); }
     .p3d.is-3d .p3d__fruit { display: block; will-change: transform; }
     /* Frutas ~65% del tamaño anterior, ancladas a la órbita (--cx/--cy/--rx/--ry) */
     /* lejanas (desenfocadas, detrás de la botella) */
-    .p3d.is-3d .p3d__f1 { width: 40px; left: calc(var(--cx) + var(--rx) + 70px); top: calc(var(--cy) - var(--bh) * .62); transform: rotate(-24deg); z-index: 1; }
-    .p3d.is-3d .p3d__f2 { width: 48px; left: calc(var(--cx) + var(--rx) * .42); top: calc(var(--cy) - var(--ry) - 50px); transform: rotate(14deg); z-index: 1; }
-    .p3d.is-3d .p3d__f3 { width: 38px; left: calc(var(--cx) - var(--rx) * .62); top: calc(var(--cy) - var(--ry) - 70px); transform: rotate(-20deg); z-index: 1; }
-    .p3d.is-3d .p3d__f7 { width: 34px; left: calc(var(--cx) - 130px); top: calc(var(--cy) - var(--bh) * .9); transform: rotate(30deg); z-index: 1; }
-    .p3d.is-3d .p3d__f8 { width: 44px; left: calc(var(--cx) + var(--rx) + 90px); top: calc(var(--cy) + var(--ry) - 6px); transform: rotate(16deg); z-index: 1; }
+    .p3d.is-3d .p3d__f1 { width: 40px; left: calc(var(--cx) + var(--rx) + 70px); top: calc(var(--gy) - var(--bh) * .62); transform: rotate(-24deg); z-index: 1; }
+    .p3d.is-3d .p3d__f2 { width: 48px; left: calc(var(--cx) + var(--rx) * .42); top: calc(var(--gy) - var(--ry) - 50px); transform: rotate(14deg); z-index: 1; }
+    .p3d.is-3d .p3d__f3 { width: 38px; left: calc(var(--cx) - var(--rx) * .62); top: calc(var(--gy) - var(--ry) - 70px); transform: rotate(-20deg); z-index: 1; }
+    .p3d.is-3d .p3d__f7 { width: 34px; left: calc(var(--cx) - 130px); top: calc(var(--gy) - var(--bh) * .9); transform: rotate(30deg); z-index: 1; }
+    .p3d.is-3d .p3d__f8 { width: 44px; left: calc(var(--cx) + var(--rx) + 90px); top: calc(var(--gy) - 40px); transform: rotate(16deg); z-index: 1; }
     .p3d.is-3d .p3d__fruit--far.p3d__f7 img, .p3d.is-3d .p3d__fruit--far.p3d__f8 img { filter: blur(3px); opacity: .75; }
     /* medias y cercanas (nítidas) */
-    .p3d.is-3d .p3d__f4 { width: 66px; left: calc(var(--cx) + var(--bh) * .2); top: calc(var(--cy) - var(--bh) * .74); transform: rotate(18deg); z-index: 5; }
-    .p3d.is-3d .p3d__f9 { width: 72px; left: calc(var(--cx) + var(--rx) + 20px); top: calc(var(--cy) - var(--bh) * .95); transform: rotate(-8deg); z-index: 8; }
-    .p3d.is-3d .p3d__f5 { width: 104px; left: calc(var(--cx) - var(--rx) - 175px); top: calc(var(--cy) + var(--ry) + 22px); transform: rotate(-12deg); z-index: 8; }
-    .p3d.is-3d .p3d__f6 { width: 58px; left: calc(var(--cx) + var(--rx) + 56px); top: calc(var(--cy) + var(--ry) + 38px); transform: rotate(26deg); z-index: 8; }
+    .p3d.is-3d .p3d__f4 { width: 66px; left: calc(var(--cx) + var(--bh) * .2); top: calc(var(--gy) - var(--bh) * .74); transform: rotate(18deg); z-index: 5; }
+    .p3d.is-3d .p3d__f9 { width: 72px; left: calc(var(--cx) + var(--rx) + 20px); top: calc(var(--gy) - var(--bh) * .95); transform: rotate(-8deg); z-index: 8; }
+    .p3d.is-3d .p3d__f5 { width: 104px; left: calc(var(--cx) - var(--rx) - 175px); top: calc(var(--gy) - 24px); transform: rotate(-12deg); z-index: 8; }
+    .p3d.is-3d .p3d__f6 { width: 58px; left: calc(var(--cx) + var(--rx) + 56px); top: calc(var(--gy) + 4px); transform: rotate(26deg); z-index: 8; }
     .p3d.is-3d .p3d__fruit > img { transform: translate3d(var(--px, 0px), var(--py, 0px), 0); transition: transform .9s var(--p3d-ease); }
 
     .p3d.is-3d .p3d__steps { position: absolute; inset: 0; margin: 0; display: block; z-index: auto; pointer-events: none; }
-    .p3d.is-3d .p3d__step { position: absolute; left: 0; top: 0; width: 158px; gap: 9px; pointer-events: auto; cursor: default; will-change: transform, opacity; transform-origin: 15px 15px; }
-    .p3d.is-3d .p3d__step.is-left { flex-direction: row-reverse; text-align: right; transform-origin: calc(100% - 15px) 15px; }
+    .p3d.is-3d .p3d__step { position: absolute; left: 0; top: 0; width: 168px; gap: 9px; padding: 8px 12px 9px 8px; border-radius: 14px; background: rgba(122,10,20,.86); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 14px 28px rgba(50,0,6,.32); pointer-events: auto; cursor: default; will-change: transform, opacity; transform-origin: 23px 23px; }
+    .p3d.is-3d .p3d__step.is-left { flex-direction: row-reverse; text-align: right; padding: 8px 8px 9px 12px; transform-origin: calc(100% - 23px) 23px; }
     .p3d.is-3d .p3d__dot { flex-basis: 30px; height: 30px; font-size: 12px; box-shadow: 0 8px 18px rgba(50,0,6,.35); }
     .p3d.is-3d .p3d__txt h3 { font-size: 15px; }
     .p3d.is-3d .p3d__txt p { font-size: 12px; line-height: 1.35; margin-top: 3px; }
@@ -95,11 +97,11 @@
 }
 /* Tablet: cabecera arriba, escena debajo */
 @media (min-width: 768px) and (max-width: 1099px) {
-    .p3d.is-3d { --bh: clamp(200px, 30vh, 250px); }
+    .p3d.is-3d { --bh: clamp(260px, 52vh, 320px); }
     .p3d.is-3d .p3d__sticky { height: 600px; min-height: 0; }
     .p3d.is-3d .p3d__wrap { height: auto; display: block; padding-top: 40px; }
     .p3d.is-3d .p3d__head { width: min(520px, 100%); }
-    .p3d.is-3d .p3d__step { width: 140px; }
+    .p3d.is-3d .p3d__step { width: 160px; }
     .p3d.is-3d .p3d__f1, .p3d.is-3d .p3d__f3, .p3d.is-3d .p3d__f7, .p3d.is-3d .p3d__f8, .p3d.is-3d .p3d__f9, .p3d.is-3d .p3d__f5 { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
