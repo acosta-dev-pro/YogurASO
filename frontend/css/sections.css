@@ -108,14 +108,14 @@
 
 .fl-card { flex: none; width: clamp(184px, 16vw, 210px); scroll-snap-align: start; perspective: 1400px; }
 .fl-card-hit {
-    --c: var(--bg-fresa, #F4CBCF);
+    --c: var(--bg-fresa, #C3343E);
     position: relative; display: flex; flex-direction: column; justify-content: flex-end;
     aspect-ratio: 4 / 5.8; padding: 15px; border-radius: 22px; overflow: hidden;
-    color: var(--sx-ink, #171717); text-decoration: none; isolation: isolate;
+    color: #fff; text-decoration: none; isolation: isolate;
     background:
-        radial-gradient(120% 70% at 50% 0%, color-mix(in oklab, var(--c), #fff 18%) 0%, transparent 60%),
-        linear-gradient(180deg, var(--c) 0%, color-mix(in oklab, var(--c), #000 10%) 100%);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 18px 34px -24px color-mix(in oklab, var(--c), #000 28%);
+        radial-gradient(120% 70% at 50% 0%, color-mix(in oklab, var(--c), #fff 22%) 0%, transparent 60%),
+        linear-gradient(180deg, var(--c) 0%, color-mix(in oklab, var(--c), #000 18%) 100%);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 18px 34px -24px color-mix(in oklab, var(--c), #000 40%);
     transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transform-style: preserve-3d;
     transition: transform 0.5s var(--sx-ease), box-shadow 0.35s ease;
@@ -136,8 +136,8 @@
 .fl-card-hit:hover .fl-ring { transform: translate(-50%, -50%) scale(1.08); }
 .fl-num { position: absolute; top: 14px; left: 15px; font: 700 11px/1 var(--font-ui); letter-spacing: 0.12em; opacity: 0.75; }
 .fl-chip { position: absolute; top: 10px; right: 10px; padding: 5px 9px; border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.08); font: 700 10.5px/1 var(--font-ui); letter-spacing: 0.04em; color: var(--sx-ink, #171717); }
+    background: rgba(255, 255, 255, 0.16); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); font: 700 10.5px/1 var(--font-ui); letter-spacing: 0.04em; }
 .fl-bottle { position: absolute; left: 50%; top: 8%; width: 45%; transform: translateX(-50%) translateZ(22px); transition: transform 0.6s var(--sx-ease); }
 .fl-bottle img { position: relative; z-index: 1; display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none;
     filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.22)); }
@@ -150,7 +150,7 @@
 .fl-sub { font: 600 11.5px/1.3 var(--font-ui); opacity: 0.82; }
 .fl-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; width: max-content;
     font: 800 11.5px/1 var(--font-ui); letter-spacing: 0.02em; padding: 8px 11px 8px 13px; border-radius: 999px;
-    background: rgba(255, 255, 255, 0.95); color: color-mix(in oklab, var(--c), #000 48%); transition: transform 0.25s var(--sx-ease), gap 0.25s var(--sx-ease); }
+    background: rgba(255, 255, 255, 0.95); color: color-mix(in oklab, var(--c), #000 35%); transition: transform 0.25s var(--sx-ease), gap 0.25s var(--sx-ease); }
 .fl-go svg { width: 13px; height: 13px; }
 .fl-card-hit:hover .fl-go { gap: 8px; }
 
@@ -343,8 +343,8 @@ html.fc-lock { overflow: hidden; }
 .fc-body > *:nth-child(4) { animation-delay: 120ms !important; } .fc-body > *:nth-child(n+5) { animation-delay: 160ms !important; }
 @keyframes fcInR { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
 @keyframes fcInL { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
-.fc-art { position: relative; isolation: isolate; display: grid; place-items: center; padding: 32px 20px 48px; color: var(--sx-ink, #171717);
-    background: radial-gradient(120% 70% at 50% 0%, color-mix(in oklab, var(--flavor-bg, var(--c)), #fff 18%), transparent 60%), linear-gradient(180deg, var(--flavor-bg, var(--c)), color-mix(in oklab, var(--flavor-bg, var(--c)), #000 10%));
+.fc-art { position: relative; isolation: isolate; display: grid; place-items: center; padding: 32px 20px 48px; color: #fff;
+    background: radial-gradient(120% 70% at 50% 0%, color-mix(in oklab, var(--flavor-bg, var(--c)), #fff 22%), transparent 60%), linear-gradient(180deg, var(--flavor-bg, var(--c)), color-mix(in oklab, var(--flavor-bg, var(--c)), #000 22%));
     transition: background 0.5s ease; }
 .fc-mesh { position: absolute; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.14), transparent 40%), radial-gradient(circle at 85% 20%, rgba(0, 0, 0, 0.16), transparent 45%); }
 .fc-ring { position: absolute; z-index: -1; width: 62%; aspect-ratio: 1; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.22); background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 70%); }

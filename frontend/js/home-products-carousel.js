@@ -31,9 +31,9 @@ function flavorTheme(slug) {
     const s = String(slug || '');
     const safe = /^[a-z0-9-]+$/.test(s) ? s : '';
     return {
-        color: safe ? `var(--bg-${safe})` : 'var(--brand-pink, #FFE4E8)',
-        tone: 'light', // pastel panels → dark text
-        ink: 'var(--ink, #171717)'
+        color: safe ? `var(--bg-${safe})` : 'var(--brand-red, #E51D2A)',
+        tone: 'dark', // strong panels → white body text
+        ink: 'color-mix(in srgb, var(--hp-c) 52%, #000)' // labels on white chips/buttons
     };
 }
 

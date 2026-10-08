@@ -51,19 +51,19 @@
     --dur-ui: 220ms;
     --dur-panel: 320ms;
 
-    /* Flavor panel backgrounds (pastel, ~88-92% lightness).
-       Surfaces behind product images / flavor panels only.
-       Accents (dots, buttons, prices) keep strong brand colors. */
-    --bg-fresa: #F4CBCF;
-    --bg-pina: #F5E6A6;
-    --bg-mora: #E6CEE3;
-    --bg-melocoton: #F7D4B4;
-    --bg-frutos-rojos: #F2CBD4;
-    --bg-cafe: #E5D3C4;
-    --bg-guanabana: #D4E8C9;
-    --bg-mango: #F5DDB0;
+    /* Flavor panel backgrounds: strong brand hues, ~10% lighter
+       (piña/mango ~3% so white text still works). Surfaces behind
+       product images / flavor panels. Accents keep separate strong dots. */
+    --bg-fresa: #C3343E;
+    --bg-pina: #E4A30F;
+    --bg-mora: #82366B;
+    --bg-melocoton: #DD6827;
+    --bg-frutos-rojos: #B12C4E;
+    --bg-cafe: #663E31;
+    --bg-guanabana: #488738;
+    --bg-mango: #ED8311;
 
-    /* Legacy near-white washes -> alias to pastel panels */
+    /* Legacy washes → same flavor panel tokens */
     --wash-fresa: var(--bg-fresa);
     --wash-pina: var(--bg-pina);
     --wash-mora: var(--bg-mora);

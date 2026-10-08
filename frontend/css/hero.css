@@ -1,6 +1,6 @@
 /* hero.css — portada YoguraSo (mockup: docs/design/reference/mockup-hero.png)
    Reglas del diseño:
-   - Fondo de escenario pastel por sabor (tokens --bg-* de brand.css).
+   - Fondo de escenario por sabor (fuertes un poco más claros; --bg-* de brand.css).
    - Mesa de estudio integrada con horizonte suave y reflejo realista de botellas.
    - Columna izquierda limpia con título, subtítulo, texto promocional y ticket CTA.
    - Carrusel físico 3D de 3 slots con transición fluida. */
@@ -10,55 +10,57 @@
     --s: clamp(10px, 1.1vw, 16px);
 }
 
-/* ---------- Tokens por sabor (pastel profesional via --bg-* de brand.css) ----------
-   --hero-bg    pared de fondo pastel del sabor (var(--bg-<sabor>))
-   --hero-floor mesa un tono mas profundo del mismo pastel
-   --hero-ink   tinta oscura tintada (texto legible sobre pastel)
-   --hero-fg    texto del hero = tinta oscura */
+/* ---------- Tokens por sabor (fuertes un poco más claros via --bg-* de brand.css) ----------
+   --hero-bg    pared de fondo del sabor (var(--bg-<sabor>))
+   --hero-floor mesa un tono más profundo (hex fijo)
+   --hero-ink   acento oscuro del botón ticket
+   --hero-fg    texto del hero = blanco */
 body[data-flavor] {
-    --hero-fg: var(--hero-ink);
-    --hero-ts: none;
+    --hero-fg: #fff;
+    --hero-ts: 0 1px 2px rgba(0, 0, 0, 0.14), 0 8px 28px rgba(0, 0, 0, 0.12);
     --nav-active: var(--hero-ink);
 }
 body[data-flavor="fresa"] {
     --hero-bg: var(--bg-fresa);
-    --hero-floor: color-mix(in srgb, var(--bg-fresa) 86%, #8F0E17);
+    --hero-floor: #B33039;
     --hero-ink: #8F0E17;
 }
 body[data-flavor="pina"] {
     --hero-bg: var(--bg-pina);
-    --hero-floor: color-mix(in srgb, var(--bg-pina) 86%, #754B00);
+    --hero-floor: #D2960E;
     --hero-ink: #754B00;
+    --hero-ts: 0 1px 2px rgba(90, 45, 0, 0.35), 0 6px 22px rgba(90, 45, 0, 0.28);
 }
 body[data-flavor="mora"] {
     --hero-bg: var(--bg-mora);
-    --hero-floor: color-mix(in srgb, var(--bg-mora) 86%, #3F092E);
+    --hero-floor: #783262;
     --hero-ink: #3F092E;
 }
 body[data-flavor="melocoton"] {
     --hero-bg: var(--bg-melocoton);
-    --hero-floor: color-mix(in srgb, var(--bg-melocoton) 86%, #8A2D00);
+    --hero-floor: #CB6024;
     --hero-ink: #8A2D00;
 }
 body[data-flavor="frutos-rojos"] {
     --hero-bg: var(--bg-frutos-rojos);
-    --hero-floor: color-mix(in srgb, var(--bg-frutos-rojos) 86%, #65051E);
+    --hero-floor: #A32848;
     --hero-ink: #65051E;
 }
 body[data-flavor="cafe"] {
     --hero-bg: var(--bg-cafe);
-    --hero-floor: color-mix(in srgb, var(--bg-cafe) 86%, #2C1008);
+    --hero-floor: #5E392D;
     --hero-ink: #2C1008;
 }
 body[data-flavor="guanabana"] {
     --hero-bg: var(--bg-guanabana);
-    --hero-floor: color-mix(in srgb, var(--bg-guanabana) 86%, #144009);
+    --hero-floor: #427C34;
     --hero-ink: #144009;
 }
 body[data-flavor="mango"] {
     --hero-bg: var(--bg-mango);
-    --hero-floor: color-mix(in srgb, var(--bg-mango) 86%, #7A3700);
+    --hero-floor: #DA7910;
     --hero-ink: #7A3700;
+    --hero-ts: 0 1px 2px rgba(90, 35, 0, 0.35), 0 6px 22px rgba(90, 35, 0, 0.26);
 }
 
 /* ---------- Estructura del Hero ---------- */
@@ -204,7 +206,7 @@ body[data-flavor="mango"] {
     font-weight: 400;
     font-size: clamp(0.92rem, 1.1vw, 1.08rem);
     line-height: 1.45;
-    color: color-mix(in srgb, var(--hero-fg) 78%, transparent);
+    color: rgba(255, 255, 255, 0.94);
     max-width: 24em;
     text-shadow: var(--hero-ts);
 }

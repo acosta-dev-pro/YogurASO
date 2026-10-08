@@ -1,6 +1,6 @@
 /* home-products.css — "Nuestros yogures" (home)
  * Carrusel de una fila con la botella saliendo de la tarjeta.
- * La tarjeta centrada (.is-active) toma el pastel del sabor (--hp-c = var(--bg-<sabor>) de brand.css).
+ * La tarjeta centrada (.is-active) toma el color del sabor (--hp-c = var(--bg-<sabor>) de brand.css).
  * Lógica: js/home-products-carousel.js
  * Solo se animan transform y opacity.
  */
@@ -286,9 +286,9 @@
     box-shadow: none;
 }
 
-/* texto sobre panel pastel: siempre oscuro y legible */
-.hp-card.is-active .hp-card__body { color: var(--ink, #171717); }
-.hp-card.is-active .hp-card__meta { color: rgba(23, 23, 23, 0.66); }
+/* texto sobre panel de sabor: blanco (incl. piña) */
+.hp-card.is-active .hp-card__body { color: #fff; }
+.hp-card.is-active .hp-card__meta { color: rgba(255, 255, 255, 0.82); }
 
 /* foco de teclado en el carrusel: anillo en el panel activo */
 .hp-track:focus-visible .hp-card.is-active .hp-card__panel {
