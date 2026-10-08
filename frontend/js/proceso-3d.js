@@ -16,22 +16,40 @@
     var mqHover = window.matchMedia('(hover: hover) and (pointer: fine)');
     var N = steps.length, STEP = 360 / N;
     var TURN_MS = 16000, SPEED = -360 / TURN_MS; // grados/ms (negativo: cada paso pasa al frente en orden 01, 02, 03…)
-    var HALF = 18; // mitad del punto numerado
+    var HALF = 15; // mitad del punto numerado (se mide en measure)
     var geo = { cx: 0, cy: 0, rx: 0, ry: 0 };
     var rot = 180, vel = 0, hoverIdx = -1, active = -1;
     var tilt = { x: 0, y: 0, tx: 0, ty: 0 };
     var inView = false, raf = 0, enabled = false, last = 0;
 
     function measure() {
-        var w = stage.clientWidth, h = stage.clientHeight || 680;
-        geo.cx = w * (w > 1100 ? 0.56 : 0.5);
-        geo.rx = Math.min(w * (w > 1100 ? 0.275 : 0.25), 400);
-        geo.ry = Math.min(geo.rx * 0.3, 118);
-        geo.cy = h - geo.ry - 112;
-        stage.style.setProperty('--cx', geo.cx + 'px');
-        stage.style.setProperty('--cy', geo.cy + 'px');
-        stage.style.setProperty('--rx', geo.rx + 'px');
-        stage.style.setProperty('--ry', geo.ry + 'px');
+        var w = stage.clientWidth, h = stage.clientHeight || 560;
+        var sr = stage.getBoundingClientRect();
+        var head = root.querySelector('.p3d__head');
+        var hr = head ? head.getBoundingClientRect() : null;
+        var wide = w >= 1100;
+        var stepW = steps[0].offsetWidth || 158;
+        var dot = steps[0].querySelector('.p3d__dot');
+        HALF = dot && dot.offsetWidth ? dot.offsetWidth / 2 : 15;
+        var bottle = root.querySelector('.p3d__bottle');
+        var bh = bottle ? bottle.offsetHeight : 260;
+        var L, R, top;
+        if (wide && hr) {
+            // cabecera a la izquierda: la órbita ocupa el espacio restante a la derecha
+            L = hr.right - sr.left + 24; R = Math.min(w, sr.width) - 24; top = 0;
+        } else {
+            L = 20; R = w - 20; top = hr ? (hr.bottom - sr.top + 8) : 0;
+        }
+        geo.cx = (L + R) / 2;
+        geo.rx = Math.max(150, Math.min((R - L) / 2 - stepW - 8, 330));
+        geo.ry = Math.min(geo.rx * 0.3, 92);
+        // centra verticalmente: desde la tapa de la botella hasta el texto del paso frontal
+        var content = bh * 0.91 + geo.ry + 58;
+        geo.cy = top + Math.max(10, (h - top - content) / 2) + bh * 0.91;
+        stage.style.setProperty('--cx', geo.cx.toFixed(1) + 'px');
+        stage.style.setProperty('--cy', geo.cy.toFixed(1) + 'px');
+        stage.style.setProperty('--rx', geo.rx.toFixed(1) + 'px');
+        stage.style.setProperty('--ry', geo.ry.toFixed(1) + 'px');
     }
 
     function place() {
