@@ -377,15 +377,6 @@
   padding: 16px 20px;
   text-align: center; font-size: 0.85rem;
 }
-.footer-map-wrap {
-  background: var(--cream) !important;
-  padding: 28px 0 8px;
-}
-.footer-map-title {
-  color: var(--brand-red-deep) !important;
-  text-align: center; font-family: var(--font-display);
-  letter-spacing: 0.08em; font-size: 0.95rem;
-}
 
 /* ========== FICHA MODAL mockup 01 ========== */
 .fc {

@@ -182,7 +182,6 @@
 
 /* ---------- Mapa con consentimiento ---------- */
 [data-consent-embed] { position: relative; }
-.footer-map[data-consent-embed] { height: clamp(260px, 32vw, 360px); }
 .nt-embed-ph {
     position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px;
     padding: 24px; text-align: center; color: var(--ink, #171717);
