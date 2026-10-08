@@ -287,12 +287,31 @@
         label.textContent = code;
     }
 
+    function smallBottle(item) {
+        const src = String(item.imagen || "");
+        if (!src) return "";
+        if (/-sm\.webp($|\?)/i.test(src)) return src;
+        return src.replace(/-500ml\.webp/i, "-500ml-sm.webp");
+    }
+
+    function syncFlavorShots(root) {
+        const scope = root || document.getElementById("cart-sidebar-items");
+        if (!scope) return;
+        scope.querySelectorAll(".cart-chip").forEach((chip) => {
+            const on = chip.querySelector(".cart-item-check")?.checked;
+            chip.classList.toggle("is-selected", Boolean(on));
+        });
+    }
+
     function renderSidebar() {
         dressTicketShell();
         const container = document.getElementById("cart-sidebar-items");
         if (!container) return;
 
         const items = syncFromStorage();
+        container._checkedIds = new Set(
+            [...container.querySelectorAll(".cart-item-check:checked")].map((box) => String(box.dataset.id))
+        );
         const clearBtn = document.getElementById("btn-clear-cart-sidebar");
         if (clearBtn) clearBtn.hidden = items.length === 0;
 
@@ -315,15 +334,26 @@
             const meta = productMeta(item);
             const line = Number(item.precio) * Number(item.cantidad);
             const detail = [meta.size, formatCOP(item.precio) + " c/u"].filter(Boolean).join(" · ");
+            const shot = smallBottle(item);
+            if (shot) {
+                const pre = new Image();
+                pre.src = shot;
+            }
+            const shotHtml = shot
+                ? `<span class="cart-flavor-shot" aria-hidden="true"><img src="${escapeHtml(shot)}" alt="" decoding="sync"></span>`
+                : "";
             return `
-            <article class="cart-chip" data-id="${escapeHtml(item.id)}" style="--chip-line:${tone.line};--chip-ink:${tone.ink}">
+            <article class="cart-chip" data-id="${escapeHtml(item.id)}" style="--chip-line:${tone.line};--chip-wash:${tone.wash};--chip-ink:${tone.ink}">
                 <label class="cart-pick">
                     <input type="checkbox" class="cart-item-check" data-id="${escapeHtml(item.id)}" aria-label="Seleccionar ${escapeHtml(meta.name)}">
                 </label>
                 <div class="cart-chip-top">
-                    <div>
-                        <div class="cart-chip-name"><i class="cart-flavor-dot" aria-hidden="true"></i>${escapeHtml(meta.name)}</div>
+                    <div class="cart-chip-lead">
+                        ${shotHtml}
+                        <div>
+                        <div class="cart-chip-name">${escapeHtml(meta.name)}</div>
                         <div class="cart-chip-meta">${escapeHtml(detail)}</div>
+                        </div>
                     </div>
                     <button type="button" class="cart-chip-x" data-action="remove" data-id="${escapeHtml(item.id)}" aria-label="Quitar ${escapeHtml(meta.name)}">×</button>
                 </div>
@@ -338,6 +368,14 @@
             </article>`;
         }).join("")}`;
 
+        const kept = container._checkedIds;
+        if (kept && kept.size) {
+            container.querySelectorAll(".cart-item-check").forEach((box) => {
+                if (kept.has(String(box.dataset.id))) box.checked = true;
+            });
+        }
+        syncFlavorShots(container);
+        syncSelectToolbar(container);
         syncTicketMeta(items);
     }
 
@@ -778,6 +816,7 @@
                         sidebarItems.querySelectorAll('.cart-item-check').forEach((c) => { c.checked = on; });
                     }
                     syncSelectToolbar(sidebarItems);
+                    syncFlavorShots(sidebarItems);
                 }
             });
         }
