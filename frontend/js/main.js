@@ -208,6 +208,54 @@ function bindAddButtons(container) {
     if (container.dataset.boundAdd) return;
     container.dataset.boundAdd = '1';
     container.addEventListener('click', (e) => {
+        const hpCard = e.target.closest('.hp-card');
+        if (hpCard && !hpCard.classList.contains('producto-skeleton')) {
+            const hpQty = e.target.closest('[data-hp-qty]');
+            if (hpQty) {
+                e.preventDefault();
+                e.stopPropagation();
+                const val = hpCard.querySelector('[data-hp-qty-val]');
+                if (!val) return;
+                const next = Math.max(1, (Number(val.textContent) || 1) + Number(hpQty.dataset.hpQty));
+                val.textContent = String(next);
+                return;
+            }
+            const fav = e.target.closest('[data-hp-fav]');
+            if (fav) {
+                e.preventDefault();
+                e.stopPropagation();
+                const on = fav.getAttribute('aria-pressed') === 'true';
+                fav.setAttribute('aria-pressed', on ? 'false' : 'true');
+                fav.classList.toggle('is-on', !on);
+                return;
+            }
+            const hpAdd = e.target.closest('[data-hp-add]');
+            if (hpAdd) {
+                e.preventDefault();
+                e.stopPropagation();
+                const p = allProducts.find((x) => String(x.id) === String(hpCard.dataset.id));
+                const qty = Number(hpCard.querySelector('[data-hp-qty-val]')?.textContent) || 1;
+                if (window.Cart && p && !hpAdd.disabled) {
+                    window.Cart.addToCart({
+                        id: p.id,
+                        lineId: `${p.id}::500`,
+                        nombre: p.nombre,
+                        tamano: '500 ml',
+                        precio: Number(salePrice(p)) || Number(p.precio) || 0,
+                        imagen_url: bottleUrlFor(p),
+                        stock: p.stock,
+                        cantidad: qty
+                    });
+                }
+                return;
+            }
+            const hpOpen = e.target.closest('[data-hp-open]');
+            if (hpOpen && hpCard.dataset.slug && window.YogFicha) {
+                e.preventDefault();
+                window.YogFicha.open(hpCard.dataset.slug, hpOpen);
+                return;
+            }
+        }
         const qtyBtn = e.target.closest('[data-qty]');
         if (qtyBtn) {
             e.preventDefault();
@@ -455,10 +503,10 @@ function closeInspect() {
 }
 
 
-/** Fondo pastel del sabor: referencia CSS --bg-<sabor> (brand.css), sin hex duplicado. */
+/** Fondo pastel de la tarjeta: --fondo-claro-<sabor> (brand.css). El hero sigue en --bg-*. */
 function flavorBgVar(slug) {
     const s = String(slug || '');
-    return /^[a-z0-9-]+$/.test(s) ? `var(--bg-${s})` : 'var(--cream, #FFF8F4)';
+    return /^[a-z0-9-]+$/.test(s) ? `var(--fondo-claro-${s})` : 'var(--cream, #FFF8F4)';
 }
 
 function flavorCatalog() {
@@ -539,6 +587,63 @@ function renderProducts() {
         return;
     }
 
+    const useHpCards = document.body.classList.contains('productos-page-v3');
+    const HP_HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.3-4.4-9.2-9A5.2 5.2 0 0 1 12 6.1a5.2 5.2 0 0 1 9.2 5.2c-1.9 4.6-9.2 9-9.2 9Z"/></svg>';
+
+    const hpCardHtml = (p, index) => {
+        const sinStock = Number(p.stock) <= 0;
+        const slug = matchFlavorSlug(p) || p.slug || '';
+        const safe = /^[a-z0-9-]+$/.test(String(slug)) ? slug : '';
+        const wash = safe ? flavorBgVar(safe) : 'var(--fondo-claro-fresa, #F4CBCF)';
+        const ink = 'color-mix(in srgb, var(--hp-c) 42%, #171717)';
+        const name = escapeHtml(p.nombre);
+        const bottle = bottleUrlFor(p);
+        const img = bottle
+            ? `<img src="${escapeHtml(bottle)}" alt="Yogur ${name}, botella de 500 ml" width="320" height="555" decoding="async" draggable="false">`
+            : '';
+        const askPrice = !Number(p.precio);
+        const venta = salePrice(p);
+        const price = askPrice
+            ? '<span class="hp-price is-ask">Consultar</span>'
+            : (Number(p.descuento) > 0
+                ? `<span class="hp-price"><s>${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
+                : `<span class="hp-price">${formatCOP(venta)}</span>`);
+        let label = String(p.letrero || '').trim();
+        const off = Number(p.descuento || 0);
+        if (!label && off > 0) label = `-${Math.round(off)}%`;
+        const badges = [];
+        if (label) badges.push(`<span class="hp-badge">${escapeHtml(label)}</span>`);
+        if (sinStock) badges.push('<span class="hp-badge hp-badge--out">Sin stock</span>');
+        const badgeBlock = badges.length ? `<div class="hp-card__badges">${badges.join('')}</div>` : '';
+        const addLabel = sinStock ? 'Sin stock' : (askPrice ? 'Pedir' : 'Agregar');
+        const addAria = sinStock ? `${name} sin stock` : `Agregar ${name} al carrito`;
+        const featured = index === 0 ? ' is-active' : '';
+        return `
+            <article class="hp-card${sinStock ? ' is-out' : ''}${featured}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" data-tone="light" style="--hp-c:${wash};--hp-ink:${ink};--producto-card-bg:${wash}">
+                <span class="hp-card__panel" aria-hidden="true"></span>
+                <a class="hp-card__media" href="productos.html" data-hp-open tabindex="-1" aria-hidden="true">
+                    <span class="hp-card__floor"></span>
+                    ${img}
+                </a>
+                ${badgeBlock}
+                <button type="button" class="hp-fav" data-hp-fav aria-pressed="false" aria-label="Guardar ${name} en favoritos">${HP_HEART}</button>
+                <div class="hp-card__body">
+                    <h3 class="hp-card__name"><a href="productos.html" data-hp-open aria-label="Ver ficha de ${name}">${name}</a></h3>
+                    <p class="hp-card__meta">500 ml · ${escapeHtml(p.categoria || 'Yogurt Artesanal')}</p>
+                    <p class="hp-card__price">${price}</p>
+                    <div class="hp-card__actions">
+                        <div class="hp-qty" role="group" aria-label="Cantidad de ${name}">
+                            <button type="button" data-hp-qty="-1" aria-label="Quitar uno">&minus;</button>
+                            <span data-hp-qty-val>1</span>
+                            <button type="button" data-hp-qty="1" aria-label="Sumar uno">+</button>
+                        </div>
+                        <button type="button" class="hp-add" data-hp-add ${sinStock ? 'disabled' : ''} aria-label="${addAria}">${addLabel}</button>
+                    </div>
+                </div>
+            </article>
+        `;
+    };
+
     const cardHtml = (p, index) => {
         const sinStock = Number(p.stock) <= 0;
         const venta = salePrice(p);
@@ -549,8 +654,9 @@ function renderProducts() {
             ? `<img src="${escapeHtml(bottle)}" alt="${escapeHtml(p.nombre)}" class="producto-img" loading="lazy" decoding="async" width="320" height="555">`
             : IMG_PLACEHOLDER_HTML;
 
-        const wash = (String(p.color_fondo || '').startsWith('var(') ? p.color_fondo : null)
-            || (slug ? flavorBgVar(slug) : null)
+        const stored = String(p.color_fondo || '');
+        const wash = (/^[a-z0-9-]+$/.test(slug) ? flavorBgVar(slug) : null)
+            || (stored.startsWith('var(--fondo-claro-') ? stored : null)
             || 'var(--cream, #FFF8F4)';
         const askPrice = !Number(p.precio);
         const precioHtml = askPrice
@@ -602,7 +708,7 @@ function renderProducts() {
         `;
     };
 
-    container.innerHTML = products.map((p, index) => cardHtml(p, index)).join('');
+    container.innerHTML = products.map((p, index) => (useHpCards ? hpCardHtml(p, index) : cardHtml(p, index))).join('');
     delete container.dataset.cloned;
     bindProductImageFallbacks(container);
     bindAddButtons(container);
@@ -659,7 +765,9 @@ function normalizeProducts(list) {
         return {
             ...p,
             imagen_url: bottle || p.imagen_url,
-            color_fondo: (String(p.color_fondo || '').startsWith('var(') ? p.color_fondo : null) || (slug ? flavorBgVar(slug) : p.color_fondo),
+            color_fondo: (/^[a-z0-9-]+$/.test(String(slug)) ? flavorBgVar(slug) : null)
+                || (String(p.color_fondo || '').startsWith('var(--fondo-claro-') ? p.color_fondo : null)
+                || p.color_fondo,
             slug: p.slug || slug
         };
     });

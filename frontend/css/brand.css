@@ -63,6 +63,16 @@
     --bg-guanabana: #488738;
     --bg-mango: #ED8311;
 
+    /* Pastel de tarjetas de producto (no el hero). --bg-* sigue fuerte. */
+    --fondo-claro-fresa: #F4CBCF;
+    --fondo-claro-pina: #F5E6A6;
+    --fondo-claro-mora: #E6CEE3;
+    --fondo-claro-melocoton: #F7D4B4;
+    --fondo-claro-frutos-rojos: #F2CBD4;
+    --fondo-claro-cafe: #E5D3C4;
+    --fondo-claro-guanabana: #D4E8C9;
+    --fondo-claro-mango: #F5DDB0;
+
     /* Legacy washes → same flavor panel tokens */
     --wash-fresa: var(--bg-fresa);
     --wash-pina: var(--bg-pina);

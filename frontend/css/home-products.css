@@ -1,6 +1,6 @@
 /* home-products.css — "Nuestros yogures" (home)
  * Carrusel de una fila con la botella saliendo de la tarjeta.
- * La tarjeta centrada (.is-active) toma el color del sabor (--hp-c = var(--bg-<sabor>) de brand.css).
+ * La tarjeta centrada (.is-active) toma el pastel del sabor (--hp-c = var(--fondo-claro-<sabor>) de brand.css).
  * Lógica: js/home-products-carousel.js
  * Solo se animan transform y opacity.
  */
@@ -11,7 +11,7 @@
     --hp-gap: clamp(12px, 1.6vw, 22px);
     --hp-media-h: calc(var(--hp-w) * 0.86);
     --hp-panel-top: calc(var(--hp-media-h) * 0.46);
-    padding: clamp(34px, 4.6vw, 56px) 0 clamp(36px, 4.6vw, 58px);
+    padding: 0 0 clamp(36px, 4.6vw, 58px);
     background: #F5F2EF;
     overflow: hidden;
 }
@@ -25,6 +25,25 @@
 }
 .hp-head .v3-title { margin: 10px 0 6px; }
 .hp-head .v3-lead { font-size: 0.94rem; margin-inline: auto; }
+
+/* Banda fuerte detrás del título: letras blancas sobre rojo (el fondo de la sección es crema). */
+#main-content.hp-section > .hp-head {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 10px;
+    padding: clamp(28px, 4vw, 44px) 20px clamp(22px, 3vw, 32px);
+    background: linear-gradient(135deg, var(--brand-red, #E51D2A) 0%, var(--brand-red-dark, #C91522) 72%);
+    color: #fff;
+}
+#main-content.hp-section > .hp-head .v3-kicker {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+#main-content.hp-section > .hp-head .v3-title,
+#main-content.hp-section > .hp-head .v3-lead {
+    color: #fff;
+}
+#main-content.hp-section > .hp-head .v3-lead { opacity: 0.92; }
 
 /* ---------- carrusel ---------- */
 .hp-carousel {
@@ -286,9 +305,11 @@
     box-shadow: none;
 }
 
-/* texto sobre panel de sabor: blanco (incl. piña) */
-.hp-card.is-active .hp-card__body { color: #fff; }
-.hp-card.is-active .hp-card__meta { color: rgba(255, 255, 255, 0.82); }
+/* pastel (--fondo-claro-*): tinta oscura dentro de la tarjeta */
+.hp-card.is-active .hp-card__body,
+.hp-card.is-active .hp-card__name,
+.hp-card.is-active .hp-card__price { color: var(--ink, #171717); }
+.hp-card.is-active .hp-card__meta { color: var(--ink-soft, #3A3330); }
 
 /* foco de teclado en el carrusel: anillo en el panel activo */
 .hp-track:focus-visible .hp-card.is-active .hp-card__panel {
@@ -386,4 +407,50 @@
     .hp-nav { transition: none !important; }
     .hp-card__panel { transform: none; }
     .hp-card:not(.is-active):hover .hp-card__media img { transform: translateY(10px) scale(0.84); }
+}
+
+/* ---------- catálogo (misma tarjeta que el home, en grilla) ---------- */
+.hp-grid {
+    --hp-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --hp-w: 100%;
+    --hp-media-h: clamp(176px, 22vw, 210px);
+    --hp-panel-top: calc(var(--hp-media-h) * 0.42);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+    gap: 26px 16px;
+    padding: 36px 0 8px;
+    overflow: visible;
+}
+.hp-grid .hp-card {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+    scroll-snap-align: unset;
+}
+.hp-grid .hp-card__panel {
+    opacity: 1;
+    transform: none;
+}
+.hp-grid .hp-card__media img,
+.hp-grid .hp-card.is-active .hp-card__media img {
+    transform: translateY(0) scale(1);
+}
+.hp-grid .hp-card.is-active {
+    z-index: 1;
+}
+.hp-grid .hp-card.is-active .hp-card__media img {
+    transform: translateY(-10px) scale(1.08);
+}
+@media (hover: hover) and (pointer: fine) {
+    .hp-grid .hp-card:not(.is-active):hover .hp-card__media img {
+        transform: translateY(-4px) scale(1.03);
+    }
+}
+@media (max-width: 640px) {
+    .hp-grid {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 340px;
+        margin-inline: auto;
+        --hp-media-h: 200px;
+    }
 }

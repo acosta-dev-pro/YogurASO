@@ -474,8 +474,9 @@
 }
 .productos-page-v3 .shop-hero h1 {
   margin: 8px 0 10px; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.1;
+  color: #fff;
 }
-.productos-page-v3 .shop-hero p { margin: 0; opacity: 0.9; max-width: 40ch; }
+.productos-page-v3 .shop-hero p { margin: 0; opacity: 0.9; max-width: 40ch; color: #fff; }
 .productos-page-v3 .catalog-toolbar-v3 {
   width: min(100% - 40px, var(--page-max));
   margin: -22px auto 0; position: relative; z-index: 2;

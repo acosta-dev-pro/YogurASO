@@ -26,14 +26,14 @@ const IDLE_AFTER_TOUCH_MS = 9000;
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-/* ---------- panel color: CSS --bg-<sabor> (brand.css), never a hardcoded hex ---------- */
+/* ---------- panel color: pastel --fondo-claro-<sabor> (brand.css). Hero keeps --bg-*. ---------- */
 function flavorTheme(slug) {
     const s = String(slug || '');
     const safe = /^[a-z0-9-]+$/.test(s) ? s : '';
     return {
-        color: safe ? `var(--bg-${safe})` : 'var(--brand-red, #E51D2A)',
-        tone: 'dark', // strong panels → white body text
-        ink: 'color-mix(in srgb, var(--hp-c) 52%, #000)' // labels on white chips/buttons
+        color: safe ? `var(--fondo-claro-${safe})` : 'var(--fondo-claro-fresa, #F4CBCF)',
+        tone: 'light', // pastel panels → dark ink
+        ink: 'color-mix(in srgb, var(--hp-c) 42%, #171717)' // labels on white chips/buttons
     };
 }
 
