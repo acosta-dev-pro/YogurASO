@@ -1,18 +1,18 @@
 /* Catálogo: la misma tarjeta que el carrusel del home.
    No toca el home. 4 por fila en escritorio (8 sabores = 2 filas parejas), 2 en tablet, 1 en móvil. */
 body.productos-page-v3 .productos-grid.hp-grid {
-    --hp-w: clamp(188px, 14.5vw, 220px);
+    --hp-w: clamp(176px, 13.4vw, 204px);
     --hp-media-h: calc(var(--hp-w) * 0.86);
     --hp-panel-top: calc(var(--hp-media-h) * 0.46);
     display: grid !important;
     grid-template-columns: repeat(4, var(--hp-w)) !important;
     justify-content: center !important;
     justify-items: center !important;
-    gap: 64px clamp(36px, 3.6vw, 56px) !important;   /* aire entre tarjetas: filas y columnas */
+    gap: 96px clamp(56px, 5.6vw, 84px) !important;   /* tarjetas esparcidas: mucho aire entre filas y columnas */
     width: 100%;
     max-width: none !important;
     margin-inline: auto;
-    padding: 48px 8px 40px;
+    padding: 56px 8px 64px;
 }
 body.productos-page-v3 .productos-grid.hp-grid .hp-card {
     width: var(--hp-w);
@@ -30,7 +30,7 @@ body.productos-page-v3 .hp-card__price {
     body.productos-page-v3 .productos-grid.hp-grid {
         --hp-w: clamp(196px, 26vw, 232px);
         grid-template-columns: repeat(2, var(--hp-w)) !important;
-        gap: 56px 48px !important;
+        gap: 88px 64px !important;
     }
 }
 @media (max-width: 640px) {
@@ -40,6 +40,6 @@ body.productos-page-v3 .hp-card__price {
         --hp-panel-top: calc(var(--hp-media-h) * 0.46);
         grid-template-columns: minmax(0, var(--hp-w)) !important;
         max-width: none !important;
-        gap: 44px !important;
+        gap: 64px !important;
     }
 }
