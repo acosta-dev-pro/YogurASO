@@ -129,22 +129,179 @@
             </div>`;
     }
 
+    function ensureTicketCss() {
+        if (document.getElementById("cart-ticket-css")) return;
+        const link = document.createElement("link");
+        link.id = "cart-ticket-css";
+        link.rel = "stylesheet";
+        const script = document.querySelector("script[src*='cart.js']");
+        const src = script ? script.getAttribute("src") : "js/cart.js";
+        link.href = src.replace(/js\/cart\.js(\\?.*)?$/, "css/cart-ticket.css");
+        document.head.appendChild(link);
+    }
+
+    function dressTicketShell() {
+        ensureTicketCss();
+        const sidebar = document.getElementById("cartSidebar");
+        if (!sidebar || sidebar.dataset.ticket === "1") return;
+        const header = sidebar.querySelector(".cart-header");
+        const items = document.getElementById("cart-sidebar-items");
+        const total = sidebar.querySelector(".cart-total");
+        if (!header || !items || !total) return;
+
+        sidebar.dataset.ticket = "1";
+        sidebar.classList.add("cart-ticket");
+
+        const sheet = document.createElement("div");
+        sheet.className = "cart-sheet";
+
+        const brand = document.createElement("div");
+        brand.className = "cart-sheet-brand";
+        const loc = String(getConfig().COMPANY_LOCATION || "").trim();
+        const tag = loc ? "Yogurt artesanal · " + loc : "Yogurt artesanal";
+        brand.innerHTML = '<div class="cart-sheet-logo">YogurASO</div><p>' + escapeHtml(tag) + "</p>";
+
+        const cutTop = document.createElement("div");
+        cutTop.className = "cart-cut";
+        cutTop.setAttribute("aria-hidden", "true");
+
+        const bottom = document.createElement("div");
+        bottom.className = "cart-sheet-bottom";
+        const cutBot = document.createElement("div");
+        cutBot.className = "cart-cut";
+        cutBot.setAttribute("aria-hidden", "true");
+
+        total.classList.add("cart-ticket-sum");
+        total.innerHTML = [
+            '<div class="cart-subline"><span id="cartSubLabel">Subtotal</span><span class="num" id="cartSubAmount">$0</span></div>',
+            '<div class="cart-grand"><span>TOTAL</span><span class="num" id="cartTotalAmount">$0</span></div>',
+            '<div class="cart-barcode-wrap" id="cartBarcode" aria-hidden="true"></div>',
+            '<p class="cart-order-code" id="cartOrderCode"></p>'
+        ].join("");
+        bottom.append(cutBot, total);
+
+        header.after(sheet);
+        sheet.append(brand, cutTop, items, bottom);
+
+        const foot = document.createElement("div");
+        foot.className = "cart-ticket-foot";
+        sheet.after(foot);
+        const clearBtn = document.getElementById("btn-clear-cart-sidebar");
+        const checkout = document.getElementById("checkoutBtn");
+        if (clearBtn) foot.append(clearBtn);
+        if (checkout) foot.append(checkout);
+
+        const span = header.querySelector("span");
+        if (span) {
+            span.className = "cart-ticket-headcopy";
+            span.innerHTML = '<span class="cart-ticket-title">Carrito</span><span class="cart-ticket-sub" id="cartTicketSub"></span>';
+        }
+    }
+
+    function flavorStyle(item) {
+        const name = String(item.nombre || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        const map = [
+            ["fresa", "--bg-fresa", "--fondo-claro-fresa", "#9E2530"],
+            ["guanabana", "--bg-guanabana", "--fondo-claro-guanabana", "#356628"],
+            ["mango", "--bg-mango", "--fondo-claro-mango", "#A85A06"],
+            ["pina", "--bg-pina", "--fondo-claro-pina", "#8A6408"],
+            ["mora", "--bg-mora", "--fondo-claro-mora", "#6A2A56"],
+            ["melocoton", "--bg-melocoton", "--fondo-claro-melocoton", "#A34A16"],
+            ["durazno", "--bg-melocoton", "--fondo-claro-melocoton", "#A34A16"],
+            ["frutos", "--bg-frutos-rojos", "--fondo-claro-frutos-rojos", "#8E243E"],
+            ["cafe", "--bg-cafe", "--fondo-claro-cafe", "#5C382C"]
+        ];
+        for (let i = 0; i < map.length; i++) {
+            if (name.includes(map[i][0])) {
+                return { line: "var(" + map[i][1] + ")", wash: "var(" + map[i][2] + ")", ink: map[i][3] };
+            }
+        }
+        return { line: "var(--rojo-marca)", wash: "#F6F1EA", ink: "#1F1B1A" };
+    }
+
+    function syncTicketMeta(items) {
+        const units = items.reduce((n, i) => n + Number(i.cantidad || 0), 0);
+        const total = getCartTotal(items);
+        const sub = document.getElementById("cartTicketSub");
+        if (sub) sub.textContent = units ? units + (units === 1 ? " producto" : " productos") : "Sin productos";
+        const label = document.getElementById("cartSubLabel");
+        if (label) label.textContent = units ? "Subtotal (" + units + (units === 1 ? " ud." : " uds.") + ")" : "Subtotal";
+        const subAmt = document.getElementById("cartSubAmount");
+        if (subAmt) subAmt.textContent = formatCOP(total);
+        const totalEl = document.getElementById("cartTotalAmount");
+        if (totalEl) totalEl.textContent = formatCOP(total);
+        paintBarcode(items);
+    }
+
+    function orderCode(items) {
+        const raw = items.map((i) => [i.id, i.cantidad, i.precio].join(":")).join("|") || "vacio";
+        let h = 2166136261;
+        for (let i = 0; i < raw.length; i++) {
+            h ^= raw.charCodeAt(i);
+            h = Math.imul(h, 16777619);
+        }
+        return "YG-" + String(h >>> 0).padStart(10, "0").slice(-8);
+    }
+
+    function barcodeSvg(code) {
+        const bits = [1, 1, 0, 1];
+        const s = String(code);
+        for (let i = 0; i < s.length; i++) {
+            const c = s.charCodeAt(i);
+            for (let b = 0; b < 6; b++) bits.push((c >> b) & 1);
+            bits.push(i % 2 ? 0 : 1, 0);
+        }
+        bits.push(1, 0, 1, 1);
+        const w = 1.35;
+        const rects = [];
+        let run = 0;
+        let start = 0;
+        for (let i = 0; i < bits.length; i++) {
+            if (bits[i]) {
+                if (!run) start = i;
+                run++;
+            } else if (run) {
+                rects.push([start, run]);
+                run = 0;
+            }
+        }
+        if (run) rects.push([start, run]);
+        const width = bits.length * w;
+        const bars = rects.map(([sx, len]) =>
+            '<rect x="' + (sx * w).toFixed(2) + '" y="0" width="' + Math.max(0.8, len * w - 0.25).toFixed(2) + '" height="34"/>'
+        ).join("");
+        return '<svg class="cart-barcode" viewBox="0 0 ' + width.toFixed(2) + ' 34" preserveAspectRatio="none" role="img" aria-label="Codigo ' + escapeHtml(code) + '">' + bars + "</svg>";
+    }
+
+    function paintBarcode(items) {
+        const host = document.getElementById("cartBarcode");
+        const label = document.getElementById("cartOrderCode");
+        if (!host || !label) return;
+        if (!items.length) {
+            host.innerHTML = "";
+            label.textContent = "";
+            return;
+        }
+        const code = orderCode(items);
+        host.innerHTML = barcodeSvg(code);
+        label.textContent = code;
+    }
+
     function renderSidebar() {
-        const container = document.getElementById('cart-sidebar-items');
+        dressTicketShell();
+        const container = document.getElementById("cart-sidebar-items");
         if (!container) return;
 
         const items = syncFromStorage();
-        const clearBtn = document.getElementById('btn-clear-cart-sidebar');
+        const clearBtn = document.getElementById("btn-clear-cart-sidebar");
         if (clearBtn) clearBtn.hidden = items.length === 0;
 
         if (items.length === 0) {
             container.innerHTML = emptyCartHTML(true);
-            const totalEl = document.getElementById('cartTotalAmount');
-            if (totalEl) totalEl.textContent = '$0';
+            syncTicketMeta([]);
             return;
         }
 
-        const total = getCartTotal(items);
         container.innerHTML = `
             <div class="cart-select-bar">
                 <label class="cart-select-all">
@@ -154,32 +311,34 @@
                 <button type="button" class="cart-remove-selected" data-action="remove-selected" disabled>Eliminar</button>
             </div>
             ${items.map((item) => {
-            const thumb = item.imagen
-                ? `<img class="cart-item-thumb" src="${escapeHtml(item.imagen)}" alt="" onerror="this.style.display='none'">`
-                : `<span class="shop-bag-ph" aria-hidden="true"><i class="fas fa-cheese"></i></span>`;
+            const tone = flavorStyle(item);
+            const meta = productMeta(item);
+            const line = Number(item.precio) * Number(item.cantidad);
+            const detail = [meta.size, formatCOP(item.precio) + " c/u"].filter(Boolean).join(" · ");
             return `
-            <div class="cart-item" data-id="${escapeHtml(item.id)}">
+            <article class="cart-chip" data-id="${escapeHtml(item.id)}" style="--chip-line:${tone.line};--chip-ink:${tone.ink}">
                 <label class="cart-pick">
-                    <input type="checkbox" class="cart-item-check" data-id="${escapeHtml(item.id)}" aria-label="Seleccionar ${escapeHtml(item.nombre)}">
+                    <input type="checkbox" class="cart-item-check" data-id="${escapeHtml(item.id)}" aria-label="Seleccionar ${escapeHtml(meta.name)}">
                 </label>
-                ${thumb}
-                <div class="cart-item-info">
-                    <span class="cart-item-name">${escapeHtml(item.nombre)}</span>
-                    <div class="cart-item-controls shop-qty">
-                        <button type="button" class="cart-qty-btn" data-action="qty" data-id="${escapeHtml(item.id)}" data-delta="-1" aria-label="Disminuir cantidad">-</button>
+                <div class="cart-chip-top">
+                    <div>
+                        <div class="cart-chip-name"><i class="cart-flavor-dot" aria-hidden="true"></i>${escapeHtml(meta.name)}</div>
+                        <div class="cart-chip-meta">${escapeHtml(detail)}</div>
+                    </div>
+                    <button type="button" class="cart-chip-x" data-action="remove" data-id="${escapeHtml(item.id)}" aria-label="Quitar ${escapeHtml(meta.name)}">×</button>
+                </div>
+                <div class="cart-chip-bot">
+                    <div class="cart-chip-step">
+                        <button type="button" class="cart-qty-btn" data-action="qty" data-id="${escapeHtml(item.id)}" data-delta="-1" aria-label="Disminuir cantidad">−</button>
                         <span class="cart-item-qty" aria-label="Cantidad">${escapeHtml(item.cantidad)}</span>
                         <button type="button" class="cart-qty-btn" data-action="qty" data-id="${escapeHtml(item.id)}" data-delta="1" aria-label="Aumentar cantidad">+</button>
                     </div>
-                    <span class="cart-item-price">${formatCOP(Number(item.precio) * item.cantidad)}</span>
+                    <span class="cart-chip-price num">${formatCOP(line)}</span>
                 </div>
-                <button type="button" class="cart-remove-btn" data-action="remove" data-id="${escapeHtml(item.id)}" aria-label="Eliminar ${escapeHtml(item.nombre)}">
-                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                </button>
-            </div>`;
-        }).join('')}`;
+            </article>`;
+        }).join("")}`;
 
-        const totalEl = document.getElementById('cartTotalAmount');
-        if (totalEl) totalEl.textContent = formatCOP(total);
+        syncTicketMeta(items);
     }
 
     function setQuantity(id, cantidad) {
@@ -522,16 +681,37 @@
 
         saveOrderHistory(items);
 
+        openWhatsApp(items, buildWhatsAppMessage(items));
+    }
+
+    function ticketWhatsAppText(items) {
+        return buildWhatsAppMessage(items) + "\n\nCódigo de pedido: " + orderCode(items);
+    }
+
+    function openWhatsApp(items, text) {
         const wa = getConfig().WHATSAPP_NUMBER || '573001234567';
-        const url = `https://wa.me/${wa}?text=${encodeURIComponent(buildWhatsAppMessage(items))}`;
-        window.open(url, '_blank', 'noopener,noreferrer');
+        const url = "https://wa.me/" + wa + "?text=" + encodeURIComponent(text);
+        window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function checkoutDirect() {
+        const items = syncFromStorage();
+        if (items.length === 0) {
+            showToast("Tu carrito está vacío", "warning");
+            return;
+        }
+        saveOrderHistory(items);
+        openWhatsApp(items, ticketWhatsAppText(items));
     }
 
     function openSidebar() {
         const sidebar = document.getElementById('cartSidebar');
         const overlay = document.getElementById('cartOverlay');
         if (!sidebar) return;
+        dressTicketShell();
         renderSidebar();
+        sidebar.classList.add('cart-ticket-ready');
+        void sidebar.offsetHeight;
         sidebar.classList.add('show');
         overlay?.classList.add('show');
         sidebar.setAttribute('aria-hidden', 'false');
@@ -575,7 +755,7 @@
         }
         if (overlay) overlay.addEventListener('click', closeSidebar);
         if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', checkoutWhatsApp);
+            checkoutBtn.addEventListener('click', checkoutDirect);
             checkoutBtn.innerHTML = '<i class="fab fa-whatsapp" aria-hidden="true"></i> Comprar por WhatsApp';
         }
         if (clearSidebar) clearSidebar.addEventListener('click', clearCartConfirm);
@@ -624,6 +804,7 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+        dressTicketShell();
         updateCounter();
         bindSidebar();
         renderSidebar();
