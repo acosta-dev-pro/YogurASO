@@ -380,30 +380,30 @@
 
     <section class="emp" id="empaque" aria-labelledby="emp-title">
         <div class="emp__wrap">
-            <div class="emp__card">
-                <div class="emp__copy">
-                    <span class="emp__eyebrow">Empaque</span>
-                    <h2 class="emp__title" id="emp-title">Un envase pensado para mantener la frescura</h2>
-                    <p class="emp__lead">La misma botella para todos los sabores: asa, tapa de rosca y etiqueta con color propio.</p>
-                    <dl class="emp__spec">
-                        <div class="emp__row"><dt>Material</dt><dd>Resistente, para el uso diario.</dd></div>
-                        <div class="emp__row"><dt>Envase</dt><dd>Reciclable, con menor impacto.</dd></div>
-                        <div class="emp__row"><dt>Conservación</dt><dd>Pensado para conservar la frescura en la nevera.</dd></div>
-                        <div class="emp__row" data-info="temperatura" hidden><dt>Temperatura</dt><dd></dd></div>
-                        <div class="emp__row" data-info="materialEnvase" hidden><dt>Tipo de envase</dt><dd></dd></div>
-                    </dl>
-                </div>
-                <div class="emp__stage">
-                    <video class="emp__video" autoplay muted loop playsinline preload="metadata" poster="assets/video/empaque-botella-poster.webp" width="400" height="688" aria-label="Botella YoguraSo de 500 ml con asa lateral y tapa de rosca roja">
-                        <source src="assets/video/empaque-botella.webm" type="video/webm">
-                        <source src="assets/video/empaque-botella.mp4" type="video/mp4">
-                    </video>
-                    <p class="emp__call emp__call--l emp__call--tapa"><span class="emp__call-txt"><b>Tapa de rosca</b><span>Ciérrala bien y vuelve a la nevera.</span></span><span class="emp__call-line" aria-hidden="true"></span></p>
-                    <p class="emp__call emp__call--r emp__call--asa"><span class="emp__call-txt"><b>Asa lateral</b><span>Agarre cómodo al servir.</span></span><span class="emp__call-line" aria-hidden="true"></span></p>
-                    <p class="emp__call emp__call--l emp__call--label"><span class="emp__call-txt"><b>Etiqueta por sabor</b><span>Encuentra el tuyo de un vistazo.</span></span><span class="emp__call-line" aria-hidden="true"></span></p>
-                    <p class="emp__call emp__call--r emp__call--size"><span class="emp__call-txt"><b>Presentación 500 ml</b><span>Ideal para compartir en casa o llevar.</span></span><span class="emp__call-line" aria-hidden="true"></span></p>
-                </div>
+            <div class="emp__head">
+                <span class="emp__eyebrow">Empaque</span>
+                <h2 class="emp__title" id="emp-title">Un envase pensado para mantener la frescura</h2>
+                <p class="emp__lead">La misma botella para todos los sabores: asa, tapa de rosca y etiqueta con color propio.</p>
             </div>
+            <div class="emp__stage">
+                <video class="emp__video" autoplay muted loop playsinline preload="metadata" poster="assets/video/empaque-botella-poster.webp" width="520" height="720" aria-label="Botella YoguraSo de 500 ml con asa lateral y tapa de rosca roja">
+                    <source src="assets/video/empaque-botella.webm" type="video/webm">
+                    <source src="assets/video/empaque-botella.mp4" type="video/mp4">
+                </video>
+                <ul class="emp__calls">
+                    <li class="emp__call emp__call--l emp__call--tapa"><span class="emp__call-line" aria-hidden="true"></span><span class="emp__call-txt"><b>Tapa de rosca</b><span>Ciérrala bien y vuelve a la nevera.</span></span></li>
+                    <li class="emp__call emp__call--r emp__call--asa"><span class="emp__call-line" aria-hidden="true"></span><span class="emp__call-txt"><b>Asa lateral</b><span>Agarre cómodo al servir.</span></span></li>
+                    <li class="emp__call emp__call--l emp__call--label"><span class="emp__call-line" aria-hidden="true"></span><span class="emp__call-txt"><b>Etiqueta por sabor</b><span>Encuentra el tuyo de un vistazo.</span></span></li>
+                    <li class="emp__call emp__call--r emp__call--size"><span class="emp__call-line" aria-hidden="true"></span><span class="emp__call-txt"><b>Presentación 500 ml</b><span>Ideal para compartir en casa o llevar.</span></span></li>
+                </ul>
+            </div>
+            <ul class="emp__specs">
+                <li>Material resistente, para el uso diario</li>
+                <li>Envase reciclable, con menor impacto</li>
+                <li>Pensado para conservar la frescura en la nevera</li>
+                <li data-info="temperatura" data-label="Temperatura" hidden></li>
+                <li data-info="materialEnvase" data-label="Tipo de envase" hidden></li>
+            </ul>
         </div>
     </section>
 

@@ -1,4 +1,4 @@
-/* empaque.js — sección Empaque del home.
+/* empaque.js — sección Empaque del home (estilo anatomía).
    - Muestra temperatura / material solo si están en js/product-info.js (no se inventan datos).
    - El video de la botella se pausa fuera de pantalla y no corre con "reducir movimiento". */
 (function () {
@@ -7,11 +7,11 @@
     var I = window.YOG_INFO || {};
     var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 
-    sec.querySelectorAll('[data-info]').forEach(function (row) {
-        var v = I[row.getAttribute('data-info')];
-        var dd = row.querySelector('dd');
-        if (v && dd) { dd.innerHTML = esc(v); row.hidden = false; }
-        else row.hidden = true;
+    sec.querySelectorAll('[data-info]').forEach(function (el) {
+        var v = I[el.getAttribute('data-info')];
+        var label = el.getAttribute('data-label');
+        if (v) { el.innerHTML = (label ? '<b>' + esc(label) + ':</b> ' : '') + esc(v); el.hidden = false; }
+        else el.hidden = true;
     });
 
     var video = sec.querySelector('.emp__video');
