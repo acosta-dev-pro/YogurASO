@@ -10,69 +10,75 @@
     --fcol-ease: cubic-bezier(0.23, 1, 0.32, 1);
     background: #FFF8F4;
     color: var(--fcol-ink);
-    padding: clamp(64px, 8vw, 104px) 0;
+    padding: clamp(48px, 6vw, 80px) 0;
 }
 .fcol__wrap { width: min(1240px, 100% - 40px); margin: 0 auto; }
-.fcol__head { max-width: 640px; margin-bottom: clamp(28px, 4vw, 44px); }
-.fcol__eyebrow { font-weight: 800; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--fcol-red); }
-.fcol__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(32px, 4.2vw, 48px); line-height: 1.04; letter-spacing: -.015em; margin: 10px 0 0; color: var(--fcol-ink); }
-.fcol__lead { color: var(--fcol-muted); font-size: 17px; line-height: 1.45; margin: 12px 0 0; }
+.fcol__head { max-width: 560px; margin-bottom: clamp(22px, 3vw, 34px); }
+.fcol__eyebrow { font-weight: 800; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--fcol-red); }
+.fcol__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(28px, 3.1vw, 39px); line-height: 1.04; letter-spacing: -.015em; margin: 8px 0 0; color: var(--fcol-ink); }
+.fcol__lead { color: var(--fcol-muted); font-size: 14.5px; line-height: 1.45; margin: 10px 0 0; }
 
-.fcol__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(250px, auto); gap: 20px; }
-.fcol__tile { position: relative; overflow: hidden; border-radius: var(--fcol-r); background: #fff; min-height: 250px; }
-.fcol__tile h3 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 26px; line-height: 1.04; letter-spacing: -.01em; margin: 6px 0 0; }
-.fcol__tile p { font-size: 15px; line-height: 1.45; color: var(--fcol-muted); margin: 8px 0 0; }
-.fcol__k { display: block; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--fcol-red); }
+.fcol__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(196px, auto); gap: 16px; }
+.fcol__tile { position: relative; overflow: hidden; border-radius: var(--fcol-r); background: #fff; min-height: 196px; }
+.fcol__tile h3 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 21px; line-height: 1.04; letter-spacing: -.01em; margin: 5px 0 0; }
+.fcol__tile p { font-size: 13px; line-height: 1.45; color: var(--fcol-muted); margin: 6px 0 0; }
+.fcol__k { display: block; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--fcol-red); }
 .fcol__c { position: relative; z-index: 2; }
 
 /* Campo: foto grande */
-.fcol__campo { grid-column: 1 / span 2; grid-row: span 2; min-height: 520px; color: #fff; }
+.fcol__campo { grid-column: 1 / span 2; grid-row: span 2; min-height: 408px; color: #fff; }
 .fcol__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 50%; }
 .fcol__campo::after { content: ''; position: absolute; inset: auto 0 0; height: 60%; background: linear-gradient(180deg, rgba(10,20,10,0), rgba(10,16,8,.74)); }
-.fcol__campo .fcol__c { position: absolute; left: 32px; right: 32px; bottom: 30px; }
+.fcol__campo .fcol__c { position: absolute; left: 26px; right: 26px; bottom: 24px; }
 .fcol__campo .fcol__k { color: rgba(255,255,255,.85); }
-.fcol__campo h3 { font-size: 40px; }
+.fcol__campo h3 { font-size: 32px; }
 .fcol__campo p { color: rgba(255,255,255,.86); max-width: 380px; }
-.fcol__badge { position: absolute; z-index: 2; top: 24px; right: 24px; width: 88px; height: 88px; }
+.fcol__badge { position: absolute; z-index: 2; top: 20px; right: 20px; width: 72px; height: 72px; }
 
 /* 500 ml rojo con botella saliendo */
-.fcol__ml { grid-column: 3 / span 2; background: var(--fcol-red); color: #fff; overflow: visible; min-height: 300px; }
+.fcol__ml { grid-column: 3 / span 2; background: var(--fcol-red); color: #fff; overflow: visible; min-height: 236px; }
 .fcol__ml::before { content: ''; position: absolute; inset: 0; border-radius: var(--fcol-r); background: radial-gradient(circle at 92% 8%, rgba(255,255,255,.16) 0 22%, transparent 22.3%), radial-gradient(circle at 92% 8%, transparent 0 34%, rgba(255,255,255,.12) 34.3% 34.8%, transparent 35%); pointer-events: none; }
-.fcol__big { position: absolute; left: 32px; top: 18px; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(76px, 8vw, 112px); line-height: 1; letter-spacing: -.04em; }
+.fcol__big { position: absolute; left: 26px; top: 14px; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(62px, 6.4vw, 90px); line-height: 1; letter-spacing: -.04em; }
 .fcol__big small { font-size: .48em; letter-spacing: -.01em; margin-left: 6px; }
-.fcol__ml .fcol__c { position: absolute; left: 32px; bottom: 28px; width: min(240px, 52%); }
+.fcol__ml .fcol__c { position: absolute; left: 26px; bottom: 22px; width: min(220px, 52%); }
 .fcol__ml .fcol__k { color: #FFD5D2; }
 .fcol__ml p { color: rgba(255,255,255,.88); }
 .fcol__bottle { position: absolute; z-index: 3; right: 6%; bottom: -24px; height: 118%; width: auto; transform: rotate(8deg); filter: drop-shadow(0 26px 22px rgba(80,0,8,.38)); }
 
 /* Oscuro con check */
-.fcol__check { background: #1E1415; color: #fff; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
-.fcol__check p { color: rgba(255,255,255,.68); font-size: 14px; }
+.fcol__check { background: #1E1415; color: #fff; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+.fcol__check p { color: rgba(255,255,255,.68); font-size: 12.5px; }
 .fcol__check h3 { color: #fff; }
 
-/* Fruta real */
-.fcol__fruta { background: #F9D9D7; }
-.fcol__fruta .fcol__k { position: absolute; left: 20px; top: 18px; font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: .16em; color: #B01824; }
-.fcol__fruta img { position: absolute; left: 52%; top: 52%; width: min(170px, 70%); height: auto; transform: translate(-50%, -50%) rotate(-10deg); filter: drop-shadow(0 18px 16px rgba(120,10,20,.25)); }
+/* Fruta real: fresa partida saliendo por la esquina */
+.fcol__fruta { background: #F9D9D7; overflow: visible; z-index: 3; }
+.fcol__fruta::before { content: ''; position: absolute; inset: 0; border-radius: var(--fcol-r); background: radial-gradient(circle at 78% 78%, rgba(255,255,255,.55) 0 26%, transparent 26.5%); pointer-events: none; }
+.fcol__fruta .fcol__k { position: absolute; left: 18px; top: 16px; font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 10.5px; letter-spacing: .16em; color: #B01824; }
+.fcol__fruta img { position: absolute; z-index: 2; right: -24px; bottom: -26px; width: min(138px, 54%); height: auto; transform: rotate(-14deg); filter: drop-shadow(0 22px 18px rgba(120,10,20,.32)) drop-shadow(0 4px 4px rgba(120,10,20,.18)); }
 
-/* Leche: imagen rectangular arriba */
-.fcol__leche { background: #F7E7DF; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+/* Cremoso: botella de mora con moras */
+.fcol__leche { background: #F7E7DF; padding: 13px; display: flex; flex-direction: column; gap: 12px; }
 .fcol__media { position: relative; overflow: hidden; border-radius: 12px; }
 .fcol__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.fcol__leche .fcol__media { height: 150px; }
-.fcol__leche .fcol__c { padding: 0 8px 8px; }
-.fcol__leche h3 { font-size: 22px; }
-.fcol__leche p { font-size: 14px; }
+.fcol__art { position: relative; height: 112px; border-radius: 12px; background: radial-gradient(90% 120% at 50% 100%, #E9C9DD 0%, #F2DCE6 55%, #F7E7DF 100%); }
+.fcol__art-bottle { position: absolute; left: 50%; bottom: 4px; height: 108px; width: auto; transform: translateX(-50%) rotate(6deg); filter: drop-shadow(0 14px 12px rgba(70,10,50,.3)); }
+.fcol__art-fruit { position: absolute; left: calc(50% - 84px); bottom: -4px; width: 70px; height: auto; transform: rotate(-10deg); filter: drop-shadow(0 8px 8px rgba(40,0,30,.3)); }
+.fcol__leche .fcol__c { padding: 0 6px 6px; }
+.fcol__leche h3 { font-size: 18px; }
+.fcol__leche p { font-size: 12.5px; }
 
-/* Tazón: texto + imagen rectangular */
-.fcol__tazon { grid-column: span 2; display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; padding: 16px 16px 16px 30px; align-items: center; }
-.fcol__tazon .fcol__media { height: 100%; min-height: 218px; }
+/* Tazón: texto + imagen rectangular + botella de fresa */
+.fcol__tazon { grid-column: span 2; display: grid; grid-template-columns: 1fr 1.3fr; gap: 14px; padding: 13px 13px 13px 24px; align-items: center; }
+.fcol__tazwrap { position: relative; height: 100%; min-height: 174px; padding-left: 40px; display: flex; }
+.fcol__tazon .fcol__media { flex: 1; height: auto; min-height: 174px; }
+.fcol__tazon .fcol__media img { position: absolute; inset: 0; }
+.fcol__tazbot { position: absolute; z-index: 2; left: 0; bottom: -2px; height: 84%; width: auto; transform: rotate(-7deg); transform-origin: 50% 100%; filter: drop-shadow(8px 16px 14px rgba(80,0,8,.32)) drop-shadow(0 3px 3px rgba(80,0,8,.18)); }
 
 /* Ruta Neiva -> Tello */
-.fcol__ruta { border: 1.5px solid rgba(23,23,23,.08); padding: 26px 24px; }
+.fcol__ruta { border: 1.5px solid rgba(23,23,23,.08); padding: 20px 20px; }
 .fcol__ruta .fcol__c { max-width: 210px; }
-.fcol__ruta h3 { font-size: 24px; }
-.fcol__map { position: absolute; right: 8px; bottom: 6px; width: 150px; height: auto; }
+.fcol__ruta h3 { font-size: 19px; }
+.fcol__map { position: absolute; right: 6px; bottom: 4px; width: 124px; height: auto; }
 
 /* Entrada escalonada */
 .fcol.is-ready .fcol__tile { opacity: 0; transform: translate3d(0, 28px, 0); transition: opacity .8s var(--fcol-ease), transform .8s var(--fcol-ease); transition-delay: calc(var(--i, 0) * 80ms); }
@@ -85,7 +91,7 @@
 /* Tablet: 2 columnas */
 @media (max-width: 1024px) {
     .fcol__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .fcol__campo { grid-column: 1 / -1; grid-row: auto; min-height: 420px; }
+    .fcol__campo { grid-column: 1 / -1; grid-row: auto; min-height: 340px; }
     .fcol__ml { grid-column: 1 / -1; }
     .fcol__tazon { grid-column: 1 / -1; }
     .fcol__ruta { grid-column: auto; }
@@ -93,19 +99,22 @@
 /* Móvil: 1 columna */
 @media (max-width: 640px) {
     .fcol__grid { grid-template-columns: 1fr; gap: 16px; grid-auto-rows: auto; }
-    .fcol__campo { min-height: 380px; }
-    .fcol__campo h3 { font-size: 32px; }
-    .fcol__ml { min-height: 280px; margin-top: 8px; }
+    .fcol__campo { min-height: 320px; }
+    .fcol__campo h3 { font-size: 28px; }
+    .fcol__ml { min-height: 236px; margin-top: 8px; }
     .fcol__bottle { height: 84%; right: -4%; bottom: -14px; }
     .fcol__ml .fcol__c { width: 50%; left: 24px; z-index: 4; }
     .fcol__big { left: 24px; }
-    .fcol__check { min-height: 200px; }
-    .fcol__fruta { min-height: 200px; }
-    .fcol__leche .fcol__media { height: 190px; }
+    .fcol__check { min-height: 170px; }
+    .fcol__fruta { min-height: 170px; margin-right: 20px; }
+    .fcol__fruta img { right: -20px; width: 150px; }
+    .fcol__art { height: 160px; }
+    .fcol__art-bottle { height: 150px; }
     .fcol__tazon { grid-template-columns: 1fr; padding: 16px; }
     .fcol__tazon .fcol__c { padding: 8px 8px 0; }
-    .fcol__tazon .fcol__media { min-height: 200px; height: 200px; }
-    .fcol__ruta { min-height: 230px; }
+    .fcol__tazwrap { min-height: 190px; padding-left: 36px; }
+    .fcol__tazon .fcol__media { min-height: 190px; }
+    .fcol__ruta { min-height: 196px; }
     .fcol__ruta .fcol__c { max-width: 55%; }
 }
 @media (prefers-reduced-motion: reduce) {
