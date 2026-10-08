@@ -3,33 +3,18 @@
    Banda gris = mismo gris del recuadro del post IG (.showcase-gray-box, #F3F4F6).
    Tipografía = sistema de Empaque / post IG:
    eyebrow Nunito Sans 800 · título Fredoka 600 / -.015em · lead Nunito Sans.
-   A la derecha cuelga del header una cinta pastel con punta redondeada
-   (el mismo gesto de la pestaña roja del logo). Sin botella de mostrario.
+   Sin botella de mostrario ni cinta pastel.
    Se carga al final de productos.html: pisa home-v3.css y brand-pages.css.
    ========================================================================== */
 .productos-page-v3 .shop-hero {
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     padding: 104px 0 58px;
     background: #F3F4F6;
     color: #171717;
 }
 .productos-page-v3 .shop-hero__inner { position: relative; z-index: 1; }
 
-/* cinta pastel colgante (decorativa, sin producto) */
-.productos-page-v3 .shop-hero::after {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    top: 0;
-    right: calc((100% - min(100% - 40px, var(--page-max, 1120px))) / 2 + 36px);
-    width: 176px;
-    height: calc(100% + 26px);
-    border-radius: 0 0 24px 24px;
-    background: var(--fondo-claro-fresa, #F4CBCF);
-    box-shadow: 0 10px 24px -14px rgba(23, 23, 23, .25);
-    pointer-events: none;
-}
 
 .productos-page-v3 .shop-hero .shop-hero__kicker {
     margin: 0;
@@ -59,11 +44,11 @@
     text-wrap: pretty;
 }
 
-/* barra de filtros: transparente bajo la banda, deja libre la cinta */
+/* barra de filtros: transparente bajo la banda */
 .productos-page-v3 .catalog-toolbar-v3 {
     margin: 22px auto 0;
     width: min(100% - 40px, var(--page-max, 1120px));
-    padding: 0 236px 0 0;
+    padding: 0;
     gap: 10px;
     border-radius: 0;
     background: transparent;
@@ -90,15 +75,8 @@
 .productos-page-v3 .catalog-count { font: 600 12.5px 'Nunito Sans', sans-serif !important; }
 .productos-page-v3 .productos-catalogo { padding-top: 46px; }
 
-/* tablet: la cinta se angosta */
-@media (max-width: 1024px) {
-    .productos-page-v3 .shop-hero::after { width: 128px; right: 32px; height: calc(100% - 12px); }
-    .productos-page-v3 .catalog-toolbar-v3 { padding-right: 0; }
-}
-/* móvil: sin cinta; banda gris limpia */
 @media (max-width: 720px) {
     .productos-page-v3 .shop-hero { padding: 92px 0 32px; }
-    .productos-page-v3 .shop-hero::after { display: none; }
     .productos-page-v3 .catalog-toolbar-v3 { margin-top: 16px; }
     .productos-page-v3 .productos-catalogo { padding-top: 28px; }
 }
