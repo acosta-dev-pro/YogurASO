@@ -188,7 +188,7 @@
         sheet.after(foot);
         const clearBtn = document.getElementById("btn-clear-cart-sidebar");
         const checkout = document.getElementById("checkoutBtn");
-        if (clearBtn) foot.append(clearBtn);
+        if (clearBtn) { clearBtn.textContent = "Vaciar"; foot.append(clearBtn); }
         if (checkout) foot.append(checkout);
 
         const span = header.querySelector("span");
