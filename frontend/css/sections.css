@@ -1,3 +1,4 @@
+.sx-shapes { display: none !important; opacity: 0 !important; pointer-events: none !important; }
 /* sections.css — secciones nuevas del inicio (debajo del hero).
    Escala contenida y con aire (misma perspectiva que el hero): títulos 24–34 px, texto 13–15 px,
    contenido de 1080 px como máximo y bloques con 64–104 px de respiro.

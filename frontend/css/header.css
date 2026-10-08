@@ -1,160 +1,322 @@
 /* header.css — menú global de YoguraSo
-   En el hero (arriba): transparente, sin barra flotante ni píldora blanca —
-   los links viven dentro del fondo del primer panel.
-   Al bajar (is-stuck) o en páginas interiores (--solid): barra crema flotante
-   con glass suave; ahí sí eleva. Logo izq., acciones der. (esparcidos). */
+   - En el Hero: transparente, logo izq., píldora blanca central, acciones der.
+   - Al bajar (is-stuck) o páginas interiores (--solid): pegado al tope de la pantalla (top: 0),
+     ultra delgado, sin píldora blanca (los links se acoplan directamente a la barra).
+   - Tira/ticket rojo colgante con punta triangular hacia abajo para jalar hacia el inicio. */
 
 .site-header {
     --hdr-fg: #fff;
-    --hdr-gutter-l: max(18px, calc((100vw - var(--s) * 100) / 2 + var(--s) * 2.2));
-    --hdr-gutter-r: max(14px, calc((100vw - var(--s) * 100) / 2 + var(--s) * 1.6));
+    --hdr-gutter-l: var(--hero-gutter, clamp(24px, 4vw, 56px));
+    --hdr-gutter-r: var(--hero-gutter, clamp(24px, 4vw, 56px));
     --hdr-gutter: var(--hdr-gutter-l);
     position: fixed;
     top: 0; left: 0; right: 0;
     width: 100%;
     transform: none;
     z-index: 200;
-    display: grid;
-    grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 20px;
-    padding: clamp(14px, 2.4svh, 26px) var(--hdr-gutter-r) clamp(14px, 2.4svh, 26px) var(--hdr-gutter-l);
-    /* Integrado al hero: sin capa flotante */
+    gap: clamp(16px, 2.5vw, 36px);
+    padding: clamp(8px, 1.3svh, 14px) var(--hdr-gutter-r) clamp(8px, 1.3svh, 14px) var(--hdr-gutter-l);
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     border: 0;
     border-radius: 0;
+    border-bottom: 1px solid transparent;
     box-shadow: none;
     color: var(--hdr-fg);
-    transition: background-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft),
-                padding 0.35s var(--ease-soft), color 0.5s var(--ease-soft),
-                border-color 0.35s var(--ease-soft), top 0.35s var(--ease-soft),
-                left 0.35s var(--ease-soft), right 0.35s var(--ease-soft),
-                border-radius 0.35s var(--ease-soft), width 0.35s var(--ease-soft);
+    transition: background-color 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+                padding 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+                color 0.35s var(--ease-soft),
+                border-color 0.28s ease;
 }
 
-/* Al bajar / páginas interiores: sí flota y eleva */
+/* Al bajar en scroll (is-stuck) o en páginas interiores (--solid):
+   Pegado al tope superior de la pantalla (top: 0), ultra delgado, beige suave integrado */
 .site-header.is-stuck,
 .site-header--solid {
-    --hdr-fg: var(--ink);
-    top: 12px; left: 14px; right: 14px;
-    width: auto;
-    padding: 8px var(--hdr-gutter-r) 8px var(--hdr-gutter-l);
-    background: rgba(255, 247, 232, 0.90);
+    --hdr-fg: #1F1630;
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    padding: 4px var(--hdr-gutter-r) 4px var(--hdr-gutter-l);
+    min-height: 46px;
+    background: rgba(255, 248, 238, 0.94);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
     backdrop-filter: blur(16px) saturate(150%);
-    border: 1px solid rgba(23, 23, 23, 0.08);
-    border-radius: 18px;
-    box-shadow: 0 1px 3px rgba(23, 23, 23, 0.06), 0 12px 32px rgba(23, 23, 23, 0.10);
+    border-bottom: 1px solid rgba(23, 23, 23, 0.07);
+    border-radius: 0;
+    box-shadow: 0 1px 10px rgba(23, 23, 23, 0.05);
 }
 
-/* ---------- Logo ---------- */
+/* ---------- Logo con Listón / Bookmark Rojo (Estilo Guardado Instagram/Facebook) ---------- */
 .site-header .brand-logo {
     position: relative;
-    display: block;
+    display: inline-flex;
+    align-items: center;
     justify-self: start;
-    margin-left: -2px;
-    width: clamp(108px, calc(var(--s) * 12.2), 190px);
-    aspect-ratio: 3105 / 1119;
+    margin-left: 0;
+    text-decoration: none;
     flex-shrink: 0;
 }
-.site-header--solid .brand-logo,
-.site-header.is-stuck .brand-logo { width: clamp(104px, 9vw, 140px); }
-.site-header .brand-logo img {
+
+.site-header .brand-badge-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* En el Hero: Logo suelto transparente y limpio */
+.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge-container {
+    position: relative;
+}
+.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: clamp(112px, 9.2vw, 145px);
+    aspect-ratio: 3105 / 1119;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    transition: transform 0.2s ease, width 0.28s ease;
+}
+.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge:hover {
+    transform: scale(1.03);
+}
+.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge img {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
     display: block;
-    transition: opacity 0.45s var(--ease-soft);
+    object-fit: contain;
+    transition: opacity 0.35s var(--ease-soft);
 }
-.site-header .logo-blanco,
-.site-header .logo-oscuro { opacity: 0; }
-.site-header .logo-rojo { opacity: 0; }
-body[data-hero-fg="light"] .site-header:not(.is-stuck) .logo-blanco { opacity: 1; }
-body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1; }
-.site-header.is-stuck .logo-rojo,
-.site-header--solid .logo-rojo { opacity: 1; }
-.site-header--solid .logo-blanco,
-.site-header--solid .logo-oscuro { opacity: 0 !important; }
+.site-header:not(.is-stuck):not(.site-header--solid) .logo-blanco,
+.site-header:not(.is-stuck):not(.site-header--solid) .logo-oscuro { opacity: 0; }
+.site-header:not(.is-stuck):not(.site-header--solid) .logo-rojo { opacity: 0; }
+body[data-hero-fg="light"] .site-header:not(.is-stuck):not(.site-header--solid) .logo-blanco { opacity: 1; }
+body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .logo-oscuro { opacity: 1; }
+.site-header:not(.is-stuck):not(.site-header--solid) .brand-pull-tab {
+    display: none;
+}
 
-/* ---------- Menú ----------
-   Sobre el hero: sin píldora blanca — links blancos dentro de la escena.
-   Stuck/solid: píldora crema/blanca compacta. */
-.site-header .nav {
+/* En estado Pegado / Scroll y páginas interiores:
+   Listón rojo tipo Bookmark (toca borde superior e inferior del header y cuelga con corte de guardado) */
+.site-header.is-stuck .brand-logo,
+.site-header--solid .brand-logo {
+    align-self: stretch;
+    display: flex;
+    align-items: flex-start;
+}
+
+.site-header.is-stuck .brand-badge-container,
+.site-header--solid .brand-badge-container {
+    position: absolute;
+    top: 0;
+    left: var(--hdr-gutter-l, clamp(20px, 4.5vw, 56px));
+    width: 120px;
+    height: 66px;
+    background: var(--brand-red, #E51D2A);
+    /* Corte tipo Bookmark / Guardado de Instagram/Facebook */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 5px;
+    gap: 1px;
+    cursor: pointer;
+    z-index: 100;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.14)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+    transform-origin: 50% 0%;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+
+.site-header.is-stuck .brand-badge,
+.site-header--solid .brand-badge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 102px;
+    height: 36px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.site-header.is-stuck .brand-badge img,
+.site-header--solid .brand-badge img {
+    position: absolute;
+    width: 102px;
+    height: 36px;
+    object-fit: contain;
+    transition: opacity 0.25s ease;
+}
+
+/* El logo rojo desaparece y se muestra el logo blanco grande y nítido */
+.site-header.is-stuck .logo-blanco,
+.site-header--solid .logo-blanco {
+    opacity: 1 !important;
+}
+.site-header.is-stuck .logo-rojo,
+.site-header.is-stuck .logo-oscuro,
+.site-header--solid .logo-rojo,
+.site-header--solid .logo-oscuro {
+    opacity: 0 !important;
+}
+
+/* Flechita blanca sutil en la tirita inferior del bookmark */
+.brand-pull-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2px;
+    pointer-events: none;
+}
+
+.brand-pull-tab .pull-tab-arrow {
+    width: 12px;
+    height: 12px;
+    color: #ffffff;
+    stroke-width: 3.2;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+}
+
+/* Efecto de jalar al pasar cursor (hover) y clic (active) */
+.site-header.is-stuck .brand-badge-container:hover,
+.site-header--solid .brand-badge-container:hover {
+    background: #cc1622;
+    transform: translateY(3px) scaleY(1.05);
+}
+.site-header.is-stuck .brand-badge-container:hover .pull-tab-arrow,
+.site-header--solid .brand-badge-container:hover .pull-tab-arrow {
+    transform: translateY(-2px);
+}
+.site-header.is-stuck .brand-badge-container:active,
+.site-header--solid .brand-badge-container:active {
+    transform: translateY(7px) scaleY(1.12);
+    transition-duration: 0.06s;
+}
+
+/* ---------- Menú Central ---------- */
+.site-header .nav,
+.nav {
     position: relative;
     display: flex;
     align-items: center;
     justify-self: center;
-    gap: 10px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
 }
+
+/* En el Hero: Botones como texto directamente sobre el fondo (sin píldora blanca) */
 .site-header #nav-items {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
     list-style: none;
     margin: 0;
-    padding: 4px;
+    padding: 0;
     background: transparent;
     border-radius: var(--radius-pill);
     box-shadow: none;
-    transition: background-color 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft);
+    transition: background-color 0.28s ease, padding 0.28s ease, gap 0.28s ease;
 }
-.site-header--solid #nav-items,
-.site-header.is-stuck #nav-items {
-    background: #fff;
-    box-shadow: 0 0 0 1px rgba(23, 23, 23, 0.08);
-    padding: 5px;
-}
-.site-header #nav-items li {
-    font-family: var(--font-display);
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0;
-    color: var(--ink);
+.site-header #nav-items li,
+.nav-item {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #ffffff;
     cursor: auto;
 }
-.site-header #nav-items li a {
+.site-header #nav-items li a,
+.nav-item a {
     display: block;
-    padding: 9px clamp(14px, calc(var(--s) * 1.9), 26px);
+    padding: 7px 16px;
     border-radius: var(--radius-pill);
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    color: rgba(255, 255, 255, 0.88);
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 600;
+    text-shadow: none;
     text-decoration: none;
     white-space: nowrap;
     position: relative;
-    transition: background-color 0.35s var(--ease-soft), color 0.35s var(--ease-soft), text-shadow 0.35s var(--ease-soft);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border: none;
 }
 .site-header #nav-items li a::after { display: none; }
-.site-header #nav-items li:hover a {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.16);
+.site-header #nav-items li:hover a,
+.nav-item:hover a {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.10);
 }
-.site-header #nav-items li.active a {
-    background: rgba(255, 255, 255, 0.22);
-    color: #fff;
+/* La sesión que está seleccionada: suave, sin marco (border) */
+.site-header #nav-items li.active a,
+.nav-item.active a,
+.nav-item.active {
+    background: rgba(255, 255, 255, 0.18);
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
 }
-.site-header #nav-items li.active:hover a { color: #fff; }
+.site-header #nav-items li.active:hover a,
+.nav-item.active:hover a {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.24);
+    font-weight: 700;
+}
 
-/* Stuck / solid: links oscuros en píldora */
-.site-header.is-stuck #nav-items li a,
-.site-header--solid #nav-items li a {
-    color: var(--ink);
-    text-shadow: none;
+/* Estado Pegado / Scroll (is-stuck y --solid):
+   Barra compacta adaptada sobre fondo claro.
+   Botón activo blanco con letras negras, acorde al diseño */
+.site-header--solid #nav-items,
+.site-header.is-stuck #nav-items {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    gap: 2px !important;
 }
-.site-header.is-stuck #nav-items li:hover a,
-.site-header--solid #nav-items li:hover a {
-    color: var(--nav-active, var(--brand-red));
-    background: transparent;
+.site-header--solid #nav-items li,
+.site-header.is-stuck #nav-items li {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1F1630;
 }
-.site-header.is-stuck #nav-items li.active a,
-.site-header--solid #nav-items li.active a {
-    background: var(--nav-active, var(--brand-red));
-    color: #fff;
+.site-header--solid #nav-items li a,
+.site-header.is-stuck #nav-items li a {
+    padding: 5px 13px;
+    border-radius: var(--radius-pill);
+    color: #3F3F46;
+    border: none;
 }
-.site-header.is-stuck #nav-items li.active:hover a,
-.site-header--solid #nav-items li.active:hover a { color: #fff; }
+.site-header--solid #nav-items li:hover a,
+.site-header.is-stuck #nav-items li:hover a {
+    color: #18181B;
+    background: rgba(0, 0, 0, 0.05);
+}
+.site-header--solid #nav-items li.active a,
+.site-header.is-stuck #nav-items li.active a {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    color: #18181B;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.site-header--solid #nav-items li.active:hover a,
+.site-header.is-stuck #nav-items li.active:hover a {
+    background: #ffffff;
+    color: #000000;
+}
 
-/* ---------- Lupa, user, carrito (más a la derecha) ---------- */
+/* ---------- Lupa, usuario, carrito (derecha) ---------- */
 .site-header .icon-buttons {
     display: flex;
     align-items: center;
@@ -169,7 +331,8 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: clamp(46px, calc(var(--s) * 3.4), 54px); aspect-ratio: 1;
+    width: clamp(44px, calc(var(--s) * 3.2), 52px);
+    aspect-ratio: 1;
     padding: 0;
     background: transparent;
     border: 0;
@@ -177,29 +340,114 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     color: var(--hdr-fg);
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.2s var(--ease-out), background-color 0.2s, color 0.35s var(--ease-soft);
+    transition: transform 0.2s var(--ease-out), background-color 0.2s, color 0.35s var(--ease-soft), width 0.28s ease;
 }
-.site-header .icon-btn:hover { background: rgba(255, 255, 255, 0.18); color: var(--hdr-fg); transform: translateY(-2px) scale(1.04); }
+.site-header .icon-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--hdr-fg);
+    transform: translateY(-2px) scale(1.04);
+}
+.site-header .icon-btn:active {
+    transform: scale(0.96);
+}
+.site-header .icon-btn svg {
+    width: clamp(24px, calc(var(--s) * 2), 30px);
+    height: auto;
+    aspect-ratio: 1;
+    display: block;
+    transition: width 0.28s ease;
+}
+.site-header .icon-btn:focus-visible {
+    outline-color: currentColor;
+}
+
+/* ---------- Botón "Regístrate" (cuando no hay sesión activa) ---------- */
+.site-header .btn-header-register {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    border-radius: var(--radius-pill, 999px);
+    transition: background-color 0.22s ease, color 0.22s ease, transform 0.2s ease, border-color 0.22s ease, box-shadow 0.22s ease, padding 0.22s ease;
+}
+
+/* En el Hero: Botón transparente limpio pegado al fondo */
+.site-header:not(.is-stuck):not(.site-header--solid) .btn-header-register {
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    padding: 7px 18px;
+    box-shadow: none;
+}
+.site-header:not(.is-stuck):not(.site-header--solid) .btn-header-register:hover {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.50);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+.site-header:not(.is-stuck):not(.site-header--solid) .btn-header-register:active {
+    transform: translateY(0);
+}
+
+/* En estado Pegado / Scroll o páginas interiores: Botón blanco con letras negras, acorde al diseño */
+.site-header.is-stuck .btn-header-register,
+.site-header--solid .btn-header-register {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    color: #18181B;
+    padding: 5px 15px;
+    font-size: 13px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.site-header.is-stuck .btn-header-register:hover,
+.site-header--solid .btn-header-register:hover {
+    background: #F4F4F5;
+    border-color: rgba(0, 0, 0, 0.20);
+    color: #000000;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+/* Iconos en estado pegado / ultra delgado */
+.site-header--solid .icon-btn,
+.site-header.is-stuck .icon-btn {
+    width: 34px;
+    height: 34px;
+}
+.site-header--solid .icon-btn svg,
+.site-header.is-stuck .icon-btn svg {
+    width: 19px;
+}
 .site-header--solid .icon-btn:hover,
-.site-header.is-stuck .icon-btn:hover { background: rgba(23, 23, 23, 0.06); }
-.site-header .icon-btn:active { transform: scale(0.96); }
-.site-header .icon-btn svg { width: clamp(26px, calc(var(--s) * 2.2), 34px); height: auto; aspect-ratio: 1; display: block; }
-.site-header .icon-btn:focus-visible { outline-color: currentColor; }
+.site-header.is-stuck .icon-btn:hover {
+    background: rgba(23, 23, 23, 0.06);
+    color: var(--brand-red, #E51D2A);
+}
 
 .site-header .cart-badge {
     position: absolute;
     top: 1px; right: 0;
-    min-width: 19px; height: 19px;
+    min-width: 18px; height: 18px;
     padding: 0 4px;
     display: flex; align-items: center; justify-content: center;
-    background: var(--ink);
+    background: var(--brand-red, #E51D2A);
     color: #fff;
     border: 0;
     border-radius: var(--radius-pill);
     font-family: var(--font-display);
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10.5px;
+    font-weight: 700;
     line-height: 1;
+}
+.site-header--solid .cart-badge,
+.site-header.is-stuck .cart-badge {
+    top: -1px; right: -1px;
+    min-width: 16px; height: 16px;
+    font-size: 9.5px;
 }
 .site-header .cart-badge[hidden] { display: flex; }
 .site-header .cart-badge.badge-bounce { animation: badgeIn 0.4s var(--ease-out); }
@@ -208,19 +456,21 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
 .site-header .icon-btn svg.icon { stroke-width: 1.75; }
 .site-header #nav-items li.nav-account--mobile { display: none; }
 
+
+
 /* ---------- Botón del menú en celular ---------- */
 .nav-toggle {
     display: none;
-    width: 46px; height: 46px;
-    padding: 0 13px;
+    width: 42px; height: 42px;
+    padding: 0 11px;
     border: 0;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 6px 18px rgba(23, 23, 23, 0.14);
+    box-shadow: 0 4px 14px rgba(23, 23, 23, 0.12);
     cursor: pointer;
     flex-direction: column;
     justify-content: center;
-    gap: 5px;
+    gap: 4.5px;
 }
 .nav-toggle span {
     display: block;
@@ -230,25 +480,30 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     border-radius: 2px;
     transition: transform 0.25s var(--ease-out), opacity 0.2s;
 }
-.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 @media screen and (max-width: 860px) {
     .site-header {
         grid-template-columns: 1fr auto auto;
         gap: 4px;
-        padding: 12px 16px;
+        padding: 10px 16px;
     }
     .site-header.is-stuck,
     .site-header--solid {
-        top: 8px; left: 10px; right: 10px;
-        padding: 8px 12px;
-        border-radius: 16px;
+        top: 0; left: 0; right: 0;
+        padding: 6px 14px;
+        min-height: 42px;
+        border-radius: 0;
     }
-    .site-header .brand-logo { width: 118px; }
-    .site-header--solid .brand-logo,
-    .site-header.is-stuck .brand-logo { width: 108px; }
+    .site-header .brand-badge { width: 110px; }
+    .site-header--solid .brand-badge-container,
+    .site-header.is-stuck .brand-badge-container { width: 94px; height: 56px; padding-top: 4px; }
+    .site-header--solid .brand-badge,
+    .site-header.is-stuck .brand-badge { width: 82px; height: 28px; }
+    .site-header--solid .brand-badge img,
+    .site-header.is-stuck .brand-badge img { width: 82px; height: 28px; }
     .site-header .nav { order: 3; justify-self: end; }
     .site-header .icon-buttons { order: 2; }
     .nav-toggle { display: flex; }
@@ -257,30 +512,30 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck) .logo-oscuro { opacity: 1;
     .site-header #nav-items {
         display: none;
         position: absolute;
-        top: calc(100% + 12px);
+        top: calc(100% + 8px);
         right: 0;
         min-width: 210px;
         flex-direction: column;
         align-items: stretch;
         gap: 2px;
         padding: 8px;
-        background: #fff;
+        background: #fff !important;
         border-radius: var(--radius);
-        box-shadow: 0 12px 32px rgba(23, 23, 23, 0.16);
+        box-shadow: 0 12px 32px rgba(23, 23, 23, 0.16) !important;
         z-index: 220;
     }
     .site-header #nav-items.is-open { display: flex; animation: menuIn 0.22s var(--ease-out); }
-    .site-header #nav-items li { font-size: 16px; }
+    .site-header #nav-items li { font-size: 15px !important; }
     .site-header #nav-items li a {
-        padding: 12px 14px;
-        border-radius: 12px;
-        color: var(--ink);
+        padding: 10px 14px !important;
+        border-radius: 10px;
+        color: var(--ink) !important;
         text-shadow: none;
     }
-    .site-header #nav-items li:hover a { color: var(--nav-active, var(--brand-red)); background: transparent; }
+    .site-header #nav-items li:hover a { color: var(--brand-red, #E51D2A) !important; background: #FFF0F2 !important; }
     .site-header #nav-items li.active a {
-        background: var(--nav-active, var(--brand-red));
-        color: #fff;
+        background: var(--brand-red, #E51D2A) !important;
+        color: #fff !important;
     }
 }
 

@@ -159,13 +159,81 @@
         requestAnimationFrame(function () { requestAnimationFrame(function () { b.classList.add('is-in'); }); });
     }
 
+    /* ---------------- Ventana de Bienvenida Promocional (Estilo Aqua / Apple) ---------------- */
+    var WELCOME_KEY = 'yog_welcome_seen';
+
+    function showWelcomeModal(onCloseCallback) {
+        var overlay = document.createElement('div');
+        overlay.className = 'nt-welcome-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Promoción de Bienvenida YogurASO');
+
+        var imagePath = (inPages ? '../' : '') + 'assets/marketing/tazon-yogurt-fresa.jpg';
+        var catalogLink = (inPages ? '' : 'pages/') + 'productos.html';
+
+        overlay.innerHTML =
+            '<div class="nt-welcome-window">' +
+                '<button type="button" class="nt-welcome-close" data-act="close-welcome" aria-label="Cerrar publicidad">' +
+                    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+                '</button>' +
+                '<div class="nt-welcome-content">' +
+                    '<img class="nt-welcome-img" src="' + imagePath + '" alt="Publicidad YogurASO" loading="eager">' +
+                '</div>' +
+            '</div>';
+
+        document.body.appendChild(overlay);
+
+        function closeWelcome() {
+            try { localStorage.setItem(WELCOME_KEY, 'true'); } catch (e) {}
+            overlay.classList.remove('is-in');
+            setTimeout(function () {
+                overlay.remove();
+                if (typeof onCloseCallback === 'function') onCloseCallback();
+            }, reduce.matches ? 0 : 250);
+        }
+
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay || e.target.closest('[data-act="close-welcome"]')) {
+                closeWelcome();
+            }
+        });
+
+        document.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape' && document.body.contains(overlay)) {
+                document.removeEventListener('keydown', escHandler);
+                closeWelcome();
+            }
+        });
+
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                overlay.classList.add('is-in');
+            });
+        });
+    }
+
     function init() {
         var c = getConsent();
         applyConsent(c);
         document.querySelectorAll('[data-open-cookies]').forEach(function (a) {
             a.addEventListener('click', function (e) { e.preventDefault(); openBanner(true); });
         });
-        if (!c) setTimeout(function () { openBanner(false); }, 1200);
+
+        var welcomeSeen = false;
+        try { welcomeSeen = !!localStorage.getItem(WELCOME_KEY); } catch (e) {}
+
+        if (!welcomeSeen) {
+            setTimeout(function () {
+                showWelcomeModal(function () {
+                    if (!c) {
+                        setTimeout(function () { openBanner(false); }, 350);
+                    }
+                });
+            }, 600);
+        } else if (!c) {
+            setTimeout(function () { openBanner(false); }, 1200);
+        }
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

@@ -1,4 +1,6 @@
-/* Fuentes alojadas en el proyecto (Fredoka y Nunito Sans, licencia OFL). Solo subconjuntos latin y latin-ext. */
+/* Fuentes alojadas en el proyecto y Google Fonts (Fredoka y Nunito Sans, licencia OFL). */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
+
 /* Fredoka latin-ext */
 @font-face {
   font-family: 'Fredoka';

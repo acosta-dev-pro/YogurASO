@@ -51,4 +51,50 @@
             if (q) q.focus();
         });
     }
+
+    // Logo Badge / Tira de jalar hacia arriba (Scroll elástico fluido al inicio)
+    var logoBtn = document.getElementById('brandLogoBtn') || document.querySelector('.brand-logo');
+    if (logoBtn) {
+        logoBtn.addEventListener('click', function (e) {
+            var startY = window.pageYOffset || document.documentElement.scrollTop;
+            var isHome = location.pathname.endsWith('index.html') || location.pathname === '/' || location.pathname.endsWith('/');
+
+            // Si está en scroll hacia abajo, jala la pantalla rápidamente hacia arriba
+            if (startY > 50) {
+                e.preventDefault();
+
+                // Animación rápida y directa (280ms)
+                var duration = Math.min(320, Math.max(200, Math.sqrt(startY) * 7.5));
+                var startTime = null;
+
+                function easeFast(t) {
+                    return 1 - Math.pow(1 - t, 3.5);
+                }
+
+                function animateScroll(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    var elapsed = currentTime - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    var ease = easeFast(progress);
+
+                    window.scrollTo(0, startY * (1 - ease));
+
+                    if (progress < 1) {
+                        window.requestAnimationFrame(animateScroll);
+                    } else {
+                        window.scrollTo(0, 0);
+                        if (window.history && window.history.replaceState) {
+                            window.history.replaceState(null, '', location.pathname);
+                        }
+                    }
+                }
+
+                window.requestAnimationFrame(animateScroll);
+            } else if (isHome && startY <= 50) {
+                e.preventDefault();
+                window.scrollTo(0, 0);
+            }
+            // Si está en otra página y ya está en top (startY <= 50), navega normalmente a index.html
+        });
+    }
 })();

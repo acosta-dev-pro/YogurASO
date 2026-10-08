@@ -1,24 +1,77 @@
-/* notice.css — aviso de cookies, toasts y mapa con consentimiento (js/notice.js)
-   Vidrio crema, borde de 1 px, radio 20 px, entrada fade + subida 12 px con la curva de Apple. */
-
-:root { --nt-ease: cubic-bezier(0.22, 1, 0.36, 1); }
-
-.nt-ico { width: 18px; height: 18px; flex: none; }
-.nt-ico-lg { width: 28px; height: 28px; }
-
-/* Botones */
-.nt-btn {
-    appearance: none; border: 0; cursor: pointer;
-    min-height: 40px; padding: 0 16px; border-radius: 999px;
-    font: 700 13px/1 var(--font-ui); letter-spacing: 0.01em;
-    transition: transform 0.22s var(--nt-ease), background-color 0.22s ease, box-shadow 0.22s ease, color 0.22s ease;
+/* ---------- Ventana de Bienvenida Promocional (Clásica limpia) ---------- */
+.nt-welcome-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.68);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
 }
-.nt-btn:hover { transform: translateY(-2px); }
-.nt-btn:active { transform: translateY(0) scale(0.98); }
-.nt-btn-solid { background: var(--ink, #171717); color: #fff; box-shadow: 0 6px 16px -8px rgba(23, 23, 23, 0.6); }
-.nt-btn-solid:hover { background: var(--brand-red, #E51D2A); }
-.nt-btn-ghost { background: transparent; color: var(--ink, #171717); box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.14); }
-.nt-btn-ghost:hover { box-shadow: inset 0 0 0 1px rgba(23, 23, 23, 0.4); }
+.nt-welcome-overlay.is-in {
+    opacity: 1;
+    visibility: visible;
+}
+
+.nt-welcome-window {
+    position: relative;
+    width: min(540px, calc(100vw - 32px));
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.38);
+    overflow: hidden;
+    transform: scale(0.96);
+    transition: transform 0.25s ease;
+}
+.nt-welcome-overlay.is-in .nt-welcome-window {
+    transform: scale(1);
+}
+
+.nt-welcome-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    appearance: none;
+    border: 0;
+    background: rgba(255, 255, 255, 0.90);
+    cursor: pointer;
+    color: #171717;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.nt-welcome-close:hover {
+    background: #171717;
+    color: #ffffff;
+    transform: scale(1.06);
+}
+.nt-welcome-close:active {
+    transform: scale(0.94);
+}
+
+.nt-welcome-content {
+    position: relative;
+    width: 100%;
+    display: block;
+    line-height: 0;
+}
+.nt-welcome-img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    display: block;
+    object-fit: cover;
+}
+
 
 /* ---------- Aviso de cookies ---------- */
 .nt-cookie {

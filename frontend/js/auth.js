@@ -18,6 +18,7 @@ const isInPages = window.location.pathname.includes('/pages/');
 const HOME_PATH = isInPages ? '../index.html' : 'index.html';
 const ADMIN_PATH = isInPages ? 'admin.html' : 'pages/admin.html';
 const LOGIN_PATH = isInPages ? 'login.html' : 'pages/login.html';
+const REGISTER_PATH = isInPages ? 'registro.html' : 'pages/registro.html';
 const PROFILE_PATH = isInPages ? 'perfil.html' : 'pages/perfil.html';
 const pageName = (window.location.pathname.split('/').pop() || '').split('?')[0];
 const isProfilePage = () =>
@@ -228,19 +229,26 @@ function setupNavAccountLink() {
             if (onProfile) li.className = 'active';
             list.appendChild(li);
         } else if (!['login.html', 'registro.html', 'recuperar.html', 'reset-password.html'].includes(pageName)) {
-            li.innerHTML = `<a href="${LOGIN_PATH}">Entrar</a>`;
+            li.innerHTML = `<a href="${REGISTER_PATH}">Regístrate</a>`;
             list.appendChild(li);
         }
     }
 
-    // Escritorio: la cuenta va como ícono en el header (#accountBtn); el enlace de texto queda solo para el menú del celular
+    // Escritorio: si no hay sesión activa muestra "Regístrate", si hay sesión muestra el ícono de perfil
     const accountBtn = document.getElementById('accountBtn');
     if (accountBtn) {
         list.querySelector('[data-nav-account]')?.classList.add('nav-account--mobile');
         if (isLoggedIn()) {
+            accountBtn.className = 'icon-btn icon-btn--account';
             accountBtn.setAttribute('href', PROFILE_PATH);
             accountBtn.setAttribute('aria-label', 'Mi perfil');
+            accountBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>`;
             if (isProfilePage()) accountBtn.setAttribute('aria-current', 'page');
+        } else {
+            accountBtn.className = 'btn-header-register';
+            accountBtn.setAttribute('href', REGISTER_PATH);
+            accountBtn.setAttribute('aria-label', 'Regístrate');
+            accountBtn.innerHTML = `<span>Regístrate</span>`;
         }
     }
 

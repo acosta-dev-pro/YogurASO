@@ -31,16 +31,14 @@
     function src(slug, small) { return base + slug + '-500ml' + (small ? '-sm' : '') + '.webp'; }
     function mainSet(slug) { return src(slug, true) + ' 320w, ' + src(slug) + ' 640w'; }
 
-    function makeSlot(sel, isMain) {
-        var el = hero.querySelector(sel);
-        return { isMain: isMain, imgs: el ? [].slice.call(el.querySelectorAll('.bottle-img')) : [] };
-    }
-    var slots = [makeSlot('.bottle--main', true), makeSlot('.bottle--second', false)];
+    var bottleLeft = document.getElementById('bottle-left');
+    var bottleMain = document.getElementById('bottle-main');
+    var bottleSecond = document.getElementById('bottle-second');
 
-    var current = 0, swapId = 0;
+    var current = 0, swapId = 0, isAnimating = false;
     var userPaused = reduce.matches, hidden = document.hidden, offscreen = false, focusHold = false;
 
-    /* ---------- Imágenes ---------- */
+    /* ---------- Imágenes y Precarga Inmediata ---------- */
     var cache = {};
     function load(slug, isMain) {
         var key = slug + (isMain ? ':m' : ':s');
@@ -55,93 +53,298 @@
         }
         return cache[key];
     }
-    function fill(img, flavor, isMain) {
-        if (isMain) { img.sizes = MAIN_SIZES; img.srcset = mainSet(flavor.slug); }
-        img.src = src(flavor.slug, !isMain);
+
+    // Precargar inmediatamente los 8 sabores para eliminar cualquier latencia en cambios rápidos
+    FLAVORS.forEach(function (f) {
+        load(f.slug, true);
+        load(f.slug, false);
+    });
+
+    function fillSlot(slotEl, flavor, isMain) {
+        if (!slotEl || !flavor) return;
+        var img = slotEl.querySelector('.bottle-img');
+        var reflectImg = slotEl.querySelector('.bottle-reflect-img');
+        if (img) {
+            if (isMain) { img.sizes = MAIN_SIZES; img.srcset = mainSet(flavor.slug); }
+            else { img.removeAttribute('sizes'); img.removeAttribute('srcset'); }
+            img.src = src(flavor.slug, !isMain);
+            img.alt = isMain ? flavor.alt : '';
+        }
+        if (reflectImg) {
+            reflectImg.src = src(flavor.slug, !isMain);
+        }
+    }
+
+    var activeAnims = [];
+    function cancelActiveAnims() {
+        while (activeAnims.length > 0) {
+            var a = activeAnims.pop();
+            try { a.cancel(); } catch (e) {}
+        }
     }
 
     function anim(el, frames, opts) {
-        if (!el.animate) return { finished: Promise.resolve(), cancel: function () {} };
-        return el.animate(frames, opts);
+        if (!el || !el.animate) return { finished: Promise.resolve(), cancel: function () {} };
+        var a = el.animate(frames, opts);
+        activeAnims.push(a);
+        return a;
     }
 
-    /* Fundido en capas: la botella que sale baja la opacidad con una escala mínima;
-       la nueva aparece en el mismo sitio. Nada se desplaza de lado. */
-    function crossfade(slot, flavor, delay, id) {
-        return load(flavor.slug, slot.isMain).then(function () {
-            if (id !== swapId || slot.imgs.length < 2) return;
-            var on = slot.imgs[0].classList.contains('is-on') ? slot.imgs[0] : slot.imgs[1];
-            var off = on === slot.imgs[0] ? slot.imgs[1] : slot.imgs[0];
-            fill(off, flavor, slot.isMain);
-            var go = function () {
-                if (id !== swapId) return;
-                var fast = reduce.matches;
-                on.getAnimations && on.getAnimations().forEach(function (a) { a.cancel(); });
-                off.getAnimations && off.getAnimations().forEach(function (a) { a.cancel(); });
-                off.classList.add('is-on');
-                on.classList.remove('is-on');
-                anim(on, fast ? [{ opacity: 1 }, { opacity: 0 }] : [
-                    { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' },
-                    { opacity: 0, transform: 'scale(0.965)', filter: 'blur(2px)' }
-                ], { duration: fast ? 180 : 620, delay: delay, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'backwards' });
-                anim(off, fast ? [{ opacity: 0 }, { opacity: 1 }] : [
-                    { opacity: 0, transform: 'scale(1.025)', filter: 'blur(3px)' },
-                    { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' }
-                ], { duration: fast ? 220 : 820, delay: delay + (fast ? 0 : 140), easing: EASE, fill: 'backwards' });
-                slot.imgs[0].alt = '';
-                slot.imgs[1].alt = '';
-                if (slot.isMain) off.alt = flavor.alt;
-            };
-            if (off.decode) off.decode().then(go, go); else go();
-        });
+    var showcaseBottleImg = document.getElementById('showcaseBottleImg');
+    var showcaseBottleReflect = document.getElementById('showcaseBottleReflect');
+
+    function updateShowcaseFlavor(flavor) {
+        if (!flavor) return;
+        if (showcaseBottleImg) {
+            showcaseBottleImg.src = src(flavor.slug, false);
+            showcaseBottleImg.alt = 'Yogurt artesanal de ' + flavor.nombre + ', 500 ml';
+        }
+        if (showcaseBottleReflect) {
+            showcaseBottleReflect.src = src(flavor.slug, false);
+        }
+        if (travelBottleImg) {
+            travelBottleImg.src = src(flavor.slug, false);
+        }
     }
 
-    /* ---------- Cambio de sabor ---------- */
     function setTheme(flavor) {
         body.dataset.flavor = flavor.slug;
-        body.dataset.heroFg = 'light';          // logo y textos siempre blancos
+        body.dataset.heroFg = 'light';
         if (themeMeta) {
             var c = getComputedStyle(body).getPropertyValue('--hero-bg').trim();
             if (c) themeMeta.content = c;
         }
+        updateShowcaseFlavor(flavor);
+    }
+
+    var lastStepTime = 0;
+
+    function transitionStage(fromIndex, toIndex, dir, id) {
+        var fromF = FLAVORS[fromIndex];
+        var toF = FLAVORS[toIndex];
+        var nextF = FLAVORS[(toIndex + 1) % FLAVORS.length];
+        var prevF = FLAVORS[(toIndex - 1 + FLAVORS.length) % FLAVORS.length];
+
+        var isForward = dir >= 0;
+        var fast = reduce.matches;
+
+        // Cancelar inmediatamente cualquier animación activa previa
+        cancelActiveAnims();
+
+        if (fast) {
+            fillSlot(bottleMain, toF, true);
+            fillSlot(bottleSecond, nextF, false);
+            isAnimating = false;
+            return;
+        }
+
+        var isMobile = window.innerWidth <= 860;
+        var ANIM_DURATION = 380;
+        var ANIM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+        if (isMobile) {
+            fillSlot(bottleMain, fromF, true);
+            if (isForward) {
+                fillSlot(bottleSecond, toF, false);
+                if (bottleSecond) {
+                    bottleSecond.style.opacity = '1';
+                    bottleSecond.style.left = '125%';
+                }
+                var m1 = anim(bottleMain, [
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(-50vw, 0, 0) scale(0.82)', opacity: 0 }
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+                var m2 = anim(bottleSecond, [
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(0.82)', opacity: 0.5 },
+                    { transform: 'translateX(-50%) translate3d(-75vw, 0, 0) scale(1)', opacity: 1 }
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+                Promise.all([m1.finished, m2.finished]).then(function () {
+                    if (id !== swapId) return;
+                    cancelActiveAnims();
+                    fillSlot(bottleMain, toF, true);
+                    fillSlot(bottleSecond, nextF, false);
+                    if (bottleSecond) { bottleSecond.style.opacity = '0'; bottleSecond.style.left = '125%'; }
+                    isAnimating = false;
+                }).catch(function () {});
+            } else {
+                fillSlot(bottleLeft, toF, false);
+                if (bottleLeft) {
+                    bottleLeft.style.opacity = '1';
+                    bottleLeft.style.left = '-25%';
+                }
+                var m1 = anim(bottleMain, [
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(50vw, 0, 0) scale(0.82)', opacity: 0 }
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+                var m2 = anim(bottleLeft, [
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(0.82)', opacity: 0.5 },
+                    { transform: 'translateX(-50%) translate3d(75vw, 0, 0) scale(1)', opacity: 1 }
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+                Promise.all([m1.finished, m2.finished]).then(function () {
+                    if (id !== swapId) return;
+                    cancelActiveAnims();
+                    fillSlot(bottleMain, toF, true);
+                    fillSlot(bottleSecond, nextF, false);
+                    if (bottleLeft) { bottleLeft.style.opacity = '0'; bottleLeft.style.left = '-25%'; }
+                    isAnimating = false;
+                }).catch(function () {});
+            }
+            return;
+        }
+
+        if (isForward) {
+            // El sabor saliente está en bottleMain
+            fillSlot(bottleMain, fromF, true);
+            // El sabor entrante (toF) SIEMPRE se ubica explícitamente en bottleSecond para entrar al centro
+            fillSlot(bottleSecond, toF, false);
+            // El siguiente sabor (nextF) entra por la derecha a través de bottleLeft
+            fillSlot(bottleLeft, nextF, false);
+            if (bottleLeft) {
+                bottleLeft.style.opacity = '1';
+                bottleLeft.style.left = 'clamp(740px, 88vw, 1440px)';
+            }
+
+            // 1. Botella principal sale hacia atrás a la izquierda
+            var a1 = anim(bottleMain, [
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 1, filter: 'blur(0px)' },
+                { transform: 'translateX(-50%) translate3d(-20vw, -18px, 0) scale(0.68) rotate(-4deg)', opacity: 0, filter: 'blur(2px)' }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+            // 2. Botella secundaria (toF) avanza al centro y crece a protagonista
+            var a2 = anim(bottleSecond, [
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' },
+                { transform: 'translateX(-50%) translate3d(-25vw, 35px, 0) scale(1.61) rotate(0deg)', opacity: 1, filter: 'blur(0px)' }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+            // 3. Nueva botella de fondo entra por la derecha
+            var a3 = anim(bottleLeft, [
+                { transform: 'translateX(-50%) translate3d(16vw, -15px, 0) scale(0.68) rotate(4deg)', opacity: 0, filter: 'blur(2px)' },
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+            Promise.all([a1.finished, a2.finished, a3.finished]).then(function () {
+                if (id !== swapId) return;
+                cancelActiveAnims();
+                fillSlot(bottleMain, toF, true);
+                fillSlot(bottleSecond, nextF, false);
+                if (bottleLeft) {
+                    bottleLeft.style.opacity = '0';
+                    bottleLeft.style.left = 'clamp(260px, 36vw, 620px)';
+                }
+                isAnimating = false;
+            }).catch(function () {});
+        } else {
+            // Atrás: el anterior entra desde la izquierda
+            fillSlot(bottleMain, fromF, true);
+            fillSlot(bottleLeft, toF, false);
+            fillSlot(bottleSecond, prevF, false);
+            if (bottleLeft) {
+                bottleLeft.style.opacity = '1';
+                bottleLeft.style.left = 'clamp(260px, 36vw, 620px)';
+            }
+
+            var b1 = anim(bottleMain, [
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 1, filter: 'blur(0px)' },
+                { transform: 'translateX(-50%) translate3d(20vw, -18px, 0) scale(0.68) rotate(4deg)', opacity: 0, filter: 'blur(2px)' }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+            var b2 = anim(bottleLeft, [
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' },
+                { transform: 'translateX(-50%) translate3d(25vw, 35px, 0) scale(1.61) rotate(0deg)', opacity: 1, filter: 'blur(0px)' }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+            var b3 = anim(bottleSecond, [
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' },
+                { transform: 'translateX(-50%) translate3d(16vw, -15px, 0) scale(0.68) rotate(4deg)', opacity: 0, filter: 'blur(2px)' }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+
+            Promise.all([b1.finished, b2.finished, b3.finished]).then(function () {
+                if (id !== swapId) return;
+                cancelActiveAnims();
+                fillSlot(bottleMain, toF, true);
+                fillSlot(bottleSecond, nextF, false);
+                if (bottleLeft) {
+                    bottleLeft.style.opacity = '0';
+                }
+                isAnimating = false;
+            }).catch(function () {});
+        }
     }
 
     function show(i, opts) {
-        var n = (i + FLAVORS.length) % FLAVORS.length;
+        var len = FLAVORS.length;
+        var n = (i % len + len) % len;
         if (n === current && !(opts && opts.force)) return;
-        var flavor = FLAVORS[n];
-        var next = FLAVORS[(n + 1) % FLAVORS.length];
-        var id = ++swapId;
+        var dir = (opts && typeof opts.dir === 'number') ? opts.dir : 1;
+        var prevIndex = current;
         current = n;
+        var flavor = FLAVORS[n];
+        var id = ++swapId;
+        isAnimating = true;
+
+        var now = performance.now();
+        var isVeryFast = (now - lastStepTime) < 140;
+        lastStepTime = now;
+
+        // El fondo y el sabor se activan al mismo milisegundo exacto
         setTheme(flavor);
-        crossfade(slots[0], flavor, 0, id);
-        crossfade(slots[1], next, 90, id);
-        if (stage) stage.setAttribute('aria-label', flavor.nombre + '. Usa las flechas izquierda y derecha para cambiar de sabor');
+
+        if (isVeryFast) {
+            // A velocidad luz: sincronización instantánea sin colas ni desfasajes
+            cancelActiveAnims();
+            fillSlot(bottleMain, flavor, true);
+            var nextF = FLAVORS[(n + 1) % len];
+            fillSlot(bottleSecond, nextF, false);
+            if (bottleLeft) {
+                bottleLeft.style.opacity = '0';
+                bottleLeft.style.left = 'clamp(260px, 36vw, 620px)';
+            }
+            isAnimating = false;
+        } else {
+            transitionStage(prevIndex, n, dir, id);
+        }
+
+        if (stage) stage.setAttribute('aria-label', flavor.nombre + '. Toca o usa las flechas para cambiar de sabor');
         if (live && opts && opts.announce) live.textContent = 'Sabor ' + flavor.nombre;
         restartTimer();
     }
-    function step(d, announce) { show(current + d, { announce: announce }); }
+    function step(d, announce) {
+        show(current + d, { announce: announce, dir: d });
+    }
 
-    /* ---------- Cambio automático con el anillo como reloj ---------- */
+    /* ---------- Cambio automático cada ~5.5s ---------- */
+    var autoTimer = null;
     function held() { return userPaused || hidden || offscreen || focusHold; }
     function restartTimer() {
-        if (!pauseBtn) return;
-        pauseBtn.classList.remove('is-running');
-        if (userPaused) return;
-        void pauseBtn.offsetWidth;              // reinicia la animación del anillo
-        pauseBtn.classList.add('is-running');
-        syncHold();
+        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        if (held()) return;
+        autoTimer = setTimeout(function () {
+            if (!held()) step(1, false);
+        }, INTERVAL);
     }
     function syncHold() {
-        if (!pauseBtn) return;
-        pauseBtn.classList.toggle('is-held', held());
+        if (held()) {
+            if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        } else {
+            restartTimer();
+        }
     }
     function setUserPaused(p) {
         userPaused = p;
-        pauseBtn.setAttribute('aria-pressed', p ? 'true' : 'false');
-        pauseBtn.setAttribute('aria-label', p ? 'Reanudar el cambio automático de sabores' : 'Pausar el cambio automático de sabores');
-        if (p) pauseBtn.classList.remove('is-running', 'is-held');
-        else restartTimer();
+        if (pauseBtn) {
+            pauseBtn.setAttribute('aria-pressed', p ? 'true' : 'false');
+            pauseBtn.setAttribute('aria-label', p ? 'Reanudar el cambio automático de sabores' : 'Pausar el cambio automático de sabores');
+            if (p) pauseBtn.classList.remove('is-running', 'is-held');
+        }
+        if (p) {
+            if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        } else {
+            restartTimer();
+        }
     }
     if (pauseBtn) {
         pauseBtn.style.setProperty('--hero-interval', INTERVAL + 'ms');
@@ -150,6 +353,8 @@
             if (e.animationName === 'heroRing' && !held()) step(1, false);
         });
         setUserPaused(userPaused);
+    } else {
+        restartTimer();
     }
     document.addEventListener('visibilitychange', function () { hidden = document.hidden; syncHold(); });
     if ('IntersectionObserver' in window) {
@@ -194,13 +399,177 @@
         });
     }
 
-    /* ---------- Menú: barra crema al bajar del hero ---------- */
+    /* ---------- Sistema de Scroll & Acompañamiento del Yogurt a Sección 2 ---------- */
     var header = document.getElementById('siteHeader');
-    if (header) {
-        var onScroll = function () { header.classList.toggle('is-stuck', window.scrollY > 24); };
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
+    var secShowcase = document.getElementById('nosotros');
+    var showcaseRedBox = document.getElementById('showcaseRedBox');
+    var showcaseBottleWrap = document.getElementById('showcaseBottleWrap');
+    var showcaseShadow = showcaseBottleWrap ? showcaseBottleWrap.querySelector('.showcase-bottle-shadow') : null;
+
+    // Crear elemento de la botella viajera fija
+    var travelBottle = document.getElementById('heroTravelBottle');
+    var travelBottleImg = null;
+    if (!travelBottle) {
+        travelBottle = document.createElement('div');
+        travelBottle.id = 'heroTravelBottle';
+        travelBottle.className = 'hero-travel-bottle';
+        travelBottle.setAttribute('aria-hidden', 'true');
+        travelBottleImg = document.createElement('img');
+        travelBottleImg.alt = '';
+        travelBottleImg.decoding = 'async';
+        if (showcaseBottleImg) travelBottleImg.src = showcaseBottleImg.src;
+        travelBottle.appendChild(travelBottleImg);
+        document.body.appendChild(travelBottle);
+    } else {
+        travelBottleImg = travelBottle.querySelector('img');
     }
+
+    var winHeight = window.innerHeight;
+    var heroDoc = null;
+    var targetDoc = null;
+    var endScroll = 600;
+    var prefersReduced = false;
+
+    function measureHeroMetrics() {
+        winHeight = window.innerHeight;
+        prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        var sY = window.scrollY || window.pageYOffset || 0;
+        var sX = window.scrollX || window.pageXOffset || 0;
+
+        var mainBottleEl = bottleMain ? bottleMain.querySelector('.bottle-img') : null;
+        if (mainBottleEl) {
+            // Si estaba oculto por el viaje, mostrar brevemente para medir con exactitud
+            var wasHidden = mainBottleEl.style.visibility === 'hidden';
+            if (wasHidden) mainBottleEl.style.visibility = '';
+            var r = mainBottleEl.getBoundingClientRect();
+            if (wasHidden) mainBottleEl.style.visibility = 'hidden';
+
+            heroDoc = {
+                left: r.left + sX,
+                top: r.top + sY,
+                width: r.width,
+                height: r.height
+            };
+        }
+
+        if (showcaseBottleWrap) {
+            var wasWrapHidden = showcaseBottleWrap.style.visibility === 'hidden';
+            if (wasWrapHidden) showcaseBottleWrap.style.visibility = '';
+            var tr = showcaseBottleWrap.getBoundingClientRect();
+            if (wasWrapHidden) showcaseBottleWrap.style.visibility = 'hidden';
+
+            targetDoc = {
+                left: tr.left + sX,
+                top: tr.top + sY,
+                width: tr.width,
+                height: tr.height
+            };
+        }
+
+        if (secShowcase && showcaseRedBox) {
+            var secR = secShowcase.getBoundingClientRect();
+            var secDocTop = secR.top + sY;
+            var boxOffset = showcaseRedBox.offsetTop || 0;
+            var boxH = showcaseRedBox.offsetHeight || 450;
+            // Scroll exacto donde el cuadro sólido queda centrado en la ventana
+            endScroll = Math.max(180, (secDocTop + boxOffset + boxH / 2) - (winHeight / 2));
+        }
+    }
+
+    var ticking = false;
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(function () {
+                var sY = window.scrollY || window.pageYOffset || 0;
+                var sX = window.scrollX || window.pageXOffset || 0;
+
+                // Barra fijada (header) al salir del Hero
+                if (header) {
+                    header.classList.toggle('is-stuck', sY > (winHeight * 0.5));
+                }
+
+                // Pausar carrusel del hero cuando esté fuera de pantalla
+                var isOff = sY > (winHeight * 0.9);
+                if (offscreen !== isOff) {
+                    offscreen = isOff;
+                    if (offscreen) {
+                        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+                    } else {
+                        restartTimer();
+                    }
+                }
+
+                // Animación de viaje y aterrizaje del producto
+                if (!prefersReduced && heroDoc && targetDoc && endScroll > 0) {
+                    var p = Math.max(0, Math.min(1, sY / endScroll));
+
+                    if (p <= 0.005) {
+                        // 100% en el Hero
+                        if (bottleMain) bottleMain.style.visibility = '';
+                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                        if (travelBottle) travelBottle.classList.remove('is-active');
+                        if (showcaseShadow) showcaseShadow.style.opacity = '0';
+                    } else if (p >= 0.995) {
+                        // 100% aterrizado en la sección 2
+                        if (bottleMain) bottleMain.style.visibility = 'hidden';
+                        if (showcaseBottleWrap) {
+                            showcaseBottleWrap.style.visibility = '';
+                            showcaseBottleWrap.style.transform = 'translate3d(0, 0, 0)';
+                            showcaseBottleWrap.style.opacity = '1';
+                        }
+                        if (travelBottle) travelBottle.classList.remove('is-active');
+                        if (showcaseShadow) showcaseShadow.style.opacity = '1';
+                    } else {
+                        // Viajando con el usuario entre secciones
+                        if (bottleMain) bottleMain.style.visibility = 'hidden';
+                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+
+                        // Curva de aceleración/desaceleración suave
+                        var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+                        var curDocX = heroDoc.left + (targetDoc.left - heroDoc.left) * e;
+                        var curDocY = heroDoc.top + (targetDoc.top - heroDoc.top) * e;
+                        var curW = heroDoc.width + (targetDoc.width - heroDoc.width) * e;
+                        var curH = heroDoc.height + (targetDoc.height - heroDoc.height) * e;
+
+                        // Posición en pantalla (coordenadas viewport fijas)
+                        var viewX = curDocX - sX;
+                        var viewY = curDocY - sY;
+
+                        // Rotación sutil y dinámica durante el vuelo (se endereza a 0° al aterrizar)
+                        var tilt = Math.sin(p * Math.PI) * -5.2;
+
+                        travelBottle.style.transform = 'translate3d(' + viewX.toFixed(1) + 'px, ' + viewY.toFixed(1) + 'px, 0) rotate(' + tilt.toFixed(2) + 'deg)';
+                        travelBottle.style.width = curW.toFixed(1) + 'px';
+                        travelBottle.style.height = curH.toFixed(1) + 'px';
+                        travelBottle.classList.add('is-active');
+
+                        if (showcaseShadow) {
+                            showcaseShadow.style.opacity = (Math.max(0, (p - 0.75) / 0.25)).toFixed(2);
+                        }
+                    }
+                } else if (prefersReduced) {
+                    if (bottleMain) bottleMain.style.visibility = '';
+                    if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = '';
+                    if (travelBottle) travelBottle.classList.remove('is-active');
+                }
+
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+            measureHeroMetrics();
+            onScroll();
+        }, 120);
+    }, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     /* ---------- Precarga del resto de sabores cuando el navegador está libre ---------- */
     function idle(fn, ms) {
@@ -230,14 +599,20 @@
     if (start !== 0) {
         current = start;
         var f0 = FLAVORS[start], f1 = FLAVORS[(start + 1) % FLAVORS.length];
-        fill(slots[0].imgs[0], f0, true); slots[0].imgs[0].alt = f0.alt;
-        fill(slots[1].imgs[0], f1, false);
-        if (stage) stage.setAttribute('aria-label', f0.nombre + '. Usa las flechas izquierda y derecha para cambiar de sabor');
+        fillSlot(bottleMain, f0, true);
+        fillSlot(bottleSecond, f1, false);
+        if (stage) stage.setAttribute('aria-label', f0.nombre + '. Toca o usa las flechas para cambiar de sabor');
     }
     requestAnimationFrame(function () {
         hero.classList.remove('is-loading');
+        measureHeroMetrics();
+        onScroll();
         // tras la entrada, las capas quedan libres para los fundidos
-        setTimeout(function () { hero.classList.add('is-ready'); }, 1100);
+        setTimeout(function () {
+            hero.classList.add('is-ready');
+            measureHeroMetrics();
+            onScroll();
+        }, 1100);
     });
     if (document.readyState === 'complete') idle(warm, 600); else window.addEventListener('load', function () { idle(warm, 600); });
 })();
