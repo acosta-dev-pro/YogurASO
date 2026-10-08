@@ -1,0 +1,122 @@
+/* =========================================================
+   EMPAQUE — tarjeta con la botella en video (sin fondo, en bucle)
+   y las partes del envase señaladas con líneas finas.
+   Mismo ancho (1240px) y radio (16px) que las otras secciones.
+   ========================================================= */
+.emp {
+    --emp-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --emp-card: #F6E6E2;          /* = color de fondo del MP4 de respaldo */
+    --emp-ink: #171717;
+    --emp-muted: #6A6259;
+    --emp-red: #E51D2A;
+    --emp-line: rgba(120, 30, 36, .38);
+    --emp-h: clamp(330px, 56vh, 420px);   /* alto del video */
+    background: #FFF8F4;
+    padding: clamp(28px, 5vh, 44px) 0;
+    scroll-margin-top: 72px;
+    overflow-x: clip;
+}
+.emp__wrap { width: min(1240px, 100% - 40px); margin: 0 auto; }
+.emp__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.18fr);
+    align-items: center;
+    background: var(--emp-card);
+    border-radius: 16px;
+    padding: clamp(18px, 3vh, 26px) clamp(22px, 3vw, 44px);
+    box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 18px 40px -26px rgba(120,30,36,.35);
+}
+
+/* ---------- Texto + ficha técnica ---------- */
+.emp__eyebrow { display: inline-block; font-weight: 800; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--emp-red); }
+.emp__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 8px; color: var(--emp-ink); text-wrap: balance; }
+.emp__lead { margin: 0; color: var(--emp-muted); font-size: 15px; line-height: 1.5; max-width: 40ch; text-wrap: pretty; }
+.emp__spec { margin: clamp(16px, 2.6vh, 22px) 0 0; padding: 0; max-width: 430px; border-top: 1px solid rgba(23,23,23,.14); }
+.emp__row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(23,23,23,.1); }
+.emp__row[hidden] { display: none; }
+.emp__row dt { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--emp-muted); padding-top: 2px; }
+.emp__row dd { margin: 0; font-size: 14.5px; line-height: 1.4; color: var(--emp-ink); }
+.emp__row dd strong { font-weight: 800; }
+
+/* ---------- Escenario con el video ---------- */
+.emp__stage { position: relative; height: var(--emp-h); }
+.emp__video {
+    position: absolute; left: 50%; top: 0;
+    height: 100%; width: calc(var(--emp-h) * 0.5814);
+    transform: translateX(-50%);
+    display: block; object-fit: contain;
+    background: transparent;
+}
+
+/* Llamadas: texto + línea fina que termina en un punto sobre la botella */
+.emp__call {
+    position: absolute; top: var(--y);
+    display: flex; align-items: center; gap: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.emp__call--l { left: 0; right: calc(50% - var(--dx)); }
+.emp__call--r { right: 0; left: calc(50% + var(--dx)); flex-direction: row-reverse; text-align: right; }
+.emp__call-txt { flex: 0 1 auto; max-width: 190px; }
+.emp__call-txt b { display: block; font-size: 14px; font-weight: 800; color: var(--emp-ink); line-height: 1.2; }
+.emp__call-txt span { display: block; font-size: 12.5px; color: var(--emp-muted); line-height: 1.35; margin-top: 2px; }
+.emp__call-line { position: relative; flex: 1 1 auto; min-width: 24px; height: 1px; background: var(--emp-line); transform-origin: var(--o, right) center; }
+.emp__call--l .emp__call-line { --o: left; }
+.emp__call--r .emp__call-line { --o: right; }
+.emp__call-line::after {
+    content: ""; position: absolute; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%;
+    background: var(--emp-red); box-shadow: 0 0 0 3px rgba(229,29,42,.16);
+}
+.emp__call--l .emp__call-line::after { right: -3px; }
+.emp__call--r .emp__call-line::after { left: -3px; }
+
+/* Posición de cada parte (fracciones del alto del video) */
+.emp__call--tapa  { --y: 15%; --dx: calc(var(--emp-h) * -0.07); }
+.emp__call--asa   { --y: 31%; --dx: calc(var(--emp-h) * 0.235); }
+.emp__call--label { --y: 56%; --dx: calc(var(--emp-h) * -0.2); }
+.emp__call--size  { --y: 80%; --dx: calc(var(--emp-h) * 0.2); }
+
+/* ---------- Entrada ---------- */
+.emp.is-js .emp__card { opacity: 0; transform: translate3d(0, 18px, 0); transition: opacity .8s var(--emp-ease), transform .8s var(--emp-ease); }
+.emp.is-js .emp__call { opacity: 0; transition: opacity .7s var(--emp-ease); }
+.emp.is-js .emp__call-line { transform: scaleX(0); transition: transform .9s var(--emp-ease); }
+.emp.is-js.is-in .emp__card { opacity: 1; transform: none; }
+.emp.is-js.is-in .emp__call { opacity: 1; }
+.emp.is-js.is-in .emp__call-line { transform: scaleX(1); }
+.emp.is-js.is-in .emp__call--tapa,  .emp.is-js.is-in .emp__call--tapa  .emp__call-line { transition-delay: .25s; }
+.emp.is-js.is-in .emp__call--asa,   .emp.is-js.is-in .emp__call--asa   .emp__call-line { transition-delay: .35s; }
+.emp.is-js.is-in .emp__call--label, .emp.is-js.is-in .emp__call--label .emp__call-line { transition-delay: .45s; }
+.emp.is-js.is-in .emp__call--size,  .emp.is-js.is-in .emp__call--size  .emp__call-line { transition-delay: .55s; }
+
+@media (hover: hover) {
+    .emp__call-line::after { transition: transform .3s var(--emp-ease); }
+    .emp__stage:hover .emp__call-line::after { transform: scale(1.25); }
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1100px) {
+    .emp { --emp-h: clamp(300px, 54vh, 380px); }
+    .emp__card { grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr); }
+    .emp__call-txt { max-width: 150px; }
+    .emp__call-txt span { font-size: 12px; }
+}
+
+/* ---------- Móvil: se apila; las llamadas pasan a una lista corta bajo el video ---------- */
+@media (max-width: 760px) {
+    .emp { --emp-h: 300px; }
+    .emp__card { display: flex; flex-direction: column; align-items: stretch; padding: 22px 20px 20px; }
+    .emp__stage { order: 2; height: auto; margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+    .emp__video { position: relative; left: auto; transform: none; grid-column: 1 / -1; justify-self: center; height: var(--emp-h); }
+    .emp__call, .emp__call--l, .emp__call--r { position: static; transform: none; flex-direction: row; text-align: left; }
+    .emp__call-line { display: none; }
+    .emp__call-txt { max-width: none; padding-left: 12px; border-left: 2px solid var(--emp-red); }
+    .emp__spec { max-width: none; }
+}
+@media (max-width: 380px) {
+    .emp__row { grid-template-columns: 96px minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .emp.is-js .emp__card, .emp.is-js .emp__call, .emp.is-js .emp__call-line { opacity: 1; transform: none; transition: none; }
+}
