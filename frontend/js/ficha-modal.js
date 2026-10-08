@@ -6,6 +6,7 @@
        misma API / respaldo local de las tarjetas). Si no está, usa YOGUR_FLAVORS + $6.900 del respaldo local.
      - Ficha técnica: window.YOG_INFO (js/product-info.js). Lo que está en null se muestra como
        "Por confirmar" / "Verificar". Nunca se inventan ingredientes, temperaturas ni cifras.
+   Color: --yfm-c = --bg-<sabor> (nombre, precio, botón); panel izquierdo --fondo-claro-<sabor>.
    Estilos: css/ficha-modal.css */
 (function () {
     'use strict';
@@ -222,6 +223,7 @@
         current = { slug: slug, product: product || null };
         dlg.querySelector('[data-yfm-inner]').innerHTML = content(slug);
         dlg.setAttribute('data-flavor', slug);
+        dlg.style.setProperty('--yfm-c', 'var(--bg-' + slug + ', var(--rojo-marca))'); // color fuerte del sabor
         if (!dlg.open) {
             if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
         }
