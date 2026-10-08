@@ -10,8 +10,8 @@
     --emp-bg: #FFF8F4;
     --emp-ink: #171717;
     --emp-muted: #6A6259;
-    --emp-red: #E51D2A;
-    --emp-line: #C91F2B;
+    --emp-red: var(--rojo-marca, #C3343E);
+    --emp-line: var(--rojo-marca, #C3343E);
     --emp-h: clamp(300px, 50vh, 400px);          /* alto del video */
     --emp-w: calc(var(--emp-h) * 0.7222);        /* 520 / 720 */
     --emp-col: clamp(200px, 21vw, 280px);        /* del centro al borde del texto */

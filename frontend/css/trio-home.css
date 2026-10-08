@@ -7,8 +7,8 @@
     --yt-r: 16px;              /* = --fcol-r */
     --yt-gap: 13px;            /* = --fcol-gap */
     --yt-pad: clamp(18px, 1.6vw, 24px);
-    --yt-fresa: #C91F2B;       /* rojo del hero (sabor fresa) */
-    --yt-fresa-floor: #B31722;
+    --yt-fresa: var(--rojo-marca, #C3343E);       /* rojo del hero (sabor fresa) */
+    --yt-fresa-floor: color-mix(in srgb, var(--rojo-marca, #C3343E) 85%, #000);
     background: #FFF8F4;       /* continúa el fondo del collage */
     padding: 0 0 clamp(40px, 7vh, 64px);
 }
@@ -46,7 +46,7 @@
 .ytrio__cta .ys-pill__arrow { width: 30px; height: 30px; }
 
 /* ---------- 1. Llévalo: mano sosteniendo la botella desde la esquina ---------- */
-.ytrio__card--llevalo { background: linear-gradient(155deg, #E51D2A 0%, #B01824 100%); justify-content: flex-start; }
+.ytrio__card--llevalo { background: linear-gradient(155deg, var(--rojo-marca, #C3343E) 0%, color-mix(in srgb, var(--rojo-marca, #C3343E) 82%, #000) 100%); justify-content: flex-start; }
 .ytrio__card--llevalo .ytrio__body { max-width: calc(54cqw - var(--yt-pad)); }
 .ytrio__chips {
     list-style: none; margin: 14px 0 0; padding: 0;
@@ -55,11 +55,11 @@
 .ytrio__chips li {
     display: inline-flex; align-items: center; gap: 7px;
     min-height: 30px; padding: 0 12px 0 10px; border-radius: 999px;
-    background: #fff; color: #B01824;
+    background: #fff; color: color-mix(in srgb, var(--rojo-marca, #C3343E) 82%, #000);
     font-size: 12px; font-weight: 800; line-height: 1; white-space: nowrap;
     box-shadow: 0 2px 6px rgba(80, 0, 8, .14);
 }
-.ytrio__chips i { font-size: 12px; color: #E51D2A; width: 14px; text-align: center; }
+.ytrio__chips i { font-size: 12px; color: var(--rojo-marca, #C3343E); width: 14px; text-align: center; }
 .ytrio__hand {
     position: absolute; z-index: 1; pointer-events: none;
     width: 60cqw; height: auto;
@@ -70,8 +70,8 @@
 
 /* ---------- 2. Cremoso: mismo contenedor rosado, botón a la derecha ---------- */
 .ytrio__card--cremoso { background: #FFF8F4; color: var(--ink, #171717); box-shadow: var(--shadow-md); }
-.ytrio__card--cremoso .ytrio__k { background: var(--brand-pink, #FFE4E8); color: var(--brand-red, #E51D2A); }
-.ytrio__card--cremoso h3 { color: var(--brand-red-deep, #B01824); }
+.ytrio__card--cremoso .ytrio__k { background: var(--brand-pink, #FFE4E8); color: var(--brand-red, var(--rojo-marca, #C3343E)); }
+.ytrio__card--cremoso h3 { color: var(--brand-red-deep, color-mix(in srgb, var(--rojo-marca, #C3343E) 82%, #000)); }
 .ytrio__card--cremoso p { color: #6B635C; opacity: 1; }
 .ytrio__card--cremoso .ytrio__cta { align-self: flex-end; }
 
