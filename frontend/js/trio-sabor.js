@@ -60,7 +60,7 @@
     function paint(flavor) {
         card.dataset.sabor = flavor.slug;
         /* Pasteles: blanco sobre --hero-bg casi nunca pasa; default dark. */
-        card.dataset.ink = whiteContrast(resolvedHeroBg()) < 3 ? 'dark' : 'light';
+        card.dataset.ink = 'light'; /* Juan: blanco como hero/carrusel */
         if (!bottle) return;
         bottle.src = base + flavor.slug + '-500ml.webp';
         bottle.alt = flavor.alt || ('Yogurt artesanal de ' + flavor.nombre + ', 500 ml');
