@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="css/proceso-3d.css">
     <link rel="stylesheet" href="css/collage-fruta.css">
     <link rel="stylesheet" href="css/trio-home.css">
+    <link rel="stylesheet" href="css/home-products.css">
     <link rel="stylesheet" href="css/empaque.css">
     <meta property="og:image" content="assets/products/yoguraso-fresa-500ml.png">
 </head>
@@ -408,19 +409,22 @@
 
 
 
-    <section class="v3-catalog" id="main-content" aria-label="Nuestros yogures">
-        <div class="v3-wrap">
-            <div style="margin-bottom:22px">
-                <span class="v3-kicker">Elaborado a diario</span>
-                <h2 class="v3-title">Nuestros yogures</h2>
-                <p class="v3-lead">Cada sabor con su botella. Agrega al carrito o abre la ficha.</p>
+    <section class="v3-catalog hp-section" id="main-content" aria-labelledby="hp-title">
+        <div class="v3-wrap hp-head">
+            <span class="v3-kicker">Elaborado a diario</span>
+            <h2 class="v3-title" id="hp-title">Nuestros yogures</h2>
+            <p class="v3-lead">Cada sabor con su botella. Agrega al carrito o abre la ficha.</p>
+        </div>
+        <div class="hp-carousel" data-hp-carousel>
+            <button type="button" class="hp-nav hp-nav--prev" data-hp-prev aria-controls="hp-track" aria-label="Yogur anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <div class="hp-track" id="hp-track" tabindex="0" role="region" aria-roledescription="carrusel" aria-label="Nuestros yogures. Usa las flechas izquierda y derecha para cambiar de sabor">
+                <p class="hp-status">Cargando la frescura del campo...</p>
             </div>
-            <div id="productos-container" class="productos-masonry" aria-live="polite">
-                <p class="cargando">Cargando la frescura del campo...</p>
-            </div>
-            <p class="home-rail-hint">
-                <a class="ys-pill" href="pages/productos.html">Ver catálogo completo<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
-            </p>
+            <button type="button" class="hp-nav hp-nav--next" data-hp-next aria-controls="hp-track" aria-label="Yogur siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+            <p class="sr-only" aria-live="polite" data-hp-live></p>
+        </div>
+        <div class="v3-wrap hp-more">
+            <a class="ys-pill" href="pages/productos.html">Ver todos los productos<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
         </div>
     </section>
 
@@ -527,6 +531,7 @@
     <script src="js/cart.js"></script>
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/home-products-carousel.js"></script>
     <script src="js/hero.js?v=14"></script>
     <script src="js/trio-sabor.js" defer></script>
     <script src="js/product-info.js"></script>

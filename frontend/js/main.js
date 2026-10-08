@@ -573,7 +573,6 @@ function renderProducts() {
                 <div class="producto-info">
                     <h3>${escapeHtml(p.nombre)}</h3>
                     <p class="producto-categoria">500 ml · ${escapeHtml(p.categoria || 'Yogurt Artesanal')}</p>
-                    <p class="producto-rating" aria-label="Valoración"><i class="fas fa-star" aria-hidden="true"></i> 4.9 <span>(120)</span></p>
                     <div class="producto-footer">
                         <div class="qty-row">
                             ${precioHtml}
@@ -650,6 +649,36 @@ function setupCatalogControls() {
     });
 }
 
+/** Preferir botella recortada si el nombre/sabor coincide */
+function normalizeProducts(list) {
+    return list.map((p) => {
+        const bottle = bottleUrlFor(p);
+        const slug = matchFlavorSlug(p);
+        return {
+            ...p,
+            imagen_url: bottle || p.imagen_url,
+            color_fondo: p.color_fondo || FLAVOR_WASH[slug] || p.color_fondo,
+            slug: p.slug || slug
+        };
+    });
+}
+
+/**
+ * Lista de productos lista para pintar, sin tocar el DOM.
+ * La usa el carrusel del home (js/home-products-carousel.js).
+ * Misma fuente y mismo respaldo local que cargarProductos().
+ */
+export async function loadCatalogProducts() {
+    try {
+        const list = await fetchProducts();
+        return Array.isArray(list) && list.length ? normalizeProducts(list) : flavorCatalog();
+    } catch {
+        return flavorCatalog();
+    }
+}
+
+export { salePrice, bottleUrlFor, matchFlavorSlug };
+
 /** Carga productos desde el backend y dibuja las cards */
 async function cargarProductos() {
     const container = document.getElementById('productos-container');
@@ -663,17 +692,7 @@ async function cargarProductos() {
         if (!Array.isArray(allProducts) || !allProducts.length) {
             allProducts = flavorCatalog();
         } else {
-            // Preferir botella recortada si el nombre/sabor coincide
-            allProducts = allProducts.map((p) => {
-                const bottle = bottleUrlFor(p);
-                const slug = matchFlavorSlug(p);
-                return {
-                    ...p,
-                    imagen_url: bottle || p.imagen_url,
-                    color_fondo: p.color_fondo || FLAVOR_WASH[slug] || p.color_fondo,
-                    slug: p.slug || slug
-                };
-            });
+            allProducts = normalizeProducts(allProducts);
         }
         fillCategoryOptions(allProducts);
         renderProducts();
