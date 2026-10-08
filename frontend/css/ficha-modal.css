@@ -179,13 +179,12 @@ html.yfm-lock { overflow: hidden; }
     width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 14px;
     height: 46px; padding: 0 6px 0 20px; border: 0; border-radius: 999px; cursor: pointer;
     background: var(--yfm-c); color: #fff;
-    box-shadow: 0 12px 22px -12px color-mix(in srgb, var(--yfm-c) 85%, transparent);
+    box-shadow: none; text-shadow: none; filter: none;   /* botón plano, sin sombras */
     font: 800 14px/1 var(--yfm-sans); letter-spacing: 0; white-space: nowrap;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
-    transition: transform .2s ease, filter .2s ease;
+    transition: background-color .2s ease;
 }
-#yfm .yfm-add:hover { transform: translateY(-2px); filter: brightness(0.94); }
-#yfm .yfm-add:disabled { background: #B9B1B2; box-shadow: none; cursor: not-allowed; transform: none; filter: none; }
+#yfm .yfm-add:hover { background: color-mix(in srgb, var(--yfm-c) 88%, #000); }
+#yfm .yfm-add:disabled { background: #B9B1B2; cursor: not-allowed; }
 #yfm .yfm-add-l { display: inline-flex; align-items: center; gap: 9px; font: inherit; color: inherit; }
 .yfm-add-l svg { width: 17px; height: 17px; }
 #yfm .yfm-add-p {
@@ -193,7 +192,7 @@ html.yfm-lock { overflow: hidden; }
     font: 800 13.5px/1 var(--yfm-sans); color: #fff; font-variant-numeric: tabular-nums;
 }
 #yfm .yfm-note {
-    grid-column: 1 / -1; justify-self: end; margin: 0; text-align: right;
+    grid-column: 1 / -1; justify-self: end; margin: 0; text-align: right; box-shadow: none; text-shadow: none;
     font: 400 11px/1.35 var(--yfm-sans); color: var(--yfm-muted);
 }
 .yfm :focus-visible { outline: 2px solid var(--yfm-c); outline-offset: 2px; }
