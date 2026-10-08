@@ -1,0 +1,57 @@
+/* yg-price.css — precio de las tarjetas de producto, IGUAL en el carrusel del home
+   ("Nuestros yogures") y en el catálogo (pages/productos.html).
+   Un solo estilo: serif itálica fina (Fraunces Italic 400, OFL, alojada en /fonts),
+   compacta, en tinta oscura (se lee bien sobre los 8 pasteles --fondo-claro-*).
+   Se aplica con la clase .yg-price (la ponen home-products-carousel.js y main.js). */
+
+@font-face {
+    font-family: 'Fraunces';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/fraunces-italic-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+    --yg-price-font: 'Fraunces', 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --yg-price-weight: 400;
+    --yg-price-size: 1.2rem;
+    --yg-price-color: var(--ink, #171717);
+}
+
+/* contenedor del precio en la tarjeta (antes Fredoka 700 grande en home y
+   Nunito 700 en productos): mismo bloque en ambas páginas */
+html body .hp-card .hp-card__price {
+    margin: 6px 0 10px;
+    font-family: var(--yg-price-font) !important;
+    font-size: var(--yg-price-size);
+    font-weight: var(--yg-price-weight);
+    font-style: italic;
+    line-height: 1.1;
+    letter-spacing: 0;
+}
+
+/* la regla compartida */
+html body .yg-price {
+    font-family: var(--yg-price-font) !important;
+    font-style: italic !important;
+    font-weight: var(--yg-price-weight) !important;
+    font-size: var(--yg-price-size);
+    font-optical-sizing: auto;
+    font-variant-numeric: lining-nums proportional-nums;
+    letter-spacing: 0.005em;
+    line-height: 1.1;
+    color: var(--yg-price-color);
+}
+html body .yg-price s {
+    margin-right: 5px;
+    font-size: 0.72em;
+    font-weight: inherit;
+    opacity: 0.55;
+}
+html body .yg-price.is-ask { font-size: calc(var(--yg-price-size) * 0.86); }
+
+@media (max-width: 640px) {
+    :root { --yg-price-size: 1.28rem; }
+}

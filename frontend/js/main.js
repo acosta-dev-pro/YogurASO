@@ -623,10 +623,10 @@ function renderProducts() {
         const askPrice = !Number(p.precio);
         const venta = salePrice(p);
         const price = askPrice
-            ? '<span class="hp-price is-ask">Consultar</span>'
+            ? '<span class="hp-price yg-price is-ask">Consultar</span>'
             : (Number(p.descuento) > 0
-                ? `<span class="hp-price"><s>${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
-                : `<span class="hp-price">${formatCOP(venta)}</span>`);
+                ? `<span class="hp-price yg-price"><s>${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`
+                : `<span class="hp-price yg-price">${formatCOP(venta)}</span>`);
         let label = String(p.letrero || '').trim();
         const off = Number(p.descuento || 0);
         if (!label && off > 0) label = `-${Math.round(off)}%`;

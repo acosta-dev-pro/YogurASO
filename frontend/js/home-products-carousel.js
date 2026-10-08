@@ -51,12 +51,12 @@ function badgeHtml(p, sinStock) {
 }
 
 function priceHtml(p) {
-    if (!Number(p.precio)) return '<span class="hp-price is-ask">Consultar</span>';
+    if (!Number(p.precio)) return '<span class="hp-price yg-price is-ask">Consultar</span>';
     const venta = salePrice(p);
     if (Number(p.descuento) > 0) {
-        return `<span class="hp-price"><s>${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`;
+        return `<span class="hp-price yg-price"><s>${formatCOP(p.precio)}</s> ${formatCOP(venta)}</span>`;
     }
-    return `<span class="hp-price">${formatCOP(venta)}</span>`;
+    return `<span class="hp-price yg-price">${formatCOP(venta)}</span>`;
 }
 
 function cardHtml(p, i, n, isClone) {
