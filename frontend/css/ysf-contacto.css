@@ -15,7 +15,7 @@
   --ysc-ease:cubic-bezier(.23,1,.32,1);
   --ysc-body:"Nunito Sans",sans-serif;
   position:relative;
-  background:#fff;color:var(--ysc-ink);
+  background:transparent;color:var(--ysc-ink);
   padding:clamp(44px,6vw,76px) 0 clamp(36px,5vw,60px);
   font:400 14px/1.5 var(--ysc-body);
 }
@@ -26,8 +26,12 @@
 .ysc-anchor{position:absolute;top:0;left:0;width:1px;height:1px}
 .ysc-wrap{
   width:min(100% - 40px,var(--ysc-max));margin-inline:auto;
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:clamp(28px,4.5vw,64px);align-items:start;
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:clamp(20px,3vw,36px);align-items:stretch;
+  background:#fff;border-radius:24px;padding:clamp(16px,2vw,28px);
+  box-shadow:0 1px 2px rgba(23,23,23,.04),0 10px 28px rgba(23,23,23,.06);
 }
+.ysc-mapcol{order:1;min-width:0}
+.ysc-info{order:2;min-width:0}
 
 /* Encabezado (#empaque) */
 .ysc .ysc-eyebrow{display:inline-block;font:800 11.5px/1.2 var(--ysc-body);letter-spacing:.2em;text-transform:uppercase;color:var(--ysc-muted)}
@@ -84,7 +88,7 @@
 .ysc-map{
   position:relative;isolation:isolate;overflow:hidden;border-radius:24px;background:#fff;
   border:1px solid rgba(23,23,23,.08);
-  box-shadow:0 1px 2px rgba(23,23,23,.04),0 30px 60px -32px rgba(23,23,23,.35);
+  box-shadow:none;
 }
 .ysc-map-frame{position:relative;height:clamp(360px,40vw,500px);background:#F6F2EE}
 .ysc-map-frame iframe{display:block}
@@ -111,6 +115,8 @@
 
 @media (max-width:900px){
   .ysc-wrap{grid-template-columns:1fr}
+  .ysc-mapcol{order:1}
+  .ysc-info{order:2}
   .ysc-map-frame{height:340px}
 }
 @media (max-width:560px){
