@@ -428,54 +428,62 @@
     var winHeight = window.innerHeight;
     var heroDoc = null;
     var targetDoc = null;
-    var endScroll = 600;
+    var rangeStart = 0;
+    var rangeEnd = 600;
     var prefersReduced = false;
+
+    function pxScale() {
+        var z = parseFloat(getComputedStyle(document.documentElement).zoom);
+        return z > 0 && isFinite(z) ? z : 1;
+    }
+
+    function docBox(rect, sX, sY, scale) {
+        return {
+            left: rect.left / scale + sX,
+            top: rect.top / scale + sY,
+            width: rect.width / scale,
+            height: rect.height / scale
+        };
+    }
 
     function measureHeroMetrics() {
         winHeight = window.innerHeight;
         prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+        var scale = pxScale();
         var sY = window.scrollY || window.pageYOffset || 0;
         var sX = window.scrollX || window.pageXOffset || 0;
 
         var mainBottleEl = bottleMain ? bottleMain.querySelector('.bottle-img') : null;
         if (mainBottleEl) {
-            // Si estaba oculto por el viaje, mostrar brevemente para medir con exactitud
             var wasHidden = mainBottleEl.style.visibility === 'hidden';
             if (wasHidden) mainBottleEl.style.visibility = '';
             var r = mainBottleEl.getBoundingClientRect();
             if (wasHidden) mainBottleEl.style.visibility = 'hidden';
-
-            heroDoc = {
-                left: r.left + sX,
-                top: r.top + sY,
-                width: r.width,
-                height: r.height
-            };
+            if (r.width > 2 && r.height > 2) heroDoc = docBox(r, sX, sY, scale);
         }
 
-        if (showcaseBottleWrap) {
-            var wasWrapHidden = showcaseBottleWrap.style.visibility === 'hidden';
-            if (wasWrapHidden) showcaseBottleWrap.style.visibility = '';
-            var tr = showcaseBottleWrap.getBoundingClientRect();
-            if (wasWrapHidden) showcaseBottleWrap.style.visibility = 'hidden';
+        measureLanding();
+    }
 
-            targetDoc = {
-                left: tr.left + sX,
-                top: tr.top + sY,
-                width: tr.width,
-                height: tr.height
-            };
-        }
+    function measureLanding() {
+        if (!showcaseBottleWrap || !showcaseRedBox) return;
+        var scale = pxScale();
+        var sY = window.scrollY || window.pageYOffset || 0;
+        var sX = window.scrollX || window.pageXOffset || 0;
+        var wasWrapHidden = showcaseBottleWrap.style.visibility === 'hidden';
+        if (wasWrapHidden) showcaseBottleWrap.style.visibility = '';
+        var tr = showcaseBottleWrap.getBoundingClientRect();
+        if (wasWrapHidden) showcaseBottleWrap.style.visibility = 'hidden';
+        if (tr.width > 2 && tr.height > 2) targetDoc = docBox(tr, sX, sY, scale);
 
-        if (secShowcase && showcaseRedBox) {
-            var secR = secShowcase.getBoundingClientRect();
-            var secDocTop = secR.top + sY;
-            var boxOffset = showcaseRedBox.offsetTop || 0;
-            var boxH = showcaseRedBox.offsetHeight || 450;
-            // Scroll exacto donde el cuadro sólido queda centrado en la ventana
-            endScroll = Math.max(180, (secDocTop + boxOffset + boxH / 2) - (winHeight / 2));
-        }
+        winHeight = window.innerHeight;
+        var boxR = showcaseRedBox.getBoundingClientRect();
+        var boxCenterDoc = boxR.top / scale + sY + (boxR.height / scale) / 2;
+        var endCss = boxCenterDoc - (winHeight / scale) * 0.5;
+        var startCss = endCss - (winHeight / scale) * 1.35;
+        rangeStart = startCss;
+        rangeEnd = Math.max(rangeStart + 1, endCss);
     }
 
     var ticking = false;
@@ -484,6 +492,8 @@
             requestAnimationFrame(function () {
                 var sY = window.scrollY || window.pageYOffset || 0;
                 var sX = window.scrollX || window.pageXOffset || 0;
+                measureLanding();
+                if (sY <= rangeStart) measureHeroMetrics();
 
                 // Barra sólida (header) apenas la página se mueve: cualquier scroll > 0
                 // la activa y vuelve a transparente solo en el tope (scrollY 0).
@@ -502,18 +512,22 @@
                     }
                 }
 
-                // Animación de viaje y aterrizaje del producto
-                if (!prefersReduced && heroDoc && targetDoc && endScroll > 0) {
-                    var p = Math.max(0, Math.min(1, sY / endScroll));
+                // Animación de viaje y aterrizaje del producto.
+                // scrollY y getBoundingClientRect no comparten unidades cuando html{zoom}
+                // no es 1: el viajero se quedaba arriba a la izquierda del cuadro.
+                if (!prefersReduced && heroDoc && targetDoc && rangeEnd > rangeStart) {
+                    var span = rangeEnd - rangeStart;
+                    var p = Math.max(0, Math.min(1, (sY - rangeStart) / span));
+                    // ease-out, sin rebote: cubic-bezier(0.23, 1, 0.32, 1) muestreada
+                    var u = 1 - p;
+                    var e = 1 - u * u * u;
 
-                    if (p <= 0.005) {
-                        // 100% en el Hero
+                    if (p <= 0.001) {
                         if (bottleMain) bottleMain.style.visibility = '';
                         if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
                         if (travelBottle) travelBottle.classList.remove('is-active');
                         if (showcaseShadow) showcaseShadow.style.opacity = '0';
-                    } else if (p >= 0.995) {
-                        // 100% aterrizado en la sección 2
+                    } else if (p >= 0.999) {
                         if (bottleMain) bottleMain.style.visibility = 'hidden';
                         if (showcaseBottleWrap) {
                             showcaseBottleWrap.style.visibility = '';
@@ -523,32 +537,26 @@
                         if (travelBottle) travelBottle.classList.remove('is-active');
                         if (showcaseShadow) showcaseShadow.style.opacity = '1';
                     } else {
-                        // Viajando con el usuario entre secciones
                         if (bottleMain) bottleMain.style.visibility = 'hidden';
                         if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
-
-                        // Curva de aceleración/desaceleración suave
-                        var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 
                         var curDocX = heroDoc.left + (targetDoc.left - heroDoc.left) * e;
                         var curDocY = heroDoc.top + (targetDoc.top - heroDoc.top) * e;
                         var curW = heroDoc.width + (targetDoc.width - heroDoc.width) * e;
                         var curH = heroDoc.height + (targetDoc.height - heroDoc.height) * e;
-
-                        // Posición en pantalla (coordenadas viewport fijas)
                         var viewX = curDocX - sX;
                         var viewY = curDocY - sY;
+                        var sx = targetDoc.width > 0 ? curW / targetDoc.width : 1;
+                        var sy = targetDoc.height > 0 ? curH / targetDoc.height : 1;
 
-                        // Rotación sutil y dinámica durante el vuelo (se endereza a 0° al aterrizar)
-                        var tilt = Math.sin(p * Math.PI) * -5.2;
-
-                        travelBottle.style.transform = 'translate3d(' + viewX.toFixed(1) + 'px, ' + viewY.toFixed(1) + 'px, 0) rotate(' + tilt.toFixed(2) + 'deg)';
-                        travelBottle.style.width = curW.toFixed(1) + 'px';
-                        travelBottle.style.height = curH.toFixed(1) + 'px';
+                        travelBottle.style.width = targetDoc.width.toFixed(2) + 'px';
+                        travelBottle.style.height = targetDoc.height.toFixed(2) + 'px';
+                        travelBottle.style.transformOrigin = '0 0';
+                        travelBottle.style.transform = 'translate3d(' + viewX.toFixed(2) + 'px, ' + viewY.toFixed(2) + 'px, 0) scale(' + sx.toFixed(4) + ', ' + sy.toFixed(4) + ')';
                         travelBottle.classList.add('is-active');
 
                         if (showcaseShadow) {
-                            showcaseShadow.style.opacity = (Math.max(0, (p - 0.75) / 0.25)).toFixed(2);
+                            showcaseShadow.style.opacity = (Math.max(0, (p - 0.72) / 0.28)).toFixed(2);
                         }
                     }
                 } else if (prefersReduced) {
