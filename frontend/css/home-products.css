@@ -5,6 +5,7 @@
  * Solo se animan transform y opacity.
  */
 
+#productos.hp-section,
 #main-content.hp-section {
     --hp-ease: cubic-bezier(0.23, 1, 0.32, 1);
     --hp-w: clamp(196px, 17.5vw, 232px);
@@ -27,6 +28,7 @@
 .hp-head .v3-lead { font-size: 0.94rem; margin-inline: auto; }
 
 /* Banda fuerte detrás del título: letras blancas sobre rojo (el fondo de la sección es crema). */
+#productos.hp-section > .hp-head,
 #main-content.hp-section > .hp-head {
     width: 100%;
     max-width: none;
@@ -35,14 +37,18 @@
     background: linear-gradient(135deg, var(--brand-red, #E51D2A) 0%, var(--brand-red-dark, #C91522) 72%);
     color: #fff;
 }
+#productos.hp-section > .hp-head .v3-kicker,
 #main-content.hp-section > .hp-head .v3-kicker {
     background: rgba(255, 255, 255, 0.18);
     color: #fff;
 }
+#productos.hp-section > .hp-head .v3-title,
 #main-content.hp-section > .hp-head .v3-title,
+#productos.hp-section > .hp-head .v3-lead,
 #main-content.hp-section > .hp-head .v3-lead {
     color: #fff;
 }
+#productos.hp-section > .hp-head .v3-lead,
 #main-content.hp-section > .hp-head .v3-lead { opacity: 0.92; }
 
 /* ---------- carrusel ---------- */

@@ -121,13 +121,16 @@ function salePrice(p) {
 /** Aplica búsqueda, categoría y orden (todo en frontend, sin backend) */
 function getFilteredProducts() {
     let list = [...allProducts];
-    const q = filters.q.trim().toLowerCase();
+    const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const q = norm(filters.q.trim());
 
     if (q) {
         list = list.filter((p) =>
-            String(p.nombre || '').toLowerCase().includes(q) ||
-            String(p.descripcion || '').toLowerCase().includes(q) ||
-            String(p.categoria || '').toLowerCase().includes(q)
+            norm(p.nombre).includes(q) ||
+            norm(p.descripcion).includes(q) ||
+            norm(p.categoria).includes(q) ||
+            norm(p.sabor).includes(q) ||
+            norm(p.slug).includes(q)
         );
     }
 
