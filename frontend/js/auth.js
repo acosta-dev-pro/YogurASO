@@ -349,7 +349,7 @@ function setupLoginForm() {
 
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Iniciar Sesión';
+            submitBtn.textContent = loginForm.classList.contains('ya-form') ? 'Entrar' : 'Iniciar Sesión';
         }
 
         if (!result.success) {
@@ -406,7 +406,7 @@ function setupRegisterForm() {
 
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Crear Cuenta';
+            submitBtn.textContent = registerForm.classList.contains('ya-form') ? 'Crear cuenta' : 'Crear Cuenta';
         }
 
         if (!result.success) {
@@ -923,12 +923,17 @@ function setupGoogleSignIn() {
             cancel_on_tap_outside: true
         });
         if (mount) {
+            // Ancho del botón oficial = ancho de la tarjeta (GSI acepta 200–400 px)
+            const mountWidth = Math.round(mount.offsetWidth || mount.getBoundingClientRect().width || 280);
+            const compact = mount.closest('.ya-google');
             window.google.accounts.id.renderButton(mount, {
                 theme: 'outline',
-                size: 'medium',
-                shape: 'rectangular',
+                size: compact ? 'large' : 'medium',
+                shape: compact ? 'pill' : 'rectangular',
                 text: 'continue_with',
-            width: 280
+                logo_alignment: 'center',
+                locale: 'es',
+                width: Math.max(200, Math.min(400, compact ? mountWidth : 280))
             });
             if (btn) btn.hidden = true;
         }
