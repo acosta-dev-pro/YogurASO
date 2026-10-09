@@ -388,6 +388,73 @@
 .cart-sidebar.cart-ticket .cart-empty-state.is-compact { margin: 12px 0; background: transparent; border: none; box-shadow: none; }
 .cart-sidebar.cart-ticket .cart-empty-title { font-family: "Nunito Sans", sans-serif; font-weight: 800; font-size: 14px; }
 .cart-sidebar.cart-ticket .cart-empty-cta { background: var(--rojo-marca); box-shadow: none; font-family: "Nunito Sans", sans-serif; font-weight: 800; }
+/* Carrito vacío: más alto, ícono de línea, sin totales ni código */
+.cart-sidebar.cart-ticket.is-empty .cart-sheet-bottom,
+.cart-sidebar.cart-ticket.is-empty .cart-ticket-foot,
+.cart-sidebar.cart-ticket.is-empty .cart-barcode-wrap,
+.cart-sidebar.cart-ticket.is-empty .cart-order-code { display: none !important; }
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact {
+    min-height: 280px;
+    margin: 0;
+    padding: 28px 12px 32px;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 0 18px;
+    border-radius: 50%;
+    background: #F7F3F0;
+    color: var(--rojo-marca, #C3343E);
+    display: grid;
+    place-items: center;
+    font-size: 0;
+    box-shadow: none;
+}
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-icon svg { width: 34px; height: 34px; display: block; }
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-title {
+    font-family: "Nunito Sans", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #2A2522;
+    margin: 0 0 6px;
+}
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-text {
+    font-family: "Nunito Sans", sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #8A817A;
+    max-width: 26ch;
+    margin: 0 0 20px;
+}
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 20px;
+    margin: 0;
+    border-radius: 999px;
+    background: var(--rojo-marca, #C3343E);
+    color: #fff;
+    font-family: "Nunito Sans", sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    box-shadow: none;
+    border: none;
+    transform: none;
+    transition: background-color 0.15s ease;
+}
+.cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-cta:hover { background: #A82B34; transform: none; box-shadow: none; }
+
 .num { font-variant-numeric: tabular-nums; }
 
 @media screen and (max-width: 900px) {

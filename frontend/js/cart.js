@@ -120,12 +120,12 @@
         const href = productsHref();
         return `
             <div class="cart-empty-state${compact ? ' is-compact' : ''}">
-                <div class="cart-empty-icon" aria-hidden="true"><i class="fas fa-shopping-bag"></i></div>
+                <div class="cart-empty-icon" aria-hidden="true">${compact ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>' : '<i class="fas fa-shopping-bag"></i>'}</div>
                 <p class="cart-empty-title">Tu carrito está vacío</p>
                 <p class="cart-empty-text">${compact
-                    ? 'Agrega yogures desde el catálogo y arma tu pedido.'
+                    ? 'Elige tus sabores y arma tu pedido en segundos.'
                     : 'Aún no agregaste yogures. Explora el catálogo y arma tu pedido.'}</p>
-                <a class="cart-empty-cta" href="${href}">Ver productos</a>
+                <a class="cart-empty-cta" href="${href}">${compact ? "Ver sabores" : "Ver productos"}</a>
             </div>`;
     }
 
@@ -314,6 +314,8 @@
         );
         const clearBtn = document.getElementById("btn-clear-cart-sidebar");
         if (clearBtn) clearBtn.hidden = items.length === 0;
+        const sidebar = document.getElementById("cartSidebar");
+        if (sidebar) sidebar.classList.toggle("is-empty", items.length === 0);
 
         if (items.length === 0) {
             container.innerHTML = emptyCartHTML(true);
