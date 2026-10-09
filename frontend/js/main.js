@@ -833,7 +833,7 @@ async function cargarProductos() {
             renderProducts();
             return;
         }
-        container.innerHTML = '<p class="catalog-error">Error al cargar productos. ¿El backend está corriendo?</p>';
+        container.innerHTML = '<p class="catalog-error">Error al cargar productos. Revisa tu conexión y recarga.</p>';
         toast('Error al cargar productos', 'error');
     }
 }

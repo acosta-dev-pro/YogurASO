@@ -1,7 +1,16 @@
 /**
  * admin.js — Panel administrador (CRUD de productos + usuarios)
+ * Datos en Supabase (api.js). Solo un admin activo puede escribir: lo exige RLS
+ * con is_admin(); aquí además se comprueba al entrar para no mostrar el panel.
  */
-import { fetchProducts, createProduct, updateProduct, deleteProduct, permanentlyDeleteProduct, uploadImage, fetchUsers, toggleUserActive } from './api.js';
+import { fetchProducts, createProduct, updateProduct, deleteProduct, permanentlyDeleteProduct, uploadImage, fetchUsers, toggleUserActive, verifyAdmin, syncSession } from './api.js';
+
+/** Las fotos del catálogo se guardan como "assets/..."; desde /pages/ hay que subir un nivel. */
+function imgSrc(url) {
+    const s = String(url || '');
+    if (!s || /^(https?:|data:|blob:|\/|\.\.\/)/i.test(s)) return s;
+    return `../${s.replace(/^\.\//, '')}`;
+}
 
 const categoriaMap = {
     natural: 'Natural',
@@ -311,7 +320,7 @@ function updateDashboard(productos) {
     if (line) {
         line.textContent = total
             ? `${total} en lista · ${activos} a la venta · ${stock} und. en nevera`
-            : 'No llegó inventario. ¿El API está en localhost:3000 y tu usuario es admin?';
+            : 'No llegó inventario. Revisa tu conexión y que tu usuario sea admin.';
     }
     const setStat = (id, val) => {
         const el = document.getElementById(id);
@@ -422,20 +431,8 @@ function exportProductsCsv(productos) {
 }
 
 async function setProductoActivo(producto, activo) {
-    const token = getToken();
-    if (activo) {
-        const payload = {
-            nombre: producto.nombre,
-            descripcion: producto.descripcion || '',
-            precio: Number(producto.precio || 0),
-            stock: Number(producto.stock || 0),
-            imagen_url: producto.imagen_url || '',
-            categoria: producto.categoria || 'Yogur',
-            activo: true
-        };
-        return updateProduct(producto.id, payload, token);
-    }
-    return deleteProduct(producto.id, token);
+    if (activo) return updateProduct(producto.id, { activo: true });
+    return deleteProduct(producto.id);
 }
 
 function renderRows(productos) {
@@ -458,7 +455,7 @@ function renderRows(productos) {
             <td>
                 <div class="admin-product-cell">
                     ${p.imagen_url
-                        ? `<img src="${escapeHtml(p.imagen_url)}" alt="" class="admin-thumb" onerror="this.style.display='none'">`
+                        ? `<img src="${escapeHtml(imgSrc(p.imagen_url))}" alt="" class="admin-thumb" onerror="this.style.display='none'">`
                         : '<span class="admin-thumb placeholder" aria-hidden="true"><i class="fas fa-image"></i></span>'}
                     <strong>${escapeHtml(p.nombre)}</strong>
                 </div>
@@ -660,11 +657,23 @@ function llenarFormulario(producto) {
     document.getElementById('p-stock').value = producto.stock || 0;
     document.getElementById('p-descripcion').value = producto.descripcion || '';
     document.getElementById('p-imagen').value = producto.imagen_url || '';
-    if (producto.imagen_url) setImagePreview(producto.imagen_url);
+    if (producto.imagen_url) setImagePreview(imgSrc(producto.imagen_url));
     else resetImageUpload();
 
-    const categoriaKey = Object.keys(categoriaMap).find((key) => categoriaMap[key] === producto.categoria) || 'natural';
-    document.getElementById('p-categoria').value = categoriaKey;
+    let categoriaKey = Object.keys(categoriaMap).find((key) => categoriaMap[key] === producto.categoria);
+    const catSelect = document.getElementById('p-categoria');
+    if (!categoriaKey && producto.categoria && catSelect) {
+        // Categoría que viene de la base (p. ej. "Frutales"): se agrega para no perderla al guardar.
+        categoriaKey = `db_${String(producto.categoria).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+        categoriaMap[categoriaKey] = producto.categoria;
+        if (!catSelect.querySelector(`option[value="${categoriaKey}"]`)) {
+            const opt = document.createElement('option');
+            opt.value = categoriaKey;
+            opt.textContent = producto.categoria;
+            catSelect.appendChild(opt);
+        }
+    }
+    catSelect.value = categoriaKey || 'natural';
     const colorFondo = document.getElementById('p-color-fondo');
     if (colorFondo) colorFondo.value = /^#[0-9A-Fa-f]{6}$/.test(producto.color_fondo || '') ? producto.color_fondo : '#FFF8F4';
     document.getElementById('p-activo').checked = Boolean(producto.activo);
@@ -716,7 +725,7 @@ async function cargarTablaProductos() {
     if (allAdminProducts._error) {
         updateDashboard([]);
         if (lista) {
-            lista.innerHTML = `<tr><td colspan="9" class="admin-sheet-empty">${escapeHtml(allAdminProducts._error)}. Arranca el backend en el puerto 3000 y recarga.</td></tr>`;
+            lista.innerHTML = `<tr><td colspan="9" class="admin-sheet-empty">${escapeHtml(allAdminProducts._error)}. Revisa tu conexión y recarga.</td></tr>`;
         }
         return;
     }
@@ -875,6 +884,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!token || !usuario || usuario.rol !== 'admin') {
         window.location.href = 'login.html';
+        return;
+    }
+
+    // El espejo local se puede editar a mano: la última palabra la tiene la base.
+    if (!(await verifyAdmin())) {
+        const { session } = await syncSession();
+        window.location.href = session ? '../index.html' : 'login.html';
         return;
     }
 

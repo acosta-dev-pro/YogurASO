@@ -1,6 +1,8 @@
 /**
  * auth.js — Login, registro, Google, perfil y recuperar clave.
- * El token se guarda en localStorage (así lo lee api.js en cada petición).
+ * Todo va contra Supabase Auth (ver api.js). La sesión real la guarda
+ * supabase-js; localStorage.token/usuario es solo un espejo para pintar la UI
+ * sin esperar a la red. Los permisos los decide RLS en la base.
  */
 import {
     login,
@@ -11,7 +13,12 @@ import {
     updateProfile,
     changePassword,
     requestPasswordChangeCode,
-    loginWithGoogle
+    loginWithGoogle,
+    loginWithGoogleRedirect,
+    verifySignupCode,
+    resendSignupCode,
+    syncSession,
+    logout as apiLogout
 } from './api.js';
 
 const isInPages = window.location.pathname.includes('/pages/');
@@ -77,22 +84,24 @@ async function logout() {
         return;
     }
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
+    await apiLogout();
     showMessage('Sesión cerrada correctamente', 'success');
     setTimeout(() => {
         window.location.href = HOME_PATH;
     }, 400);
 }
 
-function redirectIfAuthenticatedOnAuthPages() {
-    const usuario = getUsuario();
-    const token = getToken();
-    if (!usuario || !token) return;
-
-    const isAuthPage = ['login.html', 'registro.html', 'recuperar.html', 'reset-password.html'].includes(pageName);
+async function redirectIfAuthenticatedOnAuthPages() {
+    // reset-password.html queda fuera: ahí se usa la sesión temporal de recuperación.
+    const isAuthPage = ['login.html', 'registro.html', 'recuperar.html'].includes(pageName);
     if (!isAuthPage) return;
 
+    const { session, usuario } = await syncSession();
+    if (!session || !usuario) return;
+    if (usuario.activo === false) {
+        await apiLogout();
+        return;
+    }
     window.location.href = usuario.rol === 'admin' ? ADMIN_PATH : HOME_PATH;
 }
 
@@ -115,7 +124,12 @@ function protectProfilePage() {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
         window.location.href = LOGIN_PATH;
+        return;
     }
+    // El espejo local puede ser viejo: confirmar con Supabase.
+    syncSession().then(({ session, offline }) => {
+        if (!session && !offline) window.location.href = LOGIN_PATH;
+    });
 }
 
 function isLoggedIn() {
@@ -353,6 +367,14 @@ function setupLoginForm() {
         }
 
         if (!result.success) {
+            if (result.code === 'email_not_confirmed') {
+                const resend = await resendSignupCode(email);
+                showSignupCodeStep(loginForm, email, resend.success
+                    ? `Tu correo aún no está confirmado. ${resend.message} Escríbelo aquí.`
+                    : 'Tu correo aún no está confirmado. Escribe el código de 6 dígitos que te enviamos.');
+                if (!resend.success) showMessage(resend.message, 'warning');
+                return;
+            }
             showMessage(result.message || 'Credenciales incorrectas o cuenta restringida.', 'error');
             return;
         }
@@ -419,9 +441,82 @@ function setupRegisterForm() {
             return;
         }
 
+        if (result.needsConfirmation) {
+            showSignupCodeStep(registerForm, email, `${result.message} Escríbelo aquí para activar tu cuenta.`);
+            return;
+        }
+
         showMessage('Registro exitoso. Ahora puedes iniciar sesión', 'success');
         window.location.href = LOGIN_PATH;
     });
+}
+
+/**
+ * Paso "confirma tu correo": Supabase manda un código de 6 dígitos
+ * (plantilla Confirm signup). Se arma aquí para no tocar el HTML de la página.
+ */
+function showSignupCodeStep(anchorForm, email, message) {
+    let form = document.getElementById('verifyForm');
+    if (!form) {
+        form = document.createElement('form');
+        form.className = anchorForm.className || 'ya-form';
+        form.id = 'verifyForm';
+        form.noValidate = true;
+        form.innerHTML = `
+            <p class="ya-lead" id="verify-msg" aria-live="polite"></p>
+            <div class="ya-field">
+                <label class="ya-label" for="signup-code">Código de 6 dígitos</label>
+                <input class="ya-input" type="text" id="signup-code" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code" required>
+            </div>
+            <button type="submit" class="ya-btn ya-btn--primary">Confirmar cuenta</button>
+            <p><button type="button" class="ya-link ya-link--sm" id="verify-resend" style="background:none;border:0;padding:0;cursor:pointer">Reenviar código</button>
+            · <a class="ya-link ya-link--sm" href="#" id="verify-back">Usar otro correo</a></p>`;
+        anchorForm.insertAdjacentElement('afterend', form);
+
+        const codeInput = form.querySelector('#signup-code');
+        const submitBtn = form.querySelector('[type="submit"]');
+        const resendBtn = form.querySelector('#verify-resend');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = (codeInput.value || '').replace(/\D/g, '');
+            if (code.length !== 6) {
+                showMessage('Escribe el código de 6 dígitos', 'error');
+                codeInput.focus();
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Confirmando...';
+            const result = await verifySignupCode(form.dataset.email, code);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Confirmar cuenta';
+            if (!result.success) {
+                showMessage(result.message || 'Código inválido o vencido', 'error');
+                return;
+            }
+            showMessage('¡Cuenta confirmada!', 'success');
+            await finishLoginSuccess(result, false);
+        });
+
+        resendBtn.addEventListener('click', async () => {
+            resendBtn.disabled = true;
+            const res = await resendSignupCode(form.dataset.email);
+            showMessage(res.message || (res.success ? 'Código enviado' : 'No se pudo reenviar'), res.success ? 'success' : 'error');
+            setTimeout(() => { resendBtn.disabled = false; }, 60000);
+        });
+
+        form.querySelector('#verify-back').addEventListener('click', (e) => {
+            e.preventDefault();
+            form.hidden = true;
+            anchorForm.hidden = false;
+        });
+    }
+    form.dataset.email = email;
+    form.querySelector('#verify-msg').textContent = message || `Te enviamos un código de 6 dígitos a ${email}.`;
+    form.hidden = false;
+    anchorForm.hidden = true;
+    form.querySelector('#signup-code').value = '';
+    form.querySelector('#signup-code').focus();
 }
 
 function setupRecoverForm() {
@@ -511,7 +606,7 @@ function setupRecoverForm() {
         }
         await askAlert({
             title: 'Contraseña lista',
-            message: 'Ya puedes entrar con tu nueva clave. Te enviamos un correo de confirmación.',
+            message: 'Ya puedes entrar con tu nueva clave.',
             type: 'success'
         });
         window.location.href = LOGIN_PATH;
@@ -522,18 +617,21 @@ function setupResetForm() {
     const form = document.getElementById('resetForm');
     if (!form) return;
 
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token') || '';
-    const tokenInput = document.getElementById('reset-token');
-    if (tokenInput) tokenInput.value = token;
-
-    if (!token) {
-        askAlert({
-            title: 'Enlace inválido',
-            message: 'Falta el token. Solicita un enlace nuevo desde recuperar contraseña.',
-            type: 'warning'
-        });
-    }
+    // Con Supabase la recuperación va por código (recuperar.html). Esta página
+    // solo sirve si se llega con una sesión de recuperación (enlace del correo).
+    let token = '';
+    const ready = syncSession().then(({ session }) => {
+        token = session?.access_token || '';
+        const tokenInput = document.getElementById('reset-token');
+        if (tokenInput) tokenInput.value = token ? '1' : '';
+        if (!token) {
+            askAlert({
+                title: 'Usa el código del correo',
+                message: 'Para cambiar tu contraseña pide un código de 6 dígitos en "Recuperar contraseña".',
+                type: 'warning'
+            }).then(() => { window.location.href = 'recuperar.html'; });
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -541,8 +639,9 @@ function setupResetForm() {
         const confirm = document.getElementById('confirm-password')?.value;
         const submitBtn = form.querySelector('[type="submit"]');
 
+        await ready;
         if (!token) {
-            showMessage('Falta el token de recuperación', 'error');
+            showMessage('Pide un código nuevo en "Recuperar contraseña"', 'error');
             return;
         }
         if (!password || password.length < 8) {
@@ -568,7 +667,7 @@ function setupResetForm() {
             submitBtn.textContent = 'Guardando...';
         }
 
-        const result = await resetPassword({ token, password });
+        const result = await resetPassword({ password });
 
         if (submitBtn) {
             submitBtn.disabled = false;
@@ -645,6 +744,9 @@ async function setupProfilePage() {
         if (profileRes.success && loaded) {
             currentUser = loaded;
             localStorage.setItem('usuario', JSON.stringify(currentUser));
+        } else if (profileRes.status === 401) {
+            window.location.href = LOGIN_PATH;
+            return;
         } else if (!currentUser) {
             showMessage(profileRes.message || 'No se pudo cargar el perfil', 'error');
             return;
@@ -760,7 +862,7 @@ async function setupProfilePage() {
             return;
         }
         e.target.reset();
-        showMessage('Contraseña actualizada. Revisa tu correo de confirmación.', 'success');
+        showMessage('Contraseña actualizada.', 'success');
     });
 
     document.getElementById('passwordLegacyForm')?.addEventListener('submit', async (e) => {
@@ -874,8 +976,23 @@ function normalizeUser(raw) {
         email: raw.email || '',
         telefono: raw.telefono || '',
         rol: raw.rol || 'cliente',
+        activo: raw.activo !== false,
         auth_provider: raw.auth_provider || raw.auth_provider || ''
     };
+}
+
+// Nonce de Google: a Google va el SHA-256 en hex y a Supabase el valor sin cifrar.
+let googleRawNonce = null;
+async function makeGoogleNonce() {
+    try {
+        if (!window.crypto?.subtle) return null;
+        const raw = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))));
+        const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+        const hashed = Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, '0')).join('');
+        return { raw, hashed };
+    } catch {
+        return null;
+    }
 }
 
 async function handleGoogleCredential(response) {
@@ -884,7 +1001,7 @@ async function handleGoogleCredential(response) {
         return;
     }
 
-    const result = await loginWithGoogle(response.credential);
+    const result = await loginWithGoogle(response.credential, googleRawNonce);
     if (!result.success) {
         showMessage(result.message || 'No se pudo iniciar sesión con Google.', 'error');
         return;
@@ -902,11 +1019,11 @@ function setupGoogleSignIn() {
     if (!clientId) {
         if (btn) {
             btn.hidden = false;
-            btn.title = 'Configura GOOGLE_CLIENT_ID en config.js y backend/.env';
+            btn.title = 'Configura GOOGLE_CLIENT_ID en config.js';
             btn.addEventListener('click', () => {
                 askAlert({
                     title: 'Google no configurado',
-                    message: 'Agrega tu GOOGLE_CLIENT_ID en frontend/js/config.js y en backend/.env. Guía en docs/GMAIL_Y_GOOGLE.md',
+                    message: 'Agrega tu GOOGLE_CLIENT_ID en frontend/js/config.js (el mismo de Supabase → Providers → Google).',
                     type: 'warning'
                 });
             });
@@ -914,13 +1031,18 @@ function setupGoogleSignIn() {
         return;
     }
 
+    let nonce;
+    const noncePromise = makeGoogleNonce().then((n) => { nonce = n; });
+
     const start = () => {
-        if (!window.google?.accounts?.id) return false;
+        if (!window.google?.accounts?.id || nonce === undefined) return false;
+        googleRawNonce = nonce?.raw || null;
         window.google.accounts.id.initialize({
             client_id: clientId,
             callback: handleGoogleCredential,
             auto_select: false,
-            cancel_on_tap_outside: true
+            cancel_on_tap_outside: true,
+            ...(nonce?.hashed ? { nonce: nonce.hashed } : {})
         });
         if (mount) {
             // Ancho del botón oficial = ancho de la tarjeta (GSI acepta 200–400 px)
@@ -940,18 +1062,28 @@ function setupGoogleSignIn() {
         return true;
     };
 
-    if (!start()) {
+    noncePromise.then(() => {
+        if (start()) return;
         let tries = 0;
         const timer = setInterval(() => {
             tries += 1;
-            if (start() || tries > 40) clearInterval(timer);
+            if (start()) {
+                clearInterval(timer);
+            } else if (tries > 40) {
+                clearInterval(timer);
+                // El botón oficial no cargó: queda el botón propio con redirección de Supabase.
+                if (btn) btn.hidden = false;
+            }
         }, 150);
-    }
+    });
 
-    btn?.addEventListener('click', () => {
+    btn?.addEventListener('click', async () => {
         if (window.google?.accounts?.id) {
             window.google.accounts.id.prompt();
+            return;
         }
+        const res = await loginWithGoogleRedirect();
+        if (!res.success) showMessage(res.message || 'No se pudo abrir Google', 'error');
     });
 }
 
