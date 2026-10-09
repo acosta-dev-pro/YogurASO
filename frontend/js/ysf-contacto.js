@@ -1,7 +1,8 @@
 /* ysf-contacto.js: sección Contacto del home. Sin dependencias y seguro con defer.
    1) Entrada con IntersectionObserver (solo transform/opacity; nada si hay reduced-motion).
    2) Formulario: valida Nombre y Mensaje (Teléfono opcional) y abre wa.me/<WHATSAPP_NUMBER de js/config.js>
-      con el texto ya escrito. No hay backend ni envíos simulados. */
+      con el texto ya escrito. No hay envíos simulados: además guarda una copia en Supabase
+      (contact_messages) si la tabla existe; si no, solo WhatsApp. */
 (function () {
   'use strict';
 
@@ -76,7 +77,32 @@
       if (win) { try { win.opener = null; } catch (e) { /* nada */ } }
       else window.location.href = url;
       if (status) status.textContent = 'Abrimos WhatsApp con tu mensaje. Solo falta enviarlo.';
+      saveMessage(f.nombre.value.trim(), tel, f.mensaje.value.trim());
     });
+  }
+
+  /* Copia del mensaje en Supabase (tabla contact_messages, solo la lee el admin).
+     Va después de abrir WhatsApp y en silencio: si la tabla aún no existe, no pasa nada. */
+  function saveMessage(nombre, tel, mensaje) {
+    var vid = null;
+    try { vid = localStorage.getItem('yog_visitor_id'); } catch (e) { vid = null; }
+    if (!vid && window.crypto && crypto.randomUUID) {
+      vid = crypto.randomUUID();
+      try { localStorage.setItem('yog_visitor_id', vid); } catch (e) { /* nada */ }
+    }
+    if (!/^[0-9a-f-]{36}$/i.test(String(vid || ''))) return;
+    import('./supabase-client.js')
+      .then(function (m) {
+        return m.obtenerSupabase().from('contact_messages').insert({
+          kind: 'contacto',
+          visitor_id: vid,
+          name: nombre.slice(0, 80),
+          phone: tel ? tel.slice(0, 30) : null,
+          message: mensaje.slice(0, 1000)
+        });
+      })
+      .then(function (res) { if (res && res.error) console.info('[contacto] no se guardó en la base:', res.error.message); })
+      .catch(function (err) { console.info('[contacto] sin Supabase:', err && err.message); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
