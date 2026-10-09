@@ -1143,8 +1143,8 @@
    Ajuste de tamaño de las tarjetas (.distc*) con selectores más específicos,
    y nota gris con el mismo gris/radio del recuadro del post IG (.showcase-gray-box).
    Tarjetas y nota comparten el ancho del contenedor de la sección (.v3-wrap). */
+/* Solo el padding: el margin (18px arriba) lo deja intacto para no recortar la franja roja. */
 #distribuidores.v3-dist .distc {
-  margin: 0 0 -22px;
   padding: 30px 0 34px;
 }
 #distribuidores .distc__row {
