@@ -38,6 +38,17 @@ function questionRows(questions) {
     }));
 }
 
+function commentRows(comments) {
+    return comments.map((c) => ({
+        ID: c.id,
+        Fecha: fmtDate(c.created_at),
+        Nombre: c.author_name || 'Sin nombre',
+        Comentario: c.body || '',
+        Estado: STATUS_Q[c.status] || c.status || '',
+        Respuesta: c.reply || ''
+    }));
+}
+
 function orderRows(orders) {
     return orders.map((o) => ({
         Pedido: o.order_number || o.id,
@@ -76,10 +87,10 @@ function download(blob, ext) {
 }
 
 /**
- * Libro con una hoja por tema. Solo agrega Preguntas y Pedidos si hay datos.
+ * Libro con una hoja por tema. Preguntas, comentarios y pedidos solo si hay datos.
  * Devuelve { format: 'xlsx' | 'csv', sheets }.
  */
-export async function exportWorkbook({ products = [], questions = [], orders = [] }) {
+export async function exportWorkbook({ products = [], questions = [], orders = [], comments = [] }) {
     let XLSX;
     try {
         XLSX = await import(SHEETJS);
@@ -95,6 +106,7 @@ export async function exportWorkbook({ products = [], questions = [], orders = [
     };
     add(inventoryRows(products), 'Inventario', [6, 24, 14, 12, 12, 18, 8, 12, 14, 12, 12, 40, 20]);
     if (questions.length) add(questionRows(questions), 'Preguntas', [6, 20, 18, 60, 12, 60]);
+    if (comments.length) add(commentRows(comments), 'Comentarios del post', [6, 20, 18, 60, 12, 60]);
     if (orders.length) add(orderRows(orders), 'Pedidos', [14, 20, 22, 14, 14, 50, 12, 12, 12]);
     const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     download(new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), 'xlsx');

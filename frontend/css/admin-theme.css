@@ -428,7 +428,6 @@
 }
 .adm-emptybox strong { color: var(--txt); font-size: 13.5px; }
 .adm-emptybox p { margin: 0; font-size: 12.5px; }
-.adm-emptybox--ig { grid-template-columns: auto 1fr; align-items: center; gap: 16px; }
 
 .adm-note {
     margin: 12px 0 0;
@@ -905,65 +904,27 @@
 .adm-likelist-n { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; font-weight: 800; font-size: 12.5px; }
 .adm-likelist-n svg { width: 12px; height: 12px; color: var(--red); }
 
-.adm-ig-account h2 { font-size: 15px; margin-top: 14px; }
-.adm-ig-ico {
+/* Tarjeta del post «Sobre nosotros» */
+.adm-post-head { display: flex; align-items: center; gap: 10px; }
+.adm-post-ring {
     display: grid; place-items: center;
-    width: 46px; height: 46px;
-    border-radius: 15px;
-    background: var(--gray);
-    color: var(--txt);
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: conic-gradient(from 200deg, var(--bg-mango, #ED8311), var(--rojo-marca, #C3343E), var(--bg-mora, #82366B), var(--bg-mango, #ED8311));
 }
-.adm-ig-ico svg { width: 24px; height: 24px; }
-.adm-steps { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 8px; font-size: 12px; color: var(--txt-2); }
-.adm-steps li::marker { font-weight: 800; color: var(--red); }
-.adm-ig-profile { display: flex; align-items: center; gap: 12px; }
-.adm-ig-profile img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; }
-.adm-ig-profile strong { display: block; font-size: 14px; }
-.adm-ig-profile span { font-size: 12px; color: var(--txt-3); }
-.adm-ig-facts { display: flex; gap: 22px; margin: 16px 0 0; }
-.adm-ig-facts dt { font-size: 11px; color: var(--txt-3); font-weight: 700; }
-.adm-ig-facts dd { margin: 0; font-size: 17px; font-weight: 800; }
-.adm-ig-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start; }
-.adm-ig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-.adm-ig-post {
-    position: relative;
-    aspect-ratio: 1;
-    padding: 0;
-    border: 0;
-    border-radius: 18px;
-    overflow: hidden;
-    background: var(--gray);
-    cursor: pointer;
-    box-shadow: var(--shadow);
-}
-.adm-ig-post img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.adm-ig-post.is-on { box-shadow: 0 0 0 3px var(--red), var(--shadow-up); }
-.adm-ig-meta {
-    position: absolute;
-    left: 8px; right: 8px; bottom: 8px;
-    display: flex;
-    gap: 10px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--txt);
-}
-.adm-ig-meta span { display: inline-flex; align-items: center; gap: 4px; }
-.adm-ig-meta svg { width: 12px; height: 12px; }
-.adm-ig-meta span:first-child svg { color: var(--red); }
-.adm-ig-comments { padding: 18px; }
-.adm-ig-chead p { margin: 0; font-size: 12.5px; font-weight: 700; }
-.adm-ig-chead small { color: var(--txt-3); font-size: 11px; }
-.adm-ig-clist { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; max-height: 520px; overflow: auto; }
-.adm-ig-clist li { padding-top: 12px; border-top: 1px solid var(--line); }
-.adm-ig-clist p { margin: 0; font-size: 12.5px; }
-.adm-ig-clist small { font-size: 10.5px; color: var(--txt-3); }
-.adm-ig-reply { margin: 8px 0 0 14px; padding-left: 10px; border-left: 2px solid var(--gray-2); }
-.adm-ig-replyform { display: flex; gap: 6px; margin-top: 8px; }
-.adm-ig-replyform input { flex: 1; min-width: 0; border: 0; padding: 8px 12px; border-radius: 999px; background: #F4F5F7; font-size: 12px; }
-.adm-ig-replyform button { border: 0; padding: 8px 12px; border-radius: 999px; background: var(--dark); color: #fff; font-size: 11.5px; font-weight: 800; cursor: pointer; }
+.adm-post-ring img { width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 2px solid #fff; }
+.adm-post-head strong { display: block; font-size: 13px; }
+.adm-post-head small { font-size: 11px; color: var(--txt-3); }
+.adm-post-title { margin: 14px 0 0; font-family: var(--font-display, 'Fredoka', sans-serif); font-weight: 600; font-size: 20px; line-height: 1.15; color: var(--dark); }
+.adm-post-stats { display: grid; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.adm-post-stats span { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--txt-2); }
+.adm-post-stats svg { width: 18px; height: 18px; }
+.adm-post-stats .is-heart svg { color: var(--red); }
+.adm-post-stats strong { font-size: 18px; font-weight: 800; color: var(--txt); }
+.adm-post-pending { margin: 12px 0 0; padding: 8px 12px; border-radius: 12px; background: var(--amber); color: var(--amber-ink); font-size: 11.5px; font-weight: 800; }
+.adm-qlist--spaced { margin-top: 14px; }
+.adm-btn--danger:hover { background: color-mix(in srgb, var(--red) 10%, #fff); color: var(--red); }
+.adm-block .adm-toolbar .adm-block-head { margin-bottom: 0; }
 
 /* ---------- Preguntas ---------- */
 .adm-qcounts { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 2px; }
@@ -1190,8 +1151,7 @@ body.modal-open { overflow: hidden; }
     .adm-body { --side: 270px; }
     .adm-head-main { padding-right: 28px; padding-left: 36px; }
     .adm-split-main { padding-right: 28px; padding-left: 52px; }
-    .adm-color-layout,
-    .adm-ig-layout { grid-template-columns: 1fr; }
+    .adm-color-layout { grid-template-columns: 1fr; }
     .adm-color-previews { max-width: 280px; }
     .adm-chip { min-width: 0; flex: 1; }
 }

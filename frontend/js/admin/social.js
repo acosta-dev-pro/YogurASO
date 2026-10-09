@@ -1,240 +1,225 @@
 /**
- * admin/social.js — Vista "Instagram": me gusta de la web (reales, Supabase)
- * y la cuenta de Instagram (Graph API vía Edge Function, ver instagram.js).
+ * admin/social.js — Vista «Instagram»: el post estilo Instagram de la web
+ * («Sobre nosotros» en el inicio). Me gusta y comentarios reales de Supabase
+ * (migración 0002); responder, publicar, ocultar y borrar desde el panel.
+ * También muestra los me gusta de cada sabor.
  */
-import { esc, fmtDate, flavorOf, photoFor, colorsFor } from './shared.js';
+import { esc, fmtDate, flavorOf, photoFor, colorsFor, initials, STATUS_Q } from './shared.js';
 import { likeCounts } from './data.js';
-import { instagramStatus, listMedia, listComments, replyToComment } from './instagram.js';
+import { POST_ID, getPostLikes, listPostComments, setCommentStatus, replyToComment, deleteComment } from './instagram.js';
 
-const IG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="0.6" fill="currentColor"/></svg>';
 const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3s-7.3-4.4-9.2-9A5.2 5.2 0 0 1 12 6.1a5.2 5.2 0 0 1 9.2 5.2c-1.9 4.6-9.2 9-9.2 9Z" fill="currentColor"/></svg>';
 const BUBBLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M20.7 11.4a8.4 8.4 0 0 1-12.4 7.4L3.3 20l1.3-4.8a8.4 8.4 0 1 1 16.1-3.8Z"/></svg>';
+const STATUS_C = { pending: 'Por revisar', approved: 'Publicado', hidden: 'Oculto' };
 
 export function mountSocial(ctx) {
     const $ = (id) => document.getElementById(id);
+    let post = null;      // { likes } | { error }
+    let comments = null;  // { list, canReply } | { error, needs }
+    let flavors = null;   // { products } | { error }
+    let filter = 'pending';
     let loaded = false;
-    let ig = { status: null, posts: [], selected: null, comments: [], loadingComments: false };
-    let likes = null;
 
-    /* ---------- Me gusta de la web ---------- */
-    async function loadLikes() {
+    async function loadPost() {
+        const [l, c] = await Promise.all([getPostLikes(POST_ID), listPostComments(POST_ID)]);
+        post = l.success ? { likes: l.likes } : { error: l.message, needs: l.needs };
+        comments = c.success ? { list: c.comments, canReply: c.canReply } : { error: c.message, needs: c.needs };
+    }
+
+    async function loadFlavors() {
         const products = ctx.products().filter((p) => p.activo);
-        const targets = [{ type: 'post', id: 'nosotros' }];
+        const targets = [];
         products.forEach((p) => {
             targets.push({ type: 'product', id: String(p.id), pid: p.id });
             const slug = flavorOf(p);
-            // Si la tienda cayó al catálogo local, el corazón se guarda como local-<sabor>.
+            // Si la tienda cayó al catálogo local, el corazón queda como local-<sabor>.
             if (slug) targets.push({ type: 'product', id: `local-${slug}`, pid: p.id });
         });
-        const res = await likeCounts(targets);
+        const res = targets.length ? await likeCounts(targets) : { success: true, items: [] };
         if (!res.success) {
-            likes = { error: res.message, needs: res.needs };
+            flavors = { error: res.message };
             return;
         }
-        const post = res.items.find((t) => t.type === 'post')?.likes || 0;
-        const byProduct = new Map();
-        res.items.filter((t) => t.type === 'product').forEach((t) => byProduct.set(t.pid, (byProduct.get(t.pid) || 0) + t.likes));
-        likes = {
-            post,
-            products: products.map((p) => ({ p, n: byProduct.get(p.id) || 0 })).sort((a, b) => b.n - a.n)
-        };
+        const by = new Map();
+        res.items.forEach((t) => by.set(t.pid, (by.get(t.pid) || 0) + t.likes));
+        flavors = { products: products.map((p) => ({ p, n: by.get(p.id) || 0 })).sort((a, b) => b.n - a.n) };
     }
 
-    function renderLikes() {
+    /* ---------- Tarjeta del post (columna izquierda) ---------- */
+    function renderCard() {
+        const host = $('post-card');
+        const list = comments?.list || [];
+        const pending = list.filter((c) => c.status === 'pending').length;
+        const likes = post && !post.error ? post.likes.toLocaleString('es-CO') : '—';
+        host.innerHTML = `
+            <header class="adm-post-head">
+                <span class="adm-post-ring"><img src="../assets/favicon.svg" alt="" width="34" height="34"></span>
+                <div><strong>yoguraso</strong><small>Post «Sobre nosotros» · inicio</small></div>
+            </header>
+            <p class="adm-post-title">Pasión por la frescura natural</p>
+            <div class="adm-post-stats">
+                <span class="is-heart">${HEART}<strong>${likes}</strong> me gusta</span>
+                <span>${BUBBLE}<strong>${comments && !comments.error ? list.length.toLocaleString('es-CO') : '—'}</strong> comentarios</span>
+            </div>
+            ${pending ? `<p class="adm-post-pending">${pending} ${pending === 1 ? 'comentario espera' : 'comentarios esperan'} tu revisión</p>` : ''}
+            ${post?.error ? `<p class="adm-note">${esc(post.error)}</p>` : ''}
+            <p class="adm-muted">Hoy el post de la web solo muestra el corazón. Si vuelves a abrir los comentarios en la página, llegan aquí.</p>
+            <a class="adm-btn" href="../index.html#nosotros" target="_blank" rel="noopener">Ver el post en la web</a>`;
+    }
+
+    /* ---------- Comentarios ---------- */
+    function commentHtml(c) {
+        const name = c.author_name || 'Sin nombre';
+        const canReply = comments.canReply !== false;
+        return `
+            <article class="adm-q is-${esc(c.status)}" data-cid="${esc(c.id)}">
+                <header>
+                    <span class="adm-avatar" aria-hidden="true">${esc(initials(name))}</span>
+                    <div><strong>${esc(name)}</strong><time datetime="${esc(c.created_at)}">${esc(fmtDate(c.created_at))}</time></div>
+                    <span class="adm-qstatus is-${esc(c.status)}">${esc(STATUS_C[c.status] || STATUS_Q[c.status] || c.status)}</span>
+                </header>
+                <p class="adm-q-body">${esc(c.body)}</p>
+                ${c.reply ? `<div class="adm-q-answer"><small>Respuesta de YogurASO${c.replied_at ? ` · ${esc(fmtDate(c.replied_at))}` : ''}</small><p>${esc(c.reply)}</p></div>` : ''}
+                <form class="adm-q-form">
+                    ${canReply ? `<label class="sr-only" for="cr-${esc(c.id)}">Respuesta</label>
+                    <textarea id="cr-${esc(c.id)}" rows="2" maxlength="400" placeholder="${c.reply ? 'Cambiar la respuesta…' : 'Responder como YogurASO…'}"></textarea>` : ''}
+                    <div class="adm-q-actions">
+                        ${canReply ? '<button type="submit" class="adm-btn adm-btn--red adm-btn--sm" data-cact="reply">Responder y publicar</button>' : ''}
+                        ${c.status !== 'approved' ? '<button type="button" class="adm-btn adm-btn--sm" data-cact="approved">Publicar</button>' : ''}
+                        ${c.status !== 'hidden' ? '<button type="button" class="adm-btn adm-btn--sm adm-btn--ghost" data-cact="hidden">Ocultar</button>' : '<button type="button" class="adm-btn adm-btn--sm adm-btn--ghost" data-cact="pending">Volver a revisar</button>'}
+                        <button type="button" class="adm-btn adm-btn--sm adm-btn--ghost adm-btn--danger" data-cact="delete">Borrar</button>
+                    </div>
+                </form>
+            </article>`;
+    }
+
+    function renderComments() {
+        const host = $('post-comments');
+        document.querySelectorAll('#post-filters [data-c]').forEach((b) => b.classList.toggle('is-on', b.dataset.c === filter));
+        if (!comments) {
+            host.innerHTML = '<p class="adm-empty">Cargando comentarios…</p>';
+            return;
+        }
+        if (comments.error) {
+            host.innerHTML = `<div class="adm-emptybox"><strong>${esc(comments.error)}</strong>
+                <p>${comments.needs === 'tabla' ? 'Cuando la base tenga las tablas de interacciones, aquí ves y respondes los comentarios del post.' : 'Intenta de nuevo con «Actualizar».'}</p></div>`;
+            return;
+        }
+        const q = ctx.query().trim().toLowerCase();
+        const list = comments.list.filter((c) => (!filter || c.status === filter)
+            && (!q || `${c.body} ${c.author_name || ''} ${c.reply || ''}`.toLowerCase().includes(q)));
+        const onlyApproved = comments.list.length > 0 && comments.list.every((c) => c.status === 'approved');
+        const empty = { pending: 'No hay comentarios por revisar.', approved: 'Aún no hay comentarios publicados.', hidden: 'No hay comentarios ocultos.', '': 'Todavía nadie ha comentado el post.' };
+        host.innerHTML = (comments.canReply === false ? '<p class="adm-note">Para guardar respuestas falta un campo en la base. Mientras tanto puedes publicar, ocultar o borrar.</p>' : '')
+            + (onlyApproved ? '<p class="adm-note">Solo se ven los publicados: la base aún no deja que el admin lea los pendientes.</p>' : '')
+            + (list.length ? list.map(commentHtml).join('') : `<p class="adm-empty">${q ? 'Ningún comentario coincide con la búsqueda.' : empty[filter]}</p>`);
+    }
+
+    /* ---------- Me gusta por sabor ---------- */
+    function renderFlavors() {
         const host = $('web-likes');
-        if (!likes) {
+        if (!flavors) {
             host.innerHTML = '<p class="adm-empty">Leyendo los me gusta…</p>';
             return;
         }
-        if (likes.error) {
-            host.innerHTML = `<div class="adm-emptybox"><strong>${esc(likes.error)}</strong>
-                <p>Cuando la base tenga las tablas de interacciones, aquí ves cuántos corazones tiene cada sabor y el post de «Sobre nosotros».</p></div>`;
+        if (flavors.error) {
+            host.innerHTML = `<div class="adm-emptybox"><strong>${esc(flavors.error)}</strong><p>Cuando la base tenga las tablas de interacciones, aquí ves los corazones de cada sabor.</p></div>`;
             return;
         }
-        const max = Math.max(1, ...likes.products.map((x) => x.n));
+        const max = Math.max(1, ...flavors.products.map((x) => x.n));
         const q = ctx.query().trim().toLowerCase();
-        const rows = likes.products.filter((x) => !q || String(x.p.nombre).toLowerCase().includes(q));
-        host.innerHTML = `
-            <article class="adm-likepost">
-                <span class="adm-likepost-ico">${HEART}</span>
-                <div>
-                    <small>Post «Sobre nosotros»</small>
-                    <strong>${likes.post.toLocaleString('es-CO')} <span>${likes.post === 1 ? 'me gusta' : 'me gusta'}</span></strong>
-                </div>
-                <a href="../index.html#nosotros" target="_blank" rel="noopener">Ver en la web</a>
-            </article>
-            <ul class="adm-likelist">
-                ${rows.map(({ p, n }) => {
-                    const c = colorsFor(p);
-                    const photo = photoFor(p);
-                    return `<li style="--strong:${c.fuerte};--soft:${c.fondo}">
-                        <span class="adm-likelist-img">${photo ? `<img src="${esc(photo)}" alt="" loading="lazy" onerror="this.hidden=true">` : ''}</span>
-                        <span class="adm-likelist-name">${esc(p.nombre)}</span>
-                        <span class="adm-likelist-bar"><i style="width:${n ? Math.max(4, (n / max) * 100) : 0}%"></i></span>
-                        <span class="adm-likelist-n">${HEART}${n.toLocaleString('es-CO')}</span>
-                    </li>`;
-                }).join('') || '<li class="adm-empty">Sin sabores con esa búsqueda.</li>'}
-            </ul>`;
+        const rows = flavors.products.filter((x) => !q || String(x.p.nombre).toLowerCase().includes(q));
+        host.innerHTML = `<ul class="adm-likelist">${rows.map(({ p, n }) => {
+            const c = colorsFor(p);
+            const photo = photoFor(p);
+            return `<li style="--strong:${c.fuerte};--soft:${c.fondo}">
+                <span class="adm-likelist-img">${photo ? `<img src="${esc(photo)}" alt="" loading="lazy" onerror="this.hidden=true">` : ''}</span>
+                <span class="adm-likelist-name">${esc(p.nombre)}</span>
+                <span class="adm-likelist-bar"><i style="width:${n ? Math.max(4, (n / max) * 100) : 0}%"></i></span>
+                <span class="adm-likelist-n">${HEART}${n.toLocaleString('es-CO')}</span>
+            </li>`;
+        }).join('') || '<li class="adm-empty">Sin sabores con esa búsqueda.</li>'}</ul>`;
     }
 
-    /* ---------- Cuenta de Instagram ---------- */
-    function renderAccount() {
-        const host = $('ig-account');
-        const cfg = window.YOGUR_CONFIG || {};
-        const profileUrl = cfg.INSTAGRAM || 'https://instagram.com/';
-        const st = ig.status;
-        if (!st) {
-            host.innerHTML = `<div class="adm-ig-ico">${IG_ICON}</div><p class="adm-empty">Revisando la conexión…</p>`;
-            return;
+    async function act(id, action, form) {
+        if (action === 'delete') {
+            const ok = await ctx.confirm({
+                title: 'Borrar comentario',
+                message: 'Se borra para siempre. Si solo quieres que no se vea, usa «Ocultar».',
+                confirmText: 'Borrar', cancelText: 'Cancelar', danger: true, type: 'danger'
+            });
+            if (!ok) return;
         }
-        if (st.connected) {
-            const a = st.account || {};
-            host.classList.add('is-connected');
-            host.innerHTML = `
-                <div class="adm-ig-profile">
-                    ${a.profile_picture_url ? `<img src="${esc(a.profile_picture_url)}" alt="">` : `<span class="adm-ig-ico">${IG_ICON}</span>`}
-                    <div><strong>@${esc(a.username || '')}</strong><span>${esc(a.name || '')}</span></div>
-                </div>
-                <dl class="adm-ig-facts">
-                    ${a.media_count != null ? `<div><dt>Publicaciones</dt><dd>${Number(a.media_count).toLocaleString('es-CO')}</dd></div>` : ''}
-                    ${a.followers_count != null ? `<div><dt>Seguidores</dt><dd>${Number(a.followers_count).toLocaleString('es-CO')}</dd></div>` : ''}
-                </dl>
-                <a class="adm-btn" href="https://instagram.com/${esc(a.username || '')}" target="_blank" rel="noopener">Abrir en Instagram</a>`;
-            return;
+        const buttons = form.querySelectorAll('button');
+        buttons.forEach((b) => { b.disabled = true; });
+        let res;
+        if (action === 'reply') {
+            const text = form.querySelector('textarea')?.value.trim();
+            if (!text) {
+                buttons.forEach((b) => { b.disabled = false; });
+                ctx.toast('Escribe la respuesta antes de enviarla', 'error');
+                form.querySelector('textarea')?.focus();
+                return;
+            }
+            res = await replyToComment(id, text);
+        } else if (action === 'delete') {
+            res = await deleteComment(id);
+        } else {
+            res = await setCommentStatus(id, action);
         }
-        host.classList.remove('is-connected');
-        const why = st.reason === 'permiso'
-            ? 'Tu sesión no tiene permiso para leer Instagram.'
-            : (st.reason === 'offline' ? 'Sin conexión con Supabase.' : '');
-        host.innerHTML = `
-            <div class="adm-ig-ico">${IG_ICON}</div>
-            <h2>Conecta tu cuenta de Instagram para ver likes y comentarios</h2>
-            ${why ? `<p class="adm-note">${esc(why)}</p>` : ''}
-            <p>Instagram solo comparte esos datos con cuentas conectadas. Hace falta:</p>
-            <ol class="adm-steps">
-                <li>Que <strong>@yoguraso</strong> sea cuenta <strong>Business</strong> o <strong>Creator</strong> (se cambia gratis en la app).</li>
-                <li>Una app en <strong>Meta for Developers</strong> con permiso para leer y responder comentarios.</li>
-                <li>Guardar el token en Supabase (nunca en la página) y activar la función <em>instagram</em>.</li>
-            </ol>
-            <a class="adm-btn" href="${esc(profileUrl)}" target="_blank" rel="noopener">Abrir Instagram</a>`;
-    }
-
-    function renderFeed() {
-        const host = $('ig-feed');
-        const st = ig.status;
-        if (!st) {
-            host.innerHTML = '<p class="adm-empty">Cargando…</p>';
-            return;
-        }
-        if (!st.connected) {
-            host.innerHTML = `<div class="adm-emptybox adm-emptybox--ig">
-                <span class="adm-ig-ico">${IG_ICON}</span>
-                <div><strong>Aún no hay cuenta conectada</strong>
-                <p>Cuando la conectes, aquí salen tus publicaciones con sus me gusta y comentarios, y puedes responder sin salir del panel.</p></div>
-            </div>`;
-            return;
-        }
-        if (ig.error) {
-            host.innerHTML = `<p class="adm-empty">${esc(ig.error)}</p>`;
-            return;
-        }
-        const q = ctx.query().trim().toLowerCase();
-        const posts = ig.posts.filter((p) => !q || String(p.caption || '').toLowerCase().includes(q));
-        if (!posts.length) {
-            host.innerHTML = `<p class="adm-empty">${ig.posts.length ? 'Ninguna publicación coincide.' : 'Tu cuenta aún no tiene publicaciones.'}</p>`;
-            return;
-        }
-        host.innerHTML = `
-            <div class="adm-ig-layout">
-                <div class="adm-ig-grid">
-                    ${posts.map((p) => `
-                        <button type="button" class="adm-ig-post${ig.selected === p.id ? ' is-on' : ''}" data-media="${esc(p.id)}" aria-label="Ver comentarios de la publicación del ${esc(fmtDate(p.timestamp))}">
-                            <img src="${esc(p.thumbnail_url || p.media_url || '')}" alt="" loading="lazy" onerror="this.hidden=true">
-                            <span class="adm-ig-meta"><span>${HEART}${Number(p.like_count || 0).toLocaleString('es-CO')}</span><span>${BUBBLE}${Number(p.comments_count || 0).toLocaleString('es-CO')}</span></span>
-                        </button>`).join('')}
-                </div>
-                <div class="adm-panel adm-ig-comments" id="ig-comments">${commentsHtml()}</div>
-            </div>`;
-    }
-
-    function commentsHtml() {
-        const post = ig.posts.find((p) => p.id === ig.selected);
-        if (!post) return '<p class="adm-empty">Elige una publicación para ver sus comentarios.</p>';
-        if (ig.loadingComments) return '<p class="adm-empty">Cargando comentarios…</p>';
-        const head = `
-            <header class="adm-ig-chead">
-                <p>${esc((post.caption || '').slice(0, 140))}${(post.caption || '').length > 140 ? '…' : ''}</p>
-                <small>${esc(fmtDate(post.timestamp))} · <a href="${esc(post.permalink || '#')}" target="_blank" rel="noopener">Abrir</a></small>
-            </header>`;
-        if (ig.commentsError) return `${head}<p class="adm-empty">${esc(ig.commentsError)}</p>`;
-        if (!ig.comments.length) return `${head}<p class="adm-empty">Esta publicación no tiene comentarios.</p>`;
-        return `${head}<ul class="adm-ig-clist">${ig.comments.map((c) => `
-            <li>
-                <p><strong>@${esc(c.username || '')}</strong> ${esc(c.text || '')}</p>
-                <small>${esc(fmtDate(c.timestamp))}${c.like_count ? ` · ${c.like_count} me gusta` : ''}</small>
-                ${(c.replies || []).map((r) => `<div class="adm-ig-reply"><p><strong>@${esc(r.username || '')}</strong> ${esc(r.text || '')}</p><small>${esc(fmtDate(r.timestamp))}</small></div>`).join('')}
-                <form class="adm-ig-replyform" data-comment="${esc(c.id)}">
-                    <input type="text" maxlength="300" placeholder="Responder a @${esc(c.username || '')}" aria-label="Respuesta">
-                    <button type="submit">Responder</button>
-                </form>
-            </li>`).join('')}</ul>`;
-    }
-
-    async function openPost(id) {
-        ig.selected = id;
-        ig.loadingComments = true;
-        ig.commentsError = '';
-        renderFeed();
-        const res = await listComments(id);
-        ig.loadingComments = false;
-        ig.comments = res.success ? res.comments : [];
-        ig.commentsError = res.success ? '' : (res.message || 'No se pudieron cargar los comentarios');
-        renderFeed();
-    }
-
-    async function loadInstagram() {
-        ig.status = await instagramStatus();
-        if (ig.status.connected) {
-            const res = await listMedia(18);
-            ig.posts = res.success ? res.posts : [];
-            ig.error = res.success ? '' : (res.message || 'No se pudieron cargar las publicaciones');
-        }
-    }
-
-    $('ig-feed').addEventListener('click', (e) => {
-        const b = e.target.closest('[data-media]');
-        if (b) openPost(b.dataset.media);
-    });
-    $('ig-feed').addEventListener('submit', async (e) => {
-        const form = e.target.closest('[data-comment]');
-        if (!form) return;
-        e.preventDefault();
-        const input = form.querySelector('input');
-        const btn = form.querySelector('button');
-        btn.disabled = true;
-        const res = await replyToComment(form.dataset.comment, input.value);
-        btn.disabled = false;
+        buttons.forEach((b) => { b.disabled = false; });
         if (!res.success) {
-            ctx.toast(res.message || 'No se pudo responder', 'error');
+            ctx.toast(res.message || 'No se pudo guardar', 'error');
             return;
         }
-        ctx.toast('Respuesta publicada en Instagram', 'success');
-        openPost(ig.selected);
+        ctx.toast({ reply: 'Respuesta publicada', approved: 'Comentario publicado', hidden: 'Comentario oculto', pending: 'Comentario en revisión', delete: 'Comentario borrado' }[action], 'success');
+        await loadPost();
+        render();
+    }
+
+    $('post-filters').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-c]');
+        if (!b) return;
+        filter = b.dataset.c;
+        renderComments();
+    });
+    $('btn-reload-post').addEventListener('click', async () => {
+        comments = null;
+        render();
+        await Promise.all([loadPost(), loadFlavors()]);
+        render();
+    });
+    $('post-comments').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-cact]');
+        if (!b || b.type === 'submit') return;
+        const art = b.closest('[data-cid]');
+        act(Number(art.dataset.cid), b.dataset.cact, art.querySelector('form'));
+    });
+    $('post-comments').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const art = e.target.closest('[data-cid]');
+        if (art) act(Number(art.dataset.cid), 'reply', e.target);
     });
 
     function render() {
-        renderLikes();
-        renderAccount();
-        renderFeed();
+        renderCard();
+        renderComments();
+        renderFlavors();
     }
 
-    async function open() {
-        render();
-        if (loaded) return;
-        loaded = true;
-        await Promise.all([loadLikes(), loadInstagram()]);
-        render();
-    }
-
-    return { open, render };
+    return {
+        async open() {
+            render();
+            if (loaded) return;
+            loaded = true;
+            await Promise.all([loadPost(), loadFlavors()]);
+            render();
+        },
+        render,
+        /** Para Excel y la campanita: comentarios ya cargados (o los carga). */
+        async data() {
+            if (!comments) await loadPost();
+            return comments?.list || [];
+        }
+    };
 }

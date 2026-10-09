@@ -157,26 +157,35 @@
                 </div>
             </section>
 
-            <!-- ===== Instagram ===== -->
-            <section class="adm-view" id="view-instagram" data-view="instagram" aria-label="Instagram y me gusta" hidden>
+            <!-- ===== Instagram: el post de «Sobre nosotros» de la web ===== -->
+            <section class="adm-view" id="view-instagram" data-view="instagram" aria-label="Post estilo Instagram de la web" hidden>
                 <div class="adm-split">
                     <aside class="adm-split-side">
-                        <article class="adm-panel adm-ig-account" id="ig-account"></article>
+                        <article class="adm-panel adm-post-card" id="post-card"></article>
                     </aside>
                     <div class="adm-split-main">
                         <div class="adm-block">
-                            <div class="adm-block-head">
-                                <h2>Me gusta en la web</h2>
-                                <p>Los corazones que la gente da en el post de «Sobre nosotros» y en cada sabor.</p>
+                            <div class="adm-toolbar">
+                                <div class="adm-block-head">
+                                    <h2>Comentarios del post</h2>
+                                    <p>Lo que la gente escribe en el post de «Sobre nosotros». Nada sale en la web hasta que lo publiques.</p>
+                                </div>
+                                <button type="button" class="adm-btn" id="btn-reload-post">Actualizar</button>
                             </div>
-                            <div class="adm-likes" id="web-likes"></div>
+                            <div class="adm-cats" id="post-filters" role="group" aria-label="Filtrar comentarios">
+                                <button type="button" class="adm-cat is-on" data-c="pending">Por revisar</button>
+                                <button type="button" class="adm-cat" data-c="approved">Publicados</button>
+                                <button type="button" class="adm-cat" data-c="hidden">Ocultos</button>
+                                <button type="button" class="adm-cat" data-c="">Todos</button>
+                            </div>
+                            <div class="adm-qlist adm-qlist--spaced" id="post-comments"></div>
                         </div>
                         <div class="adm-block">
                             <div class="adm-block-head">
-                                <h2>Publicaciones de Instagram</h2>
-                                <p>Me gusta y comentarios de tu cuenta, con respuesta desde aquí.</p>
+                                <h2>Me gusta por sabor</h2>
+                                <p>Los corazones que la gente da a cada yogur en el inicio.</p>
                             </div>
-                            <div id="ig-feed"></div>
+                            <div class="adm-likes" id="web-likes"></div>
                         </div>
                     </div>
                 </div>

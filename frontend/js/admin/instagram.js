@@ -1,26 +1,21 @@
 /**
- * admin/instagram.js — Adaptador de Instagram para el panel.
+ * admin/instagram.js — Adaptador del post estilo Instagram de la web
+ * (sección «Sobre nosotros» del inicio). No es la cuenta real de Instagram:
+ * son los me gusta y comentarios que la gente deja en nuestra propia página.
  *
- * Instagram solo entrega me gusta y comentarios, y deja responder, por la
- * Instagram Graph API: cuenta Business o Creator, una app de Meta y un token
- * de acceso de larga duración. Ese token NUNCA va en el navegador.
+ * Datos (supabase/migrations/0002_interactions.sql):
+ *   content_likes     -> conteo con la RPC like_state(target_type, target_id, visitor)
+ *   content_comments  -> comentarios del post (target_type = 'post', target_id = 'nosotros')
  *
- * Por eso aquí no hay token: todo pasa por una Edge Function de Supabase
- * llamada "instagram" que guarda el token como secreto, comprueba que quien
- * llama es admin (is_admin) y habla con graph.instagram.com / graph.facebook.com.
- *
- * Contrato que espera este archivo (POST, body JSON):
- *   { action: 'status' }                       -> { connected, username, name, profile_picture_url, followers_count, media_count }
- *   { action: 'media', limit }                 -> { posts: [{ id, caption, media_type, media_url, thumbnail_url, permalink, timestamp, like_count, comments_count }] }
- *   { action: 'comments', mediaId }            -> { comments: [{ id, text, username, timestamp, like_count, replies: [{ id, text, username, timestamp }] }] }
- *   { action: 'reply', commentId, message }    -> { id }
- * Errores: { error: '<texto>' } con status 4xx/5xx.
- *
- * Mientras la función no exista o no tenga token, el panel muestra
- * "Conecta tu cuenta de Instagram..." y no inventa nada.
+ * Lo que este archivo necesita y aún no existe en la base (ver docs/admin/PENDIENTES-BACKEND.md):
+ *   - policy de admin para leer TODOS los comentarios (hoy solo se ven los aprobados)
+ *   - columnas reply / replied_at para la respuesta
+ *   - policies de admin para update y delete
+ * Si falta algo, cada función responde { success:false, needs } y el panel lo dice.
  */
 
-const FN = 'instagram';
+export const POST_ID = 'nosotros';
+const ADMIN_VISITOR = '00000000-0000-4000-8000-00000000ad01'; // solo para leer el conteo
 
 let clientPromise = null;
 function client() {
@@ -32,60 +27,94 @@ function client() {
     return clientPromise;
 }
 
-async function call(body) {
-    let sb;
+const txt = (e) => `${e?.code || ''} ${e?.message || e || ''}`;
+const MISSING_TABLE = /42P01|PGRST205|does not exist|could not find the table/i;
+const MISSING_COLUMN = /42703|PGRST204|column .* does not exist|could not find the .* column/i;
+const MISSING_FN = /PGRST202|could not find the function/i;
+
+function fail(error, fallback) {
+    const t = txt(error);
+    if (/failed to fetch|networkerror|load failed/i.test(t)) return { success: false, message: 'Sin conexión con Supabase.' };
+    if (MISSING_TABLE.test(t) || MISSING_FN.test(t)) return { success: false, needs: 'tabla', message: 'Las tablas de interacciones aún no están en Supabase (migración 0002).' };
+    if (/row-level security|permission denied|42501/i.test(t)) return { success: false, needs: 'permiso', message: 'Supabase no da permiso de admin para esta acción.' };
+    return { success: false, message: error?.message || fallback };
+}
+
+/** getPostLikes(postId) -> { success, likes } */
+export async function getPostLikes(postId = POST_ID) {
     try {
-        sb = await client();
+        const sb = await client();
+        const { data, error } = await sb.rpc('like_state', { p_target_type: 'post', p_target_id: postId, p_visitor_id: ADMIN_VISITOR });
+        if (error) return fail(error, 'No se pudieron leer los me gusta');
+        const row = Array.isArray(data) ? data[0] : data;
+        return { success: true, likes: Number(row?.likes || 0) };
     } catch (error) {
-        return { ok: false, reason: 'offline', message: 'Sin conexión con Supabase.' };
+        return fail(error, 'No se pudieron leer los me gusta');
     }
-    if (!sb.functions?.invoke) return { ok: false, reason: 'sin-funcion' };
+}
+
+/**
+ * listPostComments(postId) -> { success, comments:[{ id, author_name, body, status, created_at, reply, replied_at }], canReply }
+ * Si reply/replied_at no existen, repite sin ellas y devuelve canReply:false.
+ */
+export async function listPostComments(postId = POST_ID) {
     try {
-        const { data, error } = await sb.functions.invoke(FN, { body });
+        const sb = await client();
+        let canReply = true;
+        let res = await sb.from('content_comments')
+            .select('id,author_name,body,status,created_at,reply,replied_at')
+            .eq('target_type', 'post').eq('target_id', postId)
+            .order('created_at', { ascending: false }).limit(300);
+        if (res.error && MISSING_COLUMN.test(txt(res.error))) {
+            canReply = false;
+            res = await sb.from('content_comments')
+                .select('id,author_name,body,status,created_at')
+                .eq('target_type', 'post').eq('target_id', postId)
+                .order('created_at', { ascending: false }).limit(300);
+        }
+        if (res.error) return fail(res.error, 'No se pudieron cargar los comentarios');
+        return { success: true, comments: res.data || [], canReply };
+    } catch (error) {
+        return fail(error, 'No se pudieron cargar los comentarios');
+    }
+}
+
+async function updateComment(id, row, fallback) {
+    try {
+        const sb = await client();
+        const { data, error } = await sb.from('content_comments').update(row).eq('id', id).select('id');
         if (error) {
-            const status = error.context?.status || error.status || 0;
-            let detail = '';
-            try { detail = (await error.context?.json?.())?.error || ''; } catch { /* sin cuerpo */ }
-            if (status === 404 || /relay|not found|failed to send/i.test(`${error.name} ${error.message}`)) {
-                return { ok: false, reason: 'sin-funcion' };
-            }
-            if (status === 401 || status === 403) return { ok: false, reason: 'permiso', message: detail || 'Solo un admin puede ver Instagram.' };
-            if (/token/i.test(detail)) return { ok: false, reason: 'sin-token', message: detail };
-            return { ok: false, reason: 'error', message: detail || error.message || 'Instagram no respondió.' };
+            if (MISSING_COLUMN.test(txt(error))) return { success: false, needs: 'columna', message: 'Falta la columna de respuesta en los comentarios.' };
+            return fail(error, fallback);
         }
-        if (data?.error) {
-            return { ok: false, reason: /token|not configured|sin configurar/i.test(data.error) ? 'sin-token' : 'error', message: data.error };
-        }
-        return { ok: true, data: data || {} };
+        if (!data?.length) return { success: false, needs: 'permiso', message: 'Supabase no dejó guardar: falta el permiso de admin para editar comentarios.' };
+        return { success: true };
     } catch (error) {
-        return { ok: false, reason: 'error', message: error?.message || 'Instagram no respondió.' };
+        return fail(error, fallback);
     }
 }
 
-/** Estado de la conexión: { connected, account? , reason?, message? } */
-export async function instagramStatus() {
-    const res = await call({ action: 'status' });
-    if (!res.ok) return { connected: false, reason: res.reason, message: res.message };
-    if (!res.data.connected) return { connected: false, reason: 'sin-token', message: res.data.message };
-    return { connected: true, account: res.data };
+/** setCommentStatus(id, 'pending'|'approved'|'hidden') -> { success } */
+export function setCommentStatus(id, status) {
+    return updateComment(id, { status }, 'No se pudo cambiar el estado');
 }
 
-export async function listMedia(limit = 12) {
-    const res = await call({ action: 'media', limit });
-    if (!res.ok) return { success: false, reason: res.reason, message: res.message };
-    return { success: true, posts: Array.isArray(res.data.posts) ? res.data.posts : [] };
+/** replyToComment(id, text) -> { success }  (publica el comentario junto con la respuesta) */
+export function replyToComment(id, text) {
+    const reply = String(text || '').trim();
+    if (!reply) return Promise.resolve({ success: false, message: 'Escribe la respuesta.' });
+    return updateComment(id, { reply, replied_at: new Date().toISOString(), status: 'approved' }, 'No se pudo guardar la respuesta');
 }
 
-export async function listComments(mediaId) {
-    const res = await call({ action: 'comments', mediaId });
-    if (!res.ok) return { success: false, reason: res.reason, message: res.message };
-    return { success: true, comments: Array.isArray(res.data.comments) ? res.data.comments : [] };
-}
-
-export async function replyToComment(commentId, message) {
-    const text = String(message || '').trim();
-    if (!text) return { success: false, message: 'Escribe la respuesta.' };
-    const res = await call({ action: 'reply', commentId, message: text });
-    if (!res.ok) return { success: false, reason: res.reason, message: res.message || 'No se pudo responder.' };
-    return { success: true, id: res.data.id };
+/** deleteComment(id) -> { success } */
+export async function deleteComment(id) {
+    try {
+        const sb = await client();
+        const { data, error } = await sb.from('content_comments').delete().eq('id', id).select('id');
+        if (error) return fail(error, 'No se pudo borrar el comentario');
+        if (!data?.length) return { success: false, needs: 'permiso', message: 'Supabase no dejó borrar: falta el permiso de admin.' };
+        return { success: true };
+    } catch (error) {
+        return fail(error, 'No se pudo borrar el comentario');
+    }
 }

@@ -9,10 +9,11 @@ si algo no existe, el panel lo dice.
 | Parte del panel | De dónde sale |
 | --- | --- |
 | Inventario, ficha completa, foto, activar/ocultar, eliminar, selección | `api.js` → `products` y bucket `product-images` |
-| Exportar a Excel (.xlsx; CSV si no carga SheetJS) | inventario + preguntas + pedidos que el panel ya tenga |
+| Exportar a Excel (.xlsx; CSV si no carga SheetJS) | inventario + preguntas + comentarios + pedidos que el panel ya tenga |
 | Usuarios | `api.js` → `profiles` |
-| Me gusta de la web (post «Sobre nosotros» y cada sabor) | RPC `like_state` (migración 0002) |
-| Preguntas (leer) | tabla `faq_questions` (migración 0002) |
+| Me gusta del post «Sobre nosotros» y de cada sabor | RPC `like_state` (migración 0002, aún sin correr en Supabase) |
+| Comentarios del post (leer) | tabla `content_comments` (migración 0002) |
+| Preguntas (leer) | tabla `faq_questions` (migración 0002, aún sin correr en Supabase) |
 | Pedidos (leer y cambiar estado) | `orders` + `order_items` (migración 0001, políticas admin ya existen) |
 | Color de fondo (pastel) por producto | `products.background_color` vía `api.js` (`color_fondo`) |
 
@@ -67,30 +68,33 @@ El carrito manda el pedido por WhatsApp y solo lo guarda en el navegador del cli
 `orders` + `order_items`. Ojo: hoy solo el admin puede insertar en `orders`, así que hace falta una
 función `create_order(...)` con `security definer` que valide precios contra `products`.
 
-## 4. Instagram (me gusta, comentarios y responder)
+## 4. Post estilo Instagram de la web («Sobre nosotros»)
 
-Solo se puede con la Instagram Graph API. Juan debe:
+No es la cuenta real de Instagram: es el post del inicio donde la gente da me gusta (y, si se vuelven
+a abrir, deja comentarios). Datos de la migración 0002: `content_likes` y `content_comments`
+(`target_type = 'post'`, `target_id = 'nosotros'`). Nota: hoy `js/interactions.js` dice que el post
+ya no muestra caja de comentarios; los comentarios solo llegarán si se vuelve a abrir esa caja.
 
-1. Pasar @yoguraso a cuenta **Business** o **Creator**.
-2. Crear una app en **Meta for Developers** (producto Instagram) con permisos para leer el perfil y
-   administrar comentarios (`instagram_business_basic` e `instagram_business_manage_comments`, o con
-   inicio de sesión de Facebook: `instagram_basic`, `instagram_manage_comments`, `pages_show_list`,
-   `pages_read_engagement`, con la cuenta enlazada a una página de Facebook).
-3. Sacar un token de larga duración y el ID de la cuenta de Instagram.
+El panel lo maneja en `js/admin/instagram.js`. El conteo de me gusta ya funciona con `like_state`.
+Falta en la base:
 
-Backend: Edge Function de Supabase llamada **`instagram`** con secretos `IG_ACCESS_TOKEN` e `IG_USER_ID`
-(nunca en el frontend). Debe comprobar que quien llama es admin (`rpc('is_admin')` con el JWT del
-encabezado `Authorization`) y responder a este contrato (lo usa `js/admin/instagram.js`):
+```sql
+alter table public.content_comments
+  add column reply      text check (reply is null or char_length(reply) <= 400),
+  add column replied_at timestamptz;
 
-| body | Graph API | respuesta |
-| --- | --- | --- |
-| `{ action: 'status' }` | `GET /{ig-user-id}?fields=username,name,profile_picture_url,followers_count,media_count` | `{ connected: true, ...campos }` o `{ connected: false }` si no hay token |
-| `{ action: 'media', limit }` | `GET /{ig-user-id}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count` | `{ posts: [...] }` |
-| `{ action: 'comments', mediaId }` | `GET /{media-id}/comments?fields=id,text,username,timestamp,like_count,replies{id,text,username,timestamp}` | `{ comments: [...] }` |
-| `{ action: 'reply', commentId, message }` | `POST /{comment-id}/replies?message=…` | `{ id }` |
+create policy "content_comments: admin ve todos"
+  on public.content_comments for select to authenticated using ((select public.is_admin()));
+create policy "content_comments: admin edita"
+  on public.content_comments for update to authenticated
+  using ((select public.is_admin())) with check ((select public.is_admin()));
+create policy "content_comments: admin borra"
+  on public.content_comments for delete to authenticated using ((select public.is_admin()));
 
-Errores: `{ error: '<texto en español>' }`. El token de larga duración vence a los 60 días: renovarlo
-con un cron o desde la misma función.
+grant update (status, reply, replied_at), delete on public.content_comments to authenticated;
+```
+
+Y `list_post_comments` debe devolver `reply` para que la respuesta se vea en la web.
 
 ## 5. Contacto y distribuidores
 

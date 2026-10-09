@@ -6,7 +6,7 @@
  *
  * Datos de productos, fotos y usuarios: api.js (Supabase; RLS exige is_admin()).
  * Datos extra (preguntas, me gusta, pedidos, colores): js/admin/data.js.
- * Instagram: js/admin/instagram.js (pasa por una Edge Function; sin tokens aquí).
+ * «Instagram»: el post estilo Instagram de la web (me gusta y comentarios), js/admin/instagram.js.
  */
 import {
     fetchProducts, createProduct, updateProduct, permanentlyDeleteProduct,
@@ -34,7 +34,7 @@ const categoriaMap = {
 const VIEWS = {
     inventario: { title: 'Inventario', search: 'Buscar sabor o #id' },
     colores: { title: 'Colores', search: 'Buscar sabor' },
-    instagram: { title: 'Instagram', search: 'Buscar en publicaciones' },
+    instagram: { title: 'Instagram', search: 'Buscar en comentarios' },
     preguntas: { title: 'Preguntas', search: 'Buscar en preguntas' },
     pedidos: { title: 'Pedidos', search: 'Buscar pedido o cliente' },
     usuarios: { title: 'Usuarios', search: 'Buscar nombre o correo' }
@@ -830,11 +830,12 @@ async function exportar() {
     btn.disabled = true;
     btn.textContent = 'Preparando…';
     try {
-        const [questions, orders] = await Promise.all([
+        const [questions, orders, comments] = await Promise.all([
             views.preguntas?.data?.() || [],
-            views.pedidos?.data?.() || []
+            views.pedidos?.data?.() || [],
+            views.instagram?.data?.() || []
         ]);
-        const res = await exportWorkbook({ products: visibleProducts().length ? visibleProducts() : state.products, questions, orders });
+        const res = await exportWorkbook({ products: visibleProducts().length ? visibleProducts() : state.products, questions, orders, comments });
         toast(res.format === 'xlsx'
             ? `Excel listo (${res.sheets} ${res.sheets === 1 ? 'hoja' : 'hojas'})`
             : 'Sin conexión a la librería de Excel: se bajó en CSV', res.format === 'xlsx' ? 'success' : 'info');
