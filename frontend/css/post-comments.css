@@ -1,0 +1,75 @@
+/* Comentarios del post «Sobre nosotros» (js/post-comments.js) y respuestas
+   del equipo bajo las preguntas del FAQ. Compacto, Nunito Sans, como la tarjeta. */
+.pc {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #262626;
+}
+.pc-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.pc-more {
+  align-self: flex-start;
+  margin: 0; padding: 0; border: 0; background: none;
+  font: inherit; font-size: 0.76rem; color: #737373; cursor: pointer;
+}
+.pc-more:hover { color: #262626; }
+.pc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.pc-list[hidden] { display: none; }
+.pc-item p { margin: 0; overflow-wrap: anywhere; }
+.pc-item strong { font-weight: 800; margin-right: 2px; }
+.pc-item.is-pending > p { color: #6B7280; }
+.pc-meta { display: block; font-family: inherit; font-size: 0.68rem; letter-spacing: 0; color: #9CA3AF; }
+.pc-reply { margin: 3px 0 0 14px; padding-left: 8px; border-left: 2px solid #EDEDED; }
+.pc-reply p { color: #404040; }
+.pc-note { margin: 0; font-size: 0.74rem; color: #737373; }
+.pc-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+.pc-form[hidden] { display: none; }
+.pc-form input {
+  min-width: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #F3F4F6;
+  color: #171717;
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 7px 11px;
+}
+.pc-form .pc-name { flex: 0 0 82px; }
+.pc-form .pc-body { flex: 1 1 auto; }
+.pc-form input:focus { outline: none; box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.28); background: #fff; }
+.pc-send {
+  flex: none;
+  border: 0; background: none; padding: 4px 2px;
+  font: inherit; font-size: 0.78rem; font-weight: 800;
+  color: var(--rojo-marca, #C3343E);
+  cursor: pointer;
+}
+.pc-send:disabled { opacity: 0.4; cursor: default; }
+.pc-status { margin: 0; font-size: 0.72rem; color: #4B5563; }
+.pc-status.is-error { color: #B42318; }
+.pc-status[hidden] { display: none; }
+.pc-icon svg { display: block; color: #262626; }
+
+/* FAQ: respuesta del equipo bajo cada pregunta enviada */
+.faq-ask-answer {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-left: 2px solid var(--rojo-marca, #C3343E);
+  border-radius: 0 10px 10px 0;
+  background: rgba(255, 255, 255, 0.7);
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.faq-ask-answer-who { margin: 0 0 2px; font-size: 0.72rem; font-weight: 800; color: #171717; }
+.faq-ask-answer p:last-child { margin: 0; font-size: 0.84rem; line-height: 1.45; color: #374151; white-space: pre-line; }
