@@ -1139,28 +1139,82 @@
   max-height: 120px !important;
 }
 
-/* ========== DISTRIBUIDORES: nota gris (contratos y venta al detal) ==========
-   Gris, radio y padding salen de .showcase-gray-box (recuadro del post IG). */
+/* ========== DISTRIBUIDORES: tarjetas + nota gris ==========
+   Ajuste de tamaño de las tarjetas (.distc*) con selectores más específicos,
+   y nota gris con el mismo gris/radio del recuadro del post IG (.showcase-gray-box).
+   Tarjetas y nota comparten el ancho del contenedor de la sección (.v3-wrap). */
+#distribuidores.v3-dist .distc {
+  margin: 0 0 -22px;
+  padding: 30px 0 34px;
+}
+#distribuidores .distc__row {
+  width: min(100% - 40px, var(--page-max, 1120px));
+  max-width: none;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+#distribuidores .distc__card {
+  width: auto;
+  height: auto;
+  min-height: 124px;
+  padding: 18px 16px;
+  gap: 8px;
+  border-radius: 8px;
+}
+#distribuidores .distc__ico {
+  width: 36px;
+  height: 36px;
+}
+#distribuidores .distc__ico svg {
+  width: 18px;
+  height: 18px;
+}
+#distribuidores .distc__txt { gap: 3px; }
+#distribuidores .distc__txt strong {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15.5px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+#distribuidores .distc__txt span {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
 #distribuidores .dist-nota {
-  width: min(842px, 100% - 40px);
-  margin: 14px auto 0;
-  padding: 12px 16px;
-  gap: 5px;
+  width: min(100% - 40px, var(--page-max, 1120px));
+  margin: 20px auto 0;
+  padding: 24px 28px;
+  gap: 8px;
   text-align: left;
 }
 #distribuidores .dist-nota__eyebrow {
   margin: 0 0 2px;
   font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.72rem;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--rojo-marca, #C3343E);
 }
-#distribuidores .dist-nota .showcase-sublead { color: #374151; }
+#distribuidores .dist-nota .showcase-sublead {
+  max-width: 82ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+}
 @media (max-width: 980px) {
-  #distribuidores .dist-nota { width: min(414px, 100% - 40px); }
+  #distribuidores .distc__row,
+  #distribuidores .dist-nota { width: min(100% - 40px, 640px); }
+  #distribuidores .distc__row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 }
 @media (max-width: 480px) {
-  #distribuidores .dist-nota { padding: 11px 13px; }
+  #distribuidores .distc__row,
+  #distribuidores .dist-nota { width: calc(100% - 32px); }
+  #distribuidores .distc__row { gap: 12px; }
+  #distribuidores .distc__card { min-height: 112px; padding: 16px 12px; }
+  #distribuidores .distc__txt strong { font-size: 15px; }
+  #distribuidores .dist-nota { padding: 20px 20px; }
+  #distribuidores .dist-nota .showcase-sublead { font-size: 14.5px; }
 }
