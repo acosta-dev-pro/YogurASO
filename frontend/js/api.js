@@ -101,6 +101,11 @@ async function run(fn, fallback) {
     }
 }
 
+/** Correo tal como lo guarda Supabase (sin espacios, en minúsculas). */
+const normEmail = (e) => String(e || '').trim().toLowerCase();
+/** Código del correo: solo dígitos (Supabase manda 6 a 10 según "Email OTP length"). */
+const normCode = (c) => String(c || '').replace(/\D/g, '');
+
 function pagesUrl(file) {
     const base = new URL(isInPages ? './' : 'pages/', window.location.href);
     return new URL(file, base).href;
@@ -415,7 +420,7 @@ export async function uploadImage(file) {
 
 export async function login(email, password) {
     return run(async (sb) => {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        const { data, error } = await sb.auth.signInWithPassword({ email: normEmail(email), password });
         if (error) return fail(error, 'Credenciales incorrectas');
         return completeSession(sb, data.session);
     });
@@ -425,7 +430,8 @@ export async function login(email, password) {
  * Registro. Si el proyecto pide confirmar el correo (lo normal), devuelve
  * { success:true, needsConfirmation:true } y la página pide el código de 6 dígitos.
  */
-export async function register({ nombre, apellido, telefono, email, password }) {
+export async function register({ nombre, apellido, telefono, email: rawEmail, password }) {
+    const email = normEmail(rawEmail);
     return run(async (sb) => {
         const { data, error } = await sb.auth.signUp({
             email,
@@ -451,26 +457,39 @@ export async function register({ nombre, apellido, telefono, email, password }) 
             success: true,
             needsConfirmation: true,
             email,
-            message: `Te enviamos un código de 6 dígitos a ${email}. Revisa también Spam.`
+            message: `Te enviamos un código a ${email}. Revisa también Spam.`
         };
     }, 'Error en el registro');
 }
 
-/** Confirma la cuenta con el código de 6 dígitos del correo e inicia sesión. */
-export async function verifySignupCode(email, codigo) {
+/**
+ * Confirma la cuenta con el código del correo e inicia sesión.
+ * Prueba type 'signup' (confirmación de registro) y, si falla, 'email'.
+ * Un intento fallido no gasta el código.
+ */
+export async function verifySignupCode(rawEmail, codigo) {
+    const email = normEmail(rawEmail);
+    const token = normCode(codigo);
     return run(async (sb) => {
-        const token = String(codigo || '').trim();
-        let res = await sb.auth.verifyOtp({ email, token, type: 'email' });
+        if (!email) return { success: false, message: 'Falta el correo. Vuelve a escribirlo y pide un código nuevo.' };
+        let res = await sb.auth.verifyOtp({ email, token, type: 'signup' });
         if (res.error) {
-            const retry = await sb.auth.verifyOtp({ email, token, type: 'signup' });
+            const retry = await sb.auth.verifyOtp({ email, token, type: 'email' });
             if (!retry.error) res = retry;
         }
-        if (res.error) return fail(res.error, 'Código inválido o vencido');
+        if (res.error) {
+            const out = fail(res.error, 'Código inválido o vencido');
+            if (out.code === 'otp_expired' || /venció|no es válido/i.test(out.message)) {
+                out.message = 'Ese código no sirve o ya venció. Usa el último código que llegó (cada "Reenviar" anula el anterior). Si ya confirmaste tu cuenta, inicia sesión.';
+            }
+            return out;
+        }
         return completeSession(sb, res.data.session);
     });
 }
 
-export async function resendSignupCode(email) {
+export async function resendSignupCode(rawEmail) {
+    const email = normEmail(rawEmail);
     return run(async (sb) => {
         const { error } = await sb.auth.resend({ type: 'signup', email, options: { emailRedirectTo: pagesUrl('login.html') } });
         if (error) return fail(error, 'No se pudo reenviar el código');
@@ -509,14 +528,15 @@ export async function updateProfile(payload) {
     }, 'No se pudo actualizar');
 }
 
-/** Paso 1 de recuperar: Supabase manda el código de 6 dígitos (plantilla Reset Password). */
-export async function requestPasswordReset(email) {
+/** Paso 1 de recuperar: Supabase manda el código (plantilla Reset Password). */
+export async function requestPasswordReset(rawEmail) {
+    const email = normEmail(rawEmail);
     return run(async (sb) => {
         const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: pagesUrl('reset-password.html') });
         if (error) return fail(error, 'No se pudo enviar el código');
         return {
             success: true,
-            message: 'Si el correo está registrado, te enviamos un código de 6 dígitos. Revisa también Spam.'
+            message: 'Si el correo está registrado, te enviamos un código. Revisa también Spam.'
         };
     });
 }
@@ -529,7 +549,7 @@ export async function requestPasswordReset(email) {
 export async function resetPassword({ email, codigo, password }) {
     return run(async (sb) => {
         if (codigo) {
-            const { error } = await sb.auth.verifyOtp({ email, token: String(codigo).trim(), type: 'recovery' });
+            const { error } = await sb.auth.verifyOtp({ email: normEmail(email), token: normCode(codigo), type: 'recovery' });
             if (error) return fail(error, 'Código inválido o vencido');
         } else {
             const { data: s } = await sb.auth.getSession();
@@ -570,7 +590,7 @@ export async function requestPasswordChangeCode() {
     return run(async (sb) => {
         const { error } = await sb.auth.reauthenticate();
         if (error) return fail(error, 'No se pudo enviar el código');
-        return { success: true, message: 'Te enviamos un código de 6 dígitos a tu correo.' };
+        return { success: true, message: 'Te enviamos un código a tu correo.' };
     });
 }
 
@@ -581,7 +601,7 @@ export async function requestPasswordChangeCode() {
 export async function changePassword(passwordActual, passwordNueva, _token = null, codigo = null) {
     return run(async (sb) => {
         if (codigo) {
-            const { error } = await sb.auth.updateUser({ password: passwordNueva, nonce: String(codigo).trim() });
+            const { error } = await sb.auth.updateUser({ password: passwordNueva, nonce: normCode(codigo) });
             if (error) return fail(error, 'No se pudo cambiar la contraseña');
             return { success: true, message: 'Contraseña actualizada' };
         }

@@ -28,6 +28,22 @@ const LOGIN_PATH = isInPages ? 'login.html' : 'pages/login.html';
 const REGISTER_PATH = isInPages ? 'registro.html' : 'pages/registro.html';
 const PROFILE_PATH = isInPages ? 'perfil.html' : 'pages/perfil.html';
 const pageName = (window.location.pathname.split('/').pop() || '').split('?')[0];
+
+// Códigos del correo: Supabase usa 6 a 10 dígitos según "Email OTP length"
+// (los proyectos nuevos suelen mandar 8). Se aceptan todos y se quitan espacios.
+const cleanCode = (v) => String(v || '').replace(/\D/g, '');
+const isCode = (v) => /^\d{6,10}$/.test(cleanCode(v));
+
+/** Los campos de código del HTML traen maxlength="6": se amplían para no cortar códigos de 8. */
+function relaxCodeInputs() {
+    ['codigo', 'password-codigo', 'signup-code'].forEach((id) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.setAttribute('maxlength', '12');
+        input.removeAttribute('pattern');
+        if (/^0+$/.test(input.getAttribute('placeholder') || '')) input.setAttribute('placeholder', 'Código del correo');
+    });
+}
 const isProfilePage = () =>
     document.body.classList.contains('profile-page') || /^perfil\.html$/i.test(pageName);
 
@@ -371,7 +387,7 @@ function setupLoginForm() {
                 const resend = await resendSignupCode(email);
                 showSignupCodeStep(loginForm, email, resend.success
                     ? `Tu correo aún no está confirmado. ${resend.message} Escríbelo aquí.`
-                    : 'Tu correo aún no está confirmado. Escribe el código de 6 dígitos que te enviamos.');
+                    : 'Tu correo aún no está confirmado. Escribe el código que te enviamos.');
                 if (!resend.success) showMessage(resend.message, 'warning');
                 return;
             }
@@ -465,8 +481,8 @@ function showSignupCodeStep(anchorForm, email, message) {
         form.innerHTML = `
             <p class="ya-lead" id="verify-msg" aria-live="polite"></p>
             <div class="ya-field">
-                <label class="ya-label" for="signup-code">Código de 6 dígitos</label>
-                <input class="ya-input" type="text" id="signup-code" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code" required>
+                <label class="ya-label" for="signup-code">Código del correo</label>
+                <input class="ya-input" type="text" id="signup-code" inputmode="numeric" maxlength="12" placeholder="Código del correo" autocomplete="one-time-code" required>
             </div>
             <button type="submit" class="ya-btn ya-btn--primary">Confirmar cuenta</button>
             <p><button type="button" class="ya-link ya-link--sm" id="verify-resend" style="background:none;border:0;padding:0;cursor:pointer">Reenviar código</button>
@@ -479,9 +495,9 @@ function showSignupCodeStep(anchorForm, email, message) {
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const code = (codeInput.value || '').replace(/\D/g, '');
-            if (code.length !== 6) {
-                showMessage('Escribe el código de 6 dígitos', 'error');
+            const code = cleanCode(codeInput.value);
+            if (!isCode(code)) {
+                showMessage('Escribe el código completo que llegó al correo', 'error');
                 codeInput.focus();
                 return;
             }
@@ -512,7 +528,7 @@ function showSignupCodeStep(anchorForm, email, message) {
         });
     }
     form.dataset.email = email;
-    form.querySelector('#verify-msg').textContent = message || `Te enviamos un código de 6 dígitos a ${email}.`;
+    form.querySelector('#verify-msg').textContent = message || `Te enviamos un código a ${email}.`;
     form.hidden = false;
     anchorForm.hidden = true;
     form.querySelector('#signup-code').value = '';
@@ -572,9 +588,9 @@ function setupRecoverForm() {
         }
 
         if (step === 2) {
-            const code = codeInput?.value.trim();
-            if (!code || code.length < 6) {
-                showMessage('Escribe el código de 6 dígitos', 'error');
+            const code = cleanCode(codeInput?.value);
+            if (!isCode(code)) {
+                showMessage('Escribe el código completo que llegó al correo', 'error');
                 return;
             }
             showStep(3);
@@ -583,7 +599,7 @@ function setupRecoverForm() {
 
         const password = pass1?.value || '';
         const confirm = pass2?.value || '';
-        const codigo = codeInput?.value.trim();
+        const codigo = cleanCode(codeInput?.value);
         if (password.length < 8) {
             showMessage('La contraseña debe tener al menos 8 caracteres', 'error');
             return;
@@ -627,7 +643,7 @@ function setupResetForm() {
         if (!token) {
             askAlert({
                 title: 'Usa el código del correo',
-                message: 'Para cambiar tu contraseña pide un código de 6 dígitos en "Recuperar contraseña".',
+                message: 'Para cambiar tu contraseña pide un código en "Recuperar contraseña".',
                 type: 'warning'
             }).then(() => { window.location.href = 'recuperar.html'; });
         }
@@ -832,11 +848,11 @@ async function setupProfilePage() {
 
     document.getElementById('passwordForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const codigo = document.getElementById('password-codigo')?.value.trim();
+        const codigo = cleanCode(document.getElementById('password-codigo')?.value);
         const nueva = document.getElementById('password-nueva')?.value;
         const confirm = document.getElementById('password-confirm')?.value;
-        if (!codigo || codigo.length < 6) {
-            showMessage('Ingresa el código de 6 dígitos del correo', 'error');
+        if (!isCode(codigo)) {
+            showMessage('Ingresa el código completo que llegó al correo', 'error');
             return;
         }
         if (!nueva || nueva.length < 8) {
@@ -1088,6 +1104,7 @@ function setupGoogleSignIn() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    relaxCodeInputs();
     protectAdminPage();
     protectProfilePage();
     redirectIfAuthenticatedOnAuthPages();
