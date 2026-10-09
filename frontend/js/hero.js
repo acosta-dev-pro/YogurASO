@@ -430,6 +430,7 @@
     var targetDoc = null;
     var endScroll = 600;
     var prefersReduced = false;
+    var pageZoom = 1;
 
     function measureHeroMetrics() {
         winHeight = window.innerHeight;
@@ -437,8 +438,11 @@
 
         var sY = window.scrollY || window.pageYOffset || 0;
         var sX = window.scrollX || window.pageXOffset || 0;
+        // html{zoom}: scrollY y getBoundingClientRect van en px visuales; el viajero
+        // se escribe en px CSS, así que solo se divide al escribirlo.
         var zoom = parseFloat(getComputedStyle(document.documentElement).zoom);
         if (!(zoom > 0) || !isFinite(zoom)) zoom = 1;
+        pageZoom = zoom;
 
         var mainBottleEl = bottleMain ? bottleMain.querySelector('.bottle-img') : null;
         if (mainBottleEl) {
@@ -449,10 +453,10 @@
             if (wasHidden) mainBottleEl.style.visibility = 'hidden';
 
             heroDoc = {
-                left: r.left / zoom + sX,
-                top: r.top / zoom + sY,
-                width: r.width / zoom,
-                height: r.height / zoom
+                left: r.left + sX,
+                top: r.top + sY,
+                width: r.width,
+                height: r.height
             };
         }
 
@@ -463,20 +467,20 @@
             if (wasWrapHidden) showcaseBottleWrap.style.visibility = 'hidden';
 
             targetDoc = {
-                left: tr.left / zoom + sX,
-                top: tr.top / zoom + sY,
-                width: tr.width / zoom,
-                height: tr.height / zoom
+                left: tr.left + sX,
+                top: tr.top + sY,
+                width: tr.width,
+                height: tr.height
             };
         }
 
         if (secShowcase && showcaseRedBox) {
             var secR = secShowcase.getBoundingClientRect();
-            var secDocTop = secR.top / zoom + sY;
+            var secDocTop = secR.top + sY;
             var boxOffset = showcaseRedBox.offsetTop || 0;
             var boxH = showcaseRedBox.offsetHeight || 450;
             // Scroll exacto donde el cuadro sólido queda centrado en la ventana
-            endScroll = Math.max(180, (secDocTop + boxOffset + boxH / 2) - (winHeight / 2));
+            endScroll = Math.max(180, (secDocTop + (boxOffset + boxH / 2) * zoom) - (winHeight / 2));
         }
     }
 
@@ -494,7 +498,7 @@
                 }
 
                 // Pausar carrusel del hero cuando esté fuera de pantalla
-                var isOff = sY > (winHeight * 0.9);
+                var isOff = sY > 0;
                 if (offscreen !== isOff) {
                     offscreen = isOff;
                     if (offscreen) {
@@ -529,28 +533,34 @@
                         if (bottleMain) bottleMain.style.visibility = 'hidden';
                         if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
 
-                        // Curva de aceleración/desaceleración suave
-                        var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-
+                        // Lineal con el scroll: va recta, sin subir y bajar ni ir de lado a saltos.
                         var heroCx = heroDoc.left + heroDoc.width / 2;
                         var heroCy = heroDoc.top + heroDoc.height / 2;
                         var tgtCx = targetDoc.left + targetDoc.width / 2;
                         var tgtCy = targetDoc.top + targetDoc.height / 2;
                         var curW = targetDoc.width;
                         var curH = targetDoc.height;
-                        var curDocX = (heroCx + (tgtCx - heroCx) * e) - curW / 2;
-                        var curDocY = (heroCy + (tgtCy - heroCy) * e) - curH / 2;
+                        var cx = heroCx + (tgtCx - heroCx) * p;
+                        var cy = heroCy + (tgtCy - heroCy) * p;
+                        // Un solo cambio de tamaño, siempre hacia el tamaño del cuadro.
+                        var s0 = targetDoc.height > 0 ? heroDoc.height / targetDoc.height : 1;
+                        var sc = s0 + (1 - s0) * p;
 
                         // Posición en pantalla (coordenadas viewport fijas)
-                        var viewX = curDocX - sX;
-                        var viewY = curDocY - sY;
+                        var viewX = (cx - curW / 2 - sX) / pageZoom;
+                        var viewY = (cy - curH / 2 - sY) / pageZoom;
 
-                        // Rotación sutil y dinámica durante el vuelo (se endereza a 0° al aterrizar)
+                        // Giro suave que vuelve a 0° al aterrizar
                         var tilt = Math.sin(p * Math.PI) * -5.2;
 
-                        travelBottle.style.transform = 'translate3d(' + viewX.toFixed(1) + 'px, ' + viewY.toFixed(1) + 'px, 0) rotate(' + tilt.toFixed(2) + 'deg)';
-                        travelBottle.style.width = curW.toFixed(1) + 'px';
-                        travelBottle.style.height = curH.toFixed(1) + 'px';
+                        var cssW = curW / pageZoom, cssH = curH / pageZoom;
+                        if (travelBottle.dataset.w !== cssW.toFixed(1)) {
+                            travelBottle.style.width = cssW.toFixed(1) + 'px';
+                            travelBottle.style.height = cssH.toFixed(1) + 'px';
+                            travelBottle.style.transformOrigin = '50% 50%';
+                            travelBottle.dataset.w = cssW.toFixed(1);
+                        }
+                        travelBottle.style.transform = 'translate3d(' + viewX.toFixed(2) + 'px, ' + viewY.toFixed(2) + 'px, 0) rotate(' + tilt.toFixed(2) + 'deg) scale(' + sc.toFixed(4) + ')';
                         travelBottle.classList.add('is-active');
 
                         if (showcaseShadow) {
