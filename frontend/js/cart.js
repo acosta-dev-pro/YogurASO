@@ -23,7 +23,40 @@
     }
 
     function showToast(message, type = 'success') {
+        // Sin avisos flotantes al agregar o quitar: el contador del header late (cart-fx.js).
+        if (type === 'success' || type === 'info') return;
         if (utils().showToast) utils().showToast(message, type);
+    }
+
+    function loadCartFx() {
+        if (window.CartFx || document.getElementById('cart-fx-js')) return;
+        const script = document.querySelector("script[src*='cart.js']");
+        const base = (script ? script.getAttribute('src') : 'js/cart.js').replace(/js\/cart\.js(\?.*)?$/, '');
+        const css = document.createElement('link');
+        css.id = 'cart-fx-css';
+        css.rel = 'stylesheet';
+        css.href = base + 'css/cart-fx.css';
+        document.head.appendChild(css);
+        const js = document.createElement('script');
+        js.id = 'cart-fx-js';
+        js.src = base + 'js/cart-fx.js';
+        js.defer = true;
+        document.head.appendChild(js);
+    }
+    loadCartFx();
+
+    function askConfirm(opts) {
+        if (window.CartFx && window.CartFx.confirm) return window.CartFx.confirm(opts);
+        if (utils().confirmAction) {
+            return utils().confirmAction({
+                title: opts.title,
+                message: opts.name || '',
+                confirmText: opts.confirmText || 'Quitar',
+                cancelText: 'Cancelar',
+                danger: true
+            });
+        }
+        return Promise.resolve(window.confirm(opts.title + (opts.name ? ' ' + opts.name : '')));
     }
 
     let carrito = loadCart();
@@ -76,6 +109,7 @@
     }
 
     function pulseBadge() {
+        if (window.CartFx && window.CartFx.pulse) { window.CartFx.pulse(); return; }
         const contador = document.getElementById('cart-count');
         const btn = document.getElementById('cartBtn');
         if (contador) {
@@ -415,23 +449,18 @@
         guardarCarrito();
         updateCounter();
         renderSidebar();
-        showToast('Producto eliminado', 'info');
+        pulseBadge();
     }
 
     async function removeItemConfirm(id) {
         syncFromStorage();
         const item = carrito.find((i) => String(i.id) === String(id));
-        const nombre = item?.nombre || 'este producto';
-        const ok = utils().confirmAction
-            ? await utils().confirmAction({
-                title: 'Quitar del carrito',
-                message: `¿Seguro que quieres eliminar "${nombre}"?`,
-                confirmText: 'Sí, eliminar',
-                cancelText: 'Cancelar',
-                danger: true,
-                type: 'warning'
-            })
-            : window.confirm(`¿Eliminar ${nombre}?`);
+        const meta = item ? productMeta(item) : { name: 'este producto', size: '' };
+        const ok = await askConfirm({
+            name: [meta.name, meta.size].filter(Boolean).join(' · '),
+            title: '¿Quitar del carrito?',
+            confirmText: 'Quitar'
+        });
         if (!ok) return;
         removeItem(id);
     }
@@ -461,16 +490,11 @@
             showToast('Selecciona al menos un producto', 'warning');
             return;
         }
-        const ok = utils().confirmAction
-            ? await utils().confirmAction({
-                title: 'Eliminar seleccionados',
-                message: `¿Eliminar ${ids.length} producto${ids.length === 1 ? '' : 's'} del carrito?`,
-                confirmText: 'Sí, eliminar',
-                cancelText: 'Cancelar',
-                danger: true,
-                type: 'warning'
-            })
-            : window.confirm(`¿Eliminar ${ids.length} productos?`);
+        const ok = await askConfirm({
+            name: `${ids.length} producto${ids.length === 1 ? '' : 's'} seleccionado${ids.length === 1 ? '' : 's'}`,
+            title: '¿Quitar del carrito?',
+            confirmText: 'Quitar'
+        });
         if (!ok) return;
         syncFromStorage();
         const set = new Set(ids.map(String));
@@ -478,7 +502,7 @@
         guardarCarrito();
         updateCounter();
         renderSidebar();
-        showToast('Productos eliminados', 'info');
+        pulseBadge();
     }
 
     function addToCart(producto) {
@@ -520,9 +544,9 @@
 
         guardarCarrito();
         updateCounter();
-        pulseBadge();
         renderSidebar();
-        showToast(`${label} agregado`, 'success');
+        if (window.CartFx && window.CartFx.fly) window.CartFx.fly(producto);
+        else pulseBadge();
     }
 
     function getCart() {
@@ -544,19 +568,16 @@
             return;
         }
 
-        const ok = utils().confirmAction
-            ? await utils().confirmAction({
-                title: 'Vaciar carrito',
-                message: '¿Estás seguro de vaciar todo el carrito?',
-                confirmText: 'Vaciar',
-                cancelText: 'Cancelar',
-                danger: true
-            })
-            : window.confirm('¿Vaciar el carrito?');
+        const units = items.reduce((n, i) => n + Number(i.cantidad || 0), 0);
+        const ok = await askConfirm({
+            name: `${units} producto${units === 1 ? '' : 's'} en el carrito`,
+            title: '¿Vaciar el carrito?',
+            confirmText: 'Vaciar'
+        });
 
         if (!ok) return;
         clearCart();
-        showToast('Carrito vaciado', 'info');
+        pulseBadge();
     }
 
     function customerName() {

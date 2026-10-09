@@ -1,0 +1,155 @@
+﻿/* cart-fx.css: latido del contador, botella que vuela, confirmación y franja pastel
+   de la línea seleccionada. Plano, sombras gris claro, solo transform/opacity. */
+
+/* ---------- Latido del contador ---------- */
+.site-header .cart-badge.cfx-pulse,
+.cart-badge.cfx-pulse { animation: cfx-badge 520ms cubic-bezier(0.22, 1, 0.36, 1); }
+.cart-badge { isolation: isolate; }
+.cart-badge.cfx-pulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--rojo-marca, #C3343E);
+    z-index: -1;
+    pointer-events: none;
+    animation: cfx-glow 620ms ease-out forwards;
+}
+#cartBtn.cfx-pulse svg { animation: cfx-icon 420ms cubic-bezier(0.22, 1, 0.36, 1); transform-origin: 50% 60%; }
+@keyframes cfx-badge {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.32); }
+    100% { transform: scale(1); }
+}
+@keyframes cfx-glow {
+    0% { opacity: 0.45; transform: scale(1); }
+    100% { opacity: 0; transform: scale(2.3); }
+}
+@keyframes cfx-icon {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+/* ---------- Botella que vuela ---------- */
+.cfx-fly {
+    position: fixed;
+    z-index: 2200;
+    pointer-events: none;
+    will-change: transform, opacity;
+    transform: translate3d(0, 0, 0);
+    contain: layout style;
+}
+.cfx-fly img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
+}
+
+/* ---------- Confirmación ---------- */
+.cfx-confirm-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 2400;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(28, 22, 20, 0.28);
+    opacity: 0;
+    transition: opacity 160ms ease;
+}
+.cfx-confirm-wrap.is-in { opacity: 1; }
+.cfx-confirm {
+    width: min(300px, 100%);
+    padding: 20px 20px 16px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+    font-family: "Nunito Sans", sans-serif;
+    text-align: left;
+    transform: translate3d(0, 6px, 0) scale(0.98);
+    transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cfx-confirm-wrap.is-in .cfx-confirm { transform: none; }
+.cfx-confirm-name {
+    margin: 0 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8A817A;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+.cfx-confirm-title {
+    margin: 0 0 18px;
+    font-family: "Fredoka", "Nunito Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #1E1A18;
+    letter-spacing: 0;
+}
+.cfx-confirm-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+}
+.cfx-confirm-cancel {
+    border: none;
+    background: transparent;
+    padding: 6px 2px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6B635C;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+.cfx-confirm-cancel:hover { color: #2A2522; text-decoration-color: currentColor; }
+.cfx-confirm-ok {
+    height: 36px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 999px;
+    background: var(--rojo-marca, #C3343E);
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background-color 0.15s ease;
+}
+.cfx-confirm-ok:hover { background: #A82B34; }
+.cfx-confirm-ok:focus-visible,
+.cfx-confirm-cancel:focus-visible { outline: 2px solid var(--rojo-marca, #C3343E); outline-offset: 2px; }
+
+/* ---------- Franja pastel de la línea seleccionada ---------- */
+.cart-sidebar.cart-ticket .cart-chip { padding-left: 8px; padding-right: 8px; isolation: isolate; }
+.cart-sidebar.cart-ticket .cart-chip::before {
+    content: "";
+    position: absolute;
+    inset: 3px 0;
+    border-radius: 12px;
+    background: var(--chip-wash, #F6F1EA);
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+}
+.cart-sidebar.cart-ticket .cart-chip.is-selected::before { opacity: 1; }
+.cart-sidebar.cart-ticket .cart-chip.is-selected .cart-flavor-shot { background: rgba(255, 255, 255, 0.6); }
+.cart-sidebar.cart-ticket .cart-flavor-shot { transition: background-color 220ms ease; }
+
+@media (prefers-reduced-motion: reduce) {
+    .cart-badge.cfx-pulse,
+    .cart-badge.cfx-pulse::after,
+    #cartBtn.cfx-pulse svg { animation: none !important; }
+    .cfx-confirm-wrap, .cfx-confirm { transition: none !important; }
+    .cart-sidebar.cart-ticket .cart-chip::before { transition: none; }
+}
