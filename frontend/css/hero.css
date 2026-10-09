@@ -767,8 +767,7 @@ body[data-flavor="mango"] {
 .showcase-red-box {
     position: relative;
     width: 100%;
-    aspect-ratio: 1;
-    height: auto;
+    height: clamp(450px, 58vh, 520px);
     border-radius: 20px;
     background: var(--hero-bg, var(--rojo-marca));
     overflow: hidden;
@@ -783,7 +782,7 @@ body[data-flavor="mango"] {
 /* Envoltorio de la botella */
 .showcase-bottle-wrapper {
     position: relative;
-    height: 92%;
+    height: 80%;
     width: auto;
     aspect-ratio: 640 / 1110;
     z-index: 2;
@@ -830,7 +829,6 @@ body[data-flavor="mango"] {
     pointer-events: none;
     z-index: 95;
     will-change: transform;
-    transform-origin: 0 0;
     display: none;
 }
 .hero-travel-bottle.is-active {
@@ -861,11 +859,10 @@ body[data-flavor="mango"] {
     }
     .showcase-red-box {
         max-width: 100%;
-        aspect-ratio: 1;
-        height: auto;
+        height: 380px;
         border-radius: 20px;
     }
     .showcase-bottle-wrapper {
-        height: 90%;
+        height: 80%;
     }
 }
