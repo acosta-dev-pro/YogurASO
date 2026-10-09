@@ -1,0 +1,506 @@
+-- =====================================================================
+-- YogurASO — 0003 backend del panel admin
+-- Requiere 0001 y 0002. Se puede volver a ejecutar sin error.
+-- Pegar en Supabase → SQL Editor → Run.
+--
+--  1. Preguntas: respuesta del admin (answer, answered_at).
+--  2. Comentarios del post "nosotros": respuesta del admin (reply, replied_at).
+--  3. Políticas de admin (ver todo, editar estado/respuesta, borrar).
+--  4. list_faq_questions / list_post_comments devuelven la respuesta.
+--  5. Pedidos: invitados permitidos y create_order() que calcula los
+--     precios en la base (no confía en el precio que manda el navegador).
+--  6. Mensajes de contacto / distribuidores (tabla opcional).
+-- Ninguna parte usa la clave service_role.
+-- =====================================================================
+
+-- ---------------------------------------------------------------------
+-- 1 y 2. Columnas de respuesta
+-- ---------------------------------------------------------------------
+alter table public.faq_questions
+  add column if not exists answer      text,
+  add column if not exists answered_at timestamptz;
+
+alter table public.content_comments
+  add column if not exists reply      text,
+  add column if not exists replied_at timestamptz;
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'faq_questions_answer_len') then
+    alter table public.faq_questions
+      add constraint faq_questions_answer_len check (answer is null or char_length(answer) <= 800);
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'content_comments_reply_len') then
+    alter table public.content_comments
+      add constraint content_comments_reply_len check (reply is null or char_length(reply) <= 400);
+  end if;
+end;
+$$;
+
+-- Fecha de la respuesta automática: se pone al responder y se borra si se quita la respuesta.
+create or replace function public.stamp_admin_reply()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if tg_table_name = 'faq_questions' then
+    new.answer := nullif(btrim(coalesce(new.answer, '')), '');
+    if new.answer is null then
+      new.answered_at := null;
+    elsif new.answer is distinct from old.answer or new.answered_at is null then
+      new.answered_at := coalesce(new.answered_at, now());
+    end if;
+  elsif tg_table_name = 'content_comments' then
+    new.reply := nullif(btrim(coalesce(new.reply, '')), '');
+    if new.reply is null then
+      new.replied_at := null;
+    elsif new.reply is distinct from old.reply or new.replied_at is null then
+      new.replied_at := coalesce(new.replied_at, now());
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_faq_questions_answer on public.faq_questions;
+create trigger trg_faq_questions_answer
+  before update on public.faq_questions
+  for each row execute function public.stamp_admin_reply();
+
+drop trigger if exists trg_content_comments_reply on public.content_comments;
+create trigger trg_content_comments_reply
+  before update on public.content_comments
+  for each row execute function public.stamp_admin_reply();
+
+-- ---------------------------------------------------------------------
+-- 3. Admin: ver todo, cambiar estado/respuesta y borrar
+--    (lo público sigue igual: solo lo aprobado, más lo propio vía las funciones)
+-- ---------------------------------------------------------------------
+drop policy if exists "faq_questions: admin ve todas" on public.faq_questions;
+create policy "faq_questions: admin ve todas"
+  on public.faq_questions for select to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "faq_questions: admin edita" on public.faq_questions;
+create policy "faq_questions: admin edita"
+  on public.faq_questions for update to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "faq_questions: admin borra" on public.faq_questions;
+create policy "faq_questions: admin borra"
+  on public.faq_questions for delete to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "content_comments: admin ve todos" on public.content_comments;
+create policy "content_comments: admin ve todos"
+  on public.content_comments for select to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "content_comments: admin edita" on public.content_comments;
+create policy "content_comments: admin edita"
+  on public.content_comments for update to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "content_comments: admin borra" on public.content_comments;
+create policy "content_comments: admin borra"
+  on public.content_comments for delete to authenticated
+  using ((select public.is_admin()));
+
+-- Solo estas columnas se pueden cambiar (y RLS deja hacerlo solo al admin).
+-- Supabase da por defecto todos los permisos de tabla a anon/authenticated;
+-- se quitan update/delete de tabla y se dan solo los necesarios.
+revoke update, delete on public.faq_questions    from anon, authenticated;
+revoke update, delete on public.content_comments from anon, authenticated;
+grant update (status, answer, answered_at) on public.faq_questions to authenticated;
+grant update (status, reply, replied_at)   on public.content_comments to authenticated;
+grant delete on public.faq_questions    to authenticated;
+grant delete on public.content_comments to authenticated;
+
+-- ---------------------------------------------------------------------
+-- 4. Funciones públicas de lectura con la respuesta
+--    Visitante: lo aprobado + lo suyo (aunque siga en revisión). Admin: todo.
+--    Cambia el tipo de retorno, por eso se borran y se crean de nuevo.
+-- ---------------------------------------------------------------------
+drop function if exists public.list_faq_questions(uuid);
+create function public.list_faq_questions(p_visitor_id uuid)
+returns table (
+  id          bigint,
+  author_name text,
+  body        text,
+  status      text,
+  created_at  timestamptz,
+  mine        boolean,
+  answer      text,
+  answered_at timestamptz
+)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select q.id, q.author_name, q.body, q.status, q.created_at,
+         coalesce(q.visitor_id = p_visitor_id, false),
+         q.answer, q.answered_at
+    from public.faq_questions q
+   where q.status = 'approved'
+      or q.visitor_id = p_visitor_id
+      or (select public.is_admin())
+   order by q.created_at desc
+   limit 50;
+$$;
+
+drop function if exists public.list_post_comments(text, uuid);
+create function public.list_post_comments(
+  p_target_id  text,
+  p_visitor_id uuid
+)
+returns table (
+  id          bigint,
+  author_name text,
+  body        text,
+  status      text,
+  created_at  timestamptz,
+  mine        boolean,
+  reply       text,
+  replied_at  timestamptz
+)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select c.id, c.author_name, c.body, c.status, c.created_at,
+         coalesce(c.visitor_id = p_visitor_id, false),
+         c.reply, c.replied_at
+    from public.content_comments c
+   where c.target_type = 'post'
+     and c.target_id = p_target_id
+     and (c.status = 'approved' or c.visitor_id = p_visitor_id or (select public.is_admin()))
+   order by c.created_at asc
+   limit 80;
+$$;
+
+revoke all on function public.stamp_admin_reply() from public;
+revoke all on function public.list_faq_questions(uuid) from public;
+revoke all on function public.list_post_comments(text, uuid) from public;
+grant execute on function public.list_faq_questions(uuid) to anon, authenticated;
+grant execute on function public.list_post_comments(text, uuid) to anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- 5. Pedidos
+--    Las tablas orders y order_items ya existen (0001) con los estados
+--    pendiente | en_proceso | enviado | completado | cancelado, que son los
+--    que usa el panel. Aquí: se permiten pedidos de invitados (el carrito no
+--    pide cuenta), y create_order() es la única forma de crear un pedido
+--    desde la web.
+-- ---------------------------------------------------------------------
+alter table public.orders alter column user_id drop not null;
+alter table public.orders
+  add column if not exists visitor_id uuid,
+  add column if not exists notes      text;
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'orders_notes_len') then
+    alter table public.orders
+      add constraint orders_notes_len check (notes is null or char_length(notes) <= 500);
+  end if;
+end;
+$$;
+
+-- Si se borra una cuenta, sus pedidos quedan (sin dueño) en vez de bloquear el borrado.
+alter table public.orders drop constraint if exists orders_user_id_fkey;
+alter table public.orders
+  add constraint orders_user_id_fkey foreign key (user_id)
+  references public.profiles (id) on delete set null;
+
+create index if not exists idx_orders_created on public.orders (created_at desc);
+create index if not exists idx_orders_visitor on public.orders (visitor_id, created_at desc);
+
+-- Las políticas de 0001 se mantienen: cada persona ve los suyos, el admin ve
+-- y edita todos. Un invitado no puede leer su pedido después (no tiene cuenta).
+
+/**
+ * create_order(p_items, p_customer, p_visitor_id)
+ *   p_items:    [{ "product_id": 1, "quantity": 2, "size": "500 ml" | "1 L" | "2 L" }, ...]
+ *   p_customer: { "name", "phone", "email", "address", "city", "notes" }  (todo opcional)
+ *   p_visitor_id: uuid del navegador (para limitar envíos de invitados)
+ * Precio = el de public.products con su descuento, por el factor de la
+ * presentación, redondeado igual que main.js (salePrice / roundPrice).
+ * Devuelve { id, order_number, subtotal, shipping_cost, total, items:[...] }.
+ */
+create or replace function public.create_order(
+  p_items      jsonb,
+  p_customer   jsonb default '{}'::jsonb,
+  p_visitor_id uuid  default null
+)
+returns jsonb
+language plpgsql
+volatile
+security definer
+set search_path = ''
+as $$
+declare
+  v_uid      uuid := auth.uid();
+  v_profile  public.profiles%rowtype;
+  v_cust     jsonb := coalesce(p_customer, '{}'::jsonb);
+  v_item     jsonb;
+  v_prod     public.products%rowtype;
+  v_pid      bigint;
+  v_qty      integer;
+  v_size     text;
+  v_factor   numeric;
+  v_base     numeric;
+  v_unit     numeric;
+  v_line     numeric;
+  v_lines    jsonb := '[]'::jsonb;
+  v_subtotal numeric := 0;
+  v_recent   integer := 0;
+  v_order_id bigint;
+  v_number   text;
+begin
+  if p_items is null or jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
+    raise exception 'El pedido está vacío' using errcode = '22023';
+  end if;
+  if jsonb_array_length(p_items) > 30 then
+    raise exception 'Demasiadas referencias en un solo pedido' using errcode = '22023';
+  end if;
+  if jsonb_typeof(v_cust) <> 'object' then
+    v_cust := '{}'::jsonb;
+  end if;
+
+  -- Límite de envíos: 5 pedidos cada 10 minutos por cuenta o por navegador,
+  -- y 60 por hora para todos los invitados juntos.
+  if v_uid is not null then
+    select count(*) into v_recent from public.orders o
+     where o.user_id = v_uid and o.created_at > now() - interval '10 minutes';
+  elsif p_visitor_id is not null then
+    select count(*) into v_recent from public.orders o
+     where o.visitor_id = p_visitor_id and o.created_at > now() - interval '10 minutes';
+  end if;
+  if v_recent >= 5 then
+    raise exception 'Ya enviaste varios pedidos seguidos. Espera unos minutos.' using errcode = 'P0001';
+  end if;
+  if v_uid is null then
+    select count(*) into v_recent from public.orders o
+     where o.user_id is null and o.created_at > now() - interval '1 hour';
+    if v_recent >= 60 then
+      raise exception 'Estamos recibiendo muchos pedidos. Escríbenos por WhatsApp directamente.' using errcode = 'P0001';
+    end if;
+  end if;
+
+  for v_item in select value from jsonb_array_elements(p_items) loop
+    if jsonb_typeof(v_item) <> 'object'
+       or coalesce(v_item ->> 'product_id', '') !~ '^[0-9]{1,18}$'
+       or coalesce(v_item ->> 'quantity', '') !~ '^[0-9]{1,3}$' then
+      raise exception 'Hay un producto inválido en el pedido' using errcode = '22023';
+    end if;
+    v_pid := (v_item ->> 'product_id')::bigint;
+    v_qty := (v_item ->> 'quantity')::integer;
+    if v_qty < 1 or v_qty > 99 then
+      raise exception 'Cantidad inválida (de 1 a 99 por producto)' using errcode = '22023';
+    end if;
+
+    v_size := coalesce(nullif(btrim(v_item ->> 'size'), ''), '500 ml');
+    v_factor := case v_size
+                  when '500 ml' then 1
+                  when '1 L'    then 3.2
+                  when '2 L'    then 6.4
+                end;
+    if v_factor is null then
+      raise exception 'Presentación no disponible: %', v_size using errcode = '22023';
+    end if;
+
+    select * into v_prod from public.products p where p.id = v_pid and p.is_active;
+    if not found then
+      raise exception 'Un producto del carrito ya no está disponible' using errcode = 'P0001';
+    end if;
+    if v_prod.stock <= 0 then
+      raise exception '% está agotado', v_prod.name using errcode = 'P0001';
+    end if;
+
+    -- Igual que salePrice() y roundPrice() de main.js.
+    v_base := v_prod.price;
+    if v_prod.discount_percent > 0 then
+      v_base := greatest(500, round(v_prod.price * (1 - v_prod.discount_percent / 100.0) / 100) * 100);
+    end if;
+    v_unit := case when v_factor = 1 then v_base
+                   else greatest(500, round(v_base * v_factor / 100) * 100) end;
+    v_line := v_unit * v_qty;
+    v_subtotal := v_subtotal + v_line;
+
+    v_lines := v_lines || jsonb_build_array(jsonb_build_object(
+      'product_id',   v_prod.id,
+      'product_name', left(v_prod.name || ' · ' || v_size, 200),
+      'size',         v_size,
+      'unit_price',   v_unit,
+      'quantity',     v_qty,
+      'subtotal',     v_line
+    ));
+  end loop;
+
+  if v_uid is not null then
+    select * into v_profile from public.profiles pr where pr.id = v_uid;
+  end if;
+
+  v_number := 'YG-' || to_char(now() at time zone 'America/Bogota', 'YYMMDD') || '-'
+              || upper(substr(md5(gen_random_uuid()::text), 1, 6));
+
+  insert into public.orders (
+    user_id, visitor_id, order_number, status,
+    shipping_name, shipping_email, shipping_phone, address, city, notes,
+    subtotal, shipping_cost, total, payment_method, payment_status
+  ) values (
+    v_uid,
+    p_visitor_id,
+    v_number,
+    'pendiente',
+    left(coalesce(nullif(btrim(v_cust ->> 'name'), ''),
+                  nullif(btrim(concat_ws(' ', v_profile.first_name, v_profile.last_name)), '')), 120),
+    left(coalesce(nullif(btrim(v_cust ->> 'email'), ''), v_profile.email), 254),
+    left(coalesce(nullif(btrim(v_cust ->> 'phone'), ''), v_profile.phone), 20),
+    left(nullif(btrim(v_cust ->> 'address'), ''), 300),
+    left(nullif(btrim(v_cust ->> 'city'), ''), 80),
+    left(nullif(btrim(v_cust ->> 'notes'), ''), 500),
+    v_subtotal,
+    0,              -- el domicilio se acuerda por WhatsApp
+    v_subtotal,
+    'whatsapp',
+    'pendiente'
+  )
+  returning id into v_order_id;
+
+  insert into public.order_items (order_id, product_id, product_name, unit_price, quantity, subtotal)
+  select v_order_id,
+         (l ->> 'product_id')::bigint,
+         l ->> 'product_name',
+         (l ->> 'unit_price')::numeric,
+         (l ->> 'quantity')::integer,
+         (l ->> 'subtotal')::numeric
+    from jsonb_array_elements(v_lines) as l;
+
+  return jsonb_build_object(
+    'id',            v_order_id,
+    'order_number',  v_number,
+    'subtotal',      v_subtotal,
+    'shipping_cost', 0,
+    'total',         v_subtotal,
+    'items',         v_lines
+  );
+end;
+$$;
+
+revoke all on function public.create_order(jsonb, jsonb, uuid) from public;
+grant execute on function public.create_order(jsonb, jsonb, uuid) to anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- 6. Mensajes de contacto y distribuidores (opcional; la web aún no los guarda)
+-- ---------------------------------------------------------------------
+create table if not exists public.contact_messages (
+  id          bigint generated by default as identity primary key,
+  kind        text not null default 'contacto' check (kind in ('contacto', 'distribuidor')),
+  visitor_id  uuid not null,
+  name        text not null check (char_length(btrim(name)) between 1 and 80),
+  phone       text check (phone is null or char_length(phone) <= 30),
+  email       text check (email is null or char_length(email) <= 254),
+  city        text check (city is null or char_length(city) <= 80),
+  message     text not null check (char_length(btrim(message)) between 2 and 1000),
+  status      text not null default 'new' check (status in ('new', 'read', 'archived')),
+  created_at  timestamptz not null default now()
+);
+
+comment on table public.contact_messages is 'Formularios de contacto y distribuidores. Solo el admin los lee.';
+
+create index if not exists idx_contact_messages_status on public.contact_messages (status, created_at desc);
+create index if not exists idx_contact_messages_visitor on public.contact_messages (visitor_id, created_at desc);
+
+create or replace function public.force_new_contact()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.status := 'new';
+  new.name := btrim(new.name);
+  new.message := btrim(new.message);
+  return new;
+end;
+$$;
+
+-- El mismo límite de 0002 (3 envíos cada 10 minutos por visitante), ahora también para contacto.
+create or replace function public.reject_interaction_spam()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  n int;
+begin
+  if tg_table_name = 'faq_questions' then
+    select count(*) into n from public.faq_questions
+     where visitor_id = new.visitor_id and created_at > now() - interval '10 minutes';
+  elsif tg_table_name = 'content_comments' then
+    select count(*) into n from public.content_comments
+     where visitor_id = new.visitor_id and created_at > now() - interval '10 minutes';
+  elsif tg_table_name = 'contact_messages' then
+    select count(*) into n from public.contact_messages
+     where visitor_id = new.visitor_id and created_at > now() - interval '10 minutes';
+  else
+    return new;
+  end if;
+  if n >= 3 then
+    raise exception 'Demasiados envíos seguidos. Espera un momento.' using errcode = 'P0001';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_contact_messages_new on public.contact_messages;
+create trigger trg_contact_messages_new
+  before insert on public.contact_messages
+  for each row execute function public.force_new_contact();
+
+drop trigger if exists trg_contact_messages_spam on public.contact_messages;
+create trigger trg_contact_messages_spam
+  before insert on public.contact_messages
+  for each row execute function public.reject_interaction_spam();
+
+revoke all on function public.force_new_contact() from public;
+revoke all on function public.reject_interaction_spam() from public;
+
+alter table public.contact_messages enable row level security;
+
+drop policy if exists "contact_messages: enviar" on public.contact_messages;
+create policy "contact_messages: enviar"
+  on public.contact_messages for insert to anon, authenticated
+  with check (status = 'new' and visitor_id is not null);
+
+drop policy if exists "contact_messages: admin ve" on public.contact_messages;
+create policy "contact_messages: admin ve"
+  on public.contact_messages for select to authenticated
+  using ((select public.is_admin()));
+
+drop policy if exists "contact_messages: admin edita" on public.contact_messages;
+create policy "contact_messages: admin edita"
+  on public.contact_messages for update to authenticated
+  using ((select public.is_admin()))
+  with check ((select public.is_admin()));
+
+drop policy if exists "contact_messages: admin borra" on public.contact_messages;
+create policy "contact_messages: admin borra"
+  on public.contact_messages for delete to authenticated
+  using ((select public.is_admin()));
+
+revoke all on public.contact_messages from anon, authenticated;
+grant insert on public.contact_messages to anon, authenticated;
+grant select, delete on public.contact_messages to authenticated;
+grant update (status) on public.contact_messages to authenticated;
+grant usage, select on sequence public.contact_messages_id_seq to anon, authenticated;
+
+-- Fin de 0003. Comprobación rápida (opcional):
+--   select public.create_order('[{"product_id":1,"quantity":2}]'::jsonb);
+--   (crea un pedido de prueba; luego bórralo: delete from public.orders where order_number = '...';)

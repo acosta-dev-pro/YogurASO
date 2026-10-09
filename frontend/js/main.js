@@ -513,6 +513,18 @@ function flavorBgVar(slug) {
     return /^[a-z0-9-]+$/.test(s) ? `var(--fondo-claro-${s})` : 'var(--cream, #FFF8F4)';
 }
 
+/** Color propio guardado en el panel (hex distinto del crema por defecto) o null. */
+function customHex(c) {
+    const s = String(c || '').trim();
+    return /^#[0-9A-Fa-f]{6}$/.test(s) && s.toUpperCase() !== '#FFF8F4' ? s : null;
+}
+
+/** Variables de acento de la tarjeta (color_acento del panel), o '' si no hay. */
+function accentVars(p) {
+    const a = customHex(p?.color_acento);
+    return a ? `--producto-card-accent:${a};--yfm-c:${a};` : '';
+}
+
 function flavorCatalog() {
     const flavors = window.YOGUR_FLAVORS || [];
     const catOf = {
@@ -613,7 +625,7 @@ function renderProducts() {
         const sinStock = Number(p.stock) <= 0;
         const slug = matchFlavorSlug(p) || p.slug || '';
         const safe = /^[a-z0-9-]+$/.test(String(slug)) ? slug : '';
-        const wash = safe ? flavorBgVar(safe) : 'var(--fondo-claro-fresa, #F4CBCF)';
+        const wash = customHex(p.color_fondo) || (safe ? flavorBgVar(safe) : 'var(--fondo-claro-fresa, #F4CBCF)');
         const ink = 'color-mix(in srgb, var(--hp-c) 42%, #171717)';
         const name = escapeHtml(p.nombre);
         const bottle = bottleUrlFor(p);
@@ -638,7 +650,7 @@ function renderProducts() {
         const addAria = sinStock ? `${name} sin stock` : `Agregar ${name} al carrito`;
         const featured = index === 0 ? ' is-active' : '';
         return `
-            <article class="hp-card${sinStock ? ' is-out' : ''}${featured}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" data-tone="light" style="--hp-c:${wash};--hp-ink:${ink};--producto-card-bg:${wash}">
+            <article class="hp-card${sinStock ? ' is-out' : ''}${featured}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" data-tone="light" style="--hp-c:${wash};--hp-ink:${ink};--producto-card-bg:${wash};${accentVars(p)}">
                 <span class="hp-card__panel" aria-hidden="true"></span>
                 <a class="hp-card__media" href="productos.html" data-hp-open tabindex="-1" aria-hidden="true">
                     <span class="hp-card__floor"></span>
@@ -674,7 +686,8 @@ function renderProducts() {
             : IMG_PLACEHOLDER_HTML;
 
         const stored = String(p.color_fondo || '');
-        const wash = (/^[a-z0-9-]+$/.test(slug) ? flavorBgVar(slug) : null)
+        const wash = customHex(stored)
+            || (/^[a-z0-9-]+$/.test(slug) ? flavorBgVar(slug) : null)
             || (stored.startsWith('var(--fondo-claro-') ? stored : null)
             || 'var(--cream, #FFF8F4)';
         const askPrice = !Number(p.precio);
@@ -691,7 +704,7 @@ function renderProducts() {
                 : '<i class="fas fa-shopping-cart" aria-hidden="true"></i> Agregar al carrito');
 
         return `
-            <article class="producto-card card-v3 ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" style="--producto-card-bg:${wash};animation-delay:${Math.min(index * 0.06, 0.48)}s">
+            <article class="producto-card card-v3 ${sinStock ? 'is-out-of-stock' : ''}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" style="--producto-card-bg:${wash};${accentVars(p)}animation-delay:${Math.min(index * 0.06, 0.48)}s">
                 <div class="producto-img-container">
                     ${badgeHtml(p, sinStock)}
                     <button type="button" class="wish-btn" aria-label="Favorito" data-wish="${escapeHtml(p.id)}"><i class="fas fa-heart" aria-hidden="true"></i></button>
@@ -784,7 +797,8 @@ function normalizeProducts(list) {
         return {
             ...p,
             imagen_url: bottle || p.imagen_url,
-            color_fondo: (/^[a-z0-9-]+$/.test(String(slug)) ? flavorBgVar(slug) : null)
+            color_fondo: customHex(p.color_fondo)
+                || (/^[a-z0-9-]+$/.test(String(slug)) ? flavorBgVar(slug) : null)
                 || (String(p.color_fondo || '').startsWith('var(--fondo-claro-') ? p.color_fondo : null)
                 || p.color_fondo,
             slug: p.slug || slug
