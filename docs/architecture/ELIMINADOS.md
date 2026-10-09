@@ -50,11 +50,11 @@ Quedan en `frontend/assets/img/` solo las 4 que usa `index.html`: `Fresa.png`, `
 
 | Qué | Por qué |
 |-----|---------|
-| `backend/`, `database/` | Se necesitan hasta tener paridad con Supabase |
+| ~~`backend/`, `database/`~~ | Retirados en octubre 2026 (ver sección siguiente) |
 | `frontend/` (HTML, CSS, JS en uso) | La web actual sigue funcionando |
 | `tests/`, `.github/workflows/pages.yml` | Pruebas y publicación |
 | `docs/taller-pruebas/` | Tareas del SENA |
-| `INICIAR-YOGURASO.bat` | Es la forma de abrir la web hoy en Windows |
+| `INICIAR-YOGURASO.bat` | Es la forma de abrir la web hoy en Windows (ya solo abre el servidor estático) |
 | `fresa sin fondo.png` (duplicado de `Fresa.png`) | Las dos las usa `index.html`; se resuelve al rediseñar el hero |
 | Código muerto dentro de `api.js` y `styles.css` | Estarían en archivos que se reescriben; ver `INFORME_AUDITORIA.md` |
 
@@ -70,3 +70,19 @@ Resultado: las mismas 13 "rotas" que había **antes** de borrar nada, y ninguna 
 Ninguna imagen, hoja de estilo ni script tiene referencia rota. `index.html` sigue encontrando sus 4 imágenes.
 
 No se pudo abrir la web en un navegador ni correr `npm test`: Playwright no tiene Chromium instalado en este PC y no se instalaron dependencias en esta fase. Queda pendiente correr `npx playwright install chromium` y `npm test` cuando lo autorices.
+
+## Express y PostgreSQL local (octubre 2026)
+
+La web pasó a Supabase (commit `078a4a6`). Con eso dejó de usarse el backend y se borró con `git rm` en un commit aparte. Para recuperarlo: `git revert` de ese commit, o `git checkout 078a4a6 -- backend database`.
+
+| Qué | Por qué |
+|-----|---------|
+| `backend/` completo (`server.js`, `src/`, `scripts/`, `package.json`, `package-lock.json`, `.env.example`, `uploads/`) | API Express: la reemplazan Supabase Auth, tablas con RLS y Storage. Ningún archivo de `frontend/` la llama ya |
+| `database/` (`schema.sql`, 3 migraciones, `ops_lanzamiento.sql`, `generar_hash_password.js`) | Esquema de PostgreSQL local. El esquema vigente es `supabase/migrations/` |
+| Scripts `dev`, `install-backend`, `install-frontend`, `install-all` de `package.json` | Arrancaban o instalaban Express. `npm start` ahora abre `tools/serve-frontend.js` |
+| Arranque de la API en `INICIAR-YOGURASO.bat` | Ya no hay API; el `.bat` solo abre la web |
+
+Respaldos fuera del repo (no van a Git):
+
+- `backend/.env` (secretos viejos) → `C:\Users\acost\Desktop\YOGURASO-WEB-backup-env\.env`
+- `backend/uploads/img_1778207684287_590444.webp` → `C:\Users\acost\Desktop\YOGURASO-WEB-backup-uploads\`

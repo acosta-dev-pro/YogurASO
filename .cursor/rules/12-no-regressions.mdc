@@ -6,7 +6,7 @@ alwaysApply: true
 # Sin regresiones
 
 - No rompas la funcionalidad existente: catálogo, carrito, mensaje de WhatsApp, cuentas, perfil, recuperación, admin.
-- Node/Express **no se retira** hasta que la prueba de paridad pase. Mientras tanto, `backend/`, `database/` y `frontend/js/api.js` no se tocan.
+- Node/Express ya se retiró: la web usa Supabase. Nunca pongas la Secret key ni la `service_role` en el frontend; solo la Publishable key en `frontend/js/supabase-client.js`.
 - No borres archivos sin mapearlos ni sin evidencia de que no se usan (búsqueda de referencias).
 - No hagas reescrituras completas sin un commit de punto de recuperación antes.
 - No cambies la arquitectura sin explicar el impacto y registrar un ADR en `docs/decisions/`.

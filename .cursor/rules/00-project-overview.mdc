@@ -6,7 +6,7 @@ alwaysApply: true
 # YoguraSo: contexto
 
 - Marca: **YoguraSo** (no "YogurASO"). Yogurt artesanal del Huila, presentación de 500 ml; 1 litro vendrá después.
-- Hoy: HTML/CSS/JS en `frontend/`, API Express en `backend/`, PostgreSQL en `database/`.
+- Hoy: HTML/CSS/JS estático en `frontend/` que habla directo con Supabase (`frontend/js/api.js`, `supabase/`). Express (`backend/`) y PostgreSQL local (`database/`) se retiraron en octubre 2026 (ver `docs/architecture/ELIMINADOS.md`).
 - Destino: React + TypeScript + Vite en `src/`, Supabase en `supabase/`.
 - El pedido sale por WhatsApp. No hay pasarela de pagos y no se inventa una.
 - El usuario es aprendiz y habla español: explica simple, textos de interfaz y documentos en español.
