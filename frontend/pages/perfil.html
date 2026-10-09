@@ -64,26 +64,23 @@
 
     <main id="main-content" class="profile-shell">
         <section class="profile-hero" aria-label="Resumen de cuenta">
-            <div class="profile-hero-avatar" aria-hidden="true"><i class="fas fa-user"></i></div>
             <div class="profile-hero-text">
+                <span class="profile-kicker">Mi cuenta</span>
                 <h1 id="profile-hero-name">Mi cuenta</h1>
                 <div class="profile-hero-meta">
                     <span class="profile-hero-email" id="profile-hero-email">—</span>
                     <span class="profile-badge" id="profile-provider-badge">—</span>
                 </div>
             </div>
-            <button type="button" class="profile-btn-outline" id="btn-logout">Cerrar sesión</button>
+            <button type="button" class="profile-btn profile-btn-outline" id="btn-logout">Cerrar sesión</button>
         </section>
 
         <aside class="profile-admin-card" id="profile-admin-card" hidden>
             <div class="profile-admin-card-text">
                 <strong>Panel de administración</strong>
-                <p>Gestiona inventario, usuarios y el catálogo de YogurASO.</p>
+                <p>Inventario, colores, preguntas y pedidos de la tienda.</p>
             </div>
-            <a class="profile-btn" id="profile-admin-link" href="admin.html">
-                <i class="fas fa-user-shield" aria-hidden="true"></i>
-                Ir al panel admin
-            </a>
+            <a class="profile-btn profile-btn-outline" id="profile-admin-link" href="admin.html">Ir al panel</a>
         </aside>
 
         <nav class="profile-tabs" aria-label="Secciones del perfil">
@@ -96,9 +93,7 @@
         <section id="tab-datos" class="profile-pane is-active">
             <div class="profile-grid">
                 <article class="profile-box">
-                    <div class="profile-box-head">
-                        <h2>Información actual</h2>
-                    </div>
+                    <h2 class="profile-box-title">Información actual</h2>
                     <dl class="profile-fields">
                         <div><dt>Nombre</dt><dd id="view-nombre">—</dd></div>
                         <div><dt>Apellido</dt><dd id="view-apellido">—</dd></div>
@@ -109,28 +104,30 @@
                 </article>
 
                 <article class="profile-box profile-box-edit">
-                    <div class="profile-box-head">
-                        <h2>Editar datos</h2>
-                    </div>
-                    <p class="profile-hint">Los cambios se guardan en tu cuenta al pulsar Guardar.</p>
+                    <h2 class="profile-box-title">Editar datos</h2>
                     <form class="profile-form" id="profileForm">
-                        <div class="profile-form-row">
-                            <label for="perfil-nombre">Nombre</label>
-                            <input type="text" id="perfil-nombre" required>
+                        <div class="profile-form-cols">
+                            <div class="profile-form-row">
+                                <label for="perfil-nombre">Nombre</label>
+                                <input type="text" id="perfil-nombre" required>
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="perfil-apellido">Apellido</label>
+                                <input type="text" id="perfil-apellido">
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="perfil-email">Correo</label>
+                                <input type="email" id="perfil-email" disabled>
+                            </div>
+                            <div class="profile-form-row">
+                                <label for="perfil-telefono">Teléfono</label>
+                                <input type="tel" id="perfil-telefono" placeholder="Ej: 300 123 4567">
+                            </div>
                         </div>
-                        <div class="profile-form-row">
-                            <label for="perfil-apellido">Apellido</label>
-                            <input type="text" id="perfil-apellido">
+                        <div class="profile-form-foot">
+                            <p class="profile-hint">El correo no se cambia desde aquí.</p>
+                            <button type="submit" class="profile-btn">Guardar cambios</button>
                         </div>
-                        <div class="profile-form-row">
-                            <label for="perfil-email">Correo</label>
-                            <input type="email" id="perfil-email" disabled>
-                        </div>
-                        <div class="profile-form-row">
-                            <label for="perfil-telefono">Teléfono</label>
-                            <input type="tel" id="perfil-telefono" placeholder="Ej: 300 123 4567">
-                        </div>
-                        <button type="submit" class="profile-btn">Guardar cambios</button>
                     </form>
                 </article>
             </div>
@@ -138,66 +135,88 @@
 
         <!-- SEGURIDAD -->
         <section id="tab-seguridad" class="profile-pane">
-            <article class="profile-box">
-                <h2>Cambiar contraseña</h2>
-                <p class="profile-hint">Te enviamos un código de 6 dígitos a <strong id="security-email-hint">tu correo registrado</strong>.</p>
-
-                <div class="profile-steps">
-                    <div class="profile-step">
-                        <span class="profile-step-num">1</span>
-                        <div>
-                            <p>Solicita el código</p>
-                            <button type="button" class="profile-btn profile-btn-outline" id="btn-enviar-codigo">
-                                <i class="fas fa-envelope"></i> Enviar código al correo
-                            </button>
+            <div class="profile-acc-list">
+                <details class="profile-acc">
+                    <summary>
+                        <span class="profile-acc-txt">
+                            <strong>Cambiar contraseña</strong>
+                            <small>Con un código que llega a <span id="security-email-hint">tu correo registrado</span></small>
+                        </span>
+                        <span class="profile-acc-icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="profile-acc-body">
+                        <div class="profile-steps">
+                            <div class="profile-step">
+                                <p><span class="profile-step-num">1</span> Pide el código</p>
+                                <button type="button" class="profile-btn profile-btn-outline" id="btn-enviar-codigo">
+                                    <i class="fas fa-envelope"></i> Enviar código al correo
+                                </button>
+                            </div>
+                            <div class="profile-step">
+                                <p><span class="profile-step-num">2</span> Escribe el código y tu nueva clave</p>
+                                <form class="profile-form" id="passwordForm">
+                                    <div class="profile-form-cols profile-form-cols--3">
+                                        <div class="profile-form-row">
+                                            <label for="password-codigo">Código del correo</label>
+                                            <input type="text" id="password-codigo" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code">
+                                        </div>
+                                        <div class="profile-form-row">
+                                            <label for="password-nueva">Nueva contraseña</label>
+                                            <input type="password" id="password-nueva" minlength="8" autocomplete="new-password">
+                                        </div>
+                                        <div class="profile-form-row">
+                                            <label for="password-confirm">Confirmar contraseña</label>
+                                            <input type="password" id="password-confirm" minlength="8" autocomplete="new-password">
+                                        </div>
+                                    </div>
+                                    <div class="profile-form-foot">
+                                        <p class="profile-hint">Mínimo 8 caracteres.</p>
+                                        <button type="submit" class="profile-btn">Cambiar contraseña</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="profile-step">
-                        <span class="profile-step-num">2</span>
-                        <div>
-                            <p>Ingresa el código y tu nueva clave</p>
-                            <form class="profile-form" id="passwordForm">
-                                <div class="profile-form-row">
-                                    <label for="password-codigo">Código (6 dígitos)</label>
-                                    <input type="text" id="password-codigo" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code">
-                                </div>
-                                <div class="profile-form-row">
-                                    <label for="password-nueva">Nueva contraseña</label>
-                                    <input type="password" id="password-nueva" minlength="8" autocomplete="new-password">
-                                </div>
-                                <div class="profile-form-row">
-                                    <label for="password-confirm">Confirmar contraseña</label>
-                                    <input type="password" id="password-confirm" minlength="8" autocomplete="new-password">
-                                </div>
-                                <button type="submit" class="profile-btn">Cambiar contraseña</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <details class="profile-advanced">
-                    <summary>Cambiar con contraseña actual (opcional)</summary>
-                    <form class="profile-form" id="passwordLegacyForm">
-                        <div class="profile-form-row">
-                            <label for="password-actual">Contraseña actual</label>
-                            <input type="password" id="password-actual" autocomplete="current-password">
-                        </div>
-                        <div class="profile-form-row">
-                            <label for="password-nueva-legacy">Nueva contraseña</label>
-                            <input type="password" id="password-nueva-legacy" minlength="8" autocomplete="new-password">
-                        </div>
-                        <button type="submit" class="profile-btn profile-btn-outline">Actualizar con clave actual</button>
-                    </form>
                 </details>
-            </article>
+
+                <details class="profile-acc profile-advanced">
+                    <summary>
+                        <span class="profile-acc-txt">
+                            <strong>Cambiar con la contraseña actual</strong>
+                            <small>Si la recuerdas, sin esperar el código</small>
+                        </span>
+                        <span class="profile-acc-icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="profile-acc-body">
+                        <form class="profile-form" id="passwordLegacyForm">
+                            <div class="profile-form-cols">
+                                <div class="profile-form-row">
+                                    <label for="password-actual">Contraseña actual</label>
+                                    <input type="password" id="password-actual" autocomplete="current-password">
+                                </div>
+                                <div class="profile-form-row">
+                                    <label for="password-nueva-legacy">Nueva contraseña</label>
+                                    <input type="password" id="password-nueva-legacy" minlength="8" autocomplete="new-password">
+                                </div>
+                            </div>
+                            <div class="profile-form-foot">
+                                <p class="profile-hint">Mínimo 8 caracteres.</p>
+                                <button type="submit" class="profile-btn profile-btn-outline">Actualizar contraseña</button>
+                            </div>
+                        </form>
+                    </div>
+                </details>
+            </div>
         </section>
 
         <!-- PEDIDOS -->
         <section id="tab-pedidos" class="profile-pane">
             <article class="profile-box">
-                <h2>Compras anteriores</h2>
-                <p class="profile-hint">Pedidos enviados por WhatsApp desde este dispositivo.</p>
-                <div id="profile-orders-list"></div>
+                <div class="profile-box-head">
+                    <h2 class="profile-box-title">Compras anteriores</h2>
+                    <p class="profile-hint">Pedidos enviados por WhatsApp desde este dispositivo.</p>
+                </div>
+                <div id="profile-orders-list" class="profile-orders"></div>
             </article>
         </section>
     </main>
