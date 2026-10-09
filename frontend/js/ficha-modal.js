@@ -6,7 +6,8 @@
        misma API / respaldo local de las tarjetas). Si no está, usa YOGUR_FLAVORS + $6.900 del respaldo local.
      - Ficha técnica: window.YOG_INFO (js/product-info.js). Lo que está en null se muestra como
        "Por confirmar" / "Verificar". Nunca se inventan ingredientes, temperaturas ni cifras.
-   Color: --yfm-c = --bg-<sabor> (nombre, precio, botón); panel izquierdo --fondo-claro-<sabor>.
+   Color: --yfm-c = color_acento del producto (panel admin) si es hex válido; si no, --bg-<sabor>
+   (nombre, precio, botón); panel izquierdo --fondo-claro-<sabor>.
    Estilos: css/ficha-modal.css */
 (function () {
     'use strict';
@@ -215,6 +216,16 @@
 
     function has(slug) { return !!flavorOf(slug); }
 
+    /* Color fuerte elegido en el panel (products.accent_color -> color_acento), si es un hex válido. */
+    function accentFor(slug, given) {
+        var cat = window.YogCatalog && window.YogCatalog.bySlug && window.YogCatalog.bySlug[slug];
+        var list = [given && given.color_acento, cat && cat.color_acento];
+        for (var i = 0; i < list.length; i++) {
+            if (/^#[0-9a-f]{6}$/i.test(String(list[i] || ''))) return String(list[i]);
+        }
+        return '';
+    }
+
     function open(slug, from, product) {
         if (!has(slug)) return false;
         if (!dlg) build();
@@ -223,7 +234,7 @@
         current = { slug: slug, product: product || null };
         dlg.querySelector('[data-yfm-inner]').innerHTML = content(slug);
         dlg.setAttribute('data-flavor', slug);
-        dlg.style.setProperty('--yfm-c', 'var(--bg-' + slug + ', var(--rojo-marca))'); // color fuerte del sabor
+        dlg.style.setProperty('--yfm-c', accentFor(slug, product) || 'var(--bg-' + slug + ', var(--rojo-marca))'); // color fuerte del sabor
         if (!dlg.open) {
             if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
         }
