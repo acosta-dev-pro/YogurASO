@@ -59,7 +59,9 @@ const ERRORES = {
     '42501': 'No tienes permiso para esta acción.',
     '23505': 'Ya existe un registro con ese nombre.',
     '23514': 'Algún dato no es válido (precio, stock, color, letrero o descuento).',
-    PGRST116: 'No se encontró el registro o no tienes permiso.'
+    PGRST116: 'No se encontró el registro o no tienes permiso.',
+    PGRST202: 'Esta función todavía no está activada en el servidor. Intenta más tarde.',
+    PGRST205: 'Esta sección todavía no está activada en el servidor. Intenta más tarde.'
 };
 
 function traducir(error, fallback = 'Algo salió mal. Intenta de nuevo.') {
@@ -70,6 +72,8 @@ function traducir(error, fallback = 'Algo salió mal. Intenta de nuevo.') {
     if (/failed to fetch|networkerror|load failed|network request failed/i.test(msg)) {
         return 'Sin conexión con el servidor. Revisa tu internet.';
     }
+    if (/could not find the function/i.test(msg)) return ERRORES.PGRST202;
+    if (/could not find the table/i.test(msg)) return ERRORES.PGRST205;
     if (/invalid login credentials/i.test(msg)) return ERRORES.invalid_credentials;
     if (/email not confirmed/i.test(msg)) return ERRORES.email_not_confirmed;
     if (/already registered/i.test(msg)) return ERRORES.user_already_exists;

@@ -43,6 +43,10 @@
     <link rel="stylesheet" href="css/yg-price.css">
     <link rel="stylesheet" href="css/empaque.css">
     <link rel="stylesheet" href="css/ficha-modal.css">
+    <link rel="stylesheet" href="css/faq.css">
+    <link rel="stylesheet" href="css/interactions.css">
+    <link rel="stylesheet" href="css/distribuidores-cards.css">
+    <link rel="stylesheet" href="css/scale.css">
     <meta property="og:image" content="assets/products/yoguraso-fresa-500ml.png">
 </head>
 <body data-flavor="fresa" data-hero-fg="light">
@@ -226,10 +230,10 @@
                     <!-- Barra de interacciones estilo Instagram -->
                     <div class="insta-engagement-row">
                         <div class="insta-icons-left">
-                            <button type="button" class="insta-btn-icon is-active" aria-label="Me gusta"><i class="fas fa-heart"></i></button>
+                            <button type="button" class="insta-btn-icon" data-ix-like="post" aria-pressed="false" aria-label="Me gusta"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 20.3s-7.3-4.4-9.2-9A5.2 5.2 0 0 1 12 6.1a5.2 5.2 0 0 1 9.2 5.2c-1.9 4.6-9.2 9-9.2 9Z"/></svg></button>
                             <button type="button" class="insta-btn-icon" aria-label="Compartir"><i class="far fa-paper-plane"></i></button>
                         </div>
-                        <span class="insta-likes-txt">Les gusta a <strong>2,480 personas</strong></span>
+                        <span class="insta-likes-txt"><strong data-ix-post-count>0</strong> me gusta</span>
                     </div>
 
                     <!-- Botones de Acción: Rojo a la IZQUIERDA, Mayoristas a la DERECHA -->
@@ -443,11 +447,193 @@
             </div>
             <a class="ys-pill ys-pill--light" href="#" data-config="whatsapp" data-wa-text="Hola YogurASO, quiero distribuir sus yogures en mi zona. ¿Me cuentan condiciones, pedido mínimo y precios para distribuidores?" target="_blank" rel="noopener">Contáctanos<span class="ys-pill__arrow" aria-hidden="true">→</span></a>
         </div>
+        <div class="distc">
+            <ul class="distc__row">
+                <li class="distc__card" style="--i:0">
+                    <span class="distc__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 10.2V20h12v-9.8"/><path d="M10 20v-5h4v5"/></svg></span>
+                    <span class="distc__txt"><strong>Minoristas</strong><span>Venta al detal.</span></span>
+                </li>
+                <li class="distc__card" style="--i:1">
+                    <span class="distc__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2 12 4l8.5 4.2L12 12.4 3.5 8.2Z"/><path d="M3.5 8.2V16L12 20.2 20.5 16V8.2"/><path d="M12 12.4V20.2"/></svg></span>
+                    <span class="distc__txt"><strong>Mayoristas</strong><span>Venta al por mayor.</span></span>
+                </li>
+                <li class="distc__card" style="--i:2">
+                    <span class="distc__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 13.2 5.4 11a1.5 1.5 0 0 1 .2-2.4L8 7.2"/><path d="m8.2 13.2 2.4 2.2a2 2 0 0 0 2.8-.1l2.2-2.1"/><path d="M15.6 13.2 18.2 11a1.5 1.5 0 0 0-.1-2.4L16 7.4"/><path d="m10.2 11.2 1.8 1.6 1.8-1.6"/></svg></span>
+                    <span class="distc__txt"><strong>Contratos</strong><span>Para surtir supermercados y empresas.</span></span>
+                </li>
+                <li class="distc__card" style="--i:3">
+                    <span class="distc__ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/><path d="m8.6 14.6 2.2 2.2 4.4-4.5"/></svg></span>
+                    <span class="distc__txt"><strong>Disponibilidad</strong><span>Para nuevos puntos y pedidos.</span></span>
+                </li>
+            </ul>
             <div class="dist-nota showcase-gray-box">
                 <p class="dist-nota__eyebrow">Para negocios y para la casa</p>
                 <p class="showcase-sublead">Trabajamos con supermercados, tiendas y negocios de barrio. Podemos hacer un contrato de suministro para que no te falte YogurASO en la nevera, o venderte el producto para que lo revendas en tu local. Las condiciones las cuadramos contigo, según lo que necesite tu negocio.</p>
                 <p class="showcase-sublead">Y si lo quieres para la casa, también te vendemos como siempre: pides por la página o nos escribes por WhatsApp.</p>
             </div>
+        </div>
+    </section>
+
+    <section class="emp" id="preguntas" aria-labelledby="faq-title">
+        <div class="emp__wrap">
+            <div class="emp__head">
+                <span class="emp__eyebrow">Preguntas frecuentes</span>
+                <h2 class="emp__title" id="faq-title">Lo que más preguntan</h2>
+                <p class="emp__lead">Yogurt artesanal del Huila, en botella de 500 ml. Lo básico para pedir en Neiva y Tello.</p>
+            </div>
+            <div class="faq-list" data-faq>
+                <div class="faq-item" style="--faq-i:0">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q1" aria-expanded="false" aria-controls="faq-a1">
+                            <span class="faq-q-text">¿Qué es YogurASO y dónde lo elaboran?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a1" role="region" aria-labelledby="faq-q1">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">Somos yogurt artesanal del Huila. Lo elaboramos a diario en Tello y Neiva con leche fresca y cultivos vivos. Nos gusta un producto limpio: sin aditivos innecesarios, con sabor real y textura cremosa. Trabajamos en tandas pequeñas y revisamos la frescura de cada una antes de que salga.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:1">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">
+                            <span class="faq-q-text">¿De qué tamaño es y qué sabores hay?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a2" role="region" aria-labelledby="faq-q2">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">La presentación de la casa es la botella de 500&nbsp;ml: práctica para llevar, compartir o dejar en la nevera. Es la misma botella para todos los sabores; la etiqueta cambia de color para que encuentres el tuyo de un vistazo. El sitio está armado con fresa, piña, mora, melocotón, frutos rojos, café, guanábana y mango. En pedidos mayoristas los sabores van rotando, así que el del día te lo confirmamos al escribirnos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:2">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">
+                            <span class="faq-q-text">¿Cómo hago un pedido para la casa?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a3" role="region" aria-labelledby="faq-q3">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">Entra a Productos, arma el carrito y cierra con «Comprar por WhatsApp». Si prefieres, escríbenos directo. El número que publica la página es +57&nbsp;300&nbsp;123&nbsp;4567 <span class="faq-confirm">[CONFIRMAR: número de WhatsApp]</span> y el correo es hola@yoguraso.co. El mensaje de pedido ya sale pensado para Neiva y Tello. También puedes crear una cuenta, iniciar sesión y ver tu perfil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:3">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">
+                            <span class="faq-q-text">¿Venden al por mayor o puedo distribuir?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a4" role="region" aria-labelledby="faq-q4">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">Sí, con gusto. Atendemos pedidos mayoristas en Neiva y Tello: envases prácticos, sabores rotativos y acompañamiento para tu negocio. Si quieres llevar YogurASO a más personas y ser parte de esta comunidad en las dos ciudades, escríbenos por WhatsApp. <span class="faq-confirm">[CONFIRMAR: pedido mínimo mayorista]</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:4">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q5" aria-expanded="false" aria-controls="faq-a5">
+                            <span class="faq-q-text">¿Hacen domicilios? ¿Hasta dónde llegan?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a5" role="region" aria-labelledby="faq-q5">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">La distribución es local, en Neiva y Tello, Huila. En la página está el mapa de Tello para ubicarnos. <span class="faq-confirm">[CONFIRMAR: domicilio, zonas, costo de envío y punto de recogida]</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:5">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q6" aria-expanded="false" aria-controls="faq-a6">
+                            <span class="faq-q-text">¿Cómo es la botella y cómo la guardo?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a6" role="region" aria-labelledby="faq-q6">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">Una botella con asa lateral —agarre cómodo al servir— y tapa de rosca: ciérrala bien y devuélvela a la nevera. El envase es reciclable, resistente para el uso diario y está pensado para conservar la frescura. <span class="faq-confirm">[CONFIRMAR: vida útil]</span> <span class="faq-confirm">[CONFIRMAR: temperatura de conservación]</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:6">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q7" aria-expanded="false" aria-controls="faq-a7">
+                            <span class="faq-q-text">¿Con qué está hecho?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a7" role="region" aria-labelledby="faq-q7">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">Fruta real, seleccionada del campo del Huila, y leche fresca. Sumamos cultivos vivos y lo dejamos fermentar con el tiempo justo para el sabor. Queda cremoso para tomarlo solo, con fruta o con granola: en la mañana, después de entrenar o en la tarde. <span class="faq-confirm">[CONFIRMAR: ingredientes y sellos (proteína, azúcar, lactosa)]</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item" style="--faq-i:7">
+                    <h3 class="faq-q">
+                        <button type="button" class="faq-trigger" id="faq-q8" aria-expanded="false" aria-controls="faq-a8">
+                            <span class="faq-q-text">¿En qué horario atienden y cómo se paga?</span>
+                            <span class="faq-icon" aria-hidden="true"></span>
+                        </button>
+                    </h3>
+                    <div class="faq-answer" id="faq-a8" role="region" aria-labelledby="faq-q8">
+                        <div class="faq-answer-inner">
+                            <div class="showcase-gray-box faq-answer-box">
+                                <p class="showcase-sublead">Puedes escribir por WhatsApp, al correo hola@yoguraso.co o por Instagram y Facebook del pie de página. El carrito se cierra por WhatsApp; el horario de respuesta y los medios de pago todavía no están publicados. <span class="faq-confirm">[CONFIRMAR: horario de atención]</span> <span class="faq-confirm">[CONFIRMAR: medios de pago]</span> <span class="faq-confirm">[CONFIRMAR: precios]</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="faq-ask" data-ix-ask>
+                <button type="button" class="faq-ask-toggle" id="faq-ask-toggle" aria-expanded="false" aria-controls="faq-ask-form">Hacer una pregunta</button>
+                <form id="faq-ask-form" class="showcase-gray-box faq-ask-form" hidden>
+                    <label class="visually-hidden" for="faq-ask-name">Nombre</label>
+                    <input id="faq-ask-name" name="name" type="text" maxlength="40" autocomplete="name" placeholder="Nombre (opcional)">
+                    <label class="visually-hidden" for="faq-ask-body">Pregunta</label>
+                    <textarea id="faq-ask-body" name="body" required minlength="8" maxlength="500" placeholder="Escribe tu pregunta"></textarea>
+                    <button type="submit"><span class="ix-spin" aria-hidden="true"></span><span class="ix-btn-label">Enviar</span></button>
+                    <p class="ix-status" data-ix-status hidden></p>
+                    <p class="ix-note" data-ix-offline hidden>Pendiente de conectar. Tu mensaje queda en este navegador hasta que Supabase esté listo.</p>
+                </form>
+                <div class="faq-ask-thread" id="faq-ask-thread" aria-live="polite"></div>
+            </div>
+            <p class="faq-foot">¿No está tu pregunta? Escríbenos por WhatsApp y te contestamos con gusto.</p>
+        </div>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type":"Question","name":"¿Qué es YogurASO y dónde lo elaboran?","acceptedAnswer":{"@type":"Answer","text":"Somos yogurt artesanal del Huila. Lo elaboramos a diario en Tello y Neiva con leche fresca y cultivos vivos. Nos gusta un producto limpio: sin aditivos innecesarios, con sabor real y textura cremosa. Trabajamos en tandas pequeñas y revisamos la frescura de cada una antes de que salga."}},
+                {"@type":"Question","name":"¿De qué tamaño es y qué sabores hay?","acceptedAnswer":{"@type":"Answer","text":"La presentación de la casa es la botella de 500 ml: práctica para llevar, compartir o dejar en la nevera. Es la misma botella para todos los sabores; la etiqueta cambia de color para que encuentres el tuyo de un vistazo. El sitio está armado con fresa, piña, mora, melocotón, frutos rojos, café, guanábana y mango. En pedidos mayoristas los sabores van rotando, así que el del día te lo confirmamos al escribirnos."}},
+                {"@type":"Question","name":"¿Cómo hago un pedido para la casa?","acceptedAnswer":{"@type":"Answer","text":"Entra a Productos, arma el carrito y cierra con «Comprar por WhatsApp». Si prefieres, escríbenos directo. El número que publica la página es +57 300 123 4567 [CONFIRMAR: número de WhatsApp] y el correo es hola@yoguraso.co. El mensaje de pedido ya sale pensado para Neiva y Tello. También puedes crear una cuenta, iniciar sesión y ver tu perfil."}},
+                {"@type":"Question","name":"¿Venden al por mayor o puedo distribuir?","acceptedAnswer":{"@type":"Answer","text":"Sí, con gusto. Atendemos pedidos mayoristas en Neiva y Tello: envases prácticos, sabores rotativos y acompañamiento para tu negocio. Si quieres llevar YogurASO a más personas y ser parte de esta comunidad en las dos ciudades, escríbenos por WhatsApp. [CONFIRMAR: pedido mínimo mayorista]"}},
+                {"@type":"Question","name":"¿Hacen domicilios? ¿Hasta dónde llegan?","acceptedAnswer":{"@type":"Answer","text":"La distribución es local, en Neiva y Tello, Huila. En la página está el mapa de Tello para ubicarnos. [CONFIRMAR: domicilio, zonas, costo de envío y punto de recogida]"}},
+                {"@type":"Question","name":"¿Cómo es la botella y cómo la guardo?","acceptedAnswer":{"@type":"Answer","text":"Una botella con asa lateral —agarre cómodo al servir— y tapa de rosca: ciérrala bien y devuélvela a la nevera. El envase es reciclable, resistente para el uso diario y está pensado para conservar la frescura. [CONFIRMAR: vida útil] [CONFIRMAR: temperatura de conservación]"}},
+                {"@type":"Question","name":"¿Con qué está hecho?","acceptedAnswer":{"@type":"Answer","text":"Fruta real, seleccionada del campo del Huila, y leche fresca. Sumamos cultivos vivos y lo dejamos fermentar con el tiempo justo para el sabor. Queda cremoso para tomarlo solo, con fruta o con granola: en la mañana, después de entrenar o en la tarde. [CONFIRMAR: ingredientes y sellos (proteína, azúcar, lactosa)]"}},
+                {"@type":"Question","name":"¿En qué horario atienden y cómo se paga?","acceptedAnswer":{"@type":"Answer","text":"Puedes escribir por WhatsApp, al correo hola@yoguraso.co o por Instagram y Facebook del pie de página. El carrito se cierra por WhatsApp; el horario de respuesta y los medios de pago todavía no están publicados. [CONFIRMAR: horario de atención] [CONFIRMAR: medios de pago] [CONFIRMAR: precios]"}}
+            ]
+        }
+        </script>
     </section>
 
 
@@ -615,6 +801,8 @@
     <script src="js/proceso-3d.js" defer></script>
     <script src="js/collage-fruta.js" defer></script>
     <script src="js/empaque.js" defer></script>
+    <script src="js/faq.js" defer></script>
+    <script type="module" src="js/interactions.js"></script>
     <script src="js/ysf-footer.js" defer></script>
     <script src="js/ysf-contacto.js" defer></script>
     <script type="module" src="js/post-comments.js"></script>

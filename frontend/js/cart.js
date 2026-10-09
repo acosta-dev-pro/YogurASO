@@ -72,7 +72,7 @@
             nombre: String(item.nombre || 'Producto'),
             precio,
             cantidad,
-            imagen: item.imagen || item.imagen_url || '',
+            imagen: stripAssetPrefix(item.imagen || item.imagen_url || ''),
             stock: Number.isFinite(Number(item.stock)) ? Number(item.stock) : null,
             tamano: item.tamano || item.presentacion || ''
         };
@@ -321,11 +321,87 @@
         label.textContent = code;
     }
 
-    function smallBottle(item) {
-        const src = String(item.imagen || "");
-        if (!src) return "";
+    function assetPrefix() {
+        return window.location.pathname.includes("/pages/") ? "../" : "";
+    }
+
+    function stripAssetPrefix(src) {
+        return String(src || "").trim().replace(/^\.\.\//, "").replace(/^\.\//, "");
+    }
+
+    function flavorSlugFromText(text) {
+        const flavors = window.YOGUR_FLAVORS || [];
+        const name = String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        for (let i = 0; i < flavors.length; i++) {
+            const f = flavors[i];
+            const label = String(f.nombre || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            const slug = String(f.slug || "");
+            if (!slug) continue;
+            if (name.includes(label) || name.includes(slug) || name.includes(slug.replace(/-/g, " "))) return slug;
+        }
+        return "";
+    }
+
+    function imageFromCatalog(item) {
+        const cat = window.YogCatalog;
+        if (!cat || !cat.bySlug) return "";
+        const id = String(item.id || "").split("::")[0];
+        const name = String(item.nombre || "");
+        const slugs = Object.keys(cat.bySlug);
+        for (let i = 0; i < slugs.length; i++) {
+            const prod = cat.bySlug[slugs[i]];
+            if (!prod) continue;
+            if (String(prod.id) === id || String(prod.nombre || "") === name) {
+                return prod.imagen_url || prod.imagen || "";
+            }
+        }
+        return "";
+    }
+
+    function imageFromCard(item) {
+        const id = String(item.id || "").split("::")[0];
+        if (!id || !/^[A-Za-z0-9_-]+$/.test(id)) return "";
+        const card = document.querySelector('[data-id="' + id + '"] img');
+        return card ? (card.getAttribute("src") || "") : "";
+    }
+
+    function fallbackImageRel() {
+        return "assets/products/yoguraso-fresa-500ml-sm.webp";
+    }
+
+    function resolveImageRel(item) {
+        let src = stripAssetPrefix(item.imagen || item.imagen_url || "");
+        if (!src) src = stripAssetPrefix(imageFromCatalog(item));
+        if (!src) src = stripAssetPrefix(imageFromCard(item));
+        if (!src) {
+            const slug = flavorSlugFromText(item.nombre);
+            if (slug) src = "assets/products/yoguraso-" + slug + "-500ml-sm.webp";
+        }
+        if (!src) src = fallbackImageRel();
         if (/-sm\.webp($|\?)/i.test(src)) return src;
         return src.replace(/-500ml\.webp/i, "-500ml-sm.webp");
+    }
+
+    function renderImageSrc(item) {
+        const rel = resolveImageRel(item);
+        if (/^https?:\/\//i.test(rel) || rel.startsWith("data:")) return rel;
+        return assetPrefix() + rel;
+    }
+
+    function rememberImages(items) {
+        let dirty = false;
+        items.forEach((item) => {
+            const rel = resolveImageRel(item);
+            if (item.imagen !== rel) {
+                item.imagen = rel;
+                dirty = true;
+            }
+        });
+        if (dirty) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function smallBottle(item) {
+        return renderImageSrc(item);
     }
 
     function syncFlavorShots(root) {
@@ -343,6 +419,7 @@
         if (!container) return;
 
         const items = syncFromStorage();
+        rememberImages(items);
         container._checkedIds = new Set(
             [...container.querySelectorAll(".cart-item-check:checked")].map((box) => String(box.dataset.id))
         );
@@ -370,14 +447,11 @@
             const meta = productMeta(item);
             const line = Number(item.precio) * Number(item.cantidad);
             const detail = [meta.size, formatCOP(item.precio) + " c/u"].filter(Boolean).join(" · ");
-            const shot = smallBottle(item);
-            if (shot) {
-                const pre = new Image();
-                pre.src = shot;
-            }
-            const shotHtml = shot
-                ? `<span class="cart-flavor-shot" aria-hidden="true"><img src="${escapeHtml(shot)}" alt="" decoding="sync"></span>`
-                : "";
+            const shot = renderImageSrc(item);
+            const fallback = assetPrefix() + fallbackImageRel();
+            const pre = new Image();
+            pre.src = shot;
+            const shotHtml = `<span class="cart-flavor-shot" aria-hidden="true"><img src="${escapeHtml(shot)}" alt="" decoding="async" onerror="this.onerror=null;this.src='${escapeHtml(fallback)}'"></span>`;
             return `
             <article class="cart-chip" data-id="${escapeHtml(item.id)}" style="--chip-line:${tone.line};--chip-wash:${tone.wash};--chip-ink:${tone.ink}">
                 <label class="cart-pick">
@@ -525,6 +599,7 @@
             }
             existe.cantidad = next;
             existe.precio = Number(producto.precio) || existe.precio;
+            if (!existe.imagen) existe.imagen = stripAssetPrefix(producto.imagen_url || producto.imagen || '');
             if (Number.isFinite(stock)) existe.stock = stock;
         } else {
             if (Number.isFinite(stock) && stock <= 0) {
@@ -535,7 +610,7 @@
                 id: lineId,
                 nombre: label,
                 precio: Number(producto.precio),
-                imagen: producto.imagen_url || producto.imagen || '',
+                imagen: stripAssetPrefix(producto.imagen_url || producto.imagen || ''),
                 stock: Number.isFinite(stock) ? stock : null,
                 cantidad: qtyAdd,
                 tamano: producto.tamano || ''

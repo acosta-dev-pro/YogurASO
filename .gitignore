@@ -41,3 +41,12 @@ docs/taller-pruebas/inspect-*.txt
 /playwright/.cache/
 /playwright/.auth/
 docs/taller-pruebas/_tmp_*.zip
+
+# Local tools, scratch and test snapshots
+_local-backups/
+_handoff-faq/
+_handoff-faq.tar
+_patch-cart.js
+_shots/
+~$*.docx
+
