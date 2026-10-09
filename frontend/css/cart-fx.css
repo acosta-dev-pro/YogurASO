@@ -153,3 +153,7 @@
     .cfx-confirm-wrap, .cfx-confirm { transition: none !important; }
     .cart-sidebar.cart-ticket .cart-chip::before { transition: none; }
 }
+
+/* La vista previa del pedido (carrito.html) quedaba debajo de #cartOverlay (z 1500)
+   y el botón "Enviar pedido" no recibía el clic. */
+.order-preview-overlay { z-index: 2300 !important; }

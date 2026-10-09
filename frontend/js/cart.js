@@ -609,53 +609,40 @@
         return { name, size };
     }
 
-    function productLines(item) {
+    function productLines(item, n) {
         const { name, size } = productMeta(item);
         const unit = Number(item.precio);
         const qty = Number(item.cantidad);
         return [
-            `- ${name}`,
-            size ? `- Presentación: ${size}` : null,
-            `- Cantidad: ${qty} ${qty === 1 ? 'unidad' : 'unidades'}`,
-            `- Precio unitario: ${formatCOP(unit)}`,
-            `- Subtotal: ${formatCOP(unit * qty)}`
-        ].filter(Boolean);
+            `${n}. ${name}${size ? ' · ' + size : ''}`,
+            `   ${qty} × ${formatCOP(unit)} = ${formatCOP(unit * qty)}`
+        ];
     }
 
-    function buildWhatsAppMessage(items) {
+    function buildWhatsAppMessage(items, code) {
         const company = getConfig().COMPANY_NAME || 'YogurASO';
         const location = getConfig().COMPANY_LOCATION || 'Neiva y Tello, Huila';
         const total = getCartTotal(items);
         const units = items.reduce((n, i) => n + Number(i.cantidad || 0), 0);
         const nombre = customerName();
-        const blocks = [];
-
-        items.forEach((item, i) => {
-            if (i > 0) blocks.push('');
-            blocks.push(...productLines(item));
-        });
+        const lines = [];
+        items.forEach((item, i) => lines.push(...productLines(item, i + 1)));
 
         return [
-            `${greeting()}.`,
+            `Hola ${company}, ${greeting().toLowerCase()}.`,
+            nombre ? `Soy ${nombre}.` : null,
             '',
-            'Cordial saludo.',
+            'Quiero hacer este pedido:',
             '',
-            `Solicito el siguiente pedido de yogurt artesanal ${company}, según lo seleccionado en la tienda:`,
+            ...lines,
             '',
-            'Especificación de productos:',
-            ...blocks,
+            `Total: ${formatCOP(total)} (${units} ${units === 1 ? 'unidad' : 'unidades'})`,
+            code ? `Código de pedido: ${code}` : null,
             '',
-            'Resumen:',
-            `- Referencias: ${items.length}`,
-            `- Unidades: ${units}`,
-            `- Total del pedido: ${formatCOP(total)}`,
+            `Entrega en ${location}. Quedo atento a la confirmación, la disponibilidad y los datos de entrega.`,
             '',
-            `Cobertura: ${location}.`,
-            'Quedo atento a confirmación, disponibilidad y datos de entrega.',
-            '',
-            'Gracias.',
-            nombre || ''
-        ].filter((line, idx, arr) => line !== '' || arr[idx - 1] !== '').join('\n').trim();
+            'Gracias.'
+        ].filter((line) => line !== null).join('\n').trim();
     }
 
     function previewCheckout(items) {
@@ -742,15 +729,15 @@
 
         saveOrderHistory(items);
 
-        openWhatsApp(items, buildWhatsAppMessage(items));
+        openWhatsApp(items, ticketWhatsAppText(items));
     }
 
     function ticketWhatsAppText(items) {
-        return buildWhatsAppMessage(items) + "\n\nCódigo de pedido: " + orderCode(items);
+        return buildWhatsAppMessage(items, orderCode(items));
     }
 
     function openWhatsApp(items, text) {
-        const wa = getConfig().WHATSAPP_NUMBER || '573001234567';
+        const wa = String(getConfig().WHATSAPP_NUMBER || '573001234567').replace(/\D/g, '');
         const url = "https://wa.me/" + wa + "?text=" + encodeURIComponent(text);
         window.open(url, "_blank", "noopener,noreferrer");
     }
