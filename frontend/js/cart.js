@@ -619,14 +619,31 @@
         ];
     }
 
-    function buildWhatsAppMessage(items, code) {
+    /** Líneas con los precios que calculó Supabase (create_order), si los hay. */
+    function serverLines(order) {
+        const rows = Array.isArray(order?.items) ? order.items : [];
+        const lines = [];
+        rows.forEach((row, i) => {
+            const qty = Number(row.quantity || 0);
+            const unit = Number(row.unit_price || 0);
+            lines.push(`${i + 1}. ${row.product_name || 'Producto'}`);
+            lines.push(`   ${qty} × ${formatCOP(unit)} = ${formatCOP(Number(row.subtotal ?? unit * qty))}`);
+        });
+        return lines;
+    }
+
+    function buildWhatsAppMessage(items, code, order) {
         const company = getConfig().COMPANY_NAME || 'YogurASO';
         const location = getConfig().COMPANY_LOCATION || 'Neiva y Tello, Huila';
-        const total = getCartTotal(items);
+        const fromServer = Boolean(order && order.success && Number.isFinite(Number(order.total)));
+        const total = fromServer ? Number(order.total) : getCartTotal(items);
         const units = items.reduce((n, i) => n + Number(i.cantidad || 0), 0);
         const nombre = customerName();
-        const lines = [];
-        items.forEach((item, i) => lines.push(...productLines(item, i + 1)));
+        let lines = fromServer ? serverLines(order) : [];
+        if (!lines.length) {
+            lines = [];
+            items.forEach((item, i) => lines.push(...productLines(item, i + 1)));
+        }
 
         return [
             `Hola ${company}, ${greeting().toLowerCase()}.`,
@@ -694,7 +711,7 @@
 
     const ORDERS_KEY = 'yogur_order_history';
 
-    function saveOrderHistory(items) {
+    function saveOrderHistory(items, orderNumber) {
         let usuario = null;
         try { usuario = JSON.parse(localStorage.getItem('usuario') || 'null'); } catch { usuario = null; }
         let orders = [];
@@ -702,6 +719,7 @@
         if (!Array.isArray(orders)) orders = [];
         orders.unshift({
             id: `WA-${Date.now()}`,
+            orderNumber: orderNumber || null,
             userId: usuario?.id || null,
             email: usuario?.email || null,
             createdAt: new Date().toISOString(),
@@ -724,22 +742,115 @@
             return;
         }
 
+        if (sending) return;
         const ok = await previewCheckout(items);
-        if (!ok) return;
+        if (!ok || sending) return;
 
-        saveOrderHistory(items);
-
-        openWhatsApp(items, ticketWhatsAppText(items));
+        // Seguimos dentro del clic de «Enviar pedido»: la pestaña se abre ya.
+        await sendOrder(items, prepareWhatsAppWindow());
     }
 
-    function ticketWhatsAppText(items) {
-        return buildWhatsAppMessage(items, orderCode(items));
+    function ticketWhatsAppText(items, order) {
+        const code = order && order.success && order.order_number ? order.order_number : orderCode(items);
+        return buildWhatsAppMessage(items, code, order);
     }
 
-    function openWhatsApp(items, text) {
+    function whatsAppUrl(text) {
         const wa = String(getConfig().WHATSAPP_NUMBER || '573001234567').replace(/\D/g, '');
-        const url = "https://wa.me/" + wa + "?text=" + encodeURIComponent(text);
-        window.open(url, "_blank", "noopener,noreferrer");
+        return "https://wa.me/" + wa + "?text=" + encodeURIComponent(text);
+    }
+
+    /**
+     * Abre la pestaña de WhatsApp en el mismo clic (antes de esperar a Supabase),
+     * para que el bloqueador de ventanas no la frene. Luego se le pone la URL.
+     */
+    function prepareWhatsAppWindow() {
+        let win = null;
+        try { win = window.open("", "_blank"); } catch (e) { win = null; }
+        if (!win) return null;
+        try {
+            win.opener = null;
+            win.document.title = "Abriendo WhatsApp…";
+            win.document.body.style.cssText = "margin:0;display:grid;place-items:center;min-height:100vh;font:600 15px system-ui,sans-serif;color:#444";
+            win.document.body.textContent = "Preparando tu pedido…";
+        } catch (e) { /* la pestaña sigue sirviendo */ }
+        return win;
+    }
+
+    function openWhatsApp(items, text, win) {
+        const url = whatsAppUrl(text);
+        if (win && !win.closed) {
+            try {
+                win.location.replace(url);
+                return;
+            } catch (e) { /* se intenta abajo */ }
+        }
+        // Sin 'noopener' en features: con él window.open devuelve null y no se sabría si se bloqueó.
+        const w = window.open(url, "_blank");
+        if (w) {
+            try { w.opener = null; } catch (e) { /* nada */ }
+        } else {
+            window.location.href = url;
+        }
+    }
+
+    function customerData() {
+        let usuario = null;
+        try { usuario = JSON.parse(localStorage.getItem('usuario') || 'null'); } catch { usuario = null; }
+        const out = {};
+        const name = customerName();
+        if (name) out.name = name;
+        if (usuario?.telefono) out.phone = String(usuario.telefono);
+        if (usuario?.email) out.email = String(usuario.email);
+        return out;
+    }
+
+    /** Guarda el pedido en Supabase (create_order). Nunca lanza: si falla, el pedido sigue por WhatsApp. */
+    async function registerOrder(items) {
+        try {
+            const api = await import('./api.js');
+            const timeout = new Promise((resolve) => setTimeout(() => resolve({
+                success: false,
+                timeout: true,
+                message: 'El registro del pedido tardó demasiado'
+            }), 8000));
+            const res = await Promise.race([api.createOrder(items, customerData()), timeout]);
+            return res || { success: false, message: 'No se pudo registrar el pedido' };
+        } catch (e) {
+            console.error('[pedido]', e);
+            return { success: false, message: 'No se pudo registrar el pedido' };
+        }
+    }
+
+    let sending = false;
+
+    async function sendOrder(items, win) {
+        if (sending) return;
+        sending = true;
+        const btn = document.getElementById('checkoutBtn');
+        const idle = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Registrando pedido…';
+        }
+        try {
+            const order = await registerOrder(items);
+            if (!order.success && !order.offline) {
+                // Mensajes técnicos de PostgREST (p. ej. falta create_order en la base) no se le muestran tal cual al cliente.
+                const raw = String(order.message || '');
+                const technical = !raw || /^PGRST/i.test(String(order.code || '')) || /schema cache|could not find|function/i.test(raw);
+                const msg = technical ? 'No pudimos registrar el pedido en la tienda' : raw.replace(/[.\s]+$/, '');
+                showToast(msg + '. Igual te abrimos WhatsApp con el pedido.', 'warning');
+            }
+            saveOrderHistory(items, order.success ? order.order_number : null);
+            openWhatsApp(items, ticketWhatsAppText(items, order), win);
+        } finally {
+            sending = false;
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = idle;
+            }
+        }
     }
 
     function checkoutDirect() {
@@ -748,8 +859,8 @@
             showToast("Tu carrito está vacío", "warning");
             return;
         }
-        saveOrderHistory(items);
-        openWhatsApp(items, ticketWhatsAppText(items));
+        if (sending) return;
+        sendOrder(items, prepareWhatsAppWindow());
     }
 
     function openSidebar() {
