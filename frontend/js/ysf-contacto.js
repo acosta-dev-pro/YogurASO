@@ -1,8 +1,5 @@
-/* ysf-contacto.js: sección Contacto del home. Sin dependencias y seguro con defer.
-   1) Entrada con IntersectionObserver (solo transform/opacity; nada si hay reduced-motion).
-   2) Formulario: valida Nombre y Mensaje (Teléfono opcional) y abre wa.me/<WHATSAPP_NUMBER de js/config.js>
-      con el texto ya escrito. No hay envíos simulados: además guarda una copia en Supabase
-      (contact_messages) si la tabla existe; si no, solo WhatsApp. */
+/* ysf-contacto.js — Aquí queda el formulario de contacto.
+   Valida nombre y mensaje, guarda una copia si la base lo permite y abre WhatsApp. */
 (function () {
   'use strict';
 

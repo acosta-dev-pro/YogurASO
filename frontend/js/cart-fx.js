@@ -1,8 +1,5 @@
-﻿/* cart-fx.js: efectos del carrito sin tocar la lógica de cart.js.
-   1) pulse(): el contador del header late en --rojo-marca (transform/opacity).
-   2) fly(producto): la botella del producto viaja en curva hasta el ícono del carrito.
-   3) confirm(opts): diálogo pequeño para quitar productos (foco atrapado, Escape cierra).
-   Respeta prefers-reduced-motion. Lo carga cart.js. */
+﻿/* cart-fx.js — Aquí quedan los efectos del carrito: el número que late, la botella que vuela al ícono y el aviso de quitar.
+   No guarda productos. Lo carga cart.js. Si la persona pidió menos movimiento, no anima. */
 (function () {
     'use strict';
     if (window.CartFx) return;

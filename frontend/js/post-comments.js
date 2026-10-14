@@ -1,11 +1,6 @@
 /**
- * post-comments.js — Comentarios del post «Sobre nosotros» (#nosotros).
- * Tabla content_comments (target_type 'post', target_id 'nosotros') y la
- * función list_post_comments, que devuelve lo aprobado + lo propio del
- * visitante y la respuesta del admin (reply). Ver supabase/PEGAR-0002-y-0003.sql.
- *
- * Si la base aún no tiene esas tablas, la caja lo dice y no inventa nada.
- * El visitante es el mismo uuid de localStorage que usan los me gusta.
+ * post-comments.js — Aquí quedan los comentarios del post Nosotros.
+ * Si la base todavía no tiene la tabla, la caja lo dice y no inventa mensajes.
  */
 const POST_ID = 'nosotros';
 const VISITOR_KEY = 'yog_visitor_id';

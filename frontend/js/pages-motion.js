@@ -1,17 +1,6 @@
 /**
- * pages-motion.js — entradas escalonadas (fade-in + slide-up) del contenido de las páginas internas.
- * Va en el <head> de cada página (sin defer) y trabaja junto a css/brand-pages.css.
- * Complementa a js/ui-motion.js y css/motion.css (contador del carrito y entrada de
- * las cards del catálogo): aquí solo se animan bloques de contenido, nunca las cards.
- *
- * Qué hace:
- *  · Marca <html class="bp-pages"> al instante (sin JS, todo se ve normal).
- *  · Cada elemento de los grupos de abajo entra con opacidad + subida de 14 px,
- *    90 ms de retardo entre hermanos (tope de 8 pasos), 0.4 s, easing suave.
- *  · Las filas del carrito se animan solo la primera vez que aparecen, para
- *    que sumar o restar cantidades no parpadee.
- *  · Si el usuario pidió menos movimiento, no se activa nada.
- * No toca ninguna otra lógica (carrito, login, admin, WhatsApp).
+ * pages-motion.js — Aquí queda la entrada de las páginas internas (catálogo, cuentas, perfil, panel).
+ * Va en el encabezado de esas páginas. En el inicio no se usa.
  */
 (function () {
     'use strict';

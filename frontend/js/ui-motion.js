@@ -1,6 +1,4 @@
-/* ui-motion.js — pequeños detalles de movimiento compartidos por todas las páginas.
-   1) Contador del carrito: cuenta de un número a otro en vez de saltar.
-   2) Revelado escalonado: reparte --i entre las tarjetas hermanas (main.js solo marca las que entran). */
+/* ui-motion.js — Aquí queda el número del carrito contando de uno en uno, y el retardo entre tarjetas hermanas. */
 (function () {
     'use strict';
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');

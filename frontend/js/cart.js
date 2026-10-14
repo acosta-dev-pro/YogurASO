@@ -1,7 +1,6 @@
 /**
- * cart.js — Carrito
- * Los items se guardan en localStorage (clave yogur_cart).
- * El botón de compra arma un texto y abre WhatsApp; el servidor no guarda el pedido.
+ * cart.js — Aquí queda la bolsa.
+ * Se guarda en este navegador. Comprar abre WhatsApp y, si se puede, deja el pedido en Supabase.
  */
 (function () {
     const STORAGE_KEY = 'yogur_cart';

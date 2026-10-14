@@ -1,6 +1,4 @@
-/* YogurASO footer (ysf) — staggered reveal on enter + current year.
-   No dependencies. Safe with defer/async or at end of <body>.
-   Without this file (or with reduced motion) the footer is simply fully visible. */
+/* ysf-footer.js — Aquí queda el pie: el año y la entrada al bajar. */
 (function () {
   'use strict';
 

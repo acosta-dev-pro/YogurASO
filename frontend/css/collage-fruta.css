@@ -108,36 +108,54 @@
     .fcol__tazon { grid-column: 2 / span 2; grid-row: 3; }
     .fcol__ruta { grid-column: 4; grid-row: 3; }
 }
+/* Teléfono: mosaico de a dos. Solo el paisaje ocupa el ancho, y es bajo. */
 @media (max-width: 860px) {
-    .fcol__head { grid-template-columns: 1fr; }
-    .fcol__lead { margin-top: 8px; max-width: 520px; }
-    .fcol__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; grid-auto-flow: row dense; }
-    .fcol__tile, .fcol__campo, .fcol__ml, .fcol__check, .fcol__fruta, .fcol__leche, .fcol__tazon, .fcol__ruta { grid-column: auto; grid-row: auto; min-height: 184px; }
-    .fcol__campo, .fcol__ml, .fcol__tazon { grid-column: 1 / -1; }
-    .fcol__campo { min-height: 300px; }
-    .fcol__tazon .fcol__media, .fcol__tazwrap { min-height: 164px; }
-    .fcol__art { min-height: 110px; }
-}
-/* Móvil: 1 columna */
-@media (max-width: 640px) {
-    .fcol__grid { grid-template-columns: 1fr; gap: 14px; }
-    .fcol__campo { min-height: 280px; }
-    .fcol__campo h3 { font-size: 24px; }
-    .fcol__ml { min-height: 210px; margin-top: 8px; }
-    .fcol__bottle { height: 200px; right: -2%; bottom: -12px; }
-    .fcol__ml .fcol__c { width: 52%; z-index: 4; }
-    .fcol__check { min-height: 150px; }
-    .fcol__fruta { min-height: 150px; margin-right: 20px; }
-    .fcol__fruta img { right: -20px; width: 130px; }
-    .fcol__art { min-height: 150px; }
-    .fcol__art-bottle { height: 140px; }
-    .fcol__tazon { grid-template-columns: 1fr; padding: 14px; }
-    .fcol__tazon .fcol__c { padding: 6px 6px 0; }
-    .fcol__tazwrap { min-height: 180px; padding-left: 34px; }
-    .fcol__tazon .fcol__media { min-height: 180px; }
-    .fcol__ruta { min-height: 170px; }
-    .fcol__ruta .fcol__c { max-width: 55%; }
-    .fcol__map { width: 120px; }
+    .fcol { padding: 28px 0 10px; }
+    .fcol__wrap { width: min(1240px, 100% - 24px); }
+    .fcol__head { grid-template-columns: 1fr; margin-bottom: 12px; }
+    .fcol__title { font-size: 26px; line-height: 1.15; letter-spacing: 0; }
+    .fcol__lead { margin-top: 6px; font-size: 14px; line-height: 1.45; }
+    .fcol__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: auto; gap: 8px; }
+    .fcol__tile,
+    .fcol__campo, .fcol__ml, .fcol__check, .fcol__fruta, .fcol__leche, .fcol__tazon, .fcol__ruta {
+        grid-column: auto; grid-row: auto; min-height: 0; width: auto;
+    }
+    .fcol__tile h3 { font-size: 13px; }
+    .fcol__tile p { font-size: 11px; }
+    .fcol__campo { grid-column: 1 / -1; height: 136px; }
+    .fcol__ml { grid-column: span 2; }
+    .fcol__tazon { grid-column: span 2; }
+    .fcol__campo h3 { font-size: 18px; }
+    .fcol__badge { width: 44px; height: 44px; top: 8px; right: 8px; }
+    .fcol__ml { height: 124px; overflow: hidden; }
+    .fcol__big { font-size: 30px; top: 8px; left: 10px; }
+    .fcol__ml .fcol__c { left: 10px; right: 6px; bottom: 8px; width: auto; z-index: 4; }
+    .fcol__ml .fcol__k, .fcol__ml p { display: none; }
+    .fcol__bottle { height: 100px; right: -4px; bottom: -6px; }
+    .fcol__check { min-height: 0; padding: 8px; justify-content: flex-end; gap: 6px; }
+    .fcol__check svg { width: 22px; height: 22px; }
+    .fcol__fruta { min-height: 112px; overflow: hidden; }
+    .fcol__fruta .fcol__k { font-size: 8px; left: 8px; top: 8px; letter-spacing: .08em; }
+    .fcol__fruta img { width: 58px; right: -2px; bottom: -4px; }
+    .fcol__leche, .fcol__tazon { grid-column: span 2; margin-top: 26px; }
+    .fcol__leche { margin-right: 4px; padding: 10px; gap: 8px; min-height: 0; }
+    .fcol__art { flex: none; height: 118px; min-height: 0; }
+    .fcol__art-bottle { height: 108px; }
+    .fcol__art-fruit { width: 48px; left: 4px; }
+    .fcol__leche h3 { font-size: 15px; }
+    .fcol__tazon { display: flex; flex-direction: column; grid-template-columns: none; margin-left: 4px; padding: 12px; gap: 8px; min-height: 0; }
+    .fcol__tazon .fcol__c { padding: 0 2px; }
+    .fcol__tazon h3 { font-size: 16px; }
+    .fcol__tazon p { font-size: 12px; line-height: 1.35; }
+    .fcol__tazwrap { display: block; position: relative; width: 100%; min-height: 0; height: 148px; padding-left: 0; flex: none; }
+    .fcol__tazon .fcol__media { flex: none; width: 100%; min-width: 100%; min-height: 0; height: 148px; }
+    .fcol__tazon .fcol__media img { object-fit: cover; object-position: center 46%; }
+    .fcol__tazbot { height: 96px; left: -2px; bottom: -4px; }
+    .fcol__ruta { grid-column: 1 / -1; margin-top: 36px; min-height: 156px; padding: 18px 16px; }
+    .fcol__ruta .fcol__c { max-width: 58%; }
+    .fcol__ruta h3 { font-size: 20px; }
+    .fcol__ruta p { font-size: 13px; line-height: 1.4; }
+    .fcol__map { width: 132px; right: 6px; bottom: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .fcol.is-ready .fcol__tile { opacity: 1; transform: none; transition: none; }

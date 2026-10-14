@@ -1,57 +1,110 @@
-# Módulos del sistema YogurASO
+# Módulos del sistema YoguraSo
 
-## 1. Frontend (HTML, CSS y JavaScript)
+Documento para la exposición. La web es HTML, CSS y JavaScript, y los datos viven en Supabase.
 
-El frontend es la parte visible de la aplicación: lo que el usuario ve e interactúa en el navegador. En YogurASO se implementa con HTML5, CSS3 y JavaScript vanilla (sin React ni frameworks). Todo el código de esta capa se encuentra dentro de la carpeta `frontend/` y se comunica con el backend mediante peticiones HTTP.
+El stack y los temas de programación, listos para copiar, están en `docs/STACK-Y-TEMAS.md`.
 
-### Módulos del frontend:
+Para abrirla en el computador: `npm start` y entrar a `http://127.0.0.1:5500`.
 
-- **Páginas e interfaz**  
-  Son las vistas del sitio: cada archivo HTML corresponde a una pantalla con la que el usuario navega, compra o administra. La navegación entre pantallas se hace con enlaces HTML normales.  
-  La página de inicio está en `frontend/index.html`. El catálogo vive en `frontend/pages/productos.html`, el carrito en `frontend/pages/carrito.html`, el login en `frontend/pages/login.html`, el registro en `frontend/pages/registro.html` y el panel de administración en `frontend/pages/admin.html`. También existe `frontend/404.html` para páginas no encontradas.  
-  Los estilos visuales del sitio están centralizados en `frontend/css/styles.css`, y las imágenes de productos y marca se guardan en `frontend/assets/img/`.
+## Cómo viaja un pedido
 
-- **Gestión de estado**  
-  En YogurASO no se usan librerías como Redux ni Context API. El estado se maneja con JavaScript y el almacenamiento del navegador (`localStorage`), para que la aplicación recuerde al usuario y sus productos aunque recargue la página.  
-  La lógica del carrito (agregar, quitar y calcular totales) está en `frontend/js/cart.js`, y su representación en pantalla se controla desde `frontend/js/cart_view.js`.  
-  La sesión del usuario autenticado, el login, el registro y el guardado del token JWT se gestionan en `frontend/js/auth.js`.  
-  El estado y las acciones del panel administrador están en `frontend/js/admin.js`.  
-  La lógica general de la página de inicio se encuentra en `frontend/js/main.js`, y las funciones auxiliares compartidas entre varios módulos están en `frontend/js/utils.js`.
+1. La persona entra al inicio (`frontend/index.html`). El carrusel de sabores está en `js/home-products-carousel.js`.
+2. Los productos salen de Supabase. Si la red falla, se muestran los sabores locales (`js/catalogo.js`).
+3. Agregar al carrito guarda la bolsa en el navegador (`js/cart.js`, clave `yogur_cart`).
+4. Comprar intenta guardar el pedido en Supabase (`js/api/pedidos.js`, función `create_order`) y abre WhatsApp con el texto del pedido.
+5. No hay pasarela de pagos.
 
-- **Conexión con el backend**  
-  Se realiza con la API `fetch` del navegador. Todas las llamadas al servidor (productos, autenticación y subida de imágenes) pasan por el cliente HTTP ubicado en `frontend/js/api.js`.  
-  La URL del API, el número de WhatsApp, las redes sociales y el nombre de la marca se configuran en un solo archivo: `frontend/js/config.js`. De este modo, el frontend y el backend pueden correr por separado y solo hace falta cambiar esa configuración al publicar el sitio.
+## 1. Páginas
 
----
+Cada pantalla es un HTML. No hay router.
 
-## 2. Backend (Node.js + Express)
+| Pantalla | Archivo |
+|---|---|
+| Inicio | `frontend/index.html` |
+| Catálogo | `frontend/pages/productos.html` |
+| Carrito | `frontend/pages/carrito.html` |
+| Ingreso | `frontend/pages/login.html` |
+| Registro | `frontend/pages/registro.html` |
+| Recuperar clave | `frontend/pages/recuperar.html` y `reset-password.html` |
+| Perfil | `frontend/pages/perfil.html` |
+| Panel | `frontend/pages/admin.html` |
+| Datos personales | `frontend/pages/privacidad.html` |
 
-El backend es la capa del servidor: recibe peticiones del frontend, aplica reglas de negocio, consulta la base de datos y responde con JSON. En YogurASO se construye con Node.js y Express, y se organiza por capas para mantener el código ordenado y fácil de mantener.  
-El punto de entrada del servidor es `backend/server.js`. Ahí se montan CORS, el parseo de JSON, el rate limit, la subida de imágenes con Multer y las rutas principales `/api/auth` y `/api/products`. Las imágenes subidas por el administrador se almacenan en la carpeta `backend/uploads/`.
+El menú marca **Sabores** hacia la sección `#productos` del inicio y **Catálogo** hacia la página de productos.
 
-### Módulos del backend:
+## 2. JavaScript, un archivo por responsabilidad
 
-- **Rutas (routes)**  
-  Definen las entradas del sistema, es decir, las URLs que el cliente puede llamar. Cada ruta indica el método HTTP (GET, POST, PUT, DELETE), qué middlewares aplicar y a qué controlador enviar la solicitud.  
-  Las rutas de autenticación están en `backend/src/routes/authRoutes.js` y exponen: `POST /api/auth/login`, `POST /api/auth/registro` y `GET /api/auth/perfil`.  
-  Las rutas de productos están en `backend/src/routes/productRoutes.js` y exponen: listar y crear en `/api/products`, y obtener, actualizar o eliminar un producto en `/api/products/:id`.  
-  Ambas se registran desde `backend/server.js`, que es quien las conecta a la aplicación Express.
+| Archivo | Qué hace |
+|---|---|
+| `js/config.js` | WhatsApp, redes y nombre de la marca |
+| `js/utils.js` | Texto seguro, precios en pesos, avisos |
+| `js/nav.js` | Menú móvil |
+| `js/cart.js` | Bolsa, ticket y compra por WhatsApp |
+| `js/cart_view.js` | La misma bolsa en la página del carrito |
+| `js/auth.js` | Formularios: ingreso, registro, recuperar y perfil |
+| `js/auth-comun.js` | Rutas de las páginas y la sesión que se pinta en pantalla |
+| `js/auth-menu.js` | Botón de cuenta y enlaces del menú según haya sesión |
+| `js/main.js` | Tarjetas del catálogo, búsqueda y filtros |
+| `js/catalogo.js` | Precio con descuento, botella del sabor y respaldo local |
+| `js/hero.js` | Carrusel grande de la portada |
+| `js/home-products-carousel.js` | Carrusel Nuestros yogures |
+| `js/scroll-reveal.js` | Aparición al bajar |
+| `js/admin.js` | Panel: productos y usuarios |
+| `js/supabase-client.js` | URL y clave **pública** de Supabase |
 
-- **Controladores (controllers)**  
-  Procesan las solicitudes entrantes, ejecutan la lógica de negocio y devuelven respuestas al cliente. El controlador no define la URL: solo decide qué hacer cuando llega una petición.  
-  El archivo `backend/src/controllers/authController.js` se encarga del login, el registro y la consulta del perfil, usando JWT y bcrypt para autenticar de forma segura.  
-  El archivo `backend/src/controllers/productController.js` se encarga de listar, crear, actualizar y eliminar productos del catálogo.
+La clave secreta (`service_role`) no va en estos archivos. Quien puede leer o escribir lo decide la base (RLS).
 
-- **Middlewares**  
-  Son funciones intermedias que se ejecutan antes del controlador. Se usan para validación, autenticación, autorización y protección del servidor.  
-  En `backend/src/middleware/verifyToken.js` están las funciones `verificarToken` (exige un JWT válido), `verificarAdmin` (exige rol de administrador) y `optionalAuth` (lee el token si viene, sin obligarlo).  
-  En `backend/src/middleware/rateLimit.js` se limita la cantidad de peticiones que un cliente puede hacer en un tiempo determinado, para evitar abusos.
+## 3. Capa de datos (`js/api.js`)
 
-- **Modelos / datos**  
-  Representan las estructuras de datos en la base de datos y cómo interactuar con ellas. En este proyecto no hay una carpeta `models` ni un ORM como Sequelize: los controladores consultan PostgreSQL directamente con SQL mediante el cliente `pg`.  
-  La definición de tablas (usuarios, productos y demás relaciones) está en `database/schema.sql`. Ese archivo es la referencia de cómo están organizados los datos que el backend lee y escribe.
+`api.js` no tiene la lógica: solo reexporta, para que el resto de la web siga importando `./api.js`.
 
-- **Conexión con la base de datos**  
-  Es la configuración y el manejo de consultas hacia PostgreSQL.  
-  El pool de conexiones se crea en `backend/src/config/db.js` usando la librería `pg`. Las credenciales no van escritas en el código: se leen desde `backend/.env` (variables como `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` y `DB_PORT`).  
-  Como plantilla para configurar el entorno existe `backend/.env.example`, que indica qué variables hacen falta sin exponer secretos reales. Todas las consultas del backend pasan por esta conexión de forma centralizada.
+| Módulo | Qué hace |
+|---|---|
+| `js/api/cliente.js` | Pide el cliente de Supabase y traduce los errores al español |
+| `js/api/mapeo.js` | Pasa columnas en inglés (`name`, `price`) a campos en español (`nombre`, `precio`) |
+| `js/api/sesion.js` | Sesión real y un espejo en `localStorage` para pintar el menú sin esperar la red |
+| `js/api/productos.js` | Listar, crear, editar y subir la foto del yogur |
+| `js/api/cuentas.js` | Registro, ingreso, Google y cambio de contraseña |
+| `js/api/usuarios.js` | Activar o desactivar cuentas desde el panel |
+| `js/api/pedidos.js` | Guarda el pedido antes de abrir WhatsApp |
+
+## 4. Base de datos
+
+Las tablas y las reglas viven en `supabase/migrations/`.
+
+## 5. El inicio, de arriba a abajo
+
+En `frontend/index.html` cada bloque tiene un comentario que empieza con "Aquí queda".
+
+| Lo que se ve | Dónde está |
+|---|---|
+| Barra de arriba | el `header`. El menú del celular es `js/nav.js` |
+| Carrusel grande de botellas | sección `#hero`, movimiento en `js/hero.js` |
+| Nosotros | sección `#nosotros`. Me gusta en `js/interactions.js`. Comentarios en `js/post-comments.js` |
+| Proceso | sección `#proceso`, entrada en `js/proceso-3d.js` |
+| Collage de fruta | sección `#fruta-real`, entrada en `js/collage-fruta.js` |
+| Tres momentos | sección `.ytrio`. El del centro sigue el sabor: `js/trio-sabor.js` |
+| Empaque | sección `#empaque`, datos en `js/product-info.js` |
+| Carrusel Nuestros yogures | sección `#productos`, movimiento en `js/home-products-carousel.js` |
+| Distribuidores | sección `#distribuidores` |
+| Preguntas | sección `#preguntas`, acordeón en `js/faq.js` |
+| Contacto | sección `#contacto`, formulario en `js/ysf-contacto.js` |
+| Pie | `js/ysf-footer.js` |
+| Bolsa lateral | `js/cart.js`. Los efectos (botella que vuela, número que late) están en `js/cart-fx.js` |
+
+## 6. Animaciones, aparte de la lógica
+
+Si alguien pide menos movimiento, estas piezas no animan.
+
+| Archivo | Qué mueve |
+|---|---|
+| `js/hero.js` | Botellas y fondo de la portada |
+| `js/home-products-carousel.js` | Fila de yogures del inicio |
+| `js/scroll-reveal.js` | Aparición al bajar en el inicio |
+| `js/ui-motion.js` | El número del carrito contando |
+| `js/cart-fx.js` | Botella que viaja al ícono y aviso de quitar |
+| `js/pages-motion.js` | Entrada de las páginas internas |
+| `js/proceso-3d.js`, `js/collage-fruta.js`, `js/trio-sabor.js` | Esas tres secciones del inicio |
+
+`js/yogurt-drip.js` y `js/depth.js` están vacíos a propósito: esos efectos se apagaron.
+

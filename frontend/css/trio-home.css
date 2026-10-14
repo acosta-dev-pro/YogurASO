@@ -139,17 +139,22 @@
     .ytrio__hand { width: 30cqw; right: -3cqw; bottom: -8cqw; }
     .ytrio__card { min-height: 250px; }
 }
-/* Móvil: una columna */
-@media (max-width: 640px) {
-    .ytrio__wrap { grid-template-columns: 1fr; gap: 14px; }
-    .ytrio__card { min-height: 0; }
-    .ytrio__card--llevalo { min-height: 290px; }
-    .ytrio__card--llevalo .ytrio__body { max-width: calc(60cqw - var(--yt-pad)); }
-    .ytrio__card--llevalo .ytrio__chips { flex-direction: column; flex-wrap: nowrap; }
-    .ytrio__hand { width: 56cqw; right: -12cqw; bottom: -12cqw; }
-    .ytrio__card--cremoso { min-height: 200px; }
-    .ytrio__card--proposito { min-height: 280px; }
-    .ytrio__stage { width: 40cqw; }
+/* Teléfono: Llévalo arriba, y Cremoso con Propósito uno al lado del otro */
+@media (max-width: 860px) {
+    .fcol + .ytrio { margin-top: 8px; }
+    .ytrio__wrap { grid-template-columns: 1fr 1fr; gap: 8px; width: min(1240px, 100% - 24px); }
+    .ytrio__card { min-height: 0; padding: 12px; }
+    .ytrio__card h3 { font-size: 16px; line-height: 1.15; }
+    .ytrio__card p { font-size: 12px; }
+    .ytrio__card--llevalo { grid-column: 1 / -1; min-height: 168px; }
+    .ytrio__card--llevalo .ytrio__body { max-width: 62%; }
+    .ytrio__card--llevalo .ytrio__chips { flex-direction: row; flex-wrap: wrap; }
+    .ytrio__hand { width: 34cqw; right: -2cqw; bottom: -4cqw; }
+    .ytrio__card--cremoso { min-height: 168px; }
+    .ytrio__card--cremoso .ytrio__cta { align-self: flex-start; }
+    .ytrio__card--proposito { min-height: 168px; }
+    .ytrio__card--proposito .ytrio__body { max-width: 68%; }
+    .ytrio__stage { width: 34cqw; right: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
     .ytrio__hand, .ytrio__bottle,

@@ -82,20 +82,30 @@
     .p3d { --p3d-art: clamp(220px, 30%, 300px); --p3d-bh: clamp(300px, 52vh, 360px); }
 }
 
-/* ---------- Móvil: se apila, la botella sigue saliendo por arriba ---------- */
-@media (max-width: 720px) {
-    .p3d { --p3d-bh: 290px; padding: 40px 0 36px; }
+/* ---------- Tablet y móvil: el texto deja de ir al lado de la botella ---------- */
+@media (max-width: 980px) {
+    .p3d { --p3d-bh: clamp(240px, 46vw, 320px); padding: 36px 0 32px; }
     .p3d__head { padding-right: 0; margin-bottom: 0; }
-    .p3d__card { display: flex; flex-direction: column; margin-top: 150px; min-height: 0; }
-    .p3d__art { order: -1; height: 160px; min-height: 0; }
-    .p3d__glow { border-radius: 16px 16px 0 0; width: 100%; }
-    .p3d__contact { bottom: 2px; }
-    .p3d__bottle { bottom: 6px; }
-    .p3d__fruit--a { width: 54px; bottom: 0; }
-    .p3d__fruit--b { width: 60px; bottom: -4px; }
-    .p3d__story { padding: 22px 22px 26px; }
-    .p3d__p1 { font-size: 18px; }
-    .p3d__p2 { font-size: 15px; }
+    .p3d__sub { row-gap: 8px; }
+    .p3d__card {
+        display: flex;
+        flex-direction: column;
+        margin-top: calc(var(--p3d-bh) * .5);
+        min-height: 0;
+    }
+    .p3d__art { order: -1; height: calc(var(--p3d-bh) * .52); min-height: 0; }
+    .p3d__glow { border-radius: 16px 16px 0 0; width: min(100%, 420px); }
+    .p3d__contact { bottom: 10px; }
+    .p3d__bottle { bottom: 10px; }
+    .p3d__fruit--a { width: clamp(46px, 9vw, 64px); bottom: 8px; left: calc(50% - var(--p3d-bh) * .46); }
+    .p3d__fruit--b { width: clamp(50px, 10vw, 72px); bottom: 4px; left: calc(50% + var(--p3d-bh) * .18); }
+    .p3d__story { padding: 4px 22px 28px; max-width: none; }
+    .p3d__p1 { font-size: clamp(17px, 2.5vw, 20px); }
+    .p3d__p2 { font-size: clamp(14.5px, 2vw, 16px); max-width: none; }
+}
+@media (max-width: 420px) {
+    .p3d__wrap { width: min(1240px, 100% - 28px); }
+    .p3d__story { padding: 2px 16px 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

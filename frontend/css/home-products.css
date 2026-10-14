@@ -390,20 +390,42 @@ body .hp-card__name a {
 
 /* ---------- móvil ---------- */
 @media (max-width: 640px) {
-    #main-content.hp-section {
-        --hp-w: min(74vw, 300px);
-        --hp-media-h: calc(var(--hp-w) * 0.78);
-        --hp-gap: 12px;
+    #main-content.hp-section,
+    #productos.hp-section {
+        --hp-w: min(42vw, 168px);
+        --hp-media-h: calc(var(--hp-w) * 1.05);
+        --hp-panel-top: calc(var(--hp-media-h) * 0.42);
+        --hp-gap: 10px;
     }
-    .hp-track {
+    #productos .hp-track {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 12px;
+        overflow: visible;
         -webkit-mask-image: none;
         mask-image: none;
+        padding: 8px 16px 20px;
+        scroll-snap-type: none;
+        min-height: 0;
+        cursor: default;
     }
+    #productos .hp-card[data-clone] { display: none; }
+    #productos .hp-card { width: auto; scroll-snap-align: unset; }
+    #productos .hp-card__panel { opacity: 1; transform: none; }
+    #productos .hp-card__media img,
+    #productos .hp-card.is-active .hp-card__media img {
+        height: 100%;
+        width: auto;
+        transform: translateY(-16px) scale(1);
+    }
+    #productos .hp-card__floor { opacity: 0; }
+    #productos .hp-card__body { padding: 10px 8px 10px; }
     .hp-nav { display: none; }
-    .hp-card__name { font-size: 1.18rem; }
-    .hp-card__price { font-size: 1.42rem; }
-    .hp-add { min-height: 36px; padding: 0 18px; }
-    .hp-qty button { width: 30px; height: 30px; }
+    .hp-card__name { font-size: 0.95rem; }
+    .hp-card__meta { font-size: 0.72rem; }
+    .hp-card__price { font-size: 1.05rem; }
+    .hp-add { min-height: 32px; padding: 0 10px; font-size: 12px; }
+    .hp-qty button { width: 26px; height: 26px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

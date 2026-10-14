@@ -1,6 +1,5 @@
-/* empaque.js — sección Empaque del home (estilo anatomía).
-   - Muestra temperatura / material solo si están en js/product-info.js (no se inventan datos).
-   - El video de la botella se pausa fuera de pantalla y no corre con "reducir movimiento". */
+/* empaque.js — Aquí queda la sección Empaque.
+   Solo muestra temperatura y material si están escritos en product-info.js. */
 (function () {
     var sec = document.getElementById('empaque');
     if (!sec) return;
@@ -28,10 +27,13 @@
     if (reduce && reduce.addEventListener) reduce.addEventListener('change', function (e) { if (e.matches) stillPoster(); });
 
     sec.classList.add('is-js');
-    if (!('IntersectionObserver' in window)) { sec.classList.add('is-in'); return; }
+    var shown = false;
+    function show() { if (shown) return; shown = true; sec.classList.add('is-in'); }
+    if (!('IntersectionObserver' in window)) { show(); return; }
     new IntersectionObserver(function (entries, obs) {
-        entries.forEach(function (en) { if (en.isIntersecting) { sec.classList.add('is-in'); obs.disconnect(); } });
-    }, { threshold: 0.2 }).observe(sec);
+        entries.forEach(function (en) { if (en.isIntersecting) { show(); obs.disconnect(); } });
+    }, { threshold: 0.01, rootMargin: '120px 0px 80px 0px' }).observe(sec);
+    window.setTimeout(show, 900);
 
     if (video) {
         new IntersectionObserver(function (entries) {

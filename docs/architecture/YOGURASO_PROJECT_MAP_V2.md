@@ -1,6 +1,8 @@
 # Mapa del proyecto YogurASO — versión 2
 
 Fecha de la auditoría: 4 de octubre de 2026.
+Actualización del 9 de octubre de 2026: la web ya no usa Express. Los datos van a Supabase desde `frontend/js/api.js` y `frontend/js/api/`. El documento para la exposición está en `docs/modulos.md`.
+
 Rama de trabajo: `redesign/yoguraso-v2` (creada desde `main`, commit `1e49cba`).
 Copia de seguridad previa: `C:\Users\acost\Desktop\YOGURASO-BACKUP-2026-10-04.zip`.
 

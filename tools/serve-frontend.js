@@ -23,9 +23,29 @@ const MIME_TYPES = {
     '.eot': 'application/vnd.ms-fontobject'
 };
 
+// Direcciones que la gente escribe al buscar el catálogo, y el prefijo /frontend/
+// (cuando el servidor se abre desde la carpeta del proyecto, no desde frontend/).
+const ALIASES = {
+    '/catalogo': '/pages/productos.html',
+    '/catalogo.html': '/pages/productos.html',
+    '/pages/catalogo': '/pages/productos.html',
+    '/pages/catalogo.html': '/pages/productos.html',
+    '/pages/productos': '/pages/productos.html'
+};
+
+function publicPath(reqUrl) {
+    let urlPath = decodeURIComponent(reqUrl.split('?')[0]);
+    if (urlPath.length > 1 && urlPath.endsWith('/')) urlPath = urlPath.slice(0, -1);
+    if (urlPath === '/frontend' || urlPath.startsWith('/frontend/')) {
+        urlPath = urlPath.slice('/frontend'.length) || '/';
+    }
+    if (ALIASES[urlPath]) urlPath = ALIASES[urlPath];
+    if (urlPath === '/') urlPath = '/index.html';
+    return urlPath;
+}
+
 const server = http.createServer((req, res) => {
-    let reqUrl = decodeURIComponent(req.url.split('?')[0]);
-    if (reqUrl === '/') reqUrl = '/index.html';
+    const reqUrl = publicPath(req.url);
 
     let filePath = path.join(PUBLIC_DIR, reqUrl);
 
@@ -35,34 +55,44 @@ const server = http.createServer((req, res) => {
         return res.end('403 Forbidden');
     }
 
-    fs.stat(filePath, (err, stats) => {
-        if (err || !stats.isFile()) {
-            // Check if it's a directory or missing file
-            if (stats && stats.isDirectory()) {
-                filePath = path.join(filePath, 'index.html');
-            } else {
-                res.writeHead(404, { 'Content-Type': 'text/plain' });
-                return res.end('404 Not Found');
-            }
-        }
-
-        const ext = path.extname(filePath).toLowerCase();
+    const send = (target) => {
+        const ext = path.extname(target).toLowerCase();
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-
         res.writeHead(200, {
             'Content-Type': contentType,
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Access-Control-Allow-Origin': '*'
         });
-
-        const stream = fs.createReadStream(filePath);
-        stream.on('error', (streamErr) => {
-            if (!res.headersSent) {
-                res.writeHead(500, { 'Content-Type': 'text/plain' });
-            }
+        const stream = fs.createReadStream(target);
+        stream.on('error', () => {
+            if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain' });
             res.end('Server Error');
         });
         stream.pipe(res);
+    };
+
+    const missing = () => {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+    };
+
+    fs.stat(filePath, (err, stats) => {
+        if (!err && stats.isFile()) return send(filePath);
+        if (!err && stats.isDirectory()) {
+            const indexFile = path.join(filePath, 'index.html');
+            return fs.stat(indexFile, (errDir, statsDir) => {
+                if (!errDir && statsDir.isFile()) return send(indexFile);
+                return missing();
+            });
+        }
+        if (!path.extname(filePath)) {
+            const withHtml = `${filePath}.html`;
+            return fs.stat(withHtml, (errHtml, statsHtml) => {
+                if (!errHtml && statsHtml.isFile()) return send(withHtml);
+                return missing();
+            });
+        }
+        return missing();
     });
 });
 

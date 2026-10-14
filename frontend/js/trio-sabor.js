@@ -1,9 +1,5 @@
 /**
- * trio-sabor.js — La tarjeta "Propósito" sigue el sabor activo del hero.
- * Escucha el evento `yg:flavorchange` (hero.js → setTheme) y, al cargar,
- * lee body[data-flavor]. Colores: tokens --hero-bg de css/hero.css.
- * Botellas: assets/products/yoguraso-<slug>-500ml.webp (mismo origen que hero.js).
- * Tras pasteles (--bg-* en brand.css), el fondo es claro: tinta oscura.
+ * trio-sabor.js — Aquí queda la tarjeta del centro que cambia con el sabor de la portada.
  */
 (function () {
     'use strict';

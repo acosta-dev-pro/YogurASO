@@ -392,36 +392,32 @@ body[data-flavor="mango"] {
 
 @media screen and (max-width: 860px) {
     .hero-left {
-        left: var(--hero-gutter, 20px);
-        max-width: 88vw;
-        top: 26%;
-        transform: translateY(-50%);
+        left: 18px;
+        right: 18px;
+        max-width: none;
+        top: 92px;
+        transform: none;
+        align-items: center;
+        text-align: center;
     }
-    .hero-title { font-size: clamp(2.4rem, 8vw, 3.4rem); }
-    .hero-sub { font-size: 1.1rem; }
-    .hero-promo-desc { font-size: 0.88rem; max-width: 20em; }
+    .hero-copy { align-items: center; width: 100%; }
+    .hero-title { font-size: clamp(2.7rem, 12vw, 3.4rem); line-height: 0.92; letter-spacing: -0.03em; }
+    .hero-sub { font-size: 1.05rem; }
+    .hero-promo-desc { font-size: 0.86rem; max-width: 22em; margin-left: auto; margin-right: auto; }
+    .hero { --t-color: 0.16s; }
     .bottle--main {
         left: 50%;
-        bottom: 35px;
-        height: 52svh;
+        bottom: 10px;
+        height: 50svh;
         z-index: 5;
     }
-    .bottle--second {
-        left: 125%;
-        bottom: 35px;
-        height: 52svh;
-        z-index: 4;
-        opacity: 0;
-        pointer-events: none;
-    }
+    .bottle--second,
     .bottle--left {
-        left: -25%;
-        bottom: 35px;
-        height: 52svh;
-        z-index: 4;
         opacity: 0;
         pointer-events: none;
     }
+    .bottle--second { left: 130%; bottom: 20px; height: 50svh; }
+    .bottle--left { left: -30%; bottom: 20px; height: 50svh; }
 }
 
 /* =========================================================

@@ -1,8 +1,5 @@
 /**
- * YogurASO — preguntas del FAQ y me gusta (post de #nosotros y productos).
- * El post ya no tiene comentarios: solo el corazón y el conteo.
- * Usa solo la clave anon (frontend/js/supabase-client.js).
- * Si la URL sigue en el placeholder, guarda en este navegador y lo dice en la página.
+ * interactions.js — Aquí quedan los me gusta del post Nosotros y de los productos.
  */
 import { supabase, supabaseListo } from './supabase-client.js';
 

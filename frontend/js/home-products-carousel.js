@@ -1,14 +1,6 @@
 /**
- * home-products-carousel.js — "Nuestros yogures" del home.
- * ------------------------------------------------------------------
- * Carrusel de una sola fila, infinito, con scroll-snap centrado.
- *  - Los productos vienen de main.js (misma API y mismo respaldo local).
- *  - El loop: se pintan varias copias de la lista y, cuando el scroll
- *    termina fuera de la copia del medio, se salta en silencio a la
- *    misma tarjeta de la copia del medio (mismo contenido, sin salto visible).
- *  - La tarjeta centrada recibe .is-active (panel de color del sabor).
- *  - Carrito: window.Cart.addToCart (cart.js). Ficha flotante: window.YogFicha (ficha-modal.js).
- *  - No intercepta la rueda vertical: el scroll de la página sigue normal.
+ * home-products-carousel.js — Aquí queda el carrusel "Nuestros yogures" del inicio.
+ * Los productos vienen de main.js. Agregar usa el carrito. Clic abre la ficha.
  * Estilos: css/home-products.css
  */
 import { loadCatalogProducts, salePrice, bottleUrlFor, matchFlavorSlug } from './main.js';
@@ -149,8 +141,11 @@ function initCarousel(products) {
     }
 
     /** Copias necesarias para que un gesto largo no llegue al borde real. */
+    function isPhoneGrid() {
+        return window.matchMedia('(max-width: 640px)').matches;
+    }
     function neededReps() {
-        if (n < 2) return 1;
+        if (n < 2 || isPhoneGrid()) return 1;
         const setW = n * m.step;
         const side = Math.max(1, Math.ceil((track.clientWidth * 2) / setW));
         return Math.min(2 * side + 1, 41);
@@ -358,7 +353,7 @@ function initCarousel(products) {
 
     /* auto-avance suave (opcional): se pausa con hover, foco, toque o arrastre */
     function canAuto() {
-        return n > 1 && inView && !hovering && !touching && !drag && !document.hidden
+        return n > 1 && !isPhoneGrid() && inView && !hovering && !touching && !drag && !document.hidden
             && !reduceMotion.matches && !root.contains(document.activeElement)
             && Date.now() - lastUserAt > IDLE_AFTER_TOUCH_MS
             && !document.querySelector('dialog[open]');

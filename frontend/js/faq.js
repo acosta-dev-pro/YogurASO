@@ -1,4 +1,4 @@
-/* FAQ YogurASO — acordeón accesible y entrada suave, como #empaque. */
+/* faq.js — Aquí queda el acordeón de preguntas frecuentes. */
 (function () {
     "use strict";
 

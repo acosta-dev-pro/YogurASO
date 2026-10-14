@@ -1,7 +1,6 @@
 /**
- * admin.js — Panel administrador (CRUD de productos + usuarios)
- * Datos en Supabase (api.js). Solo un admin activo puede escribir: lo exige RLS
- * con is_admin(); aquí además se comprueba al entrar para no mostrar el panel.
+ * admin.js — Aquí queda el panel: inventario de yogures y lista de usuarios.
+ * Solo entra quien la base reconoce como admin.
  */
 import { fetchProducts, createProduct, updateProduct, deleteProduct, permanentlyDeleteProduct, uploadImage, fetchUsers, toggleUserActive, verifyAdmin, syncSession } from './api.js';
 

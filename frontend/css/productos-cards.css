@@ -35,11 +35,16 @@ body.productos-page-v3 .hp-card__price {
 }
 @media (max-width: 640px) {
     body.productos-page-v3 .productos-grid.hp-grid {
-        --hp-w: min(74vw, 300px);
-        --hp-media-h: calc(var(--hp-w) * 0.78);
-        --hp-panel-top: calc(var(--hp-media-h) * 0.46);
-        grid-template-columns: minmax(0, var(--hp-w)) !important;
-        max-width: none !important;
-        gap: 64px !important;
+        --hp-w: min(42vw, 168px);
+        --hp-media-h: calc(var(--hp-w) * 0.72);
+        --hp-panel-top: calc(var(--hp-media-h) * 0.42);
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        justify-content: stretch !important;
+        gap: 22px 12px !important;
+        padding: 28px 4px 40px;
+    }
+    body.productos-page-v3 .productos-grid.hp-grid .hp-card {
+        width: 100%;
+        max-width: none;
     }
 }

@@ -1,15 +1,23 @@
 /**
- * main.js — Catálogo y cards de productos (frontend / diseño dinámico)
- * ------------------------------------------------------------------
- * Aquí se manejan las CARDS de yogurt:
- *  1. Se piden productos a la API (api.js)
- *  2. Se filtran / buscan / ordenan en el navegador
- *  3. Se pintan como HTML con la clase .producto-card
- *
- * Contenedor HTML: #productos-container (index.html y productos.html)
- * Estilos de la card: css/cards-productos.css (el grid está en shop-ui.css)
+ * main.js — Aquí quedan las tarjetas del catálogo.
+ * Pide los yogures a Supabase, filtra y los pinta.
+ * El carrusel del inicio está en home-products-carousel.js.
+ * La entrada al hacer scroll está en scroll-reveal.js.
  */
 import { fetchProducts } from './api.js';
+import {
+    salePrice,
+    bottleUrlFor,
+    matchFlavorSlug,
+    flavorCatalog,
+    registerCatalog,
+    normalizeProducts,
+    customHex,
+    flavorBgVar,
+    accentVars
+} from './catalogo.js';
+
+export { salePrice, bottleUrlFor, matchFlavorSlug };
 
 const escapeHtml = (v) => window.YogurUtils?.escapeHtml(v) || String(v ?? '');
 const formatCOP = (n) => window.YogurUtils?.formatCOP(n) || `$${Number(n || 0).toLocaleString('es-CO')}`;
@@ -21,18 +29,6 @@ const IMG_PLACEHOLDER_HTML = `
         ${SPINNER_HTML}
     </div>
 `;
-
-const ASSET_BASE = (() => {
-    const path = String(location.pathname || '');
-    return path.includes('/pages/') ? '../' : '';
-})();
-
-function assetUrl(rel) {
-    const s = String(rel || '');
-    if (!s || /^https?:\/\//i.test(s) || s.startsWith('data:')) return s;
-    if (s.startsWith('../') || s.startsWith('/')) return s;
-    return ASSET_BASE + s.replace(/^\.\//, '');
-}
 
 const JAR_SIZES = [
     { id: '1000', label: '1 L', hint: 'Familiar', factor: 3.2 },
@@ -52,27 +48,7 @@ function bindProductImageFallbacks(container) {
 let allProducts = [];
 let filters = { q: '', categoria: 'all', sort: 'default' };
 
-/** Animaciones al hacer scroll (beneficios, nosotros, etc.) */
-function aplicarAnimacionesEntrada() {
-    const revealItems = document.querySelectorAll('.beneficio-card, .pastel-card, .nosotros-content, .nosotros-visual, .ns-process-card, .section-title, .productos-masonry .producto-card');
-    if (!revealItems.length || !('IntersectionObserver' in window)) return;
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('reveal-show');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.16 });
-
-    revealItems.forEach((el) => {
-        el.classList.add('reveal-start');
-        observer.observe(el);
-    });
-}
-
-/** Toast de bienvenida solo después de login/registro */
+/** Aviso de bienvenida solo después de entrar o registrarse. */
 function mostrarBienvenidaSiCorresponde() {
     if (sessionStorage.getItem('yogur_just_logged_in') !== '1') return;
     sessionStorage.removeItem('yogur_just_logged_in');
@@ -111,14 +87,7 @@ function badgeHtml(p, sinStock) {
     return bits.join('');
 }
 
-function salePrice(p) {
-    const base = Number(p.precio || 0);
-    const off = Number(p.descuento || 0);
-    if (!off) return base;
-    return Math.max(500, Math.round((base * (1 - off / 100)) / 100) * 100);
-}
-
-/** Aplica búsqueda, categoría y orden (todo en frontend, sin backend) */
+/** Aplica búsqueda, categoría y orden (todo en el navegador, sin pedir otra vez a la base) */
 function getFilteredProducts() {
     let list = [...allProducts];
     const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -314,6 +283,7 @@ function bindAddButtons(container) {
     });
 }
 
+/** Carrusel viejo del inicio. Solo corre si existe #home-rail-track (hoy el inicio usa otro). */
 function setupHomeRail() {
     const view = document.getElementById('home-rail-track');
     const row = document.getElementById('productos-container');
@@ -510,82 +480,6 @@ function closeInspect() {
 }
 
 
-/** Fondo pastel de la tarjeta: --fondo-claro-<sabor> (brand.css). El hero sigue en --bg-*. */
-function flavorBgVar(slug) {
-    const s = String(slug || '');
-    return /^[a-z0-9-]+$/.test(s) ? `var(--fondo-claro-${s})` : 'var(--cream, #FFF8F4)';
-}
-
-/** Color propio guardado en el panel (hex distinto del crema por defecto) o null. */
-function customHex(c) {
-    const s = String(c || '').trim();
-    return /^#[0-9A-Fa-f]{6}$/.test(s) && s.toUpperCase() !== '#FFF8F4' ? s : null;
-}
-
-/** Variables de acento de la tarjeta (color_acento del panel), o '' si no hay. */
-function accentVars(p) {
-    const a = customHex(p?.color_acento);
-    return a ? `--producto-card-accent:${a};--yfm-c:${a};` : '';
-}
-
-function flavorCatalog() {
-    const flavors = window.YOGUR_FLAVORS || [];
-    const catOf = {
-        fresa: 'Frutales', pina: 'Frutales', mora: 'Frutales', melocoton: 'Frutales',
-        mango: 'Frutales', 'frutos-rojos': 'Frutales',
-        cafe: 'Especiales', guanabana: 'Especiales'
-    };
-    return flavors.map((f) => ({
-        id: `local-${f.slug}`,
-        nombre: f.nombre,
-        categoria: catOf[f.slug] || 'Clásicos',
-        precio: 6900,
-        descuento: 0,
-        stock: 99,
-        color_fondo: flavorBgVar(f.slug),
-        imagen_url: assetUrl(`assets/products/yoguraso-${f.slug}-500ml-sm.webp`),
-        slug: f.slug,
-        local_only: true
-    }));
-}
-
-/** Producto listo para la ficha flotante (js/ficha-modal.js): mismo precio, id y stock que la tarjeta. */
-function catalogEntry(p, slug) {
-    return { ...p, slug: slug || matchFlavorSlug(p) || p.slug, precio_venta: salePrice(p) };
-}
-
-/** Deja los productos a mano de la ficha flotante: window.YogCatalog.bySlug[slug]. */
-function registerCatalog(list) {
-    const reg = window.YogCatalog || (window.YogCatalog = { bySlug: {} });
-    (list || []).forEach((p) => {
-        const slug = matchFlavorSlug(p) || p.slug;
-        if (slug && !reg.bySlug[slug]) reg.bySlug[slug] = catalogEntry(p, slug);
-    });
-    return list;
-}
-
-function matchFlavorSlug(p) {
-    const flavors = window.YOGUR_FLAVORS || [];
-    const slug = String(p.slug || p.sabor || '').toLowerCase();
-    if (slug && flavors.some((f) => f.slug === slug)) return slug;
-    const name = String(p.nombre || '').toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    for (const f of flavors) {
-        const n = f.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        const s = f.slug.replace(/-/g, ' ');
-        if (name.includes(n) || name.includes(s) || name.includes(f.slug)) return f.slug;
-    }
-    return '';
-}
-
-function bottleUrlFor(p) {
-    const slug = matchFlavorSlug(p);
-    if (slug) return assetUrl(`assets/products/yoguraso-${slug}-500ml-sm.webp`);
-    const url = String(p.imagen_url || '');
-    if (/yoguraso-[\w-]+-500ml/i.test(url)) return assetUrl(url);
-    return assetUrl(url);
-}
-
 /**
  * AQUÍ SE ARMAN Y SE PINTAN LAS CARDS DE PRODUCTO
  * Cada card: imagen, badges (Nuevo / Sin stock), nombre, precio, botón Agregar.
@@ -652,17 +546,18 @@ function renderProducts() {
         const addLabel = sinStock ? 'Sin stock' : (askPrice ? 'Pedir' : 'Agregar');
         const addAria = sinStock ? `${name} sin stock` : `Agregar ${name} al carrito`;
         const featured = index === 0 ? ' is-active' : '';
+        const catalogHref = window.location.pathname.includes('/pages/') ? 'productos.html' : 'pages/productos.html';
         return `
             <article class="hp-card${sinStock ? ' is-out' : ''}${featured}" data-id="${escapeHtml(p.id)}" data-slug="${escapeHtml(slug)}" data-tone="light" style="--hp-c:${wash};--hp-ink:${ink};--producto-card-bg:${wash};${accentVars(p)}">
                 <span class="hp-card__panel" aria-hidden="true"></span>
-                <a class="hp-card__media" href="productos.html" data-hp-open tabindex="-1" aria-hidden="true">
+                <a class="hp-card__media" href="${catalogHref}" data-hp-open tabindex="-1" aria-hidden="true">
                     <span class="hp-card__floor"></span>
                     ${img}
                 </a>
                 ${badgeBlock}
                 <button type="button" class="hp-fav" data-hp-fav aria-pressed="false" aria-label="Guardar ${name} en favoritos">${HP_HEART}</button>
                 <div class="hp-card__body">
-                    <h3 class="hp-card__name"><a href="productos.html" data-hp-open aria-label="Ver ficha de ${name}">${name}</a></h3>
+                    <h3 class="hp-card__name"><a href="${catalogHref}" data-hp-open aria-label="Ver ficha de ${name}">${name}</a></h3>
                     <p class="hp-card__meta">500 ml · ${escapeHtml(p.categoria || 'Yogurt Artesanal')}</p>
                     <p class="hp-card__price">${price}</p>
                     <div class="hp-card__actions">
@@ -792,23 +687,6 @@ function setupCatalogControls() {
     });
 }
 
-/** Preferir botella recortada si el nombre/sabor coincide */
-function normalizeProducts(list) {
-    return list.map((p) => {
-        const bottle = bottleUrlFor(p);
-        const slug = matchFlavorSlug(p);
-        return {
-            ...p,
-            imagen_url: bottle || p.imagen_url,
-            color_fondo: customHex(p.color_fondo)
-                || (/^[a-z0-9-]+$/.test(String(slug)) ? flavorBgVar(slug) : null)
-                || (String(p.color_fondo || '').startsWith('var(--fondo-claro-') ? p.color_fondo : null)
-                || p.color_fondo,
-            slug: p.slug || slug
-        };
-    });
-}
-
 /**
  * Lista de productos lista para pintar, sin tocar el DOM.
  * La usa el carrusel del home (js/home-products-carousel.js).
@@ -823,9 +701,7 @@ export async function loadCatalogProducts() {
     }
 }
 
-export { salePrice, bottleUrlFor, matchFlavorSlug };
-
-/** Carga productos desde el backend y dibuja las cards */
+/** Carga productos desde Supabase y dibuja las cards */
 async function cargarProductos() {
     const container = document.getElementById('productos-container');
     if (!container) return;
@@ -856,7 +732,6 @@ async function cargarProductos() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    aplicarAnimacionesEntrada();
     mostrarBienvenidaSiCorresponde();
     cargarProductos();
     window.Cart?.updateCounter();

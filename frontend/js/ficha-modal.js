@@ -1,14 +1,5 @@
-/* ficha-modal.js — Ficha flotante "vitrina" de cada sabor (estilo A elegido por Juan).
-   Se abre al hacer clic en una tarjeta de producto (carrusel del home y pages/productos.html)
-   mediante window.YogFicha.open(slug, opener[, producto]).
-   Datos:
-     - Producto (nombre, precio, categoría, id, stock): window.YogCatalog.bySlug (lo llena main.js con la
-       misma API / respaldo local de las tarjetas). Si no está, usa YOGUR_FLAVORS + $6.900 del respaldo local.
-     - Ficha técnica: window.YOG_INFO (js/product-info.js). Lo que está en null se muestra como
-       "Por confirmar" / "Verificar". Nunca se inventan ingredientes, temperaturas ni cifras.
-   Color: --yfm-c = color_acento del producto (panel admin) si es hex válido; si no, --bg-<sabor>
-   (nombre, precio, botón); panel izquierdo --fondo-claro-<sabor>.
-   Estilos: css/ficha-modal.css */
+/* ficha-modal.js — Aquí queda la ficha que se abre al tocar un yogur.
+   Nombre y precio salen del catálogo. Lo que no está confirmado se muestra como "Por confirmar". */
 (function () {
     'use strict';
 

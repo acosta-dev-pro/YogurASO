@@ -1,12 +1,7 @@
 /**
- * hero.js — Portada YoguraSo: cambio de sabor sin selector.
- * - Lo único que cambia es el fondo (CSS, body[data-flavor]) y las botellas, que se funden en su mismo sitio.
- *   Título, subtítulo, botón, logo y menú no se mueven ni se recargan.
- * - Cambio automático cada ~5,5 s; el anillo del botón de pausa marca el tiempo (su animationend avanza).
- * - Toque o clic en las botellas = siguiente; deslizar = siguiente/anterior; flechas ← → con foco en las botellas.
- * - Se detiene solo con la pestaña oculta, el hero fuera de vista o el foco del teclado dentro de las botellas.
- * - prefers-reduced-motion: sin cambio automático (arranca en pausa) y fundidos cortos.
- * Datos de sabores: js/flavors.js · Colores: css/hero.css
+ * hero.js — Aquí queda el carrusel grande de la portada.
+ * Cambian el fondo y las botellas. El texto no se mueve.
+ * Sabores: js/flavors.js. Colores: css/hero.css.
  */
 (function () {
     'use strict';
@@ -144,56 +139,50 @@
         var ANIM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
         if (isMobile) {
+            var slide = 140;
+            function restMobile() {
+                if (bottleMain) { bottleMain.style.left = '50%'; bottleMain.style.opacity = '1'; bottleMain.style.zIndex = ''; }
+                if (bottleSecond) { bottleSecond.style.opacity = '0'; bottleSecond.style.left = '130%'; bottleSecond.style.zIndex = ''; }
+                if (bottleLeft) { bottleLeft.style.opacity = '0'; bottleLeft.style.left = '-30%'; bottleLeft.style.zIndex = ''; }
+            }
+            function finishMobile() {
+                if (id !== swapId) return;
+                cancelActiveAnims();
+                fillSlot(bottleMain, toF, true);
+                fillSlot(bottleSecond, nextF, false);
+                restMobile();
+                isAnimating = false;
+            }
+            var settled = false;
+            function once() { if (settled) return; settled = true; finishMobile(); }
             fillSlot(bottleMain, fromF, true);
+            var outgoing;
+            var incoming;
             if (isForward) {
                 fillSlot(bottleSecond, toF, false);
-                if (bottleSecond) {
-                    bottleSecond.style.opacity = '1';
-                    bottleSecond.style.left = '125%';
-                }
-                var m1 = anim(bottleMain, [
-                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 1 },
-                    { transform: 'translateX(-50%) translate3d(-50vw, 0, 0) scale(0.82)', opacity: 0 }
-                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
-
-                var m2 = anim(bottleSecond, [
-                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(0.82)', opacity: 0.5 },
-                    { transform: 'translateX(-50%) translate3d(-75vw, 0, 0) scale(1)', opacity: 1 }
-                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
-
-                Promise.all([m1.finished, m2.finished]).then(function () {
-                    if (id !== swapId) return;
-                    cancelActiveAnims();
-                    fillSlot(bottleMain, toF, true);
-                    fillSlot(bottleSecond, nextF, false);
-                    if (bottleSecond) { bottleSecond.style.opacity = '0'; bottleSecond.style.left = '125%'; }
-                    isAnimating = false;
-                }).catch(function () {});
+                if (bottleSecond) { bottleSecond.style.opacity = '1'; bottleSecond.style.left = '50%'; bottleSecond.style.zIndex = '6'; }
+                outgoing = anim(bottleMain, [
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(-' + slide + 'px, 0, 0)', opacity: 0 }
+                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
+                incoming = anim(bottleSecond, [
+                    { transform: 'translateX(-50%) translate3d(' + slide + 'px, 0, 0)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 }
+                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
             } else {
                 fillSlot(bottleLeft, toF, false);
-                if (bottleLeft) {
-                    bottleLeft.style.opacity = '1';
-                    bottleLeft.style.left = '-25%';
-                }
-                var m1 = anim(bottleMain, [
-                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 1 },
-                    { transform: 'translateX(-50%) translate3d(50vw, 0, 0) scale(0.82)', opacity: 0 }
-                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
-
-                var m2 = anim(bottleLeft, [
-                    { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(0.82)', opacity: 0.5 },
-                    { transform: 'translateX(-50%) translate3d(75vw, 0, 0) scale(1)', opacity: 1 }
-                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
-
-                Promise.all([m1.finished, m2.finished]).then(function () {
-                    if (id !== swapId) return;
-                    cancelActiveAnims();
-                    fillSlot(bottleMain, toF, true);
-                    fillSlot(bottleSecond, nextF, false);
-                    if (bottleLeft) { bottleLeft.style.opacity = '0'; bottleLeft.style.left = '-25%'; }
-                    isAnimating = false;
-                }).catch(function () {});
+                if (bottleLeft) { bottleLeft.style.opacity = '1'; bottleLeft.style.left = '50%'; bottleLeft.style.zIndex = '6'; }
+                outgoing = anim(bottleMain, [
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(' + slide + 'px, 0, 0)', opacity: 0 }
+                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
+                incoming = anim(bottleLeft, [
+                    { transform: 'translateX(-50%) translate3d(-' + slide + 'px, 0, 0)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 }
+                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
             }
+            Promise.all([outgoing.finished, incoming.finished]).then(once).catch(once);
+            window.setTimeout(once, slide + 80);
             return;
         }
 

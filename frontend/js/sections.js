@@ -1,8 +1,5 @@
-/* sections.js — secciones nuevas del inicio.
-   - Íconos: <i data-ic="nombre"> → SVG Lucide (js/sections-icons.js).
-   - Revelado escalonado [data-rv] al entrar en pantalla.
-   - Carrusel de sabores: tarjetas desde YOGUR_FLAVORS, arrastre, flechas, barra de progreso e inclinación 3D.
-   No toca el hero ni el header. */
+/* sections.js — Íconos de las secciones del inicio y su entrada al bajar.
+   Los dibujos están en sections-icons.js. No toca la portada ni el menú. */
 (function () {
     'use strict';
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');

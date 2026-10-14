@@ -53,11 +53,7 @@
     <!-- Accesibilidad: enlace para saltar al contenido principal -->
     <a class="skip-link" href="#productos">Saltar al contenido</a>
 
-    <!-- =========================================================
-         HEADER / NAVBAR
-         Aquí va el logo de la marca, el menú, el carrito y el usuario.
-         Estilos: styles.css ? sección HEADER
-         ========================================================= -->
+    <!-- Aquí queda la barra de arriba: logo, menú, búsqueda, carrito y registro. -->
     <header class="site-header" id="siteHeader">
         <a class="brand-logo" href="index.html" id="brandLogoBtn" aria-label="YoguraSo, ir al inicio">
             <span class="brand-badge-container">
@@ -90,10 +86,11 @@
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></svg>
                 <span class="cart-badge" id="cart-count" hidden>0</span>
             </button>
-            <a class="btn-header-register" id="accountBtn" href="pages/registro.html" aria-label="Regístrate"><span>Regístrate</span></a>
+            <a class="btn-header-register" id="accountBtn" href="pages/registro.html" aria-label="Regístrate"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg><span>Regístrate</span></a>
         </div>
     </header>
 
+    <!-- Aquí queda el carrusel grande de la portada: las botellas cambian de sabor. -->
     <section class="hero is-loading" id="hero" aria-roledescription="carrusel" aria-label="Sabores de yogurt artesanal">
         <div class="hero-mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div class="hero-floor" aria-hidden="true"></div>
@@ -151,45 +148,8 @@
         <p class="sr-only" id="hero-live" aria-live="polite"></p>
     </section>
 
-    <!-- =========================================================
-         SECCIÓN 2: SHOWCASE CARD EDITORIAL "NOSOTROS"
-         Card compacta, cuadrada, estilo Apple / Awwwards.
-         Al hacer scroll, el yogurt cae directamente en el cuadro container rojo.
-         ========================================================= -->
-        <!-- =========================================================
-         SECCIÓN 2: SHOWCASE / NOSOTROS (FONDO PLANO BEIGE)
-         Diseño limpio sobre fondo beige sin tarjeta blanca.
-         La única tarjeta es el cuadro sólido donde aterriza la botella.
-         ========================================================= -->
-        <!-- =========================================================
-         SECCIÓN 2: SHOWCASE / NOSOTROS (FONDO PLANO BEIGE)
-         Diseño limpio sobre fondo beige sin tarjeta blanca.
-         Texto básico en color negro y cuadro sólido plano.
-         ========================================================= -->
-        <!-- =========================================================
-         SECCIÓN 2: NOSOTROS (FONDO PLANO BEIGE · TIPOGRAFÍA EDITORIAL APPLE)
-         Fondo beige plano, texto negro directo sin tarjeta,
-         cuadro sólido plano y botones estilo Uiverse.
-         ========================================================= -->
-        <!-- =========================================================
-         SECCIÓN 2: NOSOTROS (FONDO PLANO BEIGE · TARJETAS SIMÉTRICAS)
-         Tarjeta blanca cuadrada para el texto + tarjeta sólida del producto.
-         Botón 'Ver sabores' en rojo Uiverse y 'Mayoristas' en solo texto modo botón.
-         ========================================================= -->
-        <!-- =========================================================
-         SECCIÓN 2: NOSOTROS (FONDO PLANO BEIGE · TARJETAS SIMÉTRICAS)
-         Tarjeta blanca con ticket logo, glass container interior y
-         botón 'Ver sabores' ubicado bien a la derecha.
-         ========================================================= -->
-        <!-- =========================================================
-         SECCIÓN 2: NOSOTROS (FONDO PLANO BEIGE · ESTILO POST DE INSTAGRAM)
-         Tarjeta blanca cuadrada estilo post de Instagram pro:
-         - Header con avatar, verificado y 'Sobre nosotros' centrado.
-         - Título con nueva fuente editorial moderna.
-         - Texto en contenedor gris sólido sin marco.
-         - Barra de interacción Instagram (me gusta y compartir; sin comentarios).
-         - Botón rojo a la izquierda y Mayoristas a la derecha.
-         ========================================================= -->
+    <!-- Aquí queda Nosotros: la tarjeta tipo publicación. -->
+        <!-- Nosotros: fondo beige, tarjeta tipo publicación y botella que aterriza en el cuadro. -->
     <section class="sec-showcase" id="nosotros" aria-labelledby="nosotros-title">
         <div class="showcase-shell">
             <div class="showcase-cards-grid">
@@ -258,6 +218,7 @@
     </section>
 
     <!-- ========== PROCESO — tarjeta roja con botella que sale ========== -->
+    <!-- Aquí queda el proceso: la botella entra al bajar. -->
     <section class="p3d" id="proceso" aria-labelledby="v3-proceso-title" data-p3d>
         <div class="p3d__wrap">
             <div class="p3d__head">
@@ -284,6 +245,7 @@
         </div>
     </section>
     <!-- ========== HOME V3 — mockups 03/04/05 ========== -->
+    <!-- Aquí queda el collage de fruta real. -->
     <section class="fcol" id="fruta-real" aria-labelledby="fcol-title" data-fcol>
         <div class="fcol__wrap">
             <div class="fcol__head">
@@ -348,6 +310,7 @@
         </div>
     </section>
 
+    <!-- Aquí quedan tres momentos de la marca (el del centro sigue el sabor de la portada). -->
     <section class="ytrio" aria-label="Momentos YoguraSo">
         <div class="ytrio__wrap">
             <article class="ytrio__card ytrio__card--llevalo">
@@ -387,6 +350,7 @@
 
     
 
+    <!-- Aquí queda el empaque de la botella. -->
     <section class="emp" id="empaque" aria-labelledby="emp-title">
         <div class="emp__wrap">
             <div class="emp__head">
@@ -418,6 +382,7 @@
 
 
 
+    <!-- Aquí queda el carrusel "Nuestros yogures". -->
     <section class="v3-catalog hp-section" id="productos" aria-labelledby="hp-title">
         <div class="v3-wrap hp-head">
             <span class="v3-kicker">Elaborado a diario</span>
@@ -437,6 +402,7 @@
         </div>
     </section>
 
+    <!-- Aquí queda Distribuidores. -->
     <section class="v3-dist" id="distribuidores" aria-labelledby="v3-dist-title">
         <div class="v3-wrap v3-dist__inner">
             <div class="v3-dist__copy">
@@ -475,6 +441,7 @@
         </div>
     </section>
 
+    <!-- Aquí queda el acordeón de preguntas frecuentes. -->
     <section class="emp" id="preguntas" aria-labelledby="faq-title">
         <div class="emp__wrap">
             <div class="emp__head">
@@ -638,6 +605,7 @@
     </section>
 
 
+    <!-- Aquí queda el formulario de contacto. -->
     <section class="ysc" id="contacto" aria-labelledby="ysc-title" data-ysc>
         <span class="ysc-anchor" id="contact" aria-hidden="true"></span>
         <div class="ysc-wrap">
@@ -694,6 +662,7 @@
         </div>
     </section>
 
+    <!-- Aquí queda el pie de página. -->
     <footer class="ysf" data-ysf>
         <div class="ysf-wrap">
             <div class="ysf-grid">
@@ -759,7 +728,8 @@
         <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </a>
 
-<div class="overlay" id="cartOverlay"></div>
+    <!-- Aquí queda la bolsa lateral. Se abre con el ícono del carrito. -->
+    <div class="overlay" id="cartOverlay"></div>
     <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true" aria-label="Carrito">
         <div class="cart-header">
             <span>Bolsa</span>
@@ -779,12 +749,25 @@
         </button>
     </aside>
 
-    <!-- Scripts: config ? utils ? carrito ? auth ? catálogo/cards -->
+    <!--
+      Scripts, en orden:
+      config y utils = datos de la marca y precios.
+      notice = aviso de cookies y la publicidad de bienvenida.
+      flavors = lista de sabores de la portada.
+      nav = menú del celular.
+      scroll-reveal y ui-motion = entradas al bajar y el contador del carrito.
+      cart = la bolsa y WhatsApp.
+      auth = cuentas. main = tarjetas del catálogo.
+      home-products-carousel = carrusel "Nuestros yogures".
+      hero = carrusel grande de botellas.
+      El resto son secciones sueltas: proceso, collage, empaque, preguntas, contacto y pie.
+    -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/notice.js"></script>
     <script src="js/flavors.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/scroll-reveal.js"></script>
     <script src="js/ui-motion.js"></script>
     <script src="js/sound.js"></script>
     <script src="js/cart.js"></script>
