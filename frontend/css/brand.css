@@ -45,10 +45,10 @@
     --radius-xl: 32px;
     --radius-pill: 999px;
 
-    --font-display: 'Quicksand', 'Nunito', system-ui, sans-serif;
-    --font-brand: 'Quicksand', 'Nunito', system-ui, sans-serif;
-    --font-body: 'Quicksand', 'Nunito', system-ui, sans-serif;
-    --font-ui: 'Quicksand', 'Nunito', system-ui, sans-serif;
+    --font-display: 'Dosis', system-ui, sans-serif;
+    --font-brand: 'Dosis', system-ui, sans-serif;
+    --font-body: 'Dosis', system-ui, sans-serif;
+    --font-ui: 'Dosis', system-ui, sans-serif;
 
     /* Emil Kowalski motion */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -133,7 +133,7 @@ button, input, select, textarea { font-family: inherit; }
     padding: 0 8px 0 22px;
     border: none;
     border-radius: var(--radius-pill);
-    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
+    font-family: 'Dosis', sans-serif, sans-serif;
     font-weight: 700;
     font-size: 15px;
     text-decoration: none;

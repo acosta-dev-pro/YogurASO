@@ -28,10 +28,10 @@
     --radius: 16px;
     --radius-sm: 12px;
     --header-h: 64px;
-    --font-ui: 'Quicksand', 'Nunito', sans-serif, sans-serif;
-    --font-body: 'Quicksand', 'Nunito', sans-serif, sans-serif;
-    --font-brand: 'Quicksand', 'Nunito', sans-serif, sans-serif;
-    --font-display: 'Quicksand', 'Nunito', sans-serif, sans-serif;
+    --font-ui: 'Dosis', sans-serif, sans-serif;
+    --font-body: 'Dosis', sans-serif, sans-serif;
+    --font-brand: 'Dosis', sans-serif, sans-serif;
+    --font-display: 'Dosis', sans-serif, sans-serif;
 }
 
 /* --- FUENTES LOCALES (fallback si no carga Google Fonts) --- */

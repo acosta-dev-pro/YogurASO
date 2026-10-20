@@ -1,11 +1,12 @@
-/* Tipografía redondeada YogurASO: Quicksand + Nunito (Google Fonts OFL).
-   Armoniza 100% con las curvas orgánicas, suaves y artesanales del logo YoguraSo. */
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap');
+/* Tipografía oficial YogurASO: Dosis (Google Fonts OFL).
+   Elegante, angosta, estilizada y con terminaciones redondeadas que se integran
+   a la perfección con el logotipo artesanal YoguraSo. Escala completa 300-800. */
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --font-primary: 'Quicksand', 'Nunito', system-ui, -apple-system, sans-serif;
-  --font-display: 'Quicksand', 'Nunito', system-ui, -apple-system, sans-serif;
-  --font-brand: 'Quicksand', 'Nunito', system-ui, -apple-system, sans-serif;
-  --font-body: 'Quicksand', 'Nunito', system-ui, -apple-system, sans-serif;
-  --font-ui: 'Quicksand', 'Nunito', system-ui, -apple-system, sans-serif;
+  --font-primary: 'Dosis', system-ui, -apple-system, sans-serif;
+  --font-display: 'Dosis', system-ui, -apple-system, sans-serif;
+  --font-brand: 'Dosis', system-ui, -apple-system, sans-serif;
+  --font-body: 'Dosis', system-ui, -apple-system, sans-serif;
+  --font-ui: 'Dosis', system-ui, -apple-system, sans-serif;
 }
