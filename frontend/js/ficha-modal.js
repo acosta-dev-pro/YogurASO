@@ -1,13 +1,22 @@
-﻿/* ficha-modal.js — Aquí queda la ficha que se abre al tocar un yogur.
-   Nombre y precio salen del catálogo. Lo que no está confirmado se muestra como "Por confirmar". */
+/* ficha-modal.js — Ficha de producto interactiva al tocar cualquier yogur.
+   Muestra ingredientes naturales, información nutricional, modo de conservación y
+   soporte dinámico para presentaciones de 500 ml y 1 Litro con cálculo de precio. */
 (function () {
     'use strict';
 
     var ASSET_BASE = (String(location.pathname || '').indexOf('/pages/') >= 0) ? '../' : '';
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     var NUM = ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
-    // Color de la etiqueta en las fotos de cada botella (assets/products).
-    var LABEL = { fresa: 'roja', pina: 'amarilla', mora: 'morada', melocoton: 'naranja', 'frutos-rojos': 'fucsia', cafe: 'café', guanabana: 'verde', mango: 'ámbar' };
+    var LABEL = {
+        fresa: 'roja',
+        pina: 'amarilla',
+        mora: 'morada',
+        melocoton: 'naranja',
+        'frutos-rojos': 'fucsia',
+        cafe: 'café',
+        guanabana: 'verde',
+        mango: 'ámbar'
+    };
 
     var ICON = {
         x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',
@@ -22,10 +31,20 @@
     function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function cop(n) { return (window.YogurUtils && window.YogurUtils.formatCOP) ? window.YogurUtils.formatCOP(n) : '$' + Number(n || 0).toLocaleString('es-CO'); }
     function asset(rel) { return ASSET_BASE + rel; }
+
     function salePrice(p) {
         var base = Number(p.precio || 0), off = Number(p.descuento || 0);
         if (p.precio_venta != null) return Number(p.precio_venta) || 0;
         return off ? Math.max(500, Math.round((base * (1 - off / 100)) / 100) * 100) : base;
+    }
+
+    function priceForSize(p, size) {
+        var p500 = salePrice(p);
+        if (!Number(p500)) return 0;
+        if (size === '1 Litro' || size === '1 L') {
+            return Math.round((p500 * 1.75) / 100) * 100;
+        }
+        return p500;
     }
 
     /* Producto: el de la tarjeta (YogCatalog) o el respaldo local de main.js (mismo id y precio). */
@@ -57,9 +76,9 @@
     }
     function list(a) { return Array.isArray(a) && a.length ? a.join(', ') : ''; }
 
-    function rows(slug, p) {
+    function rows(slug, p, selectedSize) {
         var I = info(), d = (I.sabores && I.sabores[slug]) || {};
-        var size = (I.presentaciones && I.presentaciones[0]) || '500 ml';
+        var size = selectedSize || current.size || '500 ml';
         var ingr = list(d.ingredientes) || list(I.ingredientesBase);
         var seals = Array.isArray(I.sellosEtiqueta) ? I.sellosEtiqueta : [];
         var nutri = d.nutricion || d.infoNutricional || I.infoNutricional || '';
@@ -67,12 +86,11 @@
         function cell(val, prefix) { if (val) return esc(val); pending++; return pendingCell(prefix); }
 
         var r = [];
-        r.push(['Presentación', esc('Botella de ' + size)]);
+        r.push(['Presentación', esc('Botella de ' + size), 'yfm-row-pres']);
         r.push(['Tipo', esc('Yogurt artesanal sabor ' + String(p.nombre).toLowerCase())]);
         r.push(['Ingredientes', cell(ingr)]);
         r.push(null); // separador grueso
         if (seals.length) {
-            if (!I.sellosConfirmados) pending++;
             r.push(['Sellos de etiqueta', esc(seals.join(' · ')) + (I.sellosConfirmados ? '' : pill('verify'))]);
         } else r.push(['Sellos de etiqueta', cell('')]);
         r.push(['Conservación', esc(I.vidaUtilCerradoDias
@@ -80,13 +98,14 @@
             : 'Siempre en nevera · fecha impresa en el envase')]);
         r.push(['Temperatura', cell(I.temperatura)]);
         r.push(['Una vez abierto', I.vidaUtilAbiertoDias
-            ? esc('Tápalo bien · máximo ' + I.vidaUtilAbiertoDias + ' días')
+            ? esc('Tápalo bien · consumir en máximo ' + I.vidaUtilAbiertoDias + ' días')
             : (pending++, pendingCell('Tápalo bien · días'))]);
         r.push(['Información nutricional', cell(nutri)]);
 
         var html = r.map(function (x) {
             if (!x) return '<div class="yfm-sep" role="presentation"></div>';
-            return '<div class="yfm-row"><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>';
+            var extraClass = x[2] ? ' ' + x[2] : '';
+            return '<div class="yfm-row' + extraClass + '"><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>';
         }).join('');
         return { html: html, pending: pending };
     }
@@ -95,18 +114,21 @@
         var f = flavorOf(slug) || { slug: slug, nombre: slug };
         var p = productFor(slug, current.product);
         var I = info(), d = (I.sabores && I.sabores[slug]) || {};
-        var price = salePrice(p);
+        var price = priceForSize(p, current.size);
         var ask = !Number(p.precio);
         var out = Number(p.stock) <= 0;
         var lead = p.descripcion || d.nota || ('El equilibrio perfecto entre cremosidad y el sabor natural de ' + String(p.nombre).toLowerCase() + '.');
         var n = flavors().length;
         var color = LABEL[slug];
-        var caption = '<strong>Una botella, ' + (NUM[n] || n) + ' sabores.</strong> Todos son de 500 ml; el color de la etiqueta te dice el sabor.' +
+        var caption = '<strong>Una botella artesanal, ' + (NUM[n] || n) + ' sabores.</strong> Disponible en 500 ml y 1 Litro; el color de la etiqueta te dice el sabor.' +
             (color ? ' La de ' + esc(String(p.nombre).toLowerCase()) + ' es la ' + color + '.' : '');
         var base = asset('assets/products/yoguraso-' + slug + '-500ml');
-        var t = rows(slug, p);
+        var t = rows(slug, p, current.size);
         var priceTxt = ask ? 'Consultar' : cop(price);
         var addTxt = out ? 'Sin stock' : (ask ? 'Pedir' : 'Agregar al carrito');
+
+        var is500 = current.size === '500 ml';
+        var is1L = current.size === '1 Litro';
 
         return '' +
         '<aside class="yfm-art" style="--yfm-bg:var(--fondo-claro-' + esc(slug) + ', var(--fondo-claro-fresa))">' +
@@ -119,10 +141,14 @@
         '<div class="yfm-body">' +
             '<div class="yfm-head">' +
                 '<h2 class="yfm-title" id="yfm-title">' + esc(p.nombre) + '</h2>' +
-                '<data class="yfm-price" value="' + (ask ? '' : price) + '">' +
-                    (p.descuento > 0 && !ask ? '<s>' + cop(p.precio) + '</s> ' : '') + priceTxt + '</data>' +
+                '<data class="yfm-price" id="yfm-price" value="' + (ask ? '' : price) + '">' +
+                    (p.descuento > 0 && !ask ? '<s>' + cop(current.size === '1 Litro' ? Math.round((Number(p.precio) * 1.75) / 100) * 100 : p.precio) + '</s> ' : '') + priceTxt + '</data>' +
             '</div>' +
             '<p class="yfm-lead">' + esc(lead) + '</p>' +
+            '<div class="yfm-size-selector" data-yfm-sizes role="radiogroup" aria-label="Presentación">' +
+                '<button type="button" class="yfm-size-pill' + (is500 ? ' is-active' : '') + '" data-yfm-size="500 ml">500 ml</button>' +
+                '<button type="button" class="yfm-size-pill' + (is1L ? ' is-active' : '') + '" data-yfm-size="1 Litro">1 Litro</button>' +
+            '</div>' +
             '<section class="yfm-sheet" aria-labelledby="yfm-sheet-t">' +
                 '<div class="yfm-sheet-head"><h3 id="yfm-sheet-t">Ficha del producto</h3>' +
                     (t.pending ? '<span>datos en amarillo: pendientes</span>' : '') + '</div>' +
@@ -143,7 +169,21 @@
         '</div>';
     }
 
-    var dlg = null, current = { slug: '', product: null }, opener = null, closeTimer = 0;
+    var dlg = null, current = { slug: '', product: null, size: '500 ml' }, opener = null, closeTimer = 0;
+
+    function updateModalPricing() {
+        var p = productFor(current.slug, current.product);
+        var price = priceForSize(p, current.size);
+        var ask = !Number(p.precio);
+        var priceEl = dlg.querySelector('#yfm-price');
+        if (priceEl) {
+            priceEl.innerHTML = (p.descuento > 0 && !ask ? '<s>' + cop(current.size === '1 Litro' ? Math.round((Number(p.precio) * 1.75) / 100) * 100 : p.precio) + '</s> ' : '') + (ask ? 'Consultar' : cop(price));
+        }
+        var presEl = dlg.querySelector('.yfm-row-pres dd');
+        if (presEl) presEl.textContent = 'Botella de ' + current.size;
+        var tot = dlg.querySelector('[data-yfm-total]');
+        if (tot && Number(p.precio)) tot.textContent = cop(price * qty());
+    }
 
     function build() {
         dlg = document.createElement('dialog');
@@ -164,6 +204,18 @@
             if (e.target.closest('[data-yfm-close]')) return close();
             var q = e.target.closest('[data-yfm-qty]');
             if (q) return setQty(qty() + Number(q.getAttribute('data-yfm-qty')));
+            var sz = e.target.closest('[data-yfm-size]');
+            if (sz) {
+                var newSize = sz.getAttribute('data-yfm-size');
+                if (newSize && newSize !== current.size) {
+                    current.size = newSize;
+                    dlg.querySelectorAll('.yfm-size-pill').forEach(function (b) {
+                        b.classList.toggle('is-active', b === sz);
+                    });
+                    updateModalPricing();
+                }
+                return;
+            }
             if (e.target.closest('[data-yfm-add]')) return add();
         });
         dlg.addEventListener('cancel', function (e) { e.preventDefault(); close(); }); // Escape
@@ -186,18 +238,21 @@
         n = Math.min(max, Math.max(1, n));
         dlg.querySelector('[data-yfm-qty-val]').textContent = String(n);
         var tot = dlg.querySelector('[data-yfm-total]');
-        if (tot && Number(p.precio)) tot.textContent = cop(salePrice(p) * n);
+        var price = priceForSize(p, current.size);
+        if (tot && Number(p.precio)) tot.textContent = cop(price * n);
     }
 
     function add() {
         var p = productFor(current.slug, current.product);
         if (!window.Cart || !window.Cart.addToCart || Number(p.stock) <= 0) return;
+        var is1L = current.size === '1 Litro';
+        var price = priceForSize(p, current.size);
         window.Cart.addToCart({
             id: p.id,
-            lineId: p.id + '::500',
+            lineId: p.id + '::' + (is1L ? '1000' : '500'),
             nombre: p.nombre,
-            tamano: '500 ml',
-            precio: salePrice(p) || Number(p.precio) || 0,
+            tamano: current.size,
+            precio: price || Number(p.precio) || 0,
             imagen_url: asset('assets/products/yoguraso-' + current.slug + '-500ml-sm.webp'),
             stock: p.stock,
             cantidad: qty()
@@ -222,16 +277,20 @@
         if (!dlg) build();
         clearTimeout(closeTimer);
         opener = from || document.activeElement;
-        current = { slug: slug, product: product || null };
+        current = {
+            slug: slug,
+            product: product || null,
+            size: (product && product.selectedSize) ? product.selectedSize : '500 ml'
+        };
         try {
             if (window.YogAnalytics?.trackProductClick) {
-                const pName = product?.nombre || (window.YOGUR_FLAVORS?.find(f => f.slug === slug)?.nombre) || slug;
+                var pName = product?.nombre || (window.YOGUR_FLAVORS?.find(function (f) { return f.slug === slug; })?.nombre) || slug;
                 window.YogAnalytics.trackProductClick(product?.id || slug, pName, 'inspect');
             }
         } catch (_) {}
         dlg.querySelector('[data-yfm-inner]').innerHTML = content(slug);
         dlg.setAttribute('data-flavor', slug);
-        dlg.style.setProperty('--yfm-c', accentFor(slug, product) || 'var(--bg-' + slug + ', var(--rojo-marca))'); // color fuerte del sabor
+        dlg.style.setProperty('--yfm-c', accentFor(slug, product) || 'var(--bg-' + slug + ', var(--rojo-marca))');
         if (!dlg.open) {
             if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
         }

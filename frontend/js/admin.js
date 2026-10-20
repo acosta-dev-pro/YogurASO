@@ -453,9 +453,10 @@ function updateDashboard(productos) {
 /**
  * Renderiza métricas 100% reales de visitantes, clics por producto y pedidos WhatsApp.
  */
-function renderRealAnalytics(productos = allAdminProducts || []) {
+function renderRealAnalytics(productos) {
     if (!window.YogAnalytics) return;
     const metrics = window.YogAnalytics.getMetrics();
+    const list = Array.isArray(productos) ? productos : (allAdminProducts || []);
 
     const totalVisits = Number(metrics.totalVisits) || 0;
     const totalOrders = Number(metrics.totalOrders) || 0;
@@ -478,9 +479,9 @@ function renderRealAnalytics(productos = allAdminProducts || []) {
     if (elPedidos) elPedidos.textContent = totalOrders.toLocaleString('es-CO');
 
     const elConversion = document.getElementById('analytics-conversion');
-    if (elConversion) elConversion.textContent = ${conversion}%;
+    if (elConversion) elConversion.textContent = conversion + '%';
 
-    renderFlavorAnalyticsBars(productos, productStats, totalClicks);
+    renderFlavorAnalyticsBars(list, productStats, totalClicks);
     renderDeviceBreakdown(metrics.devices, totalVisits);
 }
 
@@ -491,27 +492,25 @@ function renderFlavorAnalyticsBars(productos, productStats, totalClicks) {
 
     const mergedMap = new Map();
 
-    // 1. Agregar todos los productos del inventario actual
     (productos || []).forEach((p) => {
         const id = String(p.id);
         const stats = productStats[id] || productStats[p.slug] || {};
         const clicks = (Number(stats.clicks) || 0) + (Number(stats.inspections) || 0) + (Number(stats.cartAdds) || 0);
         mergedMap.set(id, {
             id: id,
-            nombre: p.nombre || Producto #,
+            nombre: p.nombre || ('Producto #' + id),
             clicks: clicks,
             color: p.color_acento || 'var(--rojo-marca, #C3343E)'
         });
     });
 
-    // 2. Sumar productos nuevos que tengan clics registrados pero que no estén en el catálogo base
     Object.keys(productStats || {}).forEach((k) => {
         if (!mergedMap.has(k)) {
             const stats = productStats[k];
             const clicks = (Number(stats.clicks) || 0) + (Number(stats.inspections) || 0) + (Number(stats.cartAdds) || 0);
             mergedMap.set(k, {
                 id: k,
-                nombre: stats.nombre || Producto #,
+                nombre: stats.nombre || ('Producto #' + k),
                 clicks: clicks,
                 color: 'var(--rojo-marca, #C3343E)'
             });
@@ -522,7 +521,7 @@ function renderFlavorAnalyticsBars(productos, productStats, totalClicks) {
     items.sort((a, b) => b.clicks - a.clicks);
 
     if (counterEl) {
-        counterEl.textContent = ${items.length} ;
+        counterEl.textContent = items.length + (items.length === 1 ? ' producto' : ' productos');
     }
 
     if (!items.length) {
@@ -532,26 +531,26 @@ function renderFlavorAnalyticsBars(productos, productStats, totalClicks) {
 
     const html = items.map((item) => {
         const pct = totalClicks > 0 ? Math.round((item.clicks / totalClicks) * 100) : 0;
-        return 
-            <div class="admin-bar-item">
-                <div class="admin-bar-label">
-                    <span></span>
-                    <strong>% ( )</strong>
-                </div>
-                <div class="admin-bar-track">
-                    <div class="admin-bar-fill" style="width: %; background: ;"></div>
-                </div>
-            </div>
-        ;
+        const widthStyle = 'width: ' + Math.max(pct, item.clicks > 0 ? 5 : 0) + '%; background: ' + item.color + ';';
+        return '<div class="admin-bar-item">' +
+            '<div class="admin-bar-label">' +
+                '<span>' + escapeHtml(item.nombre) + '</span>' +
+                '<strong>' + pct + '% (' + item.clicks + (item.clicks === 1 ? ' clic' : ' clics') + ')</strong>' +
+            '</div>' +
+            '<div class="admin-bar-track">' +
+                '<div class="admin-bar-fill" style="' + widthStyle + '"></div>' +
+            '</div>' +
+        '</div>';
     }).join('');
 
     container.innerHTML = html;
 }
 
-function renderDeviceBreakdown(devices = {}, totalVisits = 0) {
-    const ios = Number(devices.ios) || 0;
-    const android = Number(devices.android) || 0;
-    const desktop = Number(devices.desktop) || 0;
+function renderDeviceBreakdown(devices, totalVisits) {
+    const dev = devices || {};
+    const ios = Number(dev.ios) || 0;
+    const android = Number(dev.android) || 0;
+    const desktop = Number(dev.desktop) || 0;
     const sum = (ios + android + desktop) || totalVisits || 1;
 
     const iosPct = Math.round((ios / sum) * 100) || 0;
@@ -559,14 +558,14 @@ function renderDeviceBreakdown(devices = {}, totalVisits = 0) {
     const desktopPct = Math.round((desktop / sum) * 100) || 0;
 
     const setDev = (type, pct, count) => {
-        const titleEl = document.getElementById(device--text);
-        const subEl = document.getElementById(device--sub);
+        const titleEl = document.getElementById('device-' + type + '-text');
+        const subEl = document.getElementById('device-' + type + '-sub');
         if (titleEl) {
             const label = type === 'ios' ? 'Apple iOS / iPhone' : type === 'android' ? 'Android' : 'Computador / Escritorio';
-            titleEl.textContent = ${label} (%);
+            titleEl.textContent = label + ' (' + pct + '%)';
         }
         if (subEl) {
-            subEl.textContent = ${count} ;
+            subEl.textContent = count + (count === 1 ? ' visita registrada' : ' visitas registradas');
         }
     };
 

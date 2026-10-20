@@ -180,6 +180,38 @@ function bindAddButtons(container) {
     if (container.dataset.boundAdd) return;
     container.dataset.boundAdd = '1';
     container.addEventListener('click', (e) => {
+        // Selector interactivo de presentación (500 ml vs 1 Litro)
+        const sz = e.target.closest('.yg-size-btn');
+        if (sz) {
+            e.preventDefault();
+            e.stopPropagation();
+            const group = sz.closest('.yg-size-selector');
+            const card = sz.closest('.hp-card, .producto-card');
+            if (group && card) {
+                const chosen = sz.dataset.size || '500 ml';
+                card.dataset.selectedSize = chosen;
+                group.querySelectorAll('.yg-size-btn').forEach((b) => {
+                    b.classList.toggle('is-active', b === sz);
+                });
+                const id = card.dataset.id;
+                const p = allProducts.find((x) => String(x.id) === String(id));
+                if (p && Number(p.precio)) {
+                    const base = salePrice(p);
+                    const curPrice = chosen === '1 Litro' ? Math.round((base * 1.75) / 100) * 100 : base;
+                    const priceEl = card.querySelector('.yg-price, .hp-price, .precio');
+                    if (priceEl) {
+                        if (Number(p.descuento) > 0) {
+                            const oldP = chosen === '1 Litro' ? Math.round((Number(p.precio) * 1.75) / 100) * 100 : Number(p.precio);
+                            priceEl.innerHTML = `<s>${formatCOP(oldP)}</s> ${formatCOP(curPrice)}`;
+                        } else {
+                            priceEl.textContent = formatCOP(curPrice);
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
         const hpCard = e.target.closest('.hp-card');
         if (hpCard && !hpCard.classList.contains('producto-skeleton')) {
             const hpQty = e.target.closest('[data-hp-qty]');
@@ -208,12 +240,16 @@ function bindAddButtons(container) {
                 const p = allProducts.find((x) => String(x.id) === String(hpCard.dataset.id));
                 const qty = Number(hpCard.querySelector('[data-hp-qty-val]')?.textContent) || 1;
                 if (window.Cart && p && !hpAdd.disabled) {
+                    const chosen = hpCard.dataset.selectedSize || '500 ml';
+                    const is1L = chosen === '1 Litro';
+                    const base = salePrice(p);
+                    const curPrice = is1L ? Math.round((base * 1.75) / 100) * 100 : base;
                     window.Cart.addToCart({
                         id: p.id,
-                        lineId: `${p.id}::500`,
+                        lineId: `${p.id}::${is1L ? '1000' : '500'}`,
                         nombre: p.nombre,
-                        tamano: '500 ml',
-                        precio: Number(salePrice(p)) || Number(p.precio) || 0,
+                        tamano: chosen,
+                        precio: Number(curPrice) || Number(p.precio) || 0,
                         imagen_url: bottleUrlFor(p),
                         stock: p.stock,
                         cantidad: qty
@@ -221,13 +257,17 @@ function bindAddButtons(container) {
                 }
                 return;
             }
-            // Clic en cualquier parte de la tarjeta (fuera de botones) abre la ficha flotante.
-            const slug = hpCard.dataset.slug;
-            if (slug && window.YogFicha?.open && !e.target.closest('button, input, select, textarea')) {
+            // Clic en cualquier parte de la tarjeta (fuera de botones) abre la ficha flotante
+            if (!e.target.closest('button, input, select, textarea, .yg-size-selector')) {
                 const p = allProducts.find((x) => String(x.id) === String(hpCard.dataset.id));
-                const opener = hpCard.querySelector('.hp-card__name [data-hp-open]') || hpCard;
-                if (window.YogFicha.open(slug, opener, p ? catalogEntry(p, slug) : null) !== false) {
+                const slug = hpCard.dataset.slug || (p ? matchFlavorSlug(p) : '');
+                if (slug && window.YogFicha?.open) {
                     e.preventDefault();
+                    const opener = hpCard.querySelector('.hp-card__name [data-hp-open]') || hpCard;
+                    const chosen = hpCard.dataset.selectedSize || '500 ml';
+                    const curPrice = chosen === '1 Litro' ? Math.round((salePrice(p) * 1.75) / 100) * 100 : salePrice(p);
+                    const entry = p ? { ...p, slug, selectedSize: chosen, precio_venta: curPrice } : null;
+                    window.YogFicha.open(slug, opener, entry);
                     return;
                 }
             }
@@ -259,25 +299,34 @@ function bindAddButtons(container) {
         const card = e.target.closest('.producto-card');
         if (!card || card.classList.contains('producto-skeleton')) return;
         if (!addBtn && e.target.closest('[data-ficha], .btn-ficha')) return;
-        e.preventDefault();
         const p = allProducts.find((x) => String(x.id) === String(card.dataset.id));
         const qty = Number(card.querySelector('[data-qty-val]')?.textContent) || 1;
+        const chosen = card.dataset.selectedSize || '500 ml';
+        const is1L = chosen === '1 Litro';
+        const base = salePrice(p);
+        const curPrice = is1L ? Math.round((base * 1.75) / 100) * 100 : base;
+
         if (addBtn && window.Cart && p) {
+            e.preventDefault();
             window.Cart.addToCart({
                 id: p.id,
-                lineId: `${p.id}::500`,
+                lineId: `${p.id}::${is1L ? '1000' : '500'}`,
                 nombre: p.nombre,
-                tamano: '500 ml',
-                precio: Number(salePrice(p)) || Number(p.precio) || 0,
+                tamano: chosen,
+                precio: Number(curPrice) || Number(p.precio) || 0,
                 imagen_url: bottleUrlFor(p),
                 stock: p.stock,
                 cantidad: qty
             });
             return;
         }
-        if (!addBtn && card.dataset.slug && window.YogFicha) {
-            window.YogFicha.open(card.dataset.slug, card);
-            return;
+        if (!addBtn && window.YogFicha) {
+            const slug = card.dataset.slug || (p ? matchFlavorSlug(p) : '');
+            if (slug) {
+                e.preventDefault();
+                window.YogFicha.open(slug, card, p ? { ...p, slug, selectedSize: chosen, precio_venta: curPrice } : null);
+                return;
+            }
         }
         if (addBtn) openInspect(card.dataset.id);
     });

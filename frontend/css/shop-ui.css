@@ -1259,34 +1259,36 @@ body.cart-body {
 .yg-size-selector {
     display: inline-flex;
     align-items: center;
-    background: rgba(23, 23, 23, 0.05);
-    border: 1px solid rgba(23, 23, 23, 0.06);
+    background: #EFEFEF;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 999px;
     padding: 2px;
     gap: 2px;
     vertical-align: middle;
+    user-select: none;
 }
 .yg-size-btn {
     appearance: none;
     border: none;
     background: transparent;
-    font-family: 'Nunito Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    color: #6B635C;
+    font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #6E6862;
     padding: 3px 9px;
     border-radius: 999px;
     cursor: pointer;
-    transition: all 0.18s cubic-bezier(0.23, 1, 0.32, 1);
-    line-height: 1;
+    transition: all 0.16s ease-in-out;
+    line-height: 1.2;
 }
 .yg-size-btn:hover {
-    color: #121214;
+    color: #17171A;
 }
 .yg-size-btn.is-active {
     background: #FFFFFF;
-    color: #121214;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    color: #17171A;
+    font-weight: 600;
+    box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.08);
 }
 .yfm-size-selector {
     display: inline-flex;

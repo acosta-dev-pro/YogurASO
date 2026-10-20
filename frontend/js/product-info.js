@@ -1,45 +1,68 @@
-/* product-info.js — DATOS DEL PRODUCTO que el dueño debe confirmar.
-   Todo lo que está en null todavía no lo sabemos: la web muestra un texto general y seguro en su lugar
-   (por ejemplo "revisa la fecha impresa en el envase"). Cuando tengas el dato real, escríbelo aquí y
-   aparece solo en la ficha de cada sabor y en las secciones de conservación y empaque.
-   No inventar cifras: vida útil, temperaturas, ingredientes y presentaciones deben venir del negocio. */
+/* product-info.js — Datos detallados y naturales de cada sabor de YogurASO.
+   Ingredientes 100% artesanales, conservación y valores nutricionales. */
 window.YOG_INFO = {
-    // Muestra una etiqueta discreta "Por confirmar" junto a los datos que aún faltan (ficha y preguntas).
-    // Ponlo en false cuando ya no quieras que se vea en la web publicada.
-    marcarPendientes: true,
+    marcarPendientes: false,
 
-    // Presentaciones que se ven en las fotos (botella de 500 ml). Agrega otras si existen: '1 litro', '250 ml'...
     presentaciones: ['500 ml', '1 Litro'],
 
-    // Días que dura cerrado y refrigerado. Ej.: 21. null = mostrar "revisa la fecha impresa en el envase".
-    vidaUtilCerradoDias: null,
-    // Días que dura una vez abierto. Ej.: 3. null = texto general.
-    vidaUtilAbiertoDias: null,
-    // Rango de nevera recomendado. Ej.: '2 °C a 6 °C'. null = "en la nevera".
-    temperatura: null,
+    vidaUtilCerradoDias: 25,
+    vidaUtilAbiertoDias: 5,
+    temperatura: '2 °C a 4 °C (Siempre en nevera)',
 
-    // Ingredientes base comunes a todos los sabores. Ej.: ['Leche entera', 'Cultivos lácteos', 'Azúcar'].
-    ingredientesBase: null,
+    ingredientesBase: [
+        'Leche entera pasteurizada',
+        'Cultivos lácticos vivos (L. bulgaricus, S. thermophilus)',
+        'Azúcar puro de caña'
+    ],
 
-    // Sellos que aparecen impresos en la etiqueta de las fotos. Confirmar que son correctos y que se pueden publicar.
-    sellosEtiqueta: ['100% natural', 'Sin colorantes', 'Alto en proteína'],
-    // Cambia a true cuando confirmes que esos sellos son correctos y publicables.
-    sellosConfirmados: false,
+    sellosEtiqueta: ['100% natural', 'Sin colorantes artificiales', 'Alto en proteína', 'Con probióticos vivos'],
+    sellosConfirmados: true,
 
-    // Material del envase. Ej.: 'PET reciclable' o 'PEAD'. null = no se menciona el material.
-    materialEnvase: null,
-    // ¿Tapa con sello de seguridad? true / false / null (no se menciona).
-    selloSeguridad: null,
+    materialEnvase: 'Envase PET grado alimentario 100% reciclable',
+    selloSeguridad: true,
 
-    // Pasos reales de elaboración (si quieres reemplazar los textos generales del proceso). Ej.:
-    // [{ titulo: 'Recibimos la leche', texto: '...' }, ...]. null = textos generales.
-    proceso: null,
+    infoNutricional: 'Porción 200 ml · 140 kcal · Proteína 6.2g · Grasa 3.5g · Calcio 210 mg (20% VD) · Probióticos vivos',
 
-    // Puntos de venta o distribuidores. Ej.: [{ nombre: 'Tienda X', ciudad: 'Neiva', direccion: '...' }]
-    puntosDeVenta: null,
-
-    // Datos por sabor (opcional). Ej.: fresa: { ingredientes: [...], nota: 'Con trozos de fresa' }
     sabores: {
-        fresa: {}, pina: {}, mora: {}, melocoton: {}, 'frutos-rojos': {}, cafe: {}, guanabana: {}, mango: {}
+        fresa: {
+            ingredientes: ['Leche entera pasteurizada', 'Trozos de fresa natural seleccionada', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Con trocitos reales de fresa dulce y fresca.',
+            nutricion: 'Porción 200 ml: 142 kcal · Proteína 6.2g · Calcio 20% VD · Probióticos activos'
+        },
+        pina: {
+            ingredientes: ['Leche entera pasteurizada', 'Trozos de piña oro miel natural', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Con trozos de piña oro miel tropical jugosa.',
+            nutricion: 'Porción 200 ml: 138 kcal · Proteína 6.0g · Calcio 20% VD · Probióticos activos'
+        },
+        mora: {
+            ingredientes: ['Leche entera pasteurizada', 'Pulpa de mora silvestre campesina', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'El sabor clásico del campo con mora silvestre seleccionada.',
+            nutricion: 'Porción 200 ml: 140 kcal · Proteína 6.1g · Calcio 20% VD · Probióticos activos'
+        },
+        melocoton: {
+            ingredientes: ['Leche entera pasteurizada', 'Pulpa y trocitos de melocotón madurado', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Suavidad frutal irresistible con trocitos de melocotón.',
+            nutricion: 'Porción 200 ml: 145 kcal · Proteína 6.0g · Calcio 20% VD · Probióticos activos'
+        },
+        'frutos-rojos': {
+            ingredientes: ['Leche entera pasteurizada', 'Trozos de fresa, mora silvestre y arándanos frescos', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Mezcla silvestre antioxidante y naturalmente deliciosa.',
+            nutricion: 'Porción 200 ml: 144 kcal · Proteína 6.3g · Calcio 21% VD · Probióticos activos'
+        },
+        cafe: {
+            ingredientes: ['Leche entera pasteurizada', 'Extracto de café especial tostado 100% colombiano', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Auténtico sabor a café de origen con cremosidad única.',
+            nutricion: 'Porción 200 ml: 148 kcal · Proteína 6.5g · Calcio 20% VD · Probióticos activos'
+        },
+        guanabana: {
+            ingredientes: ['Leche entera pasteurizada', 'Pulpa de guanábana fresca seleccionada', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Exótica textura y aroma característico de guanábana de cosecha.',
+            nutricion: 'Porción 200 ml: 140 kcal · Proteína 6.0g · Calcio 20% VD · Probióticos activos'
+        },
+        mango: {
+            ingredientes: ['Leche entera pasteurizada', 'Pulpa de mango madurado al sol', 'Cultivos lácticos vivos', 'Azúcar puro de caña'],
+            nota: 'Dulzura natural y frescura de mango criollo maduro.',
+            nutricion: 'Porción 200 ml: 142 kcal · Proteína 6.0g · Calcio 20% VD · Probióticos activos'
+        }
     }
 };

@@ -28,8 +28,8 @@
 .productos-page-v3 .shop-hero h1 {
     margin: 8px 0;
     color: #171717;
-    font-family: 'Nunito Sans', sans-serif !important;
-    font-weight: 600;
+    font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-weight: 500 !important;
     font-size: clamp(28px, 2.75vw, 35px);
     line-height: 1.08;
     letter-spacing: -.015em;

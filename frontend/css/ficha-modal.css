@@ -125,7 +125,10 @@ html.yfm-lock { overflow: hidden; }
     font: 800 14.5px/1.2 var(--yfm-sans) !important; letter-spacing: 0 !important;
 }
 #yfm .yfm-sheet-head span { font: 400 10px/1.2 var(--yfm-sans); color: var(--yfm-muted); }
-.yfm-rows { margin: 0; }
+.yfm-rows { margin: 0; max-height: 200px; overflow-y: auto; overscroll-behavior: contain; padding-right: 4px; }
+.yfm-rows::-webkit-scrollbar { width: 4px; }
+.yfm-rows::-webkit-scrollbar-track { background: transparent; }
+.yfm-rows::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.16); border-radius: 4px; }
 .yfm-row {
     display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: center; gap: 10px;
     min-height: 29px; padding: 5px 0; border-bottom: 1px solid var(--yfm-line);
@@ -229,4 +232,40 @@ html.yfm-lock { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
     .yfm-card, .yfm::backdrop, .yfm-x, #yfm .yfm-add { transition: none; }
+}
+
+/* Selector de tamaño dentro de la ficha flotante */
+.yfm-size-selector {
+    display: inline-flex;
+    align-items: center;
+    background: #F0EEEB;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 999px;
+    padding: 2.5px;
+    gap: 3px;
+    margin-bottom: 8px;
+    align-self: flex-start;
+}
+.yfm-size-pill {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #66605A;
+    padding: 4px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 1.2;
+}
+.yfm-size-pill:hover {
+    color: #17171A;
+}
+.yfm-size-pill.is-active {
+    background: #FFFFFF;
+    color: #17171A;
+    font-weight: 600;
+    box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.1);
 }

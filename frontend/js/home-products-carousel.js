@@ -317,6 +317,33 @@ function initCarousel(products) {
         const p = products.find((x) => String(x.id) === id);
         if (!p) return;
 
+        const sz = e.target.closest('.yg-size-btn');
+        if (sz) {
+            e.preventDefault();
+            e.stopPropagation();
+            const chosen = sz.dataset.size || '500 ml';
+            cards.forEach((c) => {
+                if (c.dataset.id === id) {
+                    c.dataset.selectedSize = chosen;
+                    c.querySelectorAll('.yg-size-btn').forEach((b) => {
+                        b.classList.toggle('is-active', b.dataset.size === chosen);
+                    });
+                    const priceEl = c.querySelector('.hp-card__price');
+                    if (priceEl && Number(p.precio)) {
+                        const base = salePrice(p);
+                        const curPrice = chosen === '1 Litro' ? Math.round((base * 1.75) / 100) * 100 : base;
+                        if (Number(p.descuento) > 0) {
+                            const oldP = chosen === '1 Litro' ? Math.round((Number(p.precio) * 1.75) / 100) * 100 : Number(p.precio);
+                            priceEl.innerHTML = `<span class="hp-price yg-price"><s>${formatCOP(oldP)}</s> ${formatCOP(curPrice)}</span>`;
+                        } else {
+                            priceEl.innerHTML = `<span class="hp-price yg-price">${formatCOP(curPrice)}</span>`;
+                        }
+                    }
+                }
+            });
+            return;
+        }
+
         const q = e.target.closest('[data-hp-qty]');
         if (q) {
             const next = Math.max(1, (qty.get(id) || 1) + Number(q.dataset.hpQty));
@@ -332,28 +359,32 @@ function initCarousel(products) {
         }
         if (e.target.closest('[data-hp-add]')) {
             if (!window.Cart?.addToCart) return;
+            const chosen = card.dataset.selectedSize || '500 ml';
+            const is1L = chosen === '1 Litro';
+            const base = salePrice(p);
+            const curPrice = is1L ? Math.round((base * 1.75) / 100) * 100 : base;
             window.Cart.addToCart({
                 id: p.id,
-                lineId: `${p.id}::500`,
+                lineId: `${p.id}::${is1L ? '1000' : '500'}`,
                 nombre: p.nombre,
-                tamano: '500 ml',
-                precio: Number(salePrice(p)) || Number(p.precio) || 0,
+                tamano: chosen,
+                precio: Number(curPrice) || Number(p.precio) || 0,
                 imagen_url: bottleUrlFor(p),
                 stock: p.stock,
                 cantidad: qty.get(id) || 1
             });
             return;
         }
-        // Clic en cualquier parte de la tarjeta (fuera de botones) abre la ficha flotante.
-        if (!e.target.closest('button, input, select, textarea')) {
+        // Clic en cualquier parte de la tarjeta (fuera de botones) abre la ficha flotante
+        if (!e.target.closest('button, input, select, textarea, .yg-size-selector')) {
             const slug = card.dataset.slug;
             const isFlavor = (window.YOGUR_FLAVORS || []).some((f) => f.slug === slug);
             if (slug && isFlavor && window.YogFicha?.open) {
                 e.preventDefault();
+                const chosen = card.dataset.selectedSize || '500 ml';
                 const opener = card.querySelector('.hp-card__name [data-hp-open]') || card;
-                window.YogFicha.open(slug, opener, { ...p, slug, precio_venta: salePrice(p) });
+                window.YogFicha.open(slug, opener, { ...p, slug, selectedSize: chosen, precio_venta: salePrice(p) });
             }
-            // si no hay ficha para ese producto, el enlace sigue a productos.html
         }
     });
 
