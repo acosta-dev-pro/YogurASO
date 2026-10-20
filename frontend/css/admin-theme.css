@@ -808,7 +808,7 @@ body.admin-page .admin-studio-grid {
 .admin-card-extracted-wrap {
     display: flex;
     justify-content: center;
-    padding-top: 4px;
+    padding-top: 28px; /* Espacio superior amplio para que la tapa roja sobresalga completa */
 }
 
 .admin-card-extracted-wrap .hp-card {
@@ -846,10 +846,10 @@ body.admin-page .admin-studio-grid {
 .admin-card-extracted-wrap .hp-card__media img {
     height: 135px;
     width: auto;
-    margin-top: -10px;
+    margin-top: 0px; /* Bajada para que no se corte la tapa roja arriba */
     object-fit: contain;
     filter: drop-shadow(0 8px 14px rgba(35, 20, 20, 0.16));
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(6px) scale(1.02);
     transition: transform 0.25s ease, filter 0.25s ease;
 }
 

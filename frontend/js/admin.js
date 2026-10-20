@@ -450,7 +450,7 @@ function limpiarFormulario() {
     const idInput = document.getElementById('p-id');
     if (idInput) idInput.value = '';
     const activo = document.getElementById('p-activo');
-    if (activo) activo.checked = true;
+    if (activo) { if (activo.type === 'checkbox') activo.checked = true; else activo.value = 'true'; }
     const categoria = document.getElementById('p-categoria');
     if (categoria) categoria.value = 'natural';
     const colorFondo = document.getElementById('p-color-fondo');
@@ -1045,7 +1045,7 @@ function payloadDesdeFormulario() {
         categoria: categoriaMap[categoriaKey] || 'Natural',
         color_fondo: document.getElementById('p-color-fondo')?.value || '#FFF8F4',
         color_acento: document.getElementById('p-color-acento')?.value || '#D62300',
-        activo: Boolean(document.getElementById('p-activo')?.checked),
+        activo: document.getElementById('p-activo')?.type === 'checkbox' ? Boolean(document.getElementById('p-activo')?.checked) : (document.getElementById('p-activo')?.value !== 'false'),
         letrero,
         letrero_tipo: letrero ? tipoLetrero : '',
         descuento: Number(document.getElementById('p-descuento')?.value || 0),
@@ -1088,7 +1088,7 @@ function llenarFormulario(producto) {
     if (colorFondo) colorFondo.value = /^#[0-9A-Fa-f]{6}$/.test(producto.color_fondo || '') ? producto.color_fondo : '#FFF8F4';
     
     const activoEl = document.getElementById('p-activo');
-    if (activoEl) activoEl.checked = Boolean(producto.activo);
+    if (activoEl) { if (activoEl.type === 'checkbox') activoEl.checked = Boolean(producto.activo); else activoEl.value = producto.activo ? 'true' : 'false'; }
 
     const tipo = producto.letrero_tipo || '';
     const texto = producto.letrero || '';

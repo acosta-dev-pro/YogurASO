@@ -364,31 +364,21 @@
                             <input type="text" id="p-nombre" required maxlength="100" placeholder="Ej: Fresa Artesanal" autocomplete="off">
                         </div>
 
-                        <!-- Hilera 2: Categoría + Estado Activo -->
-                        <div class="form-row form-row-split">
-                            <div class="form-group">
-                                <label for="p-categoria">Categoría</label>
-                                <select id="p-categoria">
-                                    <option value="natural">Natural</option>
-                                    <option value="frutas">Con Frutas</option>
-                                    <option value="griego">Griego</option>
-                                    <option value="sin_lactosa">Sin Lactosa</option>
-                                    <option value="leches">Leches</option>
-                                    <option value="quesos">Quesos</option>
-                                    <option value="kumis">Kumis</option>
-                                    <option value="arequipe">Arequipe</option>
-                                    <option value="suero">Suero Costeño</option>
-                                </select>
-                            </div>
-                            <div class="form-group form-checkbox admin-activo-box-clean">
-                                <label for="p-activo">
-                                    <input type="checkbox" id="p-activo" checked>
-                                    <span>
-                                        <strong>Visible en tienda</strong>
-                                        <small>Muestra el sabor en catálogo público</small>
-                                    </span>
-                                </label>
-                            </div>
+                        <!-- Hilera 2: Categoría -->
+                        <div class="form-group form-row-full">
+                            <label for="p-categoria">Categoría</label>
+                            <select id="p-categoria">
+                                <option value="natural">Natural</option>
+                                <option value="frutas">Con Frutas</option>
+                                <option value="griego">Griego</option>
+                                <option value="sin_lactosa">Sin Lactosa</option>
+                                <option value="leches">Leches</option>
+                                <option value="quesos">Quesos</option>
+                                <option value="kumis">Kumis</option>
+                                <option value="arequipe">Arequipe</option>
+                                <option value="suero">Suero Costeño</option>
+                            </select>
+                            <input type="hidden" id="p-activo" value="true">
                         </div>
 
                         <!-- Hilera 3: Precio 500 ml, Precio 1 Litro, Stock -->
