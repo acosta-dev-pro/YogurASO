@@ -17,8 +17,8 @@ body.ya-auth-page {
     --ya-gray: #F3F4F6;
     --ya-cream: #FFF8F4;
     --ya-ease: cubic-bezier(0.23, 1, 0.32, 1);
-    --ya-font: 'Dosis', sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --ya-font-title: 'Dosis', sans-serif, 'Dosis', sans-serif, system-ui, sans-serif;
+    --ya-font: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ya-font-title: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, system-ui, sans-serif;
     background: var(--ya-cream) !important;
     color: var(--ya-text);
 }

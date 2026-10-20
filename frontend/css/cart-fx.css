@@ -1,5 +1,5 @@
-ï»¿/* cart-fx.css: latido del contador, botella que vuela, confirmaciÃ³n y franja pastel
-   de la lÃ­nea seleccionada. Plano, sombras gris claro, solo transform/opacity. */
+/* cart-fx.css: latido del contador, botella que vuela, confirmación y franja pastel
+   de la línea seleccionada. Plano, sombras gris claro, solo transform/opacity. */
 
 /* ---------- Latido del contador ---------- */
 .site-header .cart-badge.cfx-pulse,
@@ -48,7 +48,7 @@
     filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
 }
 
-/* ---------- ConfirmaciÃ³n ---------- */
+/* ---------- Confirmación ---------- */
 .cfx-confirm-wrap {
     position: fixed;
     inset: 0;
@@ -67,7 +67,7 @@
     border-radius: 16px;
     background: #fff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
-    font-family: 'Dosis', sans-serif, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     text-align: left;
     transform: translate3d(0, 6px, 0) scale(0.98);
     transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -83,7 +83,7 @@
 }
 .cfx-confirm-title {
     margin: 0 0 18px;
-    font-family: 'Dosis', sans-serif, 'Dosis', sans-serif, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 18px;
     font-weight: 600;
     line-height: 1.2;
@@ -129,7 +129,7 @@
 .cfx-confirm-ok:focus-visible,
 .cfx-confirm-cancel:focus-visible { outline: 2px solid var(--rojo-marca, #C3343E); outline-offset: 2px; }
 
-/* ---------- Franja pastel de la lÃ­nea seleccionada ---------- */
+/* ---------- Franja pastel de la línea seleccionada ---------- */
 .cart-sidebar.cart-ticket .cart-chip { padding-left: 8px; padding-right: 8px; isolation: isolate; }
 .cart-sidebar.cart-ticket .cart-chip::before {
     content: "";
@@ -155,5 +155,5 @@
 }
 
 /* La vista previa del pedido (carrito.html) quedaba debajo de #cartOverlay (z 1500)
-   y el botÃ³n "Enviar pedido" no recibÃ­a el clic. */
+   y el botón "Enviar pedido" no recibía el clic. */
 .order-preview-overlay { z-index: 2300 !important; }

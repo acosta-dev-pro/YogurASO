@@ -1,12 +1,16 @@
-/* Tipografía oficial YogurASO: Dosis (Google Fonts OFL).
-   Elegante, angosta, estilizada y con terminaciones redondeadas que se integran
-   a la perfección con el logotipo artesanal YoguraSo. Escala completa 300-800. */
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600;700;800&display=swap');
+/* Tipografía oficial YogurASO:
+   - Sistema general: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif
+     (Misma tipografía, proporciones y curvatura del SaaS moderno de escritorio).
+   - Hero Artesanal: 'Pacifico', 'Satisfy', cursive (homenaje directo al logotipo caligráfico YoguraSo con hoja verde). */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Pacifico&family=Satisfy&display=swap');
 
 :root {
-  --font-primary: 'Dosis', system-ui, -apple-system, sans-serif;
-  --font-display: 'Dosis', system-ui, -apple-system, sans-serif;
-  --font-brand: 'Dosis', system-ui, -apple-system, sans-serif;
-  --font-body: 'Dosis', system-ui, -apple-system, sans-serif;
-  --font-ui: 'Dosis', system-ui, -apple-system, sans-serif;
+  --ws-font: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI Variable Text', system-ui, sans-serif;
+  --font-system: var(--ws-font);
+  --font-primary: var(--ws-font);
+  --font-display: var(--ws-font);
+  --font-brand: var(--ws-font);
+  --font-body: var(--ws-font);
+  --font-ui: var(--ws-font);
+  --font-hero-artisan: 'Pacifico', 'Satisfy', cursive;
 }

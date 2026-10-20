@@ -1171,13 +1171,13 @@
 }
 #distribuidores .distc__txt { gap: 3px; }
 #distribuidores .distc__txt strong {
-  font-family: 'Dosis', sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15.5px;
   font-weight: 800;
   line-height: 1.2;
 }
 #distribuidores .distc__txt span {
-  font-family: 'Dosis', sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
@@ -1191,7 +1191,7 @@
 }
 #distribuidores .dist-nota__eyebrow {
   margin: 0 0 2px;
-  font-family: 'Dosis', sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.06em;

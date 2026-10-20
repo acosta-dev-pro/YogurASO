@@ -21,15 +21,15 @@
 /* Cabecera compacta: título en una línea y subtítulo al lado */
 .fcol__head { display: grid; grid-template-columns: auto minmax(0, 400px); justify-content: space-between; align-items: end; column-gap: 32px; margin-bottom: clamp(16px, 2.6vh, 22px); }
 .fcol__eyebrow { grid-column: 1 / -1; font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fcol-red); }
-.fcol__title { font-family: 'Dosis', sans-serif, sans-serif; font-weight: 600; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 0; color: var(--fcol-ink); }
+.fcol__title { font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 0; color: var(--fcol-ink); }
 .fcol__lead { color: var(--fcol-muted); font-size: 14px; line-height: 1.45; margin: 0; padding-bottom: 2px; }
 
 /* Escritorio: 6 columnas x 2 filas */
 .fcol__grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(2, var(--fcol-row)); gap: var(--fcol-gap); }
 .fcol__tile { position: relative; overflow: hidden; border-radius: var(--fcol-r); background: #fff; min-height: 0; }
-.fcol__tile h3 { font-family: 'Dosis', sans-serif, sans-serif; font-weight: 600; font-size: 18px; line-height: 1.06; letter-spacing: -.01em; margin: 4px 0 0; }
+.fcol__tile h3 { font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: 18px; line-height: 1.06; letter-spacing: -.01em; margin: 4px 0 0; }
 .fcol__tile p { font-size: 12.5px; line-height: 1.4; color: var(--fcol-muted); margin: 5px 0 0; }
-.fcol__k { display: block; font-family: 'Dosis', sans-serif, sans-serif; font-weight: 600; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--fcol-red); }
+.fcol__k { display: block; font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--fcol-red); }
 .fcol__c { position: relative; z-index: 2; }
 
 /* Campo: foto (2 col x 2 filas, ~420px de alto máx.) */
@@ -45,7 +45,7 @@
 /* 500 ml rojo con botella saliendo */
 .fcol__ml { grid-column: 3 / span 2; grid-row: 1; background: var(--fcol-red); color: #fff; overflow: visible; }
 .fcol__ml::before { content: ''; position: absolute; inset: 0; border-radius: var(--fcol-r); background: radial-gradient(circle at 92% 8%, rgba(255,255,255,.16) 0 22%, transparent 22.3%), radial-gradient(circle at 92% 8%, transparent 0 34%, rgba(255,255,255,.12) 34.3% 34.8%, transparent 35%); pointer-events: none; }
-.fcol__big { position: absolute; left: var(--fcol-pad); top: 10px; font-family: 'Dosis', sans-serif, sans-serif; font-weight: 600; font-size: clamp(52px, 4.4vw, 64px); line-height: 1; letter-spacing: -.04em; }
+.fcol__big { position: absolute; left: var(--fcol-pad); top: 10px; font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: clamp(52px, 4.4vw, 64px); line-height: 1; letter-spacing: -.04em; }
 .fcol__big small { font-size: .46em; letter-spacing: -.01em; margin-left: 5px; }
 .fcol__ml .fcol__c { position: absolute; left: var(--fcol-pad); bottom: var(--fcol-pad); width: min(210px, 54%); }
 .fcol__ml .fcol__k { color: #FFD5D2; }
@@ -61,7 +61,7 @@
 
 /* Fruta real: fresa partida saliendo por la esquina */
 .fcol__fruta { grid-column: 6; grid-row: 1; background: #F9D9D7; overflow: visible; z-index: 3; }
-.fcol__fruta .fcol__k { position: absolute; left: var(--fcol-pad); top: var(--fcol-pad); font-family: 'Dosis', sans-serif, sans-serif; font-weight: 600; font-size: 12px; letter-spacing: .16em; color: var(--rojo-marca-deep); }
+.fcol__fruta .fcol__k { position: absolute; left: var(--fcol-pad); top: var(--fcol-pad); font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: 12px; letter-spacing: .16em; color: var(--rojo-marca-deep); }
 /* Solo la fresa y la tarjeta (sin halo). Sale por abajo sin pasar el margen lateral de la página */
 .fcol__fruta img { position: absolute; z-index: 2; right: -4px; bottom: -20px; width: min(122px, 60%); height: auto; transform: rotate(-14deg); filter: drop-shadow(0 18px 14px color-mix(in srgb, var(--rojo-marca-deep) 32%, transparent)) drop-shadow(0 4px 4px color-mix(in srgb, var(--rojo-marca-deep) 18%, transparent)); }
 

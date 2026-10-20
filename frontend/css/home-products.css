@@ -207,7 +207,7 @@
     border-radius: 999px;
     background: #fff;
     color: var(--hp-ink);
-    font: 600 12px/1.2.2 var(--font-ui, 'Dosis', sans-serif, sans-serif);
+    font: 600 12px/1.2.2 var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
@@ -222,7 +222,7 @@
    (body + !important: brand-pages.css fuerza Fredoka en h3 en las páginas internas) */
 body .hp-card__name,
 body .hp-card__name a {
-    font-family: var(--font-ui, 'Dosis', sans-serif), -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-family: var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif), -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 .hp-card__name {
     margin: 0;
@@ -249,7 +249,7 @@ body .hp-card__name a {
 }
 .hp-card__price {
     margin: 8px 0 10px;
-    font-family: 'Dosis', system-ui, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.34rem;
     font-weight: 700;
     line-height: 1;
@@ -274,7 +274,7 @@ body .hp-card__name a {
     display: inline-flex;
     align-items: center;
     gap: 2px;
-    font: 700 0.82rem/1 var(--font-ui, 'Dosis', sans-serif, sans-serif);
+    font: 700 0.82rem/1 var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
 }
 .hp-qty button {
     display: grid;
@@ -286,7 +286,7 @@ body .hp-card__name a {
     border-radius: 50%;
     background: transparent;
     color: inherit;
-    font: 700 0.95rem/1 var(--font-ui, 'Dosis', sans-serif, sans-serif);
+    font: 700 0.95rem/1 var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
     cursor: pointer;
     transition: transform 140ms var(--hp-ease);
 }
@@ -302,7 +302,7 @@ body .hp-card__name a {
     border-radius: 999px;
     background: #fff;
     color: var(--hp-ink);
-    font: 800 0.7rem/1 var(--font-ui, 'Dosis', sans-serif, sans-serif);
+    font: 800 0.7rem/1 var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
@@ -320,7 +320,7 @@ body .hp-card__name a {
 .hp-card.is-active .hp-card__name,
 .hp-card.is-active .hp-card__price {
     margin: 8px 0 10px;
-    font-family: 'Dosis', system-ui, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.34rem;
     font-weight: 700;
     line-height: 1;
@@ -434,7 +434,7 @@ body .hp-card__name a {
     .hp-card__meta { font-size: 0.72rem; }
     .hp-card__price {
     margin: 8px 0 10px;
-    font-family: 'Dosis', system-ui, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.34rem;
     font-weight: 700;
     line-height: 1;

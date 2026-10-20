@@ -45,10 +45,13 @@
     --radius-xl: 32px;
     --radius-pill: 999px;
 
-    --font-display: 'Dosis', system-ui, sans-serif;
-    --font-brand: 'Dosis', system-ui, sans-serif;
-    --font-body: 'Dosis', system-ui, sans-serif;
-    --font-ui: 'Dosis', system-ui, sans-serif;
+    --font-system: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI Variable Text', system-ui, sans-serif;
+    --font-hero-artisan: 'Pacifico', 'Satisfy', cursive;
+
+    --font-display: var(--font-system);
+    --font-brand: var(--font-system);
+    --font-body: var(--font-system);
+    --font-ui: var(--font-system);
 
     /* Emil Kowalski motion */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -133,7 +136,7 @@ button, input, select, textarea { font-family: inherit; }
     padding: 0 8px 0 22px;
     border: none;
     border-radius: var(--radius-pill);
-    font-family: 'Dosis', sans-serif, sans-serif;
+    font-family: var(--font-ui);
     font-weight: 700;
     font-size: 15px;
     text-decoration: none;

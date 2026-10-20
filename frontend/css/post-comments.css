@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-family: 'Dosis', sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.8rem;
   line-height: 1.4;
   color: #262626;
@@ -69,7 +69,7 @@
   border-left: 2px solid var(--rojo-marca, #C3343E);
   border-radius: 0 10px 10px 0;
   background: rgba(255, 255, 255, 0.7);
-  font-family: 'Dosis', sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 .faq-ask-answer-who { margin: 0 0 2px; font-size: 0.72rem; font-weight: 800; color: #171717; }
 .faq-ask-answer p:last-child { margin: 0; font-size: 0.84rem; line-height: 1.45; color: #374151; white-space: pre-line; }

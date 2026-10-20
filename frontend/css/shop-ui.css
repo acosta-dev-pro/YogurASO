@@ -1270,7 +1270,7 @@ body.cart-body {
     appearance: none;
     border: none;
     background: transparent;
-    font-family: 'Dosis', system-ui, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 11px;
     font-weight: 600;
     color: #6B635C;
@@ -1302,7 +1302,7 @@ body.cart-body {
     appearance: none;
     border: none;
     background: transparent;
-    font-family: 'Dosis', system-ui, sans-serif;
+    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 12px;
     font-weight: 600;
     color: #6B635C;
