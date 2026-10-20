@@ -69,8 +69,16 @@ function abrirModal(titulo, { isEdit = false } = {}) {
         modal.style.display = 'flex';
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
-        setTimeout(() => document.getElementById('p-nombre')?.focus(), 30);
-    syncLiveCardPreview();
+        const fieldsScroll = document.querySelector('.admin-studio-fields');
+        if (fieldsScroll) fieldsScroll.scrollTop = 0;
+        const asideScroll = document.querySelector('.admin-studio-aside');
+        if (asideScroll) asideScroll.scrollTop = 0;
+        setTimeout(() => {
+            const fieldsScroll2 = document.querySelector('.admin-studio-fields');
+            if (fieldsScroll2) fieldsScroll2.scrollTop = 0;
+            document.getElementById('p-nombre')?.focus();
+        }, 40);
+        syncLiveCardPreview();
     }
 }
 
@@ -293,7 +301,7 @@ function initAdminStudioEvents() {
     // Selector de Tipo de Letrero (Píldoras)
     document.querySelectorAll('#adminBadgeTypePills .admin-type-pill').forEach((btn) => {
         btn.addEventListener('click', () => {
-            setLetreroType(btn.dataset.type);
+            setLetreroType(btn.dataset.type, { shouldFocus: true });
         });
     });
 
@@ -382,7 +390,7 @@ function initAdminStudioEvents() {
     }
 }
 
-function setLetreroType(type) {
+function setLetreroType(type, { shouldFocus = false } = {}) {
     document.querySelectorAll('#adminBadgeTypePills .admin-type-pill').forEach((b) => {
         b.classList.toggle('is-active', (b.dataset.type || '') === (type || ''));
     });
@@ -419,7 +427,7 @@ function setLetreroType(type) {
         if (textoInput && (textoInput.value === 'NUEVO' || textoInput.value === '¡OFERTA!' || /^-\d+%$/.test(textoInput.value))) {
             textoInput.value = '';
         }
-        textoInput?.focus();
+        if (shouldFocus) textoInput?.focus();
         syncLiveCardPreview();
     }
 }

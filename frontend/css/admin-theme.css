@@ -730,14 +730,14 @@ body.admin-page .admin-email {
 
 body.admin-page .admin-modal .admin-modal-studio,
 body.admin-page .admin-modal-studio {
-    width: min(1140px, 95vw) !important;
-    max-width: 1140px !important;
-    height: min(88vh, 880px) !important;
-    max-height: 880px !important;
+    width: min(1040px, 94vw) !important;
+    max-width: 1040px !important;
+    height: min(90vh, 740px) !important;
+    max-height: 90vh !important;
     display: flex !important;
     flex-direction: column !important;
     padding: 0 !important;
-    border-radius: 26px !important;
+    border-radius: 24px !important;
     background: #FFFFFF !important;
     box-shadow: 0 32px 80px rgba(18, 18, 20, 0.22) !important;
     overflow: hidden !important;
@@ -745,7 +745,7 @@ body.admin-page .admin-modal-studio {
 
 body.admin-page .admin-modal-studio .modal-header {
     flex: 0 0 auto;
-    padding: 22px 32px 16px;
+    padding: 16px 28px 14px;
     border-bottom: 1px solid rgba(23, 23, 26, 0.08);
     margin: 0;
 }
@@ -762,20 +762,29 @@ body.admin-page .admin-studio-grid {
     flex: 1 1 auto;
     min-height: 0;
     display: grid;
-    grid-template-columns: 310px minmax(0, 1fr);
-    gap: 32px;
-    padding: 20px 32px;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 24px;
+    padding: 16px 28px 10px;
     overflow: hidden;
     margin: 0;
 }
 
-/* Columna Izquierda: Tarjeta montada tal cual tienda (FIJA, no se mueve con scroll) */
+/* Columna Izquierda: Tarjeta montada tal cual tienda (compacta, sin corte) */
 .admin-studio-aside {
-    overflow: visible;
+    overflow-y: auto;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    align-self: start;
+    gap: 12px;
+    align-self: stretch;
+    padding-right: 6px;
+}
+.admin-studio-aside::-webkit-scrollbar {
+    width: 4px;
+}
+.admin-studio-aside::-webkit-scrollbar-thumb {
+    background: #D5D5DE;
+    border-radius: 999px;
 }
 
 .admin-live-card-container {
@@ -783,32 +792,32 @@ body.admin-page .admin-studio-grid {
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 /* Tarjeta montada idéntica a tienda con botella saliendo */
 .admin-card-extracted-wrap {
     display: flex;
     justify-content: center;
-    padding-top: 16px;
+    padding-top: 6px;
 }
 
 .admin-card-extracted-wrap .hp-card {
     width: 100%;
-    max-width: 270px;
+    max-width: 250px;
     position: relative;
-    border-radius: 22px;
-    padding: 0 14px 16px;
+    border-radius: 20px;
+    padding: 0 12px 14px;
     background: transparent !important;
     isolation: isolate;
 }
 
 .admin-card-extracted-wrap .hp-card .hp-card__panel {
     position: absolute;
-    inset: 48px 0 0 0;
-    border-radius: 22px;
+    inset: 38px 0 0 0;
+    border-radius: 20px;
     background: var(--producto-card-bg, #FFF8F4);
-    box-shadow: 0 10px 28px -10px rgba(23, 23, 26, 0.12);
+    box-shadow: 0 8px 24px -8px rgba(23, 23, 26, 0.12);
     z-index: 0;
     opacity: 1;
     transform: none;
@@ -818,38 +827,38 @@ body.admin-page .admin-studio-grid {
 .admin-card-extracted-wrap .hp-card__media {
     position: relative;
     z-index: 2;
-    height: 195px;
-    margin-bottom: 4px;
+    height: 145px;
+    margin-bottom: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .admin-card-extracted-wrap .hp-card__media img {
-    height: 205px;
+    height: 155px;
     width: auto;
-    margin-top: -16px;
+    margin-top: -12px;
     object-fit: contain;
-    filter: drop-shadow(0 14px 18px rgba(35, 20, 20, 0.16));
-    transform: translateY(-4px) scale(1.02);
+    filter: drop-shadow(0 10px 16px rgba(35, 20, 20, 0.16));
+    transform: translateY(-2px) scale(1.02);
     transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .admin-card-extracted-wrap .hp-card__badges {
     position: absolute;
-    top: 56px;
-    left: 14px;
+    top: 44px;
+    left: 10px;
     z-index: 4;
 }
 
 .admin-card-extracted-wrap .hp-card__badges .hp-badge {
     display: inline-block;
     color: #FFFFFF;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    padding: 3.5px 9px;
+    padding: 3px 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
 }
@@ -861,9 +870,9 @@ body.admin-page .admin-studio-grid {
 }
 
 .admin-card-extracted-wrap .hp-card__name {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
     font-weight: 700;
-    margin: 2px 0 6px;
+    margin: 2px 0 4px;
     color: #121214;
     text-align: center;
 }
@@ -873,57 +882,53 @@ body.admin-page .admin-studio-grid {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     color: #6B635C;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .admin-card-extracted-wrap .hp-card__price {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: #121214;
     text-align: center;
-    margin: 4px 0 10px;
+    margin: 2px 0 4px;
+}
+
+.admin-card-extracted-wrap .hp-card__actions {
+    display: none !important;
 }
 
 .admin-card-extracted-wrap .hp-add {
-    width: 100%;
-    padding: 9px 14px;
-    font-size: 0.85rem;
-    border-radius: 999px;
-    background: #121214;
-    color: #FFFFFF;
-    border: none;
-    font-weight: 600;
-    cursor: default;
+    display: none !important;
 }
 
 /* Paleta de Color y Código Hex Editable */
 .admin-color-studio-box {
     background: #F8F7F4;
     border: 1px solid rgba(23, 23, 26, 0.08);
-    border-radius: 16px;
-    padding: 12px 14px;
+    border-radius: 14px;
+    padding: 10px 12px;
 }
 
 .admin-color-header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .admin-color-studio-label {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: #121214;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .admin-color-name {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
     color: #726C65;
 }
@@ -931,13 +936,13 @@ body.admin-page .admin-studio-grid {
 .admin-palette-pills {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 7px;
-    margin-bottom: 10px;
+    gap: 5px;
+    margin-bottom: 7px;
 }
 
 .palette-pill {
-    height: 30px;
-    border-radius: 9px;
+    height: 22px;
+    border-radius: 6px;
     border: 1px solid rgba(23, 23, 26, 0.12);
     cursor: pointer;
     transition: transform 0.14s ease, box-shadow 0.14s ease;
@@ -948,7 +953,7 @@ body.admin-page .admin-studio-grid {
 }
 
 .palette-pill.is-active {
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--rojo-marca, #D62300);
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3.5px var(--rojo-marca, #D62300);
 }
 
 .admin-color-picker-row {
@@ -962,16 +967,16 @@ body.admin-page .admin-studio-grid {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #555;
     cursor: pointer;
 }
 
 .admin-color-picker-btn input[type="color"] {
-    width: 26px !important;
-    height: 26px !important;
-    min-height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
     padding: 0 !important;
     border-radius: 6px !important;
     border: 1px solid rgba(0,0,0,0.15) !important;
@@ -979,16 +984,16 @@ body.admin-page .admin-studio-grid {
 }
 
 .admin-color-hex-input {
-    width: 90px;
-    padding: 5px 8px;
+    width: 82px;
+    padding: 4px 6px;
     font-family: monospace, sans-serif;
-    font-size: 12.5px;
+    font-size: 11.5px;
     font-weight: 700;
     text-transform: uppercase;
     color: #17171A;
     background: #FFFFFF;
     border: 1px solid rgba(23, 23, 26, 0.15);
-    border-radius: 8px;
+    border-radius: 7px;
     text-align: center;
 }
 .admin-color-hex-input:focus {
@@ -997,35 +1002,42 @@ body.admin-page .admin-studio-grid {
     box-shadow: 0 0 0 3px rgba(214, 35, 0, 0.1);
 }
 
-/* Columna Derecha: Formulario con scroll independiente */
+/* Columna Derecha: Formulario con scroll independiente y amplio respiro al final */
 .admin-studio-fields {
     overflow-y: auto;
     height: 100%;
     padding-right: 14px;
+    padding-bottom: 32px;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    overscroll-behavior: contain;
 }
 
 .admin-studio-fields::-webkit-scrollbar {
-    width: 6px;
+    width: 7px;
 }
 .admin-studio-fields::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 999px;
 }
 .admin-studio-fields::-webkit-scrollbar-thumb {
     background: #D5D5DE;
-    border-radius: 6px;
+    border-radius: 999px;
+}
+.admin-studio-fields::-webkit-scrollbar-thumb:hover {
+    background: #BBBABF;
 }
 
 body.admin-page .admin-modal-studio .admin-modal-actions {
     flex: 0 0 auto;
-    padding: 16px 32px;
+    padding: 12px 28px;
     border-top: 1px solid rgba(23, 23, 26, 0.08);
     background: #FAF9F7;
     margin: 0;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 12px;
 }
 
