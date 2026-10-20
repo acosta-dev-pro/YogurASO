@@ -1,4 +1,4 @@
-﻿/**
+/**
  * admin.js — Aquí queda el panel: inventario de yogures y lista de usuarios.
  * Solo entra quien la base reconoce como admin.
  */
@@ -33,6 +33,7 @@ const selectedIds = new Set();
 const escapeHtml = (v) => window.YogurUtils?.escapeHtml(v) || String(v ?? '');
 const toast = (msg, type = 'success') => window.YogurUtils?.showToast?.(msg, type);
 const confirmAction = (opts) => window.YogurUtils?.confirmAction?.(opts);
+const formatCOP = (n) => window.YogurUtils?.formatCOP?.(n) || ('$' + Number(n || 0).toLocaleString('es-CO'));
 
 function getToken() {
     return localStorage.getItem('token');
@@ -869,12 +870,22 @@ function renderRows(productos) {
     });
 
     lista.querySelectorAll('.btn-edit').forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const rawId = btn.dataset.id;
             const producto = allAdminProducts.find((item) => String(item.id) === String(rawId));
-            if (!producto) return;
+            if (!producto) {
+                console.warn('[admin] No se encontró el producto para ID:', rawId);
+                toast('No se encontró el producto en el catálogo', 'error');
+                return;
+            }
             editandoId = producto.id;
-            llenarFormulario(producto);
+            try {
+                llenarFormulario(producto);
+            } catch (err) {
+                console.error('[admin] Error al llenar formulario:', err);
+            }
             abrirModal('Editar producto', { isEdit: true });
         });
     });
@@ -916,8 +927,8 @@ function renderRows(productos) {
 
     lista.querySelectorAll('.btn-delete-permanent').forEach((btn) => {
         btn.addEventListener('click', async () => {
-            const id = Number(btn.dataset.id);
-            const producto = allAdminProducts.find((item) => item.id === id);
+            const rawId = btn.dataset.id;
+            const producto = allAdminProducts.find((item) => String(item.id) === String(rawId));
             if (!producto) return;
 
             const ok = confirmAction
@@ -1035,48 +1046,63 @@ function payloadDesdeFormulario() {
 }
 
 function llenarFormulario(producto) {
-    document.getElementById('p-id').value = producto.id;
-    document.getElementById('p-nombre').value = producto.nombre || '';
-    document.getElementById('p-precio').value = producto.precio || 0;
-    document.getElementById('p-stock').value = producto.stock || 0;
-    document.getElementById('p-descripcion').value = producto.descripcion || '';
-    document.getElementById('p-imagen').value = producto.imagen_url || '';
+    if (!producto) return;
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val ?? '';
+    };
+
+    setVal('p-id', producto.id);
+    setVal('p-nombre', producto.nombre || '');
+    setVal('p-precio', producto.precio || 0);
+    setVal('p-precio-1l', producto.precio_1l || '');
+    setVal('p-stock', producto.stock || 0);
+    setVal('p-descripcion', producto.descripcion || '');
+    setVal('p-imagen', producto.imagen_url || '');
     if (producto.imagen_url) setImagePreview(imgSrc(producto.imagen_url));
     else resetImageUpload();
 
     let categoriaKey = Object.keys(categoriaMap).find((key) => categoriaMap[key] === producto.categoria);
     const catSelect = document.getElementById('p-categoria');
     if (!categoriaKey && producto.categoria && catSelect) {
-        // Categoría que viene de la base (p. ej. "Frutales"): se agrega para no perderla al guardar.
-        categoriaKey = `db_${String(producto.categoria).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+        categoriaKey = 'db_' + String(producto.categoria).toLowerCase().replace(/[^a-z0-9]+/g, '_');
         categoriaMap[categoriaKey] = producto.categoria;
-        if (!catSelect.querySelector(`option[value="${categoriaKey}"]`)) {
+        if (!catSelect.querySelector('option[value="' + categoriaKey + '"]')) {
             const opt = document.createElement('option');
             opt.value = categoriaKey;
             opt.textContent = producto.categoria;
             catSelect.appendChild(opt);
         }
     }
-    catSelect.value = categoriaKey || 'natural';
+    if (catSelect) catSelect.value = categoriaKey || 'natural';
+
     const colorFondo = document.getElementById('p-color-fondo');
     if (colorFondo) colorFondo.value = /^#[0-9A-Fa-f]{6}$/.test(producto.color_fondo || '') ? producto.color_fondo : '#FFF8F4';
-    document.getElementById('p-activo').checked = Boolean(producto.activo);
+    
+    const activoEl = document.getElementById('p-activo');
+    if (activoEl) activoEl.checked = Boolean(producto.activo);
+
     const tipo = producto.letrero_tipo || '';
     const texto = producto.letrero || '';
-    const desc = producto.descuento || 0;
+    const desc = Number(producto.descuento || 0);
     const colorAcento = producto.color_acento || '#D62300';
+    const forma = producto.letrero_forma || 'pill';
 
-    const textoInput = document.getElementById('p-letrero');
-    if (textoInput) textoInput.value = texto;
-
-    const descInput = document.getElementById('p-descuento');
-    if (descInput) descInput.value = String(desc);
+    setVal('p-letrero', texto);
+    setVal('p-descuento', desc);
 
     const hexText = document.getElementById('p-color-fondo-text');
     if (hexText && producto.color_fondo) hexText.value = producto.color_fondo.toUpperCase();
 
     setLetreroType(tipo || (desc > 0 ? 'descuento' : (texto ? 'personalizado' : '')));
     setBadgeColorActive(colorAcento);
+
+    const shapeInput = document.getElementById('p-letrero-forma');
+    if (shapeInput) shapeInput.value = forma;
+    document.querySelectorAll('#adminShapePills .shape-pill').forEach((btn) => {
+        btn.classList.toggle('is-active', (btn.dataset.shape || 'pill') === forma);
+    });
+
     updateDiscountCalculator('percent');
     syncLiveCardPreview();
 }
@@ -1134,6 +1160,22 @@ function setupAdminEvents() {
     const modal = document.getElementById('modal-producto');
     const form = document.getElementById('form-producto');
     const search = document.getElementById('admin-search');
+    const tableList = document.getElementById('admin-productos-lista');
+    tableList?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-edit');
+        if (!btn) return;
+        const rawId = btn.dataset.id;
+        const producto = allAdminProducts.find((item) => String(item.id) === String(rawId));
+        if (!producto) return;
+        if (editandoId === producto.id && document.getElementById('modal-producto')?.style.display === 'flex') return;
+        editandoId = producto.id;
+        try {
+            llenarFormulario(producto);
+        } catch (err) {
+            console.error('[admin] Error al llenar formulario:', err);
+        }
+        abrirModal('Editar producto', { isEdit: true });
+    });
 
     document.getElementById('btn-reload-users')?.addEventListener('click', () => cargarTablaUsuarios());
     document.getElementById('admin-user-search')?.addEventListener('input', () => renderUserRows(getVisibleUsers()));
