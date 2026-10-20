@@ -48,15 +48,15 @@
 
 /* Tipografía: texto en Nunito Sans, títulos en Fredoka.
    (fuera quedan los íconos Font Awesome y el menú superior, que es de header.css) */
-body :is(p, span, a, li, label, input, select, textarea, button, td, th, small, strong, dt, dd, div, summary):not([class*="fa-"]):not(.fas):not(.fab):not(.far):not(header *) {
+body :is(p, span, a, li, label, input, select, textarea, button, td, th, small, strong, dt, dd, div, summary):not([class*="fa-"]):not(.fas):not(.fab):not(.far):not(header *):not(.cart-sidebar *):not(.cart-sidebar) {
     font-family: var(--bp-font-text);
 }
 body :is(h1, h2, h3, h4, h5),
-body .footer-logo, body .auth-title, body .cart-header span,
-body .cart-empty-title, body .inspect-body h2, body .order-preview h3,
-body .shop-kicker, body .admin-eyebrow, body .precio, body .cart-total,
+body .footer-logo, body .auth-title,
+body .inspect-body h2, body .order-preview h3,
+body .shop-kicker, body .admin-eyebrow,
 body .summary-line.total, body .admin-stat strong,
-body .profile-card h2, body .chip, body .cart-item-name, body .cart-summary h3 {
+body .profile-card h2, body .chip, body .cart-summary h3 {
     font-family: var(--bp-font-title) !important;
 }
 h1, h2, h3 { letter-spacing: -0.01em; color: var(--bp-ink); }
@@ -291,23 +291,6 @@ body.cart-body { background: var(--surface, #FFF8EC); }
 .cart-select-all, .cart-remove-selected { font-weight: 700; }
 
 .overlay { background: rgba(23, 23, 23, 0.40); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.cart-sidebar:not(.cart-ticket) {
-    background: var(--bp-glass);
-    backdrop-filter: blur(24px) saturate(170%);
-    -webkit-backdrop-filter: blur(24px) saturate(170%);
-    border-left: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: var(--bp-radius-lg) 0 0 var(--bp-radius-lg);
-    box-shadow: -24px 0 64px rgba(23, 23, 23, 0.16);
-}
-.cart-sidebar:not(.cart-ticket) .cart-item,
-.cart-sidebar:not(.cart-ticket) .cart-item.shop-bag-row { background: #fff !important; border: 1px solid var(--bp-line); border-radius: var(--bp-radius-sm); }
-.cart-sidebar:not(.cart-ticket) .cart-header span { font-weight: 700; font-size: 24px; color: var(--bp-ink); }
-.cart-sidebar:not(.cart-ticket) .cart-header i:hover { color: var(--bp-red); background: color-mix(in srgb, var(--rojo-marca) 8%, transparent); }
-.cart-sidebar:not(.cart-ticket) .cart-total,
-.cart-sidebar:not(.cart-ticket) .cart-total span:last-child { font-family: var(--bp-font-title); font-weight: 600; }
-.cart-sidebar:not(.cart-ticket) .cart-total span:last-child { color: var(--bp-red); }
-.cart-sidebar:not(.cart-ticket) .cart-empty { color: var(--bp-muted); }
-
 /* ---------- Login / registro / recuperar / reset ---------- */
 .auth-container { background: transparent; }
 .auth-card { padding: 32px 32px 28px; }

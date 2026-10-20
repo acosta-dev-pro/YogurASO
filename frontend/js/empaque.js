@@ -1,5 +1,6 @@
 /* empaque.js — Aquí queda la sección Empaque.
-   Solo muestra temperatura y material si están escritos en product-info.js. */
+   Solo muestra temperatura y material si están escritos en product-info.js.
+   Optimizado para máxima compatibilidad con iOS Safari / Apple y navegadores móviles. */
 (function () {
     var sec = document.getElementById('empaque');
     if (!sec) return;
@@ -36,10 +37,35 @@
     window.setTimeout(show, 900);
 
     if (video) {
+        // Configuración imperativa estricta para iOS WebKit / Safari
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+
+        var tryPlay = function () {
+            if (reduce && reduce.matches) return;
+            var p = video.play();
+            if (p && p.catch) {
+                p.catch(function () {
+                    // Si iOS bloquea autoplay por Modo de Bajo Consumo, desbloquear con el primer toque
+                    var unlock = function () {
+                        video.play().catch(function () {});
+                        window.removeEventListener('touchstart', unlock);
+                        window.removeEventListener('click', unlock);
+                    };
+                    window.addEventListener('touchstart', unlock, { passive: true, once: true });
+                    window.addEventListener('click', unlock, { passive: true, once: true });
+                });
+            }
+        };
+
         new IntersectionObserver(function (entries) {
             entries.forEach(function (en) {
                 if (reduce && reduce.matches) return;
-                if (en.isIntersecting) { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
+                if (en.isIntersecting) { tryPlay(); }
                 else video.pause();
             });
         }, { threshold: 0.05 }).observe(video);

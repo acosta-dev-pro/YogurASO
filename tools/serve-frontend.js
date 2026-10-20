@@ -57,20 +57,56 @@ const server = http.createServer((req, res) => {
         return res.end('403 Forbidden');
     }
 
-    const send = (target) => {
+    const send = (target, stats) => {
         const ext = path.extname(target).toLowerCase();
         const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-        res.writeHead(200, {
-            'Content-Type': contentType,
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Access-Control-Allow-Origin': '*'
-        });
-        const stream = fs.createReadStream(target);
-        stream.on('error', () => {
-            if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('Server Error');
-        });
-        stream.pipe(res);
+        const totalSize = (stats && stats.size) || fs.statSync(target).size;
+        const range = req.headers.range;
+
+        // Soporte de HTTP Range (206 Partial Content) obligatorio para Safari en iOS / macOS
+        if (range) {
+            const parts = range.replace(/bytes=/, '').split('-');
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : totalSize - 1;
+
+            if (start >= totalSize || end >= totalSize) {
+                res.writeHead(416, {
+                    'Content-Range': `bytes */${totalSize}`,
+                    'Access-Control-Allow-Origin': '*'
+                });
+                return res.end();
+            }
+
+            const chunksize = (end - start) + 1;
+            res.writeHead(206, {
+                'Content-Range': `bytes ${start}-${end}/${totalSize}`,
+                'Accept-Ranges': 'bytes',
+                'Content-Length': chunksize,
+                'Content-Type': contentType,
+                'Access-Control-Allow-Origin': '*'
+            });
+
+            const stream = fs.createReadStream(target, { start, end });
+            stream.on('error', () => {
+                if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Server Error');
+            });
+            stream.pipe(res);
+        } else {
+            res.writeHead(200, {
+                'Content-Type': contentType,
+                'Content-Length': totalSize,
+                'Accept-Ranges': 'bytes',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Access-Control-Allow-Origin': '*'
+            });
+            const stream = fs.createReadStream(target);
+            stream.on('error', () => {
+                if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Server Error');
+            });
+            stream.pipe(res);
+        }
     };
 
     const missing = () => {
@@ -79,18 +115,18 @@ const server = http.createServer((req, res) => {
     };
 
     fs.stat(filePath, (err, stats) => {
-        if (!err && stats.isFile()) return send(filePath);
+        if (!err && stats.isFile()) return send(filePath, stats);
         if (!err && stats.isDirectory()) {
             const indexFile = path.join(filePath, 'index.html');
             return fs.stat(indexFile, (errDir, statsDir) => {
-                if (!errDir && statsDir.isFile()) return send(indexFile);
+                if (!errDir && statsDir.isFile()) return send(indexFile, statsDir);
                 return missing();
             });
         }
         if (!path.extname(filePath)) {
             const withHtml = `${filePath}.html`;
             return fs.stat(withHtml, (errHtml, statsHtml) => {
-                if (!errHtml && statsHtml.isFile()) return send(withHtml);
+                if (!errHtml && statsHtml.isFile()) return send(withHtml, statsHtml);
                 return missing();
             });
         }
