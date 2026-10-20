@@ -728,16 +728,20 @@ body.admin-page .admin-email {
    ADMIN STUDIO MODAL — Edición grande, organizada y extracción de tarjeta
    ========================================================================== */
 
+body.admin-page .modal.admin-modal {
+    padding: 12px 14px !important;
+}
+
 body.admin-page .admin-modal .admin-modal-studio,
 body.admin-page .admin-modal-studio {
-    width: min(1120px, 95vw) !important;
-    max-width: 1120px !important;
-    height: min(92vh, 810px) !important;
-    max-height: 92vh !important;
+    width: min(890px, 93vw) !important;
+    max-width: 890px !important;
+    height: min(95vh, 880px) !important;
+    max-height: 95vh !important;
     display: flex !important;
     flex-direction: column !important;
     padding: 0 !important;
-    border-radius: 26px !important;
+    border-radius: 24px !important;
     background: #FFFFFF !important;
     box-shadow: 0 32px 80px rgba(18, 18, 20, 0.22) !important;
     overflow: hidden !important;
@@ -745,9 +749,14 @@ body.admin-page .admin-modal-studio {
 
 body.admin-page .admin-modal-studio .modal-header {
     flex: 0 0 auto;
-    padding: 18px 32px 14px;
+    padding: 14px 24px 10px;
     border-bottom: 1px solid rgba(23, 23, 26, 0.08);
     margin: 0;
+}
+
+body.admin-page .admin-modal-studio .modal-header h2 {
+    font-size: 19px;
+    margin: 2px 0;
 }
 
 body.admin-page .admin-modal-studio #form-producto {
@@ -762,9 +771,9 @@ body.admin-page .admin-studio-grid {
     flex: 1 1 auto;
     min-height: 0;
     display: grid;
-    grid-template-columns: 285px minmax(0, 1fr);
-    gap: 28px;
-    padding: 18px 32px 12px;
+    grid-template-columns: 245px minmax(0, 1fr);
+    gap: 20px;
+    padding: 12px 24px 8px;
     overflow: hidden;
     margin: 0;
 }
@@ -775,9 +784,9 @@ body.admin-page .admin-studio-grid {
     max-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    align-self: stretch;
-    padding-right: 6px;
+    gap: 10px;
+    align-self: start;
+    padding-right: 4px;
 }
 .admin-studio-aside::-webkit-scrollbar {
     width: 4px;
@@ -792,32 +801,32 @@ body.admin-page .admin-studio-grid {
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 /* Tarjeta montada idéntica a tienda con botella saliendo */
 .admin-card-extracted-wrap {
     display: flex;
     justify-content: center;
-    padding-top: 6px;
+    padding-top: 4px;
 }
 
 .admin-card-extracted-wrap .hp-card {
     width: 100%;
-    max-width: 265px;
+    max-width: 235px;
     position: relative;
-    border-radius: 22px;
-    padding: 0 12px 14px;
+    border-radius: 18px;
+    padding: 0 10px 10px;
     background: transparent !important;
     isolation: isolate;
 }
 
 .admin-card-extracted-wrap .hp-card .hp-card__panel {
     position: absolute;
-    inset: 38px 0 0 0;
-    border-radius: 20px;
+    inset: 32px 0 0 0;
+    border-radius: 18px;
     background: var(--producto-card-bg, #FFF8F4);
-    box-shadow: 0 8px 24px -8px rgba(23, 23, 26, 0.12);
+    box-shadow: 0 8px 20px -8px rgba(23, 23, 26, 0.12);
     z-index: 0;
     opacity: 1;
     transform: none;
@@ -827,7 +836,7 @@ body.admin-page .admin-studio-grid {
 .admin-card-extracted-wrap .hp-card__media {
     position: relative;
     z-index: 2;
-    height: 145px;
+    height: 125px;
     margin-bottom: 2px;
     display: flex;
     align-items: center;
@@ -835,44 +844,44 @@ body.admin-page .admin-studio-grid {
 }
 
 .admin-card-extracted-wrap .hp-card__media img {
-    height: 155px;
+    height: 135px;
     width: auto;
-    margin-top: -12px;
+    margin-top: -10px;
     object-fit: contain;
-    filter: drop-shadow(0 10px 16px rgba(35, 20, 20, 0.16));
+    filter: drop-shadow(0 8px 14px rgba(35, 20, 20, 0.16));
     transform: translateY(-2px) scale(1.02);
     transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .admin-card-extracted-wrap .hp-card__badges {
     position: absolute;
-    top: 44px;
-    left: 10px;
+    top: 38px;
+    left: 8px;
     z-index: 4;
 }
 
 .admin-card-extracted-wrap .hp-card__badges .hp-badge {
     display: inline-block;
     color: #FFFFFF;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    padding: 3px 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    padding: 2.5px 7px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
 }
 
 .admin-card-extracted-wrap .hp-card__body {
     position: relative;
     z-index: 2;
-    padding: 0 4px;
+    padding: 0 2px;
 }
 
 .admin-card-extracted-wrap .hp-card__name {
-    font-size: 0.98rem;
+    font-size: 0.92rem;
     font-weight: 700;
-    margin: 2px 0 4px;
+    margin: 1px 0 2px;
     color: #121214;
     text-align: center;
 }
@@ -881,18 +890,18 @@ body.admin-page .admin-studio-grid {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    font-size: 0.76rem;
+    gap: 5px;
+    font-size: 0.72rem;
     color: #6B635C;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .admin-card-extracted-wrap .hp-card__price {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #121214;
     text-align: center;
-    margin: 2px 0 4px;
+    margin: 1px 0 2px;
 }
 
 .admin-card-extracted-wrap .hp-card__actions {
@@ -907,28 +916,28 @@ body.admin-page .admin-studio-grid {
 .admin-color-studio-box {
     background: #F8F7F4;
     border: 1px solid rgba(23, 23, 26, 0.08);
-    border-radius: 14px;
-    padding: 10px 12px;
+    border-radius: 12px;
+    padding: 8px 10px;
 }
 
 .admin-color-header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 }
 
 .admin-color-studio-label {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 700;
     color: #121214;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 }
 
 .admin-color-name {
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 600;
     color: #726C65;
 }
@@ -936,13 +945,13 @@ body.admin-page .admin-studio-grid {
 .admin-palette-pills {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    margin-bottom: 7px;
+    gap: 4px;
+    margin-bottom: 5px;
 }
 
 .palette-pill {
-    height: 22px;
-    border-radius: 6px;
+    height: 19px;
+    border-radius: 5px;
     border: 1px solid rgba(23, 23, 26, 0.12);
     cursor: pointer;
     transition: transform 0.14s ease, box-shadow 0.14s ease;
@@ -953,69 +962,69 @@ body.admin-page .admin-studio-grid {
 }
 
 .palette-pill.is-active {
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 3.5px var(--rojo-marca, #D62300);
+    box-shadow: 0 0 0 1.5px #FFFFFF, 0 0 0 3px var(--rojo-marca, #D62300);
 }
 
 .admin-color-picker-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
 }
 
 .admin-color-picker-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 11px;
+    gap: 5px;
+    font-size: 10.5px;
     font-weight: 600;
     color: #555;
     cursor: pointer;
 }
 
 .admin-color-picker-btn input[type="color"] {
-    width: 24px !important;
-    height: 24px !important;
-    min-height: 24px !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-height: 20px !important;
     padding: 0 !important;
-    border-radius: 6px !important;
+    border-radius: 5px !important;
     border: 1px solid rgba(0,0,0,0.15) !important;
     cursor: pointer;
 }
 
 .admin-color-hex-input {
-    width: 82px;
-    padding: 4px 6px;
+    width: 76px;
+    padding: 3px 5px;
     font-family: monospace, sans-serif;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     color: #17171A;
     background: #FFFFFF;
     border: 1px solid rgba(23, 23, 26, 0.15);
-    border-radius: 7px;
+    border-radius: 6px;
     text-align: center;
 }
 .admin-color-hex-input:focus {
     outline: none;
     border-color: var(--rojo-marca, #D62300);
-    box-shadow: 0 0 0 3px rgba(214, 35, 0, 0.1);
+    box-shadow: 0 0 0 2px rgba(214, 35, 0, 0.1);
 }
 
-/* Columna Derecha: Formulario con scroll independiente y amplio respiro al final */
+/* Columna Derecha: Formulario optimizado en filas compactas */
 .admin-studio-fields {
     overflow-y: auto;
     height: 100%;
-    padding-right: 14px;
-    padding-bottom: 32px;
+    padding-right: 12px;
+    padding-bottom: 28px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
     overscroll-behavior: contain;
 }
 
 .admin-studio-fields::-webkit-scrollbar {
-    width: 7px;
+    width: 6px;
 }
 .admin-studio-fields::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.03);
@@ -1029,16 +1038,101 @@ body.admin-page .admin-studio-grid {
     background: #BBBABF;
 }
 
+/* Filas multi-columna en el modal para ahorrar altura */
+body.admin-page .admin-modal-studio .form-row-split {
+    display: grid !important;
+    grid-template-columns: 1.25fr 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 6px !important;
+}
+
+body.admin-page .admin-modal-studio .form-row-3cols {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 10px !important;
+    margin-bottom: 6px !important;
+}
+
+body.admin-page .admin-modal-studio .form-group {
+    margin-bottom: 8px !important;
+    gap: 4px !important;
+}
+
+body.admin-page .admin-modal-studio .form-group label {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    margin-bottom: 3px !important;
+    color: #2D2A26 !important;
+}
+
+body.admin-page .admin-modal-studio input,
+body.admin-page .admin-modal-studio select {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding: 6px 11px !important;
+    font-size: 13.5px !important;
+    border-radius: 9px !important;
+}
+
+body.admin-page .admin-modal-studio textarea {
+    min-height: 54px !important;
+    padding: 8px 11px !important;
+    font-size: 13px !important;
+    border-radius: 9px !important;
+}
+
+body.admin-page .admin-modal-studio .image-upload-area {
+    min-height: 72px !important;
+    padding: 8px 12px !important;
+    border-radius: 12px !important;
+}
+
+body.admin-page .admin-modal-studio .image-upload-placeholder p {
+    font-size: 12px !important;
+    margin: 2px 0 0 !important;
+}
+
+body.admin-page .admin-modal-studio .image-upload-placeholder i {
+    font-size: 20px !important;
+}
+
+body.admin-page .admin-modal-studio .admin-activo-box-clean {
+    display: flex;
+    align-items: center;
+    background: #F8F7F4;
+    border: 1px solid rgba(23, 23, 26, 0.08);
+    border-radius: 10px;
+    padding: 6px 12px;
+}
+
+body.admin-page .admin-modal-studio .admin-activo-box-clean label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+
+body.admin-page .admin-modal-studio .admin-activo-box-clean strong {
+    font-size: 12px;
+    display: block;
+}
+
+body.admin-page .admin-modal-studio .admin-activo-box-clean small {
+    font-size: 10.5px;
+    color: #726C65;
+}
+
 body.admin-page .admin-modal-studio .admin-modal-actions {
     flex: 0 0 auto;
-    padding: 14px 32px;
+    padding: 11px 24px;
     border-top: 1px solid rgba(23, 23, 26, 0.08);
     background: #FAF9F7;
     margin: 0;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 /* Sección de letrero promocional visible y calculadora */
