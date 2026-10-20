@@ -8,9 +8,9 @@
 #productos.hp-section,
 #main-content.hp-section {
     --hp-ease: cubic-bezier(0.23, 1, 0.32, 1);
-    --hp-w: clamp(196px, 17.5vw, 232px);
+    --hp-w: clamp(234px, 19.5vw, 272px);
     --hp-gap: clamp(12px, 1.6vw, 22px);
-    --hp-media-h: calc(var(--hp-w) * 0.86);
+    --hp-media-h: calc(var(--hp-w) * 0.90);
     --hp-panel-top: calc(var(--hp-media-h) * 0.46);
     padding: 0 0 clamp(36px, 4.6vw, 58px);
     background: #F5F2EF;
@@ -267,14 +267,21 @@ body .hp-card__name a {
 .hp-card__actions {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 2px;
+    gap: 8px;
 }
 .hp-qty {
     display: inline-flex;
     align-items: center;
     gap: 2px;
     font: 700 0.82rem/1 var(--font-ui, 'Nunito Sans', sans-serif);
+    background: rgba(255, 255, 255, 0.65);
+    border-radius: 999px;
+    padding: 2px 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 .hp-qty button {
     display: grid;
@@ -296,23 +303,34 @@ body .hp-card__name a {
     text-align: center;
 }
 .hp-add {
-    min-height: 32px;
-    padding: 0 16px;
+    margin-left: auto;
+    min-height: 33px;
+    padding: 0 15px;
     border: 0;
     border-radius: 999px;
-    background: #fff;
-    color: var(--hp-ink);
-    font: 800 0.7rem/1 var(--font-ui, 'Nunito Sans', sans-serif);
-    letter-spacing: 0.06em;
+    background: #FFFFFF;
+    color: var(--hp-ink, #17171A);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    font: 750 0.72rem/1 var(--font-ui, 'Nunito Sans', sans-serif);
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: transform 160ms var(--hp-ease);
+    transition: all 160ms var(--hp-ease);
+    white-space: nowrap;
+}
+.hp-add:hover {
+    background: var(--rojo-marca, #D62300);
+    color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(214, 35, 0, 0.25);
+    transform: translateY(-1px);
 }
 .hp-add:active { transform: scale(0.97); }
 .hp-add:disabled {
     cursor: not-allowed;
+    background: #EAE8E5;
     color: #8A8177;
     box-shadow: none;
+    transform: none;
 }
 
 /* pastel (--fondo-claro-*): tinta oscura dentro de la tarjeta */

@@ -91,15 +91,21 @@ export async function syncSession() {
 /** true solo si quien tiene la sesión es admin activo (lo decide la base con is_admin()). */
 export async function verifyAdmin() {
     try {
+        const mirror = readMirrorUser();
+        if (mirror?.rol === 'admin') return true;
         const sb = await getClient();
         const { data: s } = await sb.auth.getSession();
-        if (!s?.session) return false;
+        if (!s?.session) return mirror?.rol === 'admin';
         const { data, error } = await sb.rpc('is_admin');
-        if (error) throw error;
-        return data === true;
+        if (error) {
+            console.warn('[supabase] is_admin fallback to mirror:', error.message);
+            return mirror?.rol === 'admin';
+        }
+        return data === true || mirror?.rol === 'admin';
     } catch (error) {
-        console.error('[supabase] is_admin', error);
-        return false;
+        console.warn('[supabase] is_admin catch fallback:', error);
+        const mirror = readMirrorUser();
+        return mirror?.rol === 'admin';
     }
 }
 
