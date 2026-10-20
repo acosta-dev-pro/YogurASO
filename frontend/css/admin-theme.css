@@ -730,14 +730,14 @@ body.admin-page .admin-email {
 
 body.admin-page .admin-modal .admin-modal-studio,
 body.admin-page .admin-modal-studio {
-    width: min(1040px, 94vw) !important;
-    max-width: 1040px !important;
-    height: min(90vh, 740px) !important;
-    max-height: 90vh !important;
+    width: min(1120px, 95vw) !important;
+    max-width: 1120px !important;
+    height: min(92vh, 810px) !important;
+    max-height: 92vh !important;
     display: flex !important;
     flex-direction: column !important;
     padding: 0 !important;
-    border-radius: 24px !important;
+    border-radius: 26px !important;
     background: #FFFFFF !important;
     box-shadow: 0 32px 80px rgba(18, 18, 20, 0.22) !important;
     overflow: hidden !important;
@@ -745,7 +745,7 @@ body.admin-page .admin-modal-studio {
 
 body.admin-page .admin-modal-studio .modal-header {
     flex: 0 0 auto;
-    padding: 16px 28px 14px;
+    padding: 18px 32px 14px;
     border-bottom: 1px solid rgba(23, 23, 26, 0.08);
     margin: 0;
 }
@@ -762,9 +762,9 @@ body.admin-page .admin-studio-grid {
     flex: 1 1 auto;
     min-height: 0;
     display: grid;
-    grid-template-columns: 270px minmax(0, 1fr);
-    gap: 24px;
-    padding: 16px 28px 10px;
+    grid-template-columns: 285px minmax(0, 1fr);
+    gap: 28px;
+    padding: 18px 32px 12px;
     overflow: hidden;
     margin: 0;
 }
@@ -804,9 +804,9 @@ body.admin-page .admin-studio-grid {
 
 .admin-card-extracted-wrap .hp-card {
     width: 100%;
-    max-width: 250px;
+    max-width: 265px;
     position: relative;
-    border-radius: 20px;
+    border-radius: 22px;
     padding: 0 12px 14px;
     background: transparent !important;
     isolation: isolate;
@@ -1031,7 +1031,7 @@ body.admin-page .admin-studio-grid {
 
 body.admin-page .admin-modal-studio .admin-modal-actions {
     flex: 0 0 auto;
-    padding: 12px 28px;
+    padding: 14px 32px;
     border-top: 1px solid rgba(23, 23, 26, 0.08);
     background: #FAF9F7;
     margin: 0;
