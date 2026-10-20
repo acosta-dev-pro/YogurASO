@@ -1,2 +1,0 @@
-/* Desactivado */
-(function(){})();
