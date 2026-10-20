@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -154,60 +154,44 @@
             <div class="admin-header">
                 <div>
                     <h1>Visitas y Rendimiento de Tienda</h1>
-                    <p class="admin-subtitle">Monitoreo de tráfico, consultas móviles y conversión a pedidos por WhatsApp.</p>
+                    <p class="admin-subtitle">Métricas reales de visitantes, inspecciones en tarjetas de producto y pedidos por WhatsApp.</p>
                 </div>
                 <div class="admin-analytics-badge">
-                    <span class="live-dot"></span> Actualizado en tiempo real
+                    <span class="live-dot"></span> Datos en tiempo real
                 </div>
             </div>
 
             <div class="admin-stats admin-stats-analytics">
                 <div class="admin-stat stat-glow">
-                    <span>Visitas hoy</span>
-                    <strong id="analytics-visitas">184</strong>
-                    <small class="stat-trend up"><i class="fas fa-arrow-up"></i> +24% vs ayer</small>
+                    <span>Visitas a la web</span>
+                    <strong id="analytics-visitas">0</strong>
+                    <small class="stat-trend up" id="analytics-visitas-sub"><i class="fas fa-users"></i> Personas que ingresaron</small>
+                </div>
+                <div class="admin-stat">
+                    <span>Clics e inspecciones</span>
+                    <strong id="analytics-clicks">0</strong>
+                    <small class="stat-trend up"><i class="fas fa-mouse-pointer"></i> Interacciones con productos</small>
                 </div>
                 <div class="admin-stat">
                     <span>Pedidos WhatsApp</span>
-                    <strong id="analytics-pedidos">38</strong>
-                    <small class="stat-trend up"><i class="fas fa-arrow-up"></i> 8 hoy</small>
+                    <strong id="analytics-pedidos">0</strong>
+                    <small class="stat-trend neutral"><i class="fab fa-whatsapp"></i> Inicios de compra</small>
                 </div>
                 <div class="admin-stat">
                     <span>Tasa de conversión</span>
-                    <strong id="analytics-conversion">20.6%</strong>
-                    <small class="stat-trend neutral">Visita a checkout</small>
-                </div>
-                <div class="admin-stat">
-                    <span>Presentación favorita</span>
-                    <strong>1 Litro</strong>
-                    <small class="stat-trend">62% de volumen</small>
+                    <strong id="analytics-conversion">0.0%</strong>
+                    <small class="stat-trend neutral">Visita a pedido</small>
                 </div>
             </div>
 
             <div class="admin-analytics-grid">
                 <article class="admin-analytics-card">
-                    <h3>Sabores más consultados hoy</h3>
-                    <div class="admin-flavor-bars">
-                        <div class="admin-bar-item">
-                            <div class="admin-bar-label"><span>Fresa Natural</span> <strong>38% (70 visitas)</strong></div>
-                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 38%; background: var(--rojo-marca);"></div></div>
-                        </div>
-                        <div class="admin-bar-item">
-                            <div class="admin-bar-label"><span>Melocotón</span> <strong>24% (44 visitas)</strong></div>
-                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 24%; background: #EE6A22;"></div></div>
-                        </div>
-                        <div class="admin-bar-item">
-                            <div class="admin-bar-label"><span>Mora Silvestre</span> <strong>18% (33 visitas)</strong></div>
-                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 18%; background: #7E2460;"></div></div>
-                        </div>
-                        <div class="admin-bar-item">
-                            <div class="admin-bar-label"><span>Guanábana & Piña</span> <strong>14% (26 visitas)</strong></div>
-                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 14%; background: #3E8A25;"></div></div>
-                        </div>
-                        <div class="admin-bar-item">
-                            <div class="admin-bar-label"><span>Café Artesanal & Otros</span> <strong>6% (11 visitas)</strong></div>
-                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 6%; background: #6B3420;"></div></div>
-                        </div>
+                    <div class="admin-card-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="margin: 0;">Clics e inspecciones por producto</h3>
+                        <span class="admin-chip-role" id="analytics-products-count" style="font-size: 11px;">0 productos</span>
+                    </div>
+                    <div class="admin-flavor-bars" id="admin-flavor-bars">
+                        <!-- Se llena dinámicamente con los productos reales del catálogo -->
                     </div>
                 </article>
 
@@ -217,24 +201,30 @@
                         <div class="admin-device-stat">
                             <div class="device-icon ios"><i class="fab fa-apple"></i></div>
                             <div>
-                                <strong>Apple iOS / iPhone (58%)</strong>
-                                <p>Mayoría en WhatsApp Web & Safari iOS</p>
+                                <strong id="device-ios-text">Apple iOS / iPhone (0%)</strong>
+                                <p id="device-ios-sub">0 visitas registradas</p>
                             </div>
                         </div>
                         <div class="admin-device-stat">
                             <div class="device-icon android"><i class="fab fa-android"></i></div>
                             <div>
-                                <strong>Android (36%)</strong>
-                                <p>Chrome Mobile & WhatsApp Direct</p>
+                                <strong id="device-android-text">Android (0%)</strong>
+                                <p id="device-android-sub">0 visitas registradas</p>
                             </div>
                         </div>
                         <div class="admin-device-stat">
                             <div class="device-icon pc"><i class="fas fa-desktop"></i></div>
                             <div>
-                                <strong>Computador / Escritorio (6%)</strong>
-                                <p>Pedidos mayoristas y distribuidores</p>
+                                <strong id="device-desktop-text">Computador / Escritorio (0%)</strong>
+                                <p id="device-desktop-sub">0 visitas registradas</p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.06); display: flex; justify-content: flex-end; gap: 8px;">
+                        <button type="button" class="btn-secondary" id="btn-reset-analytics" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;">
+                            <i class="fas fa-undo"></i> Reiniciar métricas
+                        </button>
                     </div>
                 </article>
             </div>
@@ -515,6 +505,7 @@
     <script src="../js/ui-motion.js"></script>
     <script src="../js/sound.js"></script>
     <script src="../js/cart.js"></script>
+    <script src="../js/analytics.js"></script>
     <script type="module" src="../js/auth.js"></script>
     <script type="module" src="../js/admin.js"></script>
 </body>

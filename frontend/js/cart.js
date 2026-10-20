@@ -1,4 +1,4 @@
-/**
+﻿/**
  * cart.js — Aquí queda la bolsa.
  * Se guarda en este navegador. Comprar abre WhatsApp y, si se puede, deja el pedido en Supabase.
  */
@@ -852,6 +852,7 @@
     }
 
     function openWhatsApp(items, text, win) {
+        try { if (window.YogAnalytics?.trackOrder) window.YogAnalytics.trackOrder(); } catch (_) {}
         const url = whatsAppUrl(text);
         if (win && !win.closed) {
             try {

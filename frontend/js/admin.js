@@ -1,4 +1,4 @@
-/**
+﻿/**
  * admin.js — Aquí queda el panel: inventario de yogures y lista de usuarios.
  * Solo entra quien la base reconoce como admin.
  */
@@ -447,6 +447,132 @@ function updateDashboard(productos) {
     setStat('stat-activos', activos);
     setStat('stat-stock', stock);
     setStat('stat-selected', selectedIds.size);
+    renderRealAnalytics(productos);
+}
+
+/**
+ * Renderiza métricas 100% reales de visitantes, clics por producto y pedidos WhatsApp.
+ */
+function renderRealAnalytics(productos = allAdminProducts || []) {
+    if (!window.YogAnalytics) return;
+    const metrics = window.YogAnalytics.getMetrics();
+
+    const totalVisits = Number(metrics.totalVisits) || 0;
+    const totalOrders = Number(metrics.totalOrders) || 0;
+    const productStats = metrics.productClicks || {};
+
+    let totalClicks = 0;
+    Object.values(productStats).forEach((p) => {
+        totalClicks += (Number(p.clicks) || 0) + (Number(p.inspections) || 0) + (Number(p.cartAdds) || 0);
+    });
+
+    const conversion = totalVisits > 0 ? ((totalOrders / totalVisits) * 100).toFixed(1) : '0.0';
+
+    const elVisitas = document.getElementById('analytics-visitas');
+    if (elVisitas) elVisitas.textContent = totalVisits.toLocaleString('es-CO');
+
+    const elClicks = document.getElementById('analytics-clicks');
+    if (elClicks) elClicks.textContent = totalClicks.toLocaleString('es-CO');
+
+    const elPedidos = document.getElementById('analytics-pedidos');
+    if (elPedidos) elPedidos.textContent = totalOrders.toLocaleString('es-CO');
+
+    const elConversion = document.getElementById('analytics-conversion');
+    if (elConversion) elConversion.textContent = ${conversion}%;
+
+    renderFlavorAnalyticsBars(productos, productStats, totalClicks);
+    renderDeviceBreakdown(metrics.devices, totalVisits);
+}
+
+function renderFlavorAnalyticsBars(productos, productStats, totalClicks) {
+    const container = document.getElementById('admin-flavor-bars');
+    const counterEl = document.getElementById('analytics-products-count');
+    if (!container) return;
+
+    const mergedMap = new Map();
+
+    // 1. Agregar todos los productos del inventario actual
+    (productos || []).forEach((p) => {
+        const id = String(p.id);
+        const stats = productStats[id] || productStats[p.slug] || {};
+        const clicks = (Number(stats.clicks) || 0) + (Number(stats.inspections) || 0) + (Number(stats.cartAdds) || 0);
+        mergedMap.set(id, {
+            id: id,
+            nombre: p.nombre || Producto #,
+            clicks: clicks,
+            color: p.color_acento || 'var(--rojo-marca, #C3343E)'
+        });
+    });
+
+    // 2. Sumar productos nuevos que tengan clics registrados pero que no estén en el catálogo base
+    Object.keys(productStats || {}).forEach((k) => {
+        if (!mergedMap.has(k)) {
+            const stats = productStats[k];
+            const clicks = (Number(stats.clicks) || 0) + (Number(stats.inspections) || 0) + (Number(stats.cartAdds) || 0);
+            mergedMap.set(k, {
+                id: k,
+                nombre: stats.nombre || Producto #,
+                clicks: clicks,
+                color: 'var(--rojo-marca, #C3343E)'
+            });
+        }
+    });
+
+    const items = Array.from(mergedMap.values());
+    items.sort((a, b) => b.clicks - a.clicks);
+
+    if (counterEl) {
+        counterEl.textContent = ${items.length} ;
+    }
+
+    if (!items.length) {
+        container.innerHTML = '<p class="admin-empty-state" style="padding: 16px; color: #888;">No hay productos en inventario.</p>';
+        return;
+    }
+
+    const html = items.map((item) => {
+        const pct = totalClicks > 0 ? Math.round((item.clicks / totalClicks) * 100) : 0;
+        return 
+            <div class="admin-bar-item">
+                <div class="admin-bar-label">
+                    <span></span>
+                    <strong>% ( )</strong>
+                </div>
+                <div class="admin-bar-track">
+                    <div class="admin-bar-fill" style="width: %; background: ;"></div>
+                </div>
+            </div>
+        ;
+    }).join('');
+
+    container.innerHTML = html;
+}
+
+function renderDeviceBreakdown(devices = {}, totalVisits = 0) {
+    const ios = Number(devices.ios) || 0;
+    const android = Number(devices.android) || 0;
+    const desktop = Number(devices.desktop) || 0;
+    const sum = (ios + android + desktop) || totalVisits || 1;
+
+    const iosPct = Math.round((ios / sum) * 100) || 0;
+    const androidPct = Math.round((android / sum) * 100) || 0;
+    const desktopPct = Math.round((desktop / sum) * 100) || 0;
+
+    const setDev = (type, pct, count) => {
+        const titleEl = document.getElementById(device--text);
+        const subEl = document.getElementById(device--sub);
+        if (titleEl) {
+            const label = type === 'ios' ? 'Apple iOS / iPhone' : type === 'android' ? 'Android' : 'Computador / Escritorio';
+            titleEl.textContent = ${label} (%);
+        }
+        if (subEl) {
+            subEl.textContent = ${count} ;
+        }
+    };
+
+    setDev('ios', iosPct, ios);
+    setDev('android', androidPct, android);
+    setDev('desktop', desktopPct, desktop);
 }
 
 function populateCategoryFilter(productos) {
@@ -867,6 +993,18 @@ function setupAdminEvents() {
     document.getElementById('btn-export-csv')?.addEventListener('click', () => exportProductsCsv(getVisibleProducts()));
     document.getElementById('btn-bulk-deactivate')?.addEventListener('click', () => bulkSetActive(false));
     document.getElementById('btn-bulk-activate')?.addEventListener('click', () => bulkSetActive(true));
+
+    document.getElementById('btn-reset-analytics')?.addEventListener('click', () => {
+        if (confirm('¿Deseas reiniciar las estadísticas reales de visitas y clics a cero?')) {
+            window.YogAnalytics?.resetMetrics();
+            renderRealAnalytics(allAdminProducts);
+            toast('Métricas restablecidas con éxito', 'success');
+        }
+    });
+
+    window.addEventListener('yoguraso:metrics-updated', () => {
+        renderRealAnalytics(allAdminProducts);
+    });
 
     document.getElementById('admin-select-all')?.addEventListener('change', (e) => {
         const checked = e.target.checked;

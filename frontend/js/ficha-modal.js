@@ -1,4 +1,4 @@
-/* ficha-modal.js — Aquí queda la ficha que se abre al tocar un yogur.
+﻿/* ficha-modal.js — Aquí queda la ficha que se abre al tocar un yogur.
    Nombre y precio salen del catálogo. Lo que no está confirmado se muestra como "Por confirmar". */
 (function () {
     'use strict';
@@ -223,6 +223,12 @@
         clearTimeout(closeTimer);
         opener = from || document.activeElement;
         current = { slug: slug, product: product || null };
+        try {
+            if (window.YogAnalytics?.trackProductClick) {
+                const pName = product?.nombre || (window.YOGUR_FLAVORS?.find(f => f.slug === slug)?.nombre) || slug;
+                window.YogAnalytics.trackProductClick(product?.id || slug, pName, 'inspect');
+            }
+        } catch (_) {}
         dlg.querySelector('[data-yfm-inner]').innerHTML = content(slug);
         dlg.setAttribute('data-flavor', slug);
         dlg.style.setProperty('--yfm-c', accentFor(slug, product) || 'var(--bg-' + slug + ', var(--rojo-marca))'); // color fuerte del sabor
