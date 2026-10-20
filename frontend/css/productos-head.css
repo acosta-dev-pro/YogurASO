@@ -21,8 +21,8 @@
     max-width: none;
     opacity: 1;
     color: var(--rojo-marca);
-    font: 800 11.5px/1.2 'Nunito Sans', sans-serif;
-    letter-spacing: .2em;
+    font: 600 12px/1.2.2 'Nunito Sans', sans-serif;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 .productos-page-v3 .shop-hero h1 {

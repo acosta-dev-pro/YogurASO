@@ -3,10 +3,10 @@
    Tipografía redondeada, artesanal, cálida y legible: Fredoka 700 en rojo de marca. */
 
 :root {
-    --yg-price-font: var(--font-display, 'Fredoka', 'Nunito Sans', system-ui, -apple-system, sans-serif);
+    --yg-price-font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --yg-price-weight: 700;
     --yg-price-size: 1.32rem;
-    --yg-price-color: var(--brand-red, var(--rojo-marca, #C3343E));
+    --yg-price-color: #121214;
 }
 
 /* contenedor del precio en la tarjeta: mismo bloque en ambas páginas */

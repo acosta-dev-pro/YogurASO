@@ -207,7 +207,7 @@
     border-radius: 999px;
     background: #fff;
     color: var(--hp-ink);
-    font: 800 10px/1.2 var(--font-ui, 'Nunito Sans', sans-serif);
+    font: 600 12px/1.2.2 var(--font-ui, 'Nunito Sans', sans-serif);
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
@@ -249,11 +249,12 @@ body .hp-card__name a {
 }
 .hp-card__price {
     margin: 8px 0 10px;
-    font-family: var(--font-display, 'Fredoka', sans-serif);
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     font-size: 1.34rem;
     font-weight: 700;
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    color: #121214;
 }
 .hp-price s {
     margin-right: 4px;
@@ -317,7 +318,15 @@ body .hp-card__name a {
 /* pastel (--fondo-claro-*): tinta oscura dentro de la tarjeta */
 .hp-card.is-active .hp-card__body,
 .hp-card.is-active .hp-card__name,
-.hp-card.is-active .hp-card__price { color: var(--ink, #171717); }
+.hp-card.is-active .hp-card__price {
+    margin: 8px 0 10px;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-size: 1.34rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #121214;
+}
 .hp-card.is-active .hp-card__meta { color: var(--ink-soft, #3A3330); }
 
 /* foco de teclado en el carrusel: anillo en el panel activo */
@@ -423,7 +432,15 @@ body .hp-card__name a {
     .hp-nav { display: none; }
     .hp-card__name { font-size: 0.95rem; }
     .hp-card__meta { font-size: 0.72rem; }
-    .hp-card__price { font-size: 1.05rem; }
+    .hp-card__price {
+    margin: 8px 0 10px;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-size: 1.34rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #121214;
+}
     .hp-add { min-height: 32px; padding: 0 10px; font-size: 12px; }
     .hp-qty button { width: 26px; height: 26px; }
 }

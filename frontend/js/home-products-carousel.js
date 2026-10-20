@@ -75,7 +75,13 @@ function cardHtml(p, i, n, isClone) {
     <button type="button" class="hp-fav" data-hp-fav aria-pressed="false" aria-label="Guardar ${name} en favoritos">${HEART}</button>
     <div class="hp-card__body">
         <h3 class="hp-card__name"><a href="${PRODUCT_PAGE}" data-hp-open aria-label="Ver ficha de ${name}">${name}</a></h3>
-        <p class="hp-card__meta">500 ml · ${escapeHtml(p.categoria || 'Yogurt Artesanal')}</p>
+        <div class="hp-card__meta">
+            <span class="yg-size-selector" data-card-sizes role="radiogroup" aria-label="Presentación">
+                <button type="button" class="yg-size-btn is-active" data-size="500 ml">500 ml</button>
+                <button type="button" class="yg-size-btn" data-size="1 Litro">1 L</button>
+            </span>
+            <span>${escapeHtml(p.categoria || 'Yogurt Artesanal')}</span>
+        </div>
         <p class="hp-card__price">${priceHtml(p)}</p>
         <div class="hp-card__actions">
             <div class="hp-qty" role="group" aria-label="Cantidad de ${name}">

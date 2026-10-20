@@ -141,8 +141,7 @@
 .cart-sheet-brand { text-align: center; padding: 0; }
 .cart-sheet-logo {
     color: var(--rojo-marca);
-    font-size: 10px;
-    font-weight: 800;
+    font-size: 12px; font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     line-height: 1.1;
@@ -190,8 +189,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 12px; font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #6B635C;
@@ -200,8 +198,7 @@
     padding: 0;
     background: transparent !important;
     color: #6B635C;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 12px; font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
@@ -300,10 +297,10 @@
     font-weight: 800 !important;
 }
 .cart-subline, .cart-grand { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.cart-subline { padding: 0; font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #6B635C; }
+.cart-subline { padding: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6B635C; }
 .cart-subline .num { letter-spacing: 0; text-transform: none; font-size: 13px; font-weight: 800; color: #171717; }
 .cart-grand { padding-top: 4px; }
-.cart-grand span:first-child { font-size: 11px; font-weight: 800; letter-spacing: 0.14em; }
+.cart-grand span:first-child { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; }
 .cart-grand span:last-child {
     font-family: "Nunito Sans", sans-serif !important;
     font-size: 16px !important;
@@ -322,8 +319,7 @@
 .cart-order-code {
     margin: 1px 0 0;
     text-align: center;
-    font-size: 10px;
-    font-weight: 800;
+    font-size: 12px; font-weight: 600;
     letter-spacing: 0.12em;
     color: #171717;
 }

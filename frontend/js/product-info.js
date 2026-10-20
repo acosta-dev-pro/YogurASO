@@ -9,7 +9,7 @@ window.YOG_INFO = {
     marcarPendientes: true,
 
     // Presentaciones que se ven en las fotos (botella de 500 ml). Agrega otras si existen: '1 litro', '250 ml'...
-    presentaciones: ['500 ml'],
+    presentaciones: ['500 ml', '1 Litro'],
 
     // Días que dura cerrado y refrigerado. Ej.: 21. null = mostrar "revisa la fecha impresa en el envase".
     vidaUtilCerradoDias: null,

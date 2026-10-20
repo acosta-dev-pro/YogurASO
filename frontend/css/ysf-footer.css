@@ -37,7 +37,7 @@
 .ysf-logo{display:inline-block;border-radius:6px}
 .ysf-logo img{display:block;width:auto;height:30px}
 .ysf .ysf-lead{margin-top:10px;max-width:26ch;color:var(--ysf-w2);font-size:12.5px;line-height:1.5}
-.ysf .ysf-h{margin-bottom:12px;font:800 11px/1.2 var(--ysf-body);letter-spacing:.2em;text-transform:uppercase;color:var(--ysf-w)}
+.ysf .ysf-h{margin-bottom:12px;font: 600 12px/1.2.2 var(--ysf-body);letter-spacing: 0.06em;text-transform:uppercase;color:var(--ysf-w)}
 /* brand-pages.css fuerza Fredoka en h2 con !important: aquí manda la fuente de #empaque */
 .ysf .ysf-h{font-family:var(--ysf-body)!important}
 .ysf-list{display:grid;gap:7px}

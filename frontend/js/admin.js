@@ -69,6 +69,7 @@ function abrirModal(titulo, { isEdit = false } = {}) {
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
         setTimeout(() => document.getElementById('p-nombre')?.focus(), 30);
+    syncLiveCardPreview();
     }
 }
 
@@ -80,6 +81,122 @@ function cerrarModal({ reset = true } = {}) {
     }
     document.body.classList.remove('modal-open');
     if (reset) limpiarFormulario();
+}
+
+
+/* ==========================================================================
+   SINCRONIZACIÓN EN TIEMPO REAL: Tarjeta extraída y paleta de colores
+   ========================================================================== */
+
+function syncLiveCardPreview() {
+    const card = document.getElementById('adminLiveCard');
+    if (!card) return;
+
+    const nombre = document.getElementById('p-nombre')?.value.trim() || 'Nombre del yogur';
+    const precio = Number(document.getElementById('p-precio')?.value || 0);
+    const precio1L = Number(document.getElementById('p-precio-1l')?.value || 0) || (precio ? Math.round((precio * 1.75) / 100) * 100 : 0);
+    const desc = Number(document.getElementById('p-descuento')?.value || 0);
+    const catSelect = document.getElementById('p-categoria');
+    const catText = catSelect ? (catSelect.options[catSelect.selectedIndex]?.text || 'Natural') : 'Natural';
+    const colorHex = document.getElementById('p-color-fondo')?.value || '#FFF8F4';
+    const tipo = document.getElementById('p-letrero-tipo')?.value || '';
+    const texto = document.getElementById('p-letrero')?.value.trim() || '';
+    const imgVal = document.getElementById('p-imagen')?.value || '';
+
+    // Nombre y categoría
+    const titleEl = document.getElementById('adminLiveTitle');
+    if (titleEl) titleEl.textContent = nombre;
+    const catEl = document.getElementById('adminLiveCat');
+    if (catEl) catEl.textContent = catText;
+
+    // Color de tarjeta
+    card.style.setProperty('--producto-card-bg', colorHex);
+    card.style.backgroundColor = colorHex;
+    const hexLabel = document.getElementById('adminColorHex');
+    if (hexLabel) hexLabel.textContent = colorHex.toUpperCase();
+
+    // Pastillas de paleta activas
+    document.querySelectorAll('#adminPalettePills .palette-pill').forEach((btn) => {
+        btn.classList.toggle('is-active', (btn.dataset.color || '').toLowerCase() === colorHex.toLowerCase());
+    });
+
+    // Imagen
+    const bottleImg = document.getElementById('adminLiveBottle');
+    if (bottleImg) {
+        if (imgVal) {
+            bottleImg.src = imgSrc(imgVal);
+        } else {
+            const clean = String(nombre).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            const foundFlavor = (window.YOGUR_FLAVORS || []).find((f) => clean.includes(f.slug) || clean.includes(f.nombre.toLowerCase()));
+            if (foundFlavor) bottleImg.src = `../assets/products/yoguraso-${foundFlavor.slug}-500ml-sm.webp`;
+            else bottleImg.src = '../assets/products/yoguraso-fresa-500ml-sm.webp';
+        }
+    }
+
+    // Badge / Letrero
+    const badgeEl = document.getElementById('adminLiveBadge');
+    if (badgeEl) {
+        if (tipo || texto) {
+            badgeEl.style.display = 'block';
+            badgeEl.textContent = texto || (tipo.charAt(0).toUpperCase() + tipo.slice(1));
+        } else {
+            badgeEl.style.display = 'none';
+        }
+    }
+
+    // Precio en vivo
+    const priceEl = document.getElementById('adminLivePrice');
+    if (priceEl) {
+        const is1L = document.getElementById('preview-size-1L')?.classList.contains('is-active');
+        const activeBase = is1L ? precio1L : precio;
+        const finalP = desc > 0 ? Math.round((activeBase * (1 - desc / 100)) / 100) * 100 : activeBase;
+        if (desc > 0) {
+            priceEl.innerHTML = `<span class="yg-price"><s>${formatCOP(activeBase)}</s> ${formatCOP(finalP)}</span>`;
+        } else {
+            priceEl.innerHTML = `<span class="yg-price">${formatCOP(finalP)}</span>`;
+        }
+    }
+}
+
+function initAdminStudioEvents() {
+    const inputsToWatch = ['p-nombre', 'p-precio', 'p-precio-1l', 'p-stock', 'p-categoria', 'p-color-fondo', 'p-letrero', 'p-letrero-tipo', 'p-descuento'];
+    inputsToWatch.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', syncLiveCardPreview);
+            el.addEventListener('change', syncLiveCardPreview);
+        }
+    });
+
+    // Paleta de colores predefinida
+    document.querySelectorAll('#adminPalettePills .palette-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const color = btn.dataset.color;
+            const input = document.getElementById('p-color-fondo');
+            if (input && color) {
+                input.value = color;
+                syncLiveCardPreview();
+            }
+        });
+    });
+
+    // Alternador de presentación 500 ml vs 1 L en la tarjeta de vista previa
+    const btn500 = document.getElementById('preview-size-500');
+    const btn1L = document.getElementById('preview-size-1L');
+    if (btn500 && btn1L) {
+        btn500.addEventListener('click', (e) => {
+            e.preventDefault();
+            btn500.classList.add('is-active');
+            btn1L.classList.remove('is-active');
+            syncLiveCardPreview();
+        });
+        btn1L.addEventListener('click', (e) => {
+            e.preventDefault();
+            btn1L.classList.add('is-active');
+            btn500.classList.remove('is-active');
+            syncLiveCardPreview();
+        });
+    }
 }
 
 function limpiarFormulario() {
@@ -104,6 +221,7 @@ function limpiarFormulario() {
     resetImageUpload();
     setSubmitLabel(false);
     syncPromoPreview();
+    syncLiveCardPreview();
 }
 
 function formatAdminCOP(n) {
@@ -645,7 +763,8 @@ function payloadDesdeFormulario() {
         activo: Boolean(document.getElementById('p-activo')?.checked),
         letrero,
         letrero_tipo: letrero ? tipoLetrero : '',
-        descuento: Number(document.getElementById('p-descuento')?.value || 0)
+        descuento: Number(document.getElementById('p-descuento')?.value || 0),
+        precio_1l: Number(document.getElementById('p-precio-1l')?.value || 0)
     };
 }
 
@@ -780,6 +899,7 @@ function setupAdminEvents() {
     });
 
     setupPromoControls();
+    initAdminStudioEvents();
 
     const close = () => cerrarModal({ reset: true });
     btnCerrar?.addEventListener('click', close);

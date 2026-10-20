@@ -196,8 +196,7 @@ button[data-ix-like="post"][aria-pressed="true"] svg path,
   bottom: -4px;
   min-width: 14px;
   font-family: "Nunito", system-ui, sans-serif;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 12px; font-weight: 600;
   color: #171717;
   line-height: 1;
 }

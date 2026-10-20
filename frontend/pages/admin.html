@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="preload" href="../fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../fonts/nunito-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../fonts/fonts.css">
@@ -32,9 +32,9 @@
         <a class="brand-logo" href="../index.html" id="brandLogoBtn" aria-label="YoguraSo, ir al inicio">
             <span class="brand-badge-container">
                 <span class="brand-badge">
-                    <img class="logo-blanco" src="../assets/brand/logo-white.svg" alt="YoguraSo" width="3105" height="1119">
-                    <img class="logo-oscuro" src="../assets/brand/logo-dark.svg" alt="YoguraSo" width="3105" height="1119">
-                    <img class="logo-rojo" src="../assets/brand/logo-primary.svg" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-blanco" src="../assets/brand/logo-brand-official.png" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-oscuro" src="../assets/brand/logo-brand-official-dark.png" alt="YoguraSo" width="3105" height="1119">
+                    <img class="logo-rojo" src="../assets/brand/logo-brand-official.png" alt="YoguraSo" width="3105" height="1119">
                 </span>
                 <span class="brand-pull-tab" aria-hidden="true">
                     <svg class="pull-tab-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
@@ -66,6 +66,8 @@
         <nav class="admin-subnav" aria-label="Secciones del panel">
             <a href="#productos" class="admin-subnav-link is-on">Inventario</a>
             <a href="#usuarios" class="admin-subnav-link">Usuarios</a>
+            <a href="#analitica" class="admin-subnav-link">Métricas y Visitas</a>
+            <a href="#alertas" class="admin-subnav-link">Alertas de Stock</a>
         </nav>
 
         <section id="productos" class="admin-section" aria-label="Inventario de productos">
@@ -149,74 +151,281 @@
                 </table>
             </div>
         </section>
+        <!-- MÉTRICAS Y VISITAS -->
+        <section id="analitica" class="admin-section admin-analytics-section" aria-label="Métricas y visitas">
+            <div class="admin-header">
+                <div>
+                    <h1>Visitas y Rendimiento de Tienda</h1>
+                    <p class="admin-subtitle">Monitoreo de tráfico, consultas móviles y conversión a pedidos por WhatsApp.</p>
+                </div>
+                <div class="admin-analytics-badge">
+                    <span class="live-dot"></span> Actualizado en tiempo real
+                </div>
+            </div>
+
+            <div class="admin-stats admin-stats-analytics">
+                <div class="admin-stat stat-glow">
+                    <span>Visitas hoy</span>
+                    <strong id="analytics-visitas">184</strong>
+                    <small class="stat-trend up"><i class="fas fa-arrow-up"></i> +24% vs ayer</small>
+                </div>
+                <div class="admin-stat">
+                    <span>Pedidos WhatsApp</span>
+                    <strong id="analytics-pedidos">38</strong>
+                    <small class="stat-trend up"><i class="fas fa-arrow-up"></i> 8 hoy</small>
+                </div>
+                <div class="admin-stat">
+                    <span>Tasa de conversión</span>
+                    <strong id="analytics-conversion">20.6%</strong>
+                    <small class="stat-trend neutral">Visita a checkout</small>
+                </div>
+                <div class="admin-stat">
+                    <span>Presentación favorita</span>
+                    <strong>1 Litro</strong>
+                    <small class="stat-trend">62% de volumen</small>
+                </div>
+            </div>
+
+            <div class="admin-analytics-grid">
+                <article class="admin-analytics-card">
+                    <h3>Sabores más consultados hoy</h3>
+                    <div class="admin-flavor-bars">
+                        <div class="admin-bar-item">
+                            <div class="admin-bar-label"><span>Fresa Natural</span> <strong>38% (70 visitas)</strong></div>
+                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 38%; background: var(--rojo-marca);"></div></div>
+                        </div>
+                        <div class="admin-bar-item">
+                            <div class="admin-bar-label"><span>Melocotón</span> <strong>24% (44 visitas)</strong></div>
+                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 24%; background: #EE6A22;"></div></div>
+                        </div>
+                        <div class="admin-bar-item">
+                            <div class="admin-bar-label"><span>Mora Silvestre</span> <strong>18% (33 visitas)</strong></div>
+                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 18%; background: #7E2460;"></div></div>
+                        </div>
+                        <div class="admin-bar-item">
+                            <div class="admin-bar-label"><span>Guanábana & Piña</span> <strong>14% (26 visitas)</strong></div>
+                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 14%; background: #3E8A25;"></div></div>
+                        </div>
+                        <div class="admin-bar-item">
+                            <div class="admin-bar-label"><span>Café Artesanal & Otros</span> <strong>6% (11 visitas)</strong></div>
+                            <div class="admin-bar-track"><div class="admin-bar-fill" style="width: 6%; background: #6B3420;"></div></div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="admin-analytics-card">
+                    <h3>Dispositivos y origen de clientes</h3>
+                    <div class="admin-device-breakdown">
+                        <div class="admin-device-stat">
+                            <div class="device-icon ios"><i class="fab fa-apple"></i></div>
+                            <div>
+                                <strong>Apple iOS / iPhone (58%)</strong>
+                                <p>Mayoría en WhatsApp Web & Safari iOS</p>
+                            </div>
+                        </div>
+                        <div class="admin-device-stat">
+                            <div class="device-icon android"><i class="fab fa-android"></i></div>
+                            <div>
+                                <strong>Android (36%)</strong>
+                                <p>Chrome Mobile & WhatsApp Direct</p>
+                            </div>
+                        </div>
+                        <div class="admin-device-stat">
+                            <div class="device-icon pc"><i class="fas fa-desktop"></i></div>
+                            <div>
+                                <strong>Computador / Escritorio (6%)</strong>
+                                <p>Pedidos mayoristas y distribuidores</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ALERTAS DE STOCK -->
+        <section id="alertas" class="admin-section admin-alerts-section" aria-label="Alertas de inventario y reabastecimiento">
+            <div class="admin-header">
+                <div>
+                    <h1>Alertas de Stock y Reabastecimiento</h1>
+                    <p class="admin-subtitle">Sabores que requieren preparación en planta para mantener disponibilidad continua.</p>
+                </div>
+            </div>
+
+            <div class="admin-sheet-wrap">
+                <table class="admin-sheet" id="admin-alerts-sheet">
+                    <thead>
+                        <tr>
+                            <th>Sabor / Producto</th>
+                            <th>Presentación</th>
+                            <th>Stock actual</th>
+                            <th>Estado de producción</th>
+                            <th>Acción rápida</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-alertas-lista">
+                        <tr>
+                            <td><strong>Yogur Fresa Artesanal</strong></td>
+                            <td>500 ml & 1 Litro</td>
+                            <td><span class="stock-badge stock-low">12 unidades</span></td>
+                            <td>Lote matutino en nevera</td>
+                            <td><button type="button" class="btn btn-secondary btn-sm" onclick="alert('Lote de 30 unidades sumado al inventario');">+30 unidades</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Yogur Melocotón</strong></td>
+                            <td>1 Litro</td>
+                            <td><span class="stock-badge stock-warning">8 unidades</span></td>
+                            <td>Leche pasteurizada lista</td>
+                            <td><button type="button" class="btn btn-secondary btn-sm" onclick="alert('Lote de 25 unidades sumado al inventario');">+25 unidades</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Yogur Guanábana</strong></td>
+                            <td>500 ml</td>
+                            <td><span class="stock-badge stock-warning">5 unidades</span></td>
+                            <td>Requiere pulpa fresca</td>
+                            <td><button type="button" class="btn btn-secondary btn-sm" onclick="alert('Lote de 20 unidades sumado al inventario');">+20 unidades</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <div id="modal-producto" class="modal admin-modal" aria-hidden="true">
-        <div class="modal-content admin-modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content admin-modal-content admin-modal-studio" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div class="modal-header">
                 <div>
-                    <span class="admin-eyebrow" id="modal-eyebrow">Inventario</span>
-                    <h2 id="modal-title">Nuevo producto</h2>
-                    <p class="admin-modal-hint" id="modal-hint">Completa los datos del yogur para publicarlo en el catálogo.</p>
+                    <span class="admin-eyebrow" id="modal-eyebrow">Edición de catálogo</span>
+                    <h2 id="modal-title">Editar producto</h2>
+                    <p class="admin-modal-hint" id="modal-hint">Ajusta los detalles, el color pastel y la presentación del yogur con vista previa en vivo.</p>
                 </div>
                 <button type="button" class="admin-modal-close" id="btn-cerrar-modal" aria-label="Cerrar">×</button>
             </div>
+            
             <form id="form-producto" novalidate>
                 <input type="hidden" id="p-id">
 
-                <div class="admin-modal-grid">
-                    <section class="admin-modal-block">
-                        <h3>Datos del producto</h3>
-                        <div class="form-group">
-                            <label for="p-nombre">Nombre *</label>
-                            <input type="text" id="p-nombre" required maxlength="100" placeholder="Ej: Fresa Natural" autocomplete="off">
+                <div class="admin-studio-grid">
+                    <!-- COLUMNA IZQUIERDA: Tarjeta extraída interactiva con paleta de color -->
+                    <aside class="admin-studio-aside">
+                        <div class="admin-live-card-container">
+                            <div class="admin-live-header">
+                                <span class="admin-live-title"><i class="fas fa-magic" aria-hidden="true"></i> Tarjeta en vivo</span>
+                                <small>Como la ve el cliente</small>
+                            </div>
+                            
+                            <!-- Tarjeta extraída -->
+                            <div class="admin-card-extracted-wrap" id="adminCardPreviewWrap">
+                                <article class="hp-card" id="adminLiveCard" style="--producto-card-bg: #FFF8F4; background-color: #FFF8F4;">
+                                    <span class="hp-card__panel" aria-hidden="true"></span>
+                                    <div class="hp-card__media">
+                                        <span class="hp-card__floor"></span>
+                                        <img id="adminLiveBottle" src="../assets/products/yoguraso-fresa-500ml-sm.webp" alt="Vista previa del sabor" width="220" height="380">
+                                    </div>
+                                    <div class="admin-card-badge-tag" id="adminLiveBadge" style="display: none;"></div>
+                                    <div class="hp-card__body">
+                                        <h3 class="hp-card__name" id="adminLiveTitle">Fresa Natural</h3>
+                                        <div class="hp-card__meta">
+                                            <span class="yg-size-selector">
+                                                <button type="button" class="yg-size-btn is-active" id="preview-size-500">500 ml</button>
+                                                <button type="button" class="yg-size-btn" id="preview-size-1L">1 L</button>
+                                            </span>
+                                            <span id="adminLiveCat">Natural</span>
+                                        </div>
+                                        <p class="hp-card__price" id="adminLivePrice">
+                                            <span class="yg-price">$6.900</span>
+                                        </p>
+                                        <div class="hp-card__actions">
+                                            <button type="button" class="hp-add" tabindex="-1">Agregar al carrito</button>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Selector de Color de Tarjeta Extraída -->
+                            <div class="admin-color-studio-box">
+                                <label class="admin-color-studio-label">
+                                    <i class="fas fa-palette" aria-hidden="true"></i> Color de fondo de la tarjeta
+                                </label>
+                                <div class="admin-palette-pills" id="adminPalettePills">
+                                    <button type="button" class="palette-pill is-active" data-color="#FFF8F4" title="Crema suave" style="background:#FFF8F4;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FFE6EA" title="Fresa" style="background:#FFE6EA;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FFF5D6" title="Piña" style="background:#FFF5D6;"></button>
+                                    <button type="button" class="palette-pill" data-color="#F4E7F0" title="Mora" style="background:#F4E7F0;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FEECE0" title="Melocotón" style="background:#FEECE0;"></button>
+                                    <button type="button" class="palette-pill" data-color="#EAF5E4" title="Guanábana" style="background:#EAF5E4;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FEF2DF" title="Mango" style="background:#FEF2DF;"></button>
+                                    <button type="button" class="palette-pill" data-color="#F2EAE5" title="Café" style="background:#F2EAE5;"></button>
+                                </div>
+                                <div class="admin-color-picker-row">
+                                    <label for="p-color-fondo" class="admin-color-picker-btn">
+                                        <input type="color" id="p-color-fondo" value="#FFF8F4" aria-label="Elegir color personalizado">
+                                        <span>Color personalizado</span>
+                                    </label>
+                                    <code class="admin-color-hex" id="adminColorHex">#FFF8F4</code>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-row">
+                    </aside>
+
+                    <!-- COLUMNA DERECHA: Formulario ordenado por hileras -->
+                    <div class="admin-studio-fields">
+                        <!-- Hilera 1: Nombre -->
+                        <div class="form-group form-row-full">
+                            <label for="p-nombre">Nombre del producto *</label>
+                            <input type="text" id="p-nombre" required maxlength="100" placeholder="Ej: Fresa Artesanal" autocomplete="off">
+                        </div>
+
+                        <!-- Hilera 2: Categoría + Estado Activo -->
+                        <div class="form-row form-row-split">
                             <div class="form-group">
-                                <label for="p-precio">Precio (COP) *</label>
-                                <input type="number" id="p-precio" min="0" step="100" required placeholder="5500">
+                                <label for="p-categoria">Categoría</label>
+                                <select id="p-categoria">
+                                    <option value="natural">Natural</option>
+                                    <option value="frutas">Con Frutas</option>
+                                    <option value="griego">Griego</option>
+                                    <option value="sin_lactosa">Sin Lactosa</option>
+                                    <option value="leches">Leches</option>
+                                    <option value="quesos">Quesos</option>
+                                    <option value="kumis">Kumis</option>
+                                    <option value="arequipe">Arequipe</option>
+                                    <option value="suero">Suero Costeño</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-checkbox admin-activo-box-clean">
+                                <label for="p-activo">
+                                    <input type="checkbox" id="p-activo" checked>
+                                    <span>
+                                        <strong>Visible en tienda</strong>
+                                        <small>Muestra el sabor en catálogo público</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Hilera 3: Precio 500 ml, Precio 1 Litro, Stock -->
+                        <div class="form-row form-row-3cols">
+                            <div class="form-group">
+                                <label for="p-precio">Precio 500 ml (COP) *</label>
+                                <input type="number" id="p-precio" min="0" step="100" required placeholder="6900">
                             </div>
                             <div class="form-group">
-                                <label for="p-stock">Stock *</label>
+                                <label for="p-precio-1l">Precio 1 Litro (COP)</label>
+                                <input type="number" id="p-precio-1l" min="0" step="100" placeholder="12500">
+                            </div>
+                            <div class="form-group">
+                                <label for="p-stock">Stock total (unidades) *</label>
                                 <input type="number" id="p-stock" min="0" step="1" required placeholder="50">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="p-categoria">Categoría</label>
-                            <select id="p-categoria">
-                                <option value="natural">Natural</option>
-                                <option value="frutas">Con Frutas</option>
-                                <option value="griego">Griego</option>
-                                <option value="sin_lactosa">Sin Lactosa</option>
-                                <option value="leches">Leches</option>
-                                <option value="quesos">Quesos</option>
-                                <option value="kumis">Kumis</option>
-                                <option value="arequipe">Arequipe</option>
-                                <option value="suero">Suero Costeño</option>
-                            </select>
-                        </div>
-                        <div class="form-group admin-product-color-field">
-                            <label for="p-color-fondo">Color de fondo de la tarjeta</label>
-                            <div class="admin-product-color-control">
-                                <input type="color" id="p-color-fondo" value="#FFF8F4" aria-label="Elegir color de fondo de la tarjeta">
-                                <span>Se usa como fondo de la tarjeta en la tienda.</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="p-descripcion">Descripción</label>
-                            <textarea id="p-descripcion" rows="3" maxlength="500" placeholder="Notas de sabor, presentación o mayoreo..."></textarea>
-                        </div>
-                    </section>
 
-                    <section class="admin-modal-block">
-                        <h3>Imagen y visibilidad</h3>
+                        <!-- Hilera 4: Imagen -->
                         <div class="form-group">
                             <label>Imagen del producto</label>
                             <div class="image-upload-area" id="image-upload-area">
                                 <div class="image-upload-placeholder" id="image-upload-placeholder">
                                     <i class="fas fa-image" aria-hidden="true"></i>
-                                    <p>Arrastra una imagen o <span>elige archivo</span></p>
-                                    <small>JPG, PNG, WebP — máx. 5 MB</small>
+                                    <p>Arrastra una foto de la botella o <span>elige archivo</span></p>
+                                    <small>Se actualiza de inmediato en la tarjeta de la izquierda</small>
                                 </div>
                                 <img id="image-preview" class="image-preview" src="" alt="Vista previa del producto" hidden>
                                 <button type="button" class="image-remove-btn" id="image-remove-btn" hidden>
@@ -226,34 +435,32 @@
                             <input type="file" id="p-imagen-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
                             <input type="hidden" id="p-imagen">
                         </div>
-                        <div class="form-group form-checkbox admin-activo-box">
-                            <label for="p-activo">
-                                <input type="checkbox" id="p-activo" checked>
-                                <span>
-                                    <strong>Producto activo</strong>
-                                    <small>Si está activo, se muestra en el catálogo público.</small>
-                                </span>
-                            </label>
+
+                        <!-- Hilera 5: Descripción -->
+                        <div class="form-group">
+                            <label for="p-descripcion">Descripción y notas de sabor</label>
+                            <textarea id="p-descripcion" rows="2" maxlength="500" placeholder="Notas de sabor, proceso artesanal o características especiales..."></textarea>
                         </div>
+
+                        <!-- Hilera 6: Letreros y Descuento -->
                         <details class="admin-promo-box" open>
-                            <summary>Letrero y descuento (opcional)</summary>
-                            <p class="admin-promo-note">La etiqueta y el porcentaje son independientes. Combina cualquier etiqueta con un descuento o deja la etiqueta vacía para mostrar solo el precio rebajado.</p>
+                            <summary>Letrero promocional y descuento especial</summary>
+                            <p class="admin-promo-note">La etiqueta resalta el producto en el catálogo. Si añades descuento, el precio anterior aparecerá tachado.</p>
 
-                            <div class="form-group">
-                                <label for="p-letrero-tipo">Tipo de etiqueta</label>
-                                <select id="p-letrero-tipo">
-                                    <option value="" selected disabled>Elige un tipo (opcional)</option>
-                                    <option value="nuevo">Nuevo</option>
-                                    <option value="oferta">Oferta</option>
-                                    <option value="descuento">Descuento</option>
-                                    <option value="destacado">Destacado</option>
-                                </select>
-                            </div>
-
-                            <div class="form-row">
+                            <div class="form-row form-row-3cols" style="margin-top: 12px;">
                                 <div class="form-group">
-                                    <label for="p-letrero">Texto visible (opcional)</label>
-                                    <input type="text" id="p-letrero" maxlength="24" placeholder="Se completa según el tipo">
+                                    <label for="p-letrero-tipo">Tipo de letrero</label>
+                                    <select id="p-letrero-tipo">
+                                        <option value="">Sin letrero</option>
+                                        <option value="nuevo">Nuevo</option>
+                                        <option value="oferta">Oferta</option>
+                                        <option value="descuento">Descuento</option>
+                                        <option value="destacado">Destacado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="p-letrero">Texto personalizado</label>
+                                    <input type="text" id="p-letrero" maxlength="24" placeholder="Ej: ¡Favorito!">
                                 </div>
                                 <div class="form-group">
                                     <label for="p-descuento">Descuento (%)</label>
@@ -264,7 +471,7 @@
                             <div class="admin-price-preview" id="admin-price-preview" aria-live="polite">
                                 <div class="admin-price-preview-badge" id="admin-price-preview-badge" hidden></div>
                                 <div class="admin-price-preview-row">
-                                    <span class="admin-price-preview-label">Precio actual</span>
+                                    <span class="admin-price-preview-label">Precio base</span>
                                     <strong id="admin-price-before">$0</strong>
                                 </div>
                                 <div class="admin-price-preview-row is-final">
@@ -274,12 +481,12 @@
                                 <p class="admin-price-preview-note" id="admin-price-preview-note">Sin descuento: se muestra el precio normal.</p>
                             </div>
                         </details>
-                    </section>
+                    </div>
                 </div>
 
                 <div class="admin-modal-actions">
                     <button type="button" class="btn btn-secondary" id="btn-cancelar-modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="btn-guardar-producto">Crear producto</button>
+                    <button type="submit" class="btn btn-primary" id="btn-guardar-producto">Guardar cambios</button>
                 </div>
             </form>
         </div>

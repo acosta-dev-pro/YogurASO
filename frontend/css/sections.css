@@ -29,7 +29,7 @@
     display: inline-flex; align-items: center; gap: 7px;
     padding: 5px 11px 5px 9px; margin-bottom: 12px;
     border-radius: 999px; background: color-mix(in srgb, var(--rojo-marca) 8%, transparent); color: var(--brand-red, var(--rojo-marca));
-    font: 800 10.5px/1 var(--font-ui); letter-spacing: 0.08em; text-transform: uppercase;
+    font: 600 12px/1.2 var(--font-ui); letter-spacing: 0.08em; text-transform: uppercase;
 }
 .sx-kicker svg { width: 13px; height: 13px; }
 .sx-head h2 {
@@ -149,7 +149,7 @@
 .fl-name { font: 600 19px/1.05 var(--font-display); }
 .fl-sub { font: 600 11.5px/1.3 var(--font-ui); opacity: 0.82; }
 .fl-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 9px; width: max-content;
-    font: 800 11.5px/1 var(--font-ui); letter-spacing: 0.02em; padding: 8px 11px 8px 13px; border-radius: 999px;
+    font: 600 12px/1.2 var(--font-ui); letter-spacing: 0.02em; padding: 8px 11px 8px 13px; border-radius: 999px;
     background: rgba(255, 255, 255, 0.95); color: color-mix(in oklab, var(--c), #000 35%); transition: transform 0.25s var(--sx-ease), gap 0.25s var(--sx-ease); }
 .fl-go svg { width: 13px; height: 13px; }
 .fl-card-hit:hover .fl-go { gap: 8px; }
@@ -282,7 +282,7 @@
 .beneficios-sep-tag {
     gap: 7px; padding: 5px 11px 5px 9px !important; margin-bottom: 12px;
     border-radius: 999px !important; background: color-mix(in srgb, var(--rojo-marca) 8%, transparent) !important; color: var(--brand-red, var(--rojo-marca)) !important;
-    font: 800 10.5px/1 var(--font-ui) !important; letter-spacing: 0.08em !important;
+    font: 600 12px/1.2 var(--font-ui) !important; letter-spacing: 0.08em !important;
 }
 .beneficios-sep-tag i[data-ic] { display: inline-grid !important; }
 .beneficios-titulo { font: 600 clamp(24px, 2.6vw, 34px)/1.1 var(--font-display) !important; color: var(--sx-ink) !important; letter-spacing: -0.01em !important; }
@@ -352,7 +352,7 @@ html.fc-lock { overflow: hidden; }
 @keyframes fcFloat { 50% { translate: 0 -6px; } }
 .fc-floor { position: absolute; bottom: 40px; width: 30%; height: 13px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.4), transparent); filter: blur(4px); }
 .fc-body { padding: clamp(24px, 3.2vw, 36px) clamp(22px, 3.2vw, 36px) clamp(28px, 3.2vw, 36px); overflow: auto; max-height: calc(100svh - 48px); }
-.fc-kicker { display: inline-block; margin-bottom: 7px; font: 800 10.5px/1 var(--font-ui); letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); }
+.fc-kicker { display: inline-block; margin-bottom: 7px; font: 600 12px/1.2 var(--font-ui); letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); }
 .fc-title { margin: 0 0 8px; font: 600 clamp(26px, 2.8vw, 34px)/1.05 var(--font-display); color: var(--sx-ink); }
 .fc-lead { margin: 0 0 14px; font: 400 14px/1.6 var(--font-ui); color: var(--sx-muted); }
 .fc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }

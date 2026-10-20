@@ -34,7 +34,7 @@
 .ysc-info{order:2;min-width:0}
 
 /* Encabezado (#empaque) */
-.ysc .ysc-eyebrow{display:inline-block;font:800 11.5px/1.2 var(--ysc-body);letter-spacing:.2em;text-transform:uppercase;color:var(--ysc-muted)}
+.ysc .ysc-eyebrow{display:inline-block;font: 600 12px/1.2.2 var(--ysc-body);letter-spacing: 0.06em;text-transform:uppercase;color:var(--ysc-muted)}
 .ysc .ysc-title{margin:6px 0 6px;font:600 clamp(24px,2.35vw,31px)/1.08 "Fredoka",sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
 .ysc .ysc-lead{max-width:44ch;color:var(--ysc-muted);font-size:14.5px;line-height:1.5}
 
@@ -43,7 +43,7 @@
    .ysc .ysc-details para ganarle al reset ".ysc ul{margin:0;padding:0}" */
 .ysc .ysc-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 22px;margin-top:34px;padding-top:20px;border-top:1px solid var(--ysc-line)}
 .ysc-detail{min-width:0}
-.ysc-detail b{display:block;margin-bottom:5px;font-size:11px;font-weight:800;line-height:1.2;letter-spacing:.14em;text-transform:uppercase;color:var(--ysc-muted)}
+.ysc-detail b{display:block;margin-bottom:5px;font-size: 12px; font-weight: 600;line-height:1.2;letter-spacing:.14em;text-transform:uppercase;color:var(--ysc-muted)}
 .ysc-detail span,.ysc-detail .ysc-link{font-size:15px;font-weight:700;line-height:1.35;color:var(--ysc-ink)}
 .ysc-link{position:relative;display:inline-block;color:var(--ysc-muted);text-decoration:none;overflow-wrap:anywhere}
 .ysc-link::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ysc-ease)}

@@ -14,6 +14,16 @@ export function assetUrl(rel) {
     return ASSET_BASE + s.replace(/^\.\//, '');
 }
 
+export function priceForSize(p, size) {
+    const base = salePrice(p);
+    const s = String(size || '').toLowerCase();
+    if (s.includes('1 l') || s.includes('litro')) {
+        if (p && p.precio_1l) return Number(p.precio_1l);
+        return Math.round((base * 1.75) / 100) * 100;
+    }
+    return base;
+}
+
 export function salePrice(p) {
     const base = Number(p.precio || 0);
     const off = Number(p.descuento || 0);

@@ -45,10 +45,10 @@
     --radius-xl: 32px;
     --radius-pill: 999px;
 
-    --font-display: 'Fredoka', sans-serif;
-    --font-brand: 'Fredoka', sans-serif;
-    --font-body: 'Nunito Sans', sans-serif;
-    --font-ui: 'Nunito Sans', sans-serif;
+    --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-brand: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
     /* Emil Kowalski motion */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
