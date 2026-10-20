@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    TRÍO "Llévalo / Cremoso / Propósito" (debajo del collage)
    Mismo ancho, gutter y radio que .fcol (collage "Fruta real").
    ========================================================= */
@@ -37,7 +37,7 @@
     font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
 }
 .ytrio__card h3 {
-    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600;
     font-size: clamp(20px, 1.75vw, 24px); line-height: 1.12; letter-spacing: -.01em;
     margin: 10px 0 6px; color: inherit;
 }

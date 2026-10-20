@@ -1,4 +1,4 @@
-/* ysf-footer.css: footer negro, compacto y flotante de YogurASO (scope .ysf).
+﻿/* ysf-footer.css: footer negro, compacto y flotante de YogurASO (scope .ysf).
    Fuente de #empaque: Nunito Sans (800 en títulos, 400 en texto/listas). Todo el texto es blanco
    (secundario con opacidad). Solo se anima transform/opacity con cubic-bezier(.23,1,.32,1). */
 .ysf{
@@ -10,7 +10,7 @@
   --ysf-red:var(--brand-red,var(--rojo-marca));
   --ysf-max:var(--page-max,1120px);
   --ysf-ease:cubic-bezier(.23,1,.32,1);
-  --ysf-body:'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif,sans-serif;
+  --ysf-body:'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif,sans-serif;
   position:relative;z-index:1;
   margin-top:clamp(28px,4vw,48px);
   background:var(--ysf-bg);color:var(--ysf-w);

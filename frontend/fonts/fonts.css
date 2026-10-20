@@ -1,16 +1,14 @@
 /* Tipografía oficial YogurASO:
-   - Sistema general: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif
-     (Misma tipografía, proporciones y curvatura del SaaS moderno de escritorio).
-   - Hero Artesanal: 'Pacifico', 'Satisfy', cursive (homenaje directo al logotipo caligráfico YoguraSo con hoja verde). */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Pacifico&family=Satisfy&display=swap');
+   Fuente principal: Plus Jakarta Sans (Variable / Google Fonts / @fontsource-variable)
+   Pila tipográfica: Plus Jakarta Sans Variable, Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 :root {
-  --ws-font: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI Variable Text', system-ui, sans-serif;
+  --ws-font: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-system: var(--ws-font);
   --font-primary: var(--ws-font);
   --font-display: var(--ws-font);
   --font-brand: var(--ws-font);
   --font-body: var(--ws-font);
   --font-ui: var(--ws-font);
-  --font-hero-artisan: 'Pacifico', 'Satisfy', cursive;
 }

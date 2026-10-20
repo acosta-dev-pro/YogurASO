@@ -1,4 +1,4 @@
-/* brand.css — tokens YoguraSo v3 (mockups definitivos)
+﻿/* brand.css — tokens YoguraSo v3 (mockups definitivos)
    Soft reds/pinks, cream surfaces, pill UI, Emil ease-out. */
 
 :root {
@@ -45,8 +45,7 @@
     --radius-xl: 32px;
     --radius-pill: 999px;
 
-    --font-system: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Display', 'Segoe UI Variable Text', system-ui, sans-serif;
-    --font-hero-artisan: 'Pacifico', 'Satisfy', cursive;
+    --font-system: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
     --font-display: var(--font-system);
     --font-brand: var(--font-system);

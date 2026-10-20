@@ -1,9 +1,9 @@
-/* yg-price.css — precio de las tarjetas de producto, IGUAL en el carrusel del home
+﻿/* yg-price.css — precio de las tarjetas de producto, IGUAL en el carrusel del home
    ("Nuestros yogures") y en el catálogo (pages/productos.html).
    Tipografía redondeada, artesanal, cálida y legible: Fredoka 700 en rojo de marca. */
 
 :root {
-    --yg-price-font: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --yg-price-font: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     --yg-price-weight: 700;
     --yg-price-size: 1.32rem;
     --yg-price-color: #121214;

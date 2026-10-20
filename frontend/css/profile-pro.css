@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    Perfil — serio, pequeño y sencillo.
    Mismo lenguaje que el FAQ («Lo que más preguntan») y el post de
    «Sobre nosotros»: Nunito Sans para todo, Fredoka 600 solo en el nombre,
@@ -15,7 +15,7 @@ body.profile-page {
     --pf-red: var(--rojo-marca, #C3343E);
     min-height: 100vh;
     color: var(--pf-text);
-    font-family: var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+    font-family: var(--font-ui, 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
 }
 
 body.profile-page .profile-shell {
@@ -61,7 +61,7 @@ body.profile-page .profile-kicker {
 }
 body.profile-page .profile-hero h1 {
     margin: 0;
-    font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif), sans-serif;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, var(--font-ui, 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif), sans-serif;
     font-weight: 600;
     font-size: clamp(24px, 2.4vw, 30px);
     line-height: 1.1;
@@ -205,7 +205,7 @@ body.profile-page .profile-box {
 body.profile-page .profile-box-head { margin-bottom: 10px; }
 body.profile-page .profile-box-title {
     margin: 0 0 10px;
-    font-family: var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif);
+    font-family: var(--font-ui, 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
     font-size: 15px;
     font-weight: 800;
     line-height: 1.3;

@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    brand-pages.css — capa visual de marca para TODAS las páginas internas
    (catálogo, carrito, login, registro, recuperar, reset, perfil, admin,
    privacidad y 404). La portada (hero) tiene su propia hoja: no se toca.
@@ -42,8 +42,8 @@
     --bp-shadow-sm: 0 2px 8px rgba(23, 23, 23, 0.06);
     --bp-shadow-md: 0 12px 32px rgba(23, 23, 23, 0.08);
     --bp-shadow-red: 0 12px 28px color-mix(in srgb, var(--rojo-marca) 28%, transparent);
-    --bp-font-title: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    --bp-font-text: var(--font-ui, 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif);
+    --bp-font-title: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --bp-font-text: var(--font-ui, 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif);
 }
 
 /* Tipografía: texto en Nunito Sans, títulos en Fredoka.

@@ -1,4 +1,4 @@
-/* home-v3.css — secciones home según mockups 03/04/05 + footer nuevo + ficha mockup 01 */
+﻿/* home-v3.css — secciones home según mockups 03/04/05 + footer nuevo + ficha mockup 01 */
 
 /* Soft concave separator (discreto, no franja gruesa) */
 .yd {
@@ -1171,13 +1171,13 @@
 }
 #distribuidores .distc__txt { gap: 3px; }
 #distribuidores .distc__txt strong {
-  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 15.5px;
   font-weight: 800;
   line-height: 1.2;
 }
 #distribuidores .distc__txt span {
-  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
@@ -1191,7 +1191,7 @@
 }
 #distribuidores .dist-nota__eyebrow {
   margin: 0 0 2px;
-  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.06em;
