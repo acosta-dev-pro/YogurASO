@@ -85,8 +85,19 @@ function cerrarModal({ reset = true } = {}) {
 
 
 /* ==========================================================================
-   SINCRONIZACIÓN EN TIEMPO REAL: Tarjeta extraída y paleta de colores
+   SINCRONIZACIÓN EN TIEMPO REAL: Tarjeta en Vivo, Letreros y Calculadora
    ========================================================================== */
+
+const TONE_NAMES = {
+    '#fff8f4': 'Crema suave',
+    '#ffe6ea': 'Fresa pastel',
+    '#fff5d6': 'Piña oro miel',
+    '#f4e7f0': 'Mora silvestre',
+    '#feece0': 'Melocotón dulce',
+    '#eaf5e4': 'Guanábana fresca',
+    '#fef2df': 'Mango maduro',
+    '#f2eae5': 'Café huilense'
+};
 
 function syncLiveCardPreview() {
     const card = document.getElementById('adminLiveCard');
@@ -98,29 +109,39 @@ function syncLiveCardPreview() {
     const desc = Number(document.getElementById('p-descuento')?.value || 0);
     const catSelect = document.getElementById('p-categoria');
     const catText = catSelect ? (catSelect.options[catSelect.selectedIndex]?.text || 'Natural') : 'Natural';
-    const colorHex = document.getElementById('p-color-fondo')?.value || '#FFF8F4';
+    const colorHex = (document.getElementById('p-color-fondo')?.value || '#FFF8F4').trim();
     const tipo = document.getElementById('p-letrero-tipo')?.value || '';
     const texto = document.getElementById('p-letrero')?.value.trim() || '';
+    const badgeColor = document.getElementById('p-color-acento')?.value || '#D62300';
+    const badgeShape = document.getElementById('p-letrero-forma')?.value || 'pill';
     const imgVal = document.getElementById('p-imagen')?.value || '';
 
-    // Nombre y categoría
+    // 1. Título y categoría
     const titleEl = document.getElementById('adminLiveTitle');
     if (titleEl) titleEl.textContent = nombre;
     const catEl = document.getElementById('adminLiveCat');
     if (catEl) catEl.textContent = catText;
 
-    // Color de tarjeta
+    // 2. Fondo de la tarjeta y código hex editable
     card.style.setProperty('--producto-card-bg', colorHex);
+    card.style.setProperty('--hp-c', colorHex);
     card.style.backgroundColor = colorHex;
-    const hexLabel = document.getElementById('adminColorHex');
-    if (hexLabel) hexLabel.textContent = colorHex.toUpperCase();
+
+    const hexInput = document.getElementById('p-color-fondo-text');
+    if (hexInput && hexInput !== document.activeElement) {
+        hexInput.value = colorHex.toUpperCase();
+    }
+    const toneNameEl = document.getElementById('adminColorName');
+    if (toneNameEl) {
+        toneNameEl.textContent = TONE_NAMES[colorHex.toLowerCase()] || 'Personalizado';
+    }
 
     // Pastillas de paleta activas
     document.querySelectorAll('#adminPalettePills .palette-pill').forEach((btn) => {
         btn.classList.toggle('is-active', (btn.dataset.color || '').toLowerCase() === colorHex.toLowerCase());
     });
 
-    // Imagen
+    // 3. Imagen de la botella (sobresaliendo de la tarjeta con efecto 3D)
     const bottleImg = document.getElementById('adminLiveBottle');
     if (bottleImg) {
         if (imgVal) {
@@ -133,18 +154,31 @@ function syncLiveCardPreview() {
         }
     }
 
-    // Badge / Letrero
+    // 4. Letrero / Etiqueta interactiva en vivo
     const badgeEl = document.getElementById('adminLiveBadge');
     if (badgeEl) {
-        if (tipo || texto) {
-            badgeEl.style.display = 'block';
-            badgeEl.textContent = texto || (tipo.charAt(0).toUpperCase() + tipo.slice(1));
+        let badgeText = texto;
+        if (!badgeText && tipo) {
+            if (tipo === 'nuevo') badgeText = 'NUEVO';
+            else if (tipo === 'oferta') badgeText = '¡OFERTA!';
+            else if (tipo === 'descuento' && desc > 0) badgeText = `-${desc}%`;
+            else badgeText = tipo.toUpperCase();
+        } else if (!badgeText && desc > 0) {
+            badgeText = `-${desc}%`;
+        }
+
+        if (badgeText) {
+            badgeEl.style.display = 'inline-block';
+            badgeEl.textContent = badgeText;
+            badgeEl.style.backgroundColor = badgeColor;
+            badgeEl.style.borderRadius = badgeShape === 'rounded' ? '6px' : (badgeShape === 'flag' ? '4px 12px 12px 4px' : '999px');
         } else {
             badgeEl.style.display = 'none';
+            badgeEl.textContent = '';
         }
     }
 
-    // Precio en vivo
+    // 5. Precios con cálculo de descuento en vivo
     const priceEl = document.getElementById('adminLivePrice');
     if (priceEl) {
         const is1L = document.getElementById('preview-size-1L')?.classList.contains('is-active');
@@ -158,26 +192,174 @@ function syncLiveCardPreview() {
     }
 }
 
+/**
+ * Calculadora interactiva de descuento en tiempo real:
+ * Calcula el ahorro en pesos y el precio final a partir del porcentaje,
+ * o calcula el porcentaje a partir del precio final deseado.
+ */
+function updateDiscountCalculator(source = 'percent') {
+    const basePrice = Number(document.getElementById('p-precio')?.value || 0);
+    const descInput = document.getElementById('p-descuento');
+    const finalInput = document.getElementById('p-precio-final-input');
+    const tipo = document.getElementById('p-letrero-tipo')?.value || '';
+    const textoInput = document.getElementById('p-letrero');
+
+    let pct = 0;
+    let finalPrice = basePrice;
+    let savings = 0;
+
+    if (source === 'percent') {
+        pct = Math.max(0, Math.min(80, Math.round(Number(descInput?.value || 0))));
+        if (descInput && Number(descInput.value) !== pct) descInput.value = String(pct);
+        savings = pct > 0 ? Math.round((basePrice * (pct / 100)) / 100) * 100 : 0;
+        finalPrice = Math.max(0, basePrice - savings);
+        if (finalInput) finalInput.value = pct > 0 ? String(finalPrice) : '';
+    } else if (source === 'final') {
+        finalPrice = Number(finalInput?.value || 0);
+        if (basePrice > 0 && finalPrice > 0 && finalPrice < basePrice) {
+            pct = Math.max(0, Math.min(80, Math.round(((basePrice - finalPrice) / basePrice) * 100)));
+            savings = basePrice - finalPrice;
+        } else {
+            pct = 0;
+            savings = 0;
+            finalPrice = basePrice;
+        }
+        if (descInput) descInput.value = String(pct);
+    }
+
+    // Auto-actualizar texto de letrero si es tipo descuento
+    if (tipo === 'descuento' && textoInput) {
+        if (pct > 0 && (!textoInput.value.trim() || /^-\d+%$/.test(textoInput.value.trim()))) {
+            textoInput.value = `-${pct}%`;
+        } else if (pct === 0 && /^-\d+%$/.test(textoInput.value.trim())) {
+            textoInput.value = '';
+        }
+    }
+
+    // Resumen visual
+    const sumBase = document.getElementById('calcBasePrice');
+    const sumSave = document.getElementById('calcSaveAmount');
+    const sumFinal = document.getElementById('calcFinalPrice');
+
+    if (sumBase) sumBase.textContent = formatCOP(basePrice);
+    if (sumSave) sumSave.textContent = `${formatCOP(savings)} (${pct}%)`;
+    if (sumFinal) sumFinal.textContent = formatCOP(finalPrice);
+
+    syncLiveCardPreview();
+}
+
 function initAdminStudioEvents() {
-    const inputsToWatch = ['p-nombre', 'p-precio', 'p-precio-1l', 'p-stock', 'p-categoria', 'p-color-fondo', 'p-letrero', 'p-letrero-tipo', 'p-descuento'];
+    const inputsToWatch = ['p-nombre', 'p-precio', 'p-precio-1l', 'p-stock', 'p-categoria', 'p-letrero', 'p-letrero-tipo'];
     inputsToWatch.forEach((id) => {
         const el = document.getElementById(id);
         if (el) {
-            el.addEventListener('input', syncLiveCardPreview);
-            el.addEventListener('change', syncLiveCardPreview);
+            el.addEventListener('input', () => {
+                if (id === 'p-precio') updateDiscountCalculator('percent');
+                else syncLiveCardPreview();
+            });
+            el.addEventListener('change', () => {
+                if (id === 'p-precio') updateDiscountCalculator('percent');
+                else syncLiveCardPreview();
+            });
         }
     });
 
-    // Paleta de colores predefinida
+    // Eventos de la calculadora de descuento
+    const descInput = document.getElementById('p-descuento');
+    descInput?.addEventListener('input', () => updateDiscountCalculator('percent'));
+    descInput?.addEventListener('change', () => updateDiscountCalculator('percent'));
+
+    const finalInput = document.getElementById('p-precio-final-input');
+    finalInput?.addEventListener('input', () => updateDiscountCalculator('final'));
+    finalInput?.addEventListener('change', () => updateDiscountCalculator('final'));
+
+    // Botones rápidos de porcentaje (10%, 15%, 20%, 30%)
+    document.querySelectorAll('.quick-pct-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const pct = Number(btn.dataset.pct || 0);
+            if (descInput) {
+                descInput.value = String(pct);
+                // Si no hay tipo seleccionado, activar tipo descuento
+                const tipoInput = document.getElementById('p-letrero-tipo');
+                if (tipoInput && (!tipoInput.value || tipoInput.value === 'nuevo')) {
+                    setLetreroType('descuento');
+                }
+                updateDiscountCalculator('percent');
+            }
+        });
+    });
+
+    // Selector de Tipo de Letrero (Píldoras)
+    document.querySelectorAll('#adminBadgeTypePills .admin-type-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            setLetreroType(btn.dataset.type);
+        });
+    });
+
+    // Selector de Forma de Letrero (Píldora, Etiqueta, Banderín)
+    document.querySelectorAll('#adminShapePills .shape-pill').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#adminShapePills .shape-pill').forEach((b) => b.classList.toggle('is-active', b === btn));
+            const shapeInput = document.getElementById('p-letrero-forma');
+            if (shapeInput) shapeInput.value = btn.dataset.shape || 'pill';
+            syncLiveCardPreview();
+        });
+    });
+
+    // Selector de Color del Letrero (Puntos de color y color picker)
+    document.querySelectorAll('#adminBadgeColors .badge-color-dot').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#adminBadgeColors .badge-color-dot').forEach((b) => b.classList.toggle('is-active', b === btn));
+            const color = btn.dataset.color || '#D62300';
+            const acentoInput = document.getElementById('p-color-acento');
+            if (acentoInput) acentoInput.value = color;
+            const picker = document.getElementById('p-letrero-color-picker');
+            if (picker) picker.value = color;
+            syncLiveCardPreview();
+        });
+    });
+
+    const badgeColorPicker = document.getElementById('p-letrero-color-picker');
+    badgeColorPicker?.addEventListener('input', (e) => {
+        const color = e.target.value;
+        const acentoInput = document.getElementById('p-color-acento');
+        if (acentoInput) acentoInput.value = color;
+        document.querySelectorAll('#adminBadgeColors .badge-color-dot').forEach((b) => {
+            b.classList.toggle('is-active', b.dataset.color?.toLowerCase() === color.toLowerCase());
+        });
+        syncLiveCardPreview();
+    });
+
+    // Paleta de colores predefinida de la tarjeta
     document.querySelectorAll('#adminPalettePills .palette-pill').forEach((btn) => {
         btn.addEventListener('click', () => {
             const color = btn.dataset.color;
             const input = document.getElementById('p-color-fondo');
+            const textInput = document.getElementById('p-color-fondo-text');
             if (input && color) {
                 input.value = color;
+                if (textInput) textInput.value = color.toUpperCase();
                 syncLiveCardPreview();
             }
         });
+    });
+
+    // Color picker y campo de texto hex editable
+    const colorPicker = document.getElementById('p-color-fondo');
+    const colorHexInput = document.getElementById('p-color-fondo-text');
+
+    colorPicker?.addEventListener('input', (e) => {
+        if (colorHexInput) colorHexInput.value = e.target.value.toUpperCase();
+        syncLiveCardPreview();
+    });
+
+    colorHexInput?.addEventListener('input', (e) => {
+        let val = e.target.value.trim();
+        if (!val.startsWith('#')) val = '#' + val;
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+            if (colorPicker) colorPicker.value = val;
+            syncLiveCardPreview();
+        }
     });
 
     // Alternador de presentación 500 ml vs 1 L en la tarjeta de vista previa
@@ -199,6 +381,58 @@ function initAdminStudioEvents() {
     }
 }
 
+function setLetreroType(type) {
+    document.querySelectorAll('#adminBadgeTypePills .admin-type-pill').forEach((b) => {
+        b.classList.toggle('is-active', (b.dataset.type || '') === (type || ''));
+    });
+
+    const tipoInput = document.getElementById('p-letrero-tipo');
+    if (tipoInput) tipoInput.value = type || '';
+
+    const textoInput = document.getElementById('p-letrero');
+    const descInput = document.getElementById('p-descuento');
+    const acentoInput = document.getElementById('p-color-acento');
+
+    if (!type) {
+        if (textoInput) textoInput.value = '';
+        if (descInput) descInput.value = '0';
+        updateDiscountCalculator('percent');
+    } else if (type === 'nuevo') {
+        if (textoInput) textoInput.value = 'NUEVO';
+        if (descInput) descInput.value = '0';
+        setBadgeColorActive('#2A9D60');
+        updateDiscountCalculator('percent');
+    } else if (type === 'oferta') {
+        if (textoInput && (!textoInput.value || textoInput.value === 'NUEVO')) {
+            textoInput.value = '¡OFERTA!';
+        }
+        setBadgeColorActive('#E68A00');
+        syncLiveCardPreview();
+    } else if (type === 'descuento') {
+        setBadgeColorActive('#D62300');
+        if (descInput && Number(descInput.value) <= 0) {
+            descInput.value = '10';
+        }
+        updateDiscountCalculator('percent');
+    } else if (type === 'personalizado') {
+        if (textoInput && (textoInput.value === 'NUEVO' || textoInput.value === '¡OFERTA!' || /^-\d+%$/.test(textoInput.value))) {
+            textoInput.value = '';
+        }
+        textoInput?.focus();
+        syncLiveCardPreview();
+    }
+}
+
+function setBadgeColorActive(colorHex) {
+    const acentoInput = document.getElementById('p-color-acento');
+    if (acentoInput) acentoInput.value = colorHex;
+    const picker = document.getElementById('p-letrero-color-picker');
+    if (picker) picker.value = colorHex;
+    document.querySelectorAll('#adminBadgeColors .badge-color-dot').forEach((b) => {
+        b.classList.toggle('is-active', b.dataset.color?.toLowerCase() === colorHex.toLowerCase());
+    });
+}
+
 function limpiarFormulario() {
     editandoId = null;
     guardando = false;
@@ -212,119 +446,25 @@ function limpiarFormulario() {
     if (categoria) categoria.value = 'natural';
     const colorFondo = document.getElementById('p-color-fondo');
     if (colorFondo) colorFondo.value = '#FFF8F4';
-    const tipo = document.getElementById('p-letrero-tipo');
-    const texto = document.getElementById('p-letrero');
-    const desc = document.getElementById('p-descuento');
-    if (tipo) tipo.value = '';
-    if (texto) texto.value = '';
-    if (desc) desc.value = '0';
+    const colorHexInput = document.getElementById('p-color-fondo-text');
+    if (colorHexInput) colorHexInput.value = '#FFF8F4';
+
+    setLetreroType('');
+    setBadgeColorActive('#D62300');
+
+    const shapePills = document.querySelectorAll('#adminShapePills .shape-pill');
+    shapePills.forEach((p, idx) => p.classList.toggle('is-active', idx === 0));
+    const shapeInput = document.getElementById('p-letrero-forma');
+    if (shapeInput) shapeInput.value = 'pill';
+
     resetImageUpload();
     setSubmitLabel(false);
-    syncPromoPreview();
+    updateDiscountCalculator('percent');
     syncLiveCardPreview();
 }
 
 function formatAdminCOP(n) {
     return window.YogurUtils?.formatCOP?.(n) || `$${Number(n || 0).toLocaleString('es-CO')}`;
-}
-
-function syncPromoPreview() {
-    const precio = Number(document.getElementById('p-precio')?.value || 0);
-    const tipoEl = document.getElementById('p-letrero-tipo');
-    const textoEl = document.getElementById('p-letrero');
-    const descEl = document.getElementById('p-descuento');
-    const tipo = tipoEl?.value || '';
-    let off = Math.round(Number(descEl?.value || 0));
-    if (!Number.isFinite(off) || off < 0) off = 0;
-    if (off > 80) off = 80;
-    if (descEl && Number(descEl.value) !== off) descEl.value = String(off);
-
-    const tipoNow = tipoEl?.value || '';
-    if (textoEl) textoEl.disabled = tipoNow === '';
-    if (textoEl && tipoNow === 'descuento' && off > 0) {
-        const auto = `-${off}%`;
-        if (!textoEl.value.trim() || /^-\d+%$/.test(textoEl.value.trim())) {
-            textoEl.value = auto;
-        }
-    }
-    if (textoEl && tipoNow === 'descuento' && off === 0 && /^-\d+%$/.test(textoEl.value.trim())) {
-        textoEl.value = '';
-    }
-    if (textoEl && tipoNow === 'nuevo' && !textoEl.value.trim()) textoEl.value = 'Nuevo';
-    if (textoEl && tipoNow === 'oferta' && !textoEl.value.trim()) textoEl.value = 'Oferta';
-    if (textoEl && tipoNow === 'destacado' && !textoEl.value.trim()) textoEl.value = 'Destacado';
-    if (textoEl && tipoNow === '') textoEl.value = '';
-
-    const final = off > 0 ? Math.round(precio * (1 - off / 100)) : precio;
-    const before = document.getElementById('admin-price-before');
-    const after = document.getElementById('admin-price-after');
-    const note = document.getElementById('admin-price-preview-note');
-    const badge = document.getElementById('admin-price-preview-badge');
-    const preview = document.getElementById('admin-price-preview');
-
-    if (before) before.textContent = formatAdminCOP(precio);
-    if (after) {
-        after.textContent = formatAdminCOP(final);
-        after.classList.toggle('is-sale', off > 0);
-    }
-    if (note) {
-        note.textContent = off > 0
-            ? `Ahorro ${off}%: el cliente ve ${formatAdminCOP(final)} (antes ${formatAdminCOP(precio)}).`
-            : 'Sin descuento: se muestra el precio normal.';
-    }
-    if (badge) {
-        const label = (textoEl?.value || '').trim();
-        if (label) {
-            badge.hidden = false;
-            badge.textContent = label;
-            badge.className = `admin-price-preview-badge badge-${tipoNow || 'nuevo'}`;
-        } else {
-            badge.hidden = true;
-            badge.textContent = '';
-        }
-    }
-    if (preview) preview.classList.toggle('has-discount', off > 0);
-}
-
-function setupPromoControls() {
-    const precio = document.getElementById('p-precio');
-    const tipo = document.getElementById('p-letrero-tipo');
-    const texto = document.getElementById('p-letrero');
-    const desc = document.getElementById('p-descuento');
-
-    [precio, tipo, desc].forEach((el) => {
-        el?.addEventListener('input', syncPromoPreview);
-        el?.addEventListener('change', syncPromoPreview);
-    });
-
-    tipo?.addEventListener('change', () => {
-        const t = tipo.value;
-        if (texto) {
-            if (t === 'nuevo') texto.value = 'Nuevo';
-            else if (t === 'oferta') texto.value = 'Oferta';
-            else if (t === 'destacado') texto.value = 'Destacado';
-            else if (t === 'descuento') {
-                const off = Math.round(Number(desc?.value || 0));
-                texto.value = off > 0 ? `-${off}%` : '';
-            } else texto.value = '';
-        }
-        syncPromoPreview();
-    });
-
-    texto?.addEventListener('input', () => {
-        if (!texto.value.trim() && tipo?.value) {
-            tipo.selectedIndex = -1;
-        }
-        syncPromoPreview();
-    });
-    texto?.addEventListener('change', () => {
-        if (!texto.value.trim() && tipo?.value) {
-            tipo.selectedIndex = -1;
-        }
-        syncPromoPreview();
-    });
-
-    syncPromoPreview();
 }
 
 function resetImageUpload() {
@@ -885,6 +1025,7 @@ function payloadDesdeFormulario() {
         imagen_url: document.getElementById('p-imagen')?.value.trim() || '',
         categoria: categoriaMap[categoriaKey] || 'Natural',
         color_fondo: document.getElementById('p-color-fondo')?.value || '#FFF8F4',
+        color_acento: document.getElementById('p-color-acento')?.value || '#D62300',
         activo: Boolean(document.getElementById('p-activo')?.checked),
         letrero,
         letrero_tipo: letrero ? tipoLetrero : '',
@@ -920,15 +1061,24 @@ function llenarFormulario(producto) {
     const colorFondo = document.getElementById('p-color-fondo');
     if (colorFondo) colorFondo.value = /^#[0-9A-Fa-f]{6}$/.test(producto.color_fondo || '') ? producto.color_fondo : '#FFF8F4';
     document.getElementById('p-activo').checked = Boolean(producto.activo);
-    const tipo = document.getElementById('p-letrero-tipo');
-    const texto = document.getElementById('p-letrero');
-    const desc = document.getElementById('p-descuento');
-    if (tipo) tipo.value = producto.letrero_tipo || '';
-    if (texto) texto.value = producto.letrero || '';
-    if (desc) desc.value = producto.descuento || 0;
-    const box = document.querySelector('.admin-promo-box');
-    if (box) box.open = true;
-    syncPromoPreview();
+    const tipo = producto.letrero_tipo || '';
+    const texto = producto.letrero || '';
+    const desc = producto.descuento || 0;
+    const colorAcento = producto.color_acento || '#D62300';
+
+    const textoInput = document.getElementById('p-letrero');
+    if (textoInput) textoInput.value = texto;
+
+    const descInput = document.getElementById('p-descuento');
+    if (descInput) descInput.value = String(desc);
+
+    const hexText = document.getElementById('p-color-fondo-text');
+    if (hexText && producto.color_fondo) hexText.value = producto.color_fondo.toUpperCase();
+
+    setLetreroType(tipo || (desc > 0 ? 'descuento' : (texto ? 'personalizado' : '')));
+    setBadgeColorActive(colorAcento);
+    updateDiscountCalculator('percent');
+    syncLiveCardPreview();
 }
 
 async function bulkSetActive(activo) {
@@ -1032,10 +1182,8 @@ function setupAdminEvents() {
     btnNuevo?.addEventListener('click', () => {
         limpiarFormulario();
         abrirModal('Nuevo producto', { isEdit: false });
-        syncPromoPreview();
     });
 
-    setupPromoControls();
     initAdminStudioEvents();
 
     const close = () => cerrarModal({ reset: true });
@@ -1058,7 +1206,7 @@ function setupAdminEvents() {
 
         const token = getToken();
         const submitBtn = document.getElementById('btn-guardar-producto');
-        syncPromoPreview();
+        syncLiveCardPreview();
         const payload = payloadDesdeFormulario();
 
         if (!payload.nombre) {

@@ -730,108 +730,134 @@ body.admin-page .admin-email {
 
 body.admin-page .admin-modal .admin-modal-studio,
 body.admin-page .admin-modal-studio {
-    width: min(1040px, 95vw) !important;
-    max-width: 1040px !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-    padding: 30px 36px 32px !important;
-    border-radius: 28px !important;
+    width: min(1140px, 95vw) !important;
+    max-width: 1140px !important;
+    height: min(88vh, 880px) !important;
+    max-height: 880px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    border-radius: 26px !important;
     background: #FFFFFF !important;
     box-shadow: 0 32px 80px rgba(18, 18, 20, 0.22) !important;
+    overflow: hidden !important;
+}
+
+body.admin-page .admin-modal-studio .modal-header {
+    flex: 0 0 auto;
+    padding: 22px 32px 16px;
+    border-bottom: 1px solid rgba(23, 23, 26, 0.08);
+    margin: 0;
+}
+
+body.admin-page .admin-modal-studio #form-producto {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 body.admin-page .admin-studio-grid {
+    flex: 1 1 auto;
+    min-height: 0;
     display: grid;
     grid-template-columns: 310px minmax(0, 1fr);
     gap: 32px;
-    align-items: start;
-    margin-top: 14px;
+    padding: 20px 32px;
+    overflow: hidden;
+    margin: 0;
 }
 
-/* Columna Izquierda: Tarjeta extraída interactiva */
+/* Columna Izquierda: Tarjeta montada tal cual tienda (FIJA, no se mueve con scroll) */
 .admin-studio-aside {
-    position: sticky;
-    top: 0;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-self: start;
 }
 
 .admin-live-card-container {
-    background: #FAF7F5;
-    border: 1px solid rgba(23, 23, 26, 0.08);
-    border-radius: 22px;
-    padding: 18px 16px;
+    background: transparent;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-.admin-live-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 0 4px;
-}
-
-.admin-live-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: #121214;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.admin-live-title i {
-    color: var(--rojo-marca, #C3343E);
-}
-
-.admin-live-header small {
-    font-size: 11px;
-    color: #8C847E;
-    font-weight: 500;
-}
-
-/* Tarjeta montada */
+/* Tarjeta montada idéntica a tienda con botella saliendo */
 .admin-card-extracted-wrap {
     display: flex;
     justify-content: center;
+    padding-top: 16px;
 }
 
 .admin-card-extracted-wrap .hp-card {
     width: 100%;
     max-width: 270px;
-    min-height: auto;
+    position: relative;
     border-radius: 22px;
-    padding: 16px 14px;
-    box-shadow: 0 8px 24px rgba(23, 23, 26, 0.06);
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    padding: 0 14px 16px;
+    background: transparent !important;
+    isolation: isolate;
+}
+
+.admin-card-extracted-wrap .hp-card .hp-card__panel {
+    position: absolute;
+    inset: 48px 0 0 0;
+    border-radius: 22px;
+    background: var(--producto-card-bg, #FFF8F4);
+    box-shadow: 0 10px 28px -10px rgba(23, 23, 26, 0.12);
+    z-index: 0;
+    opacity: 1;
+    transform: none;
+    transition: background-color 0.2s ease;
 }
 
 .admin-card-extracted-wrap .hp-card__media {
-    height: 180px;
-    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+    height: 195px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .admin-card-extracted-wrap .hp-card__media img {
-    max-height: 170px;
+    height: 205px;
     width: auto;
+    margin-top: -16px;
     object-fit: contain;
-    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.12));
+    filter: drop-shadow(0 14px 18px rgba(35, 20, 20, 0.16));
+    transform: translateY(-4px) scale(1.02);
+    transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-.admin-card-badge-tag {
+.admin-card-extracted-wrap .hp-card__badges {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    background: #121214;
+    top: 56px;
+    left: 14px;
+    z-index: 4;
+}
+
+.admin-card-extracted-wrap .hp-card__badges .hp-badge {
+    display: inline-block;
     color: #FFFFFF;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 999px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 3.5px 9px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+}
+
+.admin-card-extracted-wrap .hp-card__body {
+    position: relative;
+    z-index: 2;
+    padding: 0 4px;
 }
 
 .admin-card-extracted-wrap .hp-card__name {
@@ -872,30 +898,46 @@ body.admin-page .admin-studio-grid {
     cursor: default;
 }
 
-/* Paleta de Color */
+/* Paleta de Color y Código Hex Editable */
 .admin-color-studio-box {
-    border-top: 1px solid rgba(23, 23, 26, 0.08);
-    padding-top: 12px;
+    background: #F8F7F4;
+    border: 1px solid rgba(23, 23, 26, 0.08);
+    border-radius: 16px;
+    padding: 12px 14px;
+}
+
+.admin-color-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 .admin-color-studio-label {
-    display: block;
     font-size: 12px;
     font-weight: 700;
     color: #121214;
-    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-color-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #726C65;
 }
 
 .admin-palette-pills {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 7px;
     margin-bottom: 10px;
 }
 
 .palette-pill {
-    height: 32px;
-    border-radius: 10px;
+    height: 30px;
+    border-radius: 9px;
     border: 1px solid rgba(23, 23, 26, 0.12);
     cursor: pointer;
     transition: transform 0.14s ease, box-shadow 0.14s ease;
@@ -906,7 +948,7 @@ body.admin-page .admin-studio-grid {
 }
 
 .palette-pill.is-active {
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--rojo-marca, #C3343E);
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--rojo-marca, #D62300);
 }
 
 .admin-color-picker-row {
@@ -927,29 +969,380 @@ body.admin-page .admin-studio-grid {
 }
 
 .admin-color-picker-btn input[type="color"] {
-    width: 28px !important;
-    height: 28px !important;
-    min-height: 28px !important;
+    width: 26px !important;
+    height: 26px !important;
+    min-height: 26px !important;
     padding: 0 !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     border: 1px solid rgba(0,0,0,0.15) !important;
     cursor: pointer;
 }
 
-.admin-color-hex {
-    font-family: monospace;
-    font-size: 11.5px;
-    background: #EFEBE7;
-    padding: 3px 7px;
-    border-radius: 6px;
-    color: #333;
+.admin-color-hex-input {
+    width: 90px;
+    padding: 5px 8px;
+    font-family: monospace, sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #17171A;
+    background: #FFFFFF;
+    border: 1px solid rgba(23, 23, 26, 0.15);
+    border-radius: 8px;
+    text-align: center;
+}
+.admin-color-hex-input:focus {
+    outline: none;
+    border-color: var(--rojo-marca, #D62300);
+    box-shadow: 0 0 0 3px rgba(214, 35, 0, 0.1);
 }
 
-/* Columna Derecha: Formulario ordenado */
+/* Columna Derecha: Formulario con scroll independiente */
 .admin-studio-fields {
+    overflow-y: auto;
+    height: 100%;
+    padding-right: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.admin-studio-fields::-webkit-scrollbar {
+    width: 6px;
+}
+.admin-studio-fields::-webkit-scrollbar-track {
+    background: transparent;
+}
+.admin-studio-fields::-webkit-scrollbar-thumb {
+    background: #D5D5DE;
+    border-radius: 6px;
+}
+
+body.admin-page .admin-modal-studio .admin-modal-actions {
+    flex: 0 0 auto;
+    padding: 16px 32px;
+    border-top: 1px solid rgba(23, 23, 26, 0.08);
+    background: #FAF9F7;
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Sección de letrero promocional visible y calculadora */
+.admin-letrero-section {
+    background: #FAF9F7;
+    border: 1px solid rgba(23, 23, 26, 0.08);
+    border-radius: 18px;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
     gap: 14px;
+}
+
+.admin-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.admin-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #17171A;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-section-title i {
+    color: var(--rojo-marca, #D62300);
+}
+
+.admin-section-sub {
+    font-size: 12px;
+    color: #726C65;
+}
+
+/* Selector de tipo de letrero en píldoras */
+.admin-badge-type-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: #EFECE7;
+    padding: 4px;
+    border-radius: 12px;
+}
+
+.admin-type-pill {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #635E58;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+}
+
+.admin-type-pill:hover {
+    color: #17171A;
+}
+
+.admin-type-pill.is-active {
+    background: #FFFFFF;
+    color: #17171A;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Opciones de estilo: Forma y Color del letrero */
+.admin-badge-styling-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 14px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid rgba(23, 23, 26, 0.06);
+}
+
+.admin-badge-style-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-style-sublabel {
+    font-size: 12px;
+    font-weight: 600;
+    color: #726C65;
+}
+
+.admin-shape-pills {
+    display: flex;
+    gap: 4px;
+    background: #F3F1ED;
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.shape-pill {
+    appearance: none;
+    border: none;
+    background: transparent;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #635E58;
+    cursor: pointer;
+    transition: all 0.14s ease;
+}
+
+.shape-pill.is-active {
+    background: #FFFFFF;
+    color: #17171A;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.admin-badge-colors {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-color-dot {
+    appearance: none;
+    border: 2px solid transparent;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.14s ease, border-color 0.14s ease;
+}
+
+.badge-color-dot:hover {
+    transform: scale(1.15);
+}
+
+.badge-color-dot.is-active {
+    border-color: #17171A;
+    transform: scale(1.12);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.badge-color-custom-btn {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    color: #FFFFFF;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    overflow: hidden;
+}
+
+.badge-color-custom-btn input[type="color"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Calculadora interactiva de descuento */
+.admin-discount-calculator-box {
+    background: #FFFFFF;
+    border: 1px solid rgba(23, 23, 26, 0.06);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-calc-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-calc-header span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #17171A;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-calc-header small {
+    font-size: 11.5px;
+    color: #726C65;
+}
+
+.admin-calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.calc-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.calc-input-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4A4540;
+}
+
+.calc-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.calc-input-wrap input {
+    width: 100%;
+    padding: 8px 30px 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1px solid rgba(23, 23, 26, 0.12);
+    background: #F9F8F6;
+}
+
+.calc-suffix {
+    position: absolute;
+    right: 12px;
+    font-weight: 700;
+    color: #8C847E;
+    pointer-events: none;
+}
+
+.calc-quick-pills {
+    display: flex;
+    gap: 5px;
+    margin-top: 4px;
+}
+
+.quick-pct-btn {
+    appearance: none;
+    border: 1px solid rgba(23, 23, 26, 0.08);
+    background: #F4F2EE;
+    font-size: 11px;
+    font-weight: 600;
+    color: #55504A;
+    padding: 2px 7px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.quick-pct-btn:hover {
+    background: var(--rojo-marca, #D62300);
+    color: #FFFFFF;
+    border-color: var(--rojo-marca, #D62300);
+}
+
+.calc-hint {
+    font-size: 10.5px;
+    color: #8C847E;
+    margin-top: 2px;
+}
+
+.admin-calc-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F7F5F0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+}
+
+.calc-sum-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.calc-sum-col span {
+    font-size: 10.5px;
+    color: #726C65;
+}
+
+.calc-sum-col strong {
+    font-size: 13.5px;
+    color: #17171A;
+}
+
+.calc-sum-col.is-total strong {
+    font-size: 15px;
+    color: var(--rojo-marca, #D62300);
+    font-weight: 800;
+}
+
+.calc-sum-col .text-save {
+    color: #2A9D60;
+}
+
+.calc-sum-operator {
+    font-size: 16px;
+    font-weight: 700;
+    color: #9C948D;
 }
 
 .form-row-split {

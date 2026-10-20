@@ -293,27 +293,24 @@
                 <input type="hidden" id="p-id">
 
                 <div class="admin-studio-grid">
-                    <!-- COLUMNA IZQUIERDA: Tarjeta extraída interactiva con paleta de color -->
+                    <!-- COLUMNA IZQUIERDA: Tarjeta del producto tal cual como se ve en la tienda (fija sin scroll) -->
                     <aside class="admin-studio-aside">
                         <div class="admin-live-card-container">
-                            <div class="admin-live-header">
-                                <span class="admin-live-title"><i class="fas fa-magic" aria-hidden="true"></i> Tarjeta en vivo</span>
-                                <small>Como la ve el cliente</small>
-                            </div>
-                            
-                            <!-- Tarjeta extraída -->
+                            <!-- Tarjeta extraída idéntica a tienda con botella que sobresale -->
                             <div class="admin-card-extracted-wrap" id="adminCardPreviewWrap">
-                                <article class="hp-card" id="adminLiveCard" style="--producto-card-bg: #FFF8F4; background-color: #FFF8F4;">
+                                <article class="hp-card is-active" id="adminLiveCard" style="--producto-card-bg: #FFF8F4; --hp-c: #FFF8F4;">
                                     <span class="hp-card__panel" aria-hidden="true"></span>
                                     <div class="hp-card__media">
                                         <span class="hp-card__floor"></span>
                                         <img id="adminLiveBottle" src="../assets/products/yoguraso-fresa-500ml-sm.webp" alt="Vista previa del sabor" width="220" height="380">
                                     </div>
-                                    <div class="admin-card-badge-tag" id="adminLiveBadge" style="display: none;"></div>
+                                    <div class="hp-card__badges" id="adminLiveBadges">
+                                        <span class="hp-badge" id="adminLiveBadge" style="display: none;"></span>
+                                    </div>
                                     <div class="hp-card__body">
                                         <h3 class="hp-card__name" id="adminLiveTitle">Fresa Natural</h3>
                                         <div class="hp-card__meta">
-                                            <span class="yg-size-selector">
+                                            <span class="yg-size-selector" data-card-sizes role="radiogroup" aria-label="Presentación">
                                                 <button type="button" class="yg-size-btn is-active" id="preview-size-500">500 ml</button>
                                                 <button type="button" class="yg-size-btn" id="preview-size-1L">1 L</button>
                                             </span>
@@ -329,27 +326,31 @@
                                 </article>
                             </div>
 
-                            <!-- Selector de Color de Tarjeta Extraída -->
+                            <!-- Selector de Color de Fondo con código editable -->
                             <div class="admin-color-studio-box">
-                                <label class="admin-color-studio-label">
-                                    <i class="fas fa-palette" aria-hidden="true"></i> Color de fondo de la tarjeta
-                                </label>
+                                <div class="admin-color-header-row">
+                                    <label class="admin-color-studio-label">
+                                        <i class="fas fa-palette" aria-hidden="true"></i> Fondo de la tarjeta
+                                    </label>
+                                    <span class="admin-color-name" id="adminColorName">Crema suave</span>
+                                </div>
                                 <div class="admin-palette-pills" id="adminPalettePills">
-                                    <button type="button" class="palette-pill is-active" data-color="#FFF8F4" title="Crema suave" style="background:#FFF8F4;"></button>
-                                    <button type="button" class="palette-pill" data-color="#FFE6EA" title="Fresa" style="background:#FFE6EA;"></button>
-                                    <button type="button" class="palette-pill" data-color="#FFF5D6" title="Piña" style="background:#FFF5D6;"></button>
-                                    <button type="button" class="palette-pill" data-color="#F4E7F0" title="Mora" style="background:#F4E7F0;"></button>
-                                    <button type="button" class="palette-pill" data-color="#FEECE0" title="Melocotón" style="background:#FEECE0;"></button>
-                                    <button type="button" class="palette-pill" data-color="#EAF5E4" title="Guanábana" style="background:#EAF5E4;"></button>
-                                    <button type="button" class="palette-pill" data-color="#FEF2DF" title="Mango" style="background:#FEF2DF;"></button>
-                                    <button type="button" class="palette-pill" data-color="#F2EAE5" title="Café" style="background:#F2EAE5;"></button>
+                                    <button type="button" class="palette-pill is-active" data-color="#FFF8F4" data-name="Crema suave" title="Crema suave" style="background:#FFF8F4;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FFE6EA" data-name="Fresa pastel" title="Fresa pastel" style="background:#FFE6EA;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FFF5D6" data-name="Piña oro miel" title="Piña oro miel" style="background:#FFF5D6;"></button>
+                                    <button type="button" class="palette-pill" data-color="#F4E7F0" data-name="Mora silvestre" title="Mora silvestre" style="background:#F4E7F0;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FEECE0" data-name="Melocotón dulce" title="Melocotón dulce" style="background:#FEECE0;"></button>
+                                    <button type="button" class="palette-pill" data-color="#EAF5E4" data-name="Guanábana fresca" title="Guanábana fresca" style="background:#EAF5E4;"></button>
+                                    <button type="button" class="palette-pill" data-color="#FEF2DF" data-name="Mango maduro" title="Mango maduro" style="background:#FEF2DF;"></button>
+                                    <button type="button" class="palette-pill" data-color="#F2EAE5" data-name="Café huilense" title="Café huilense" style="background:#F2EAE5;"></button>
                                 </div>
                                 <div class="admin-color-picker-row">
-                                    <label for="p-color-fondo" class="admin-color-picker-btn">
-                                        <input type="color" id="p-color-fondo" value="#FFF8F4" aria-label="Elegir color personalizado">
-                                        <span>Color personalizado</span>
+                                    <label for="p-color-fondo" class="admin-color-picker-btn" title="Seleccionar color">
+                                        <input type="color" id="p-color-fondo" value="#FFF8F4" aria-label="Elegir color visual">
+                                        <i class="fas fa-eye-dropper" aria-hidden="true"></i>
+                                        <span>Color</span>
                                     </label>
-                                    <code class="admin-color-hex" id="adminColorHex">#FFF8F4</code>
+                                    <input type="text" id="p-color-fondo-text" maxlength="7" class="admin-color-hex-input" value="#FFF8F4" placeholder="#FFF8F4" aria-label="Código hexadecimal de color">
                                 </div>
                             </div>
                         </div>
@@ -430,45 +431,109 @@
                             <textarea id="p-descripcion" rows="2" maxlength="500" placeholder="Notas de sabor, proceso artesanal o características especiales..."></textarea>
                         </div>
 
-                        <!-- Hilera 6: Letreros y Descuento -->
-                        <details class="admin-promo-box" open>
-                            <summary>Letrero promocional y descuento especial</summary>
-                            <p class="admin-promo-note">La etiqueta resalta el producto en el catálogo. Si añades descuento, el precio anterior aparecerá tachado.</p>
+                        <!-- Hilera 6: Letrero Promocional Visible y Calculadora Interactiva de Descuento -->
+                        <div class="admin-letrero-section">
+                            <div class="admin-section-header">
+                                <label class="admin-section-title"><i class="fas fa-tag" aria-hidden="true"></i> Letrero Promocional y Descuento</label>
+                                <span class="admin-section-sub">Configura etiquetas visuales y descuentos calculados automáticamente en tiempo real.</span>
+                            </div>
 
-                            <div class="form-row form-row-3cols" style="margin-top: 12px;">
-                                <div class="form-group">
-                                    <label for="p-letrero-tipo">Tipo de letrero</label>
-                                    <select id="p-letrero-tipo">
-                                        <option value="">Sin letrero</option>
-                                        <option value="nuevo">Nuevo</option>
-                                        <option value="oferta">Oferta</option>
-                                        <option value="descuento">Descuento</option>
-                                        <option value="destacado">Destacado</option>
-                                    </select>
+                            <!-- Selector de tipo de letrero en píldoras -->
+                            <div class="admin-badge-type-selector" id="adminBadgeTypePills" role="radiogroup" aria-label="Tipo de letrero">
+                                <button type="button" class="admin-type-pill is-active" data-type="">Sin letrero</button>
+                                <button type="button" class="admin-type-pill" data-type="nuevo">Nuevo</button>
+                                <button type="button" class="admin-type-pill" data-type="oferta">Oferta</button>
+                                <button type="button" class="admin-type-pill" data-type="descuento">Descuento (%)</button>
+                                <button type="button" class="admin-type-pill" data-type="personalizado">Personalizado</button>
+                            </div>
+                            <input type="hidden" id="p-letrero-tipo" value="">
+
+                            <!-- Opciones de estilo del letrero: Formas y Colores -->
+                            <div class="admin-badge-styling-row" id="adminBadgeStylingRow">
+                                <div class="admin-badge-style-group">
+                                    <span class="admin-style-sublabel">Forma:</span>
+                                    <div class="admin-shape-pills" id="adminShapePills">
+                                        <button type="button" class="shape-pill is-active" data-shape="pill" title="Píldora redondeada">Píldora</button>
+                                        <button type="button" class="shape-pill" data-shape="rounded" title="Etiqueta suave">Etiqueta</button>
+                                        <button type="button" class="shape-pill" data-shape="flag" title="Banderín">Banderín</button>
+                                    </div>
+                                    <input type="hidden" id="p-letrero-forma" value="pill">
                                 </div>
-                                <div class="form-group">
-                                    <label for="p-letrero">Texto personalizado</label>
-                                    <input type="text" id="p-letrero" maxlength="24" placeholder="Ej: ¡Favorito!">
-                                </div>
-                                <div class="form-group">
-                                    <label for="p-descuento">Descuento (%)</label>
-                                    <input type="number" id="p-descuento" min="0" max="80" step="1" value="0">
+
+                                <div class="admin-badge-style-group">
+                                    <span class="admin-style-sublabel">Color:</span>
+                                    <div class="admin-badge-colors" id="adminBadgeColors">
+                                        <button type="button" class="badge-color-dot is-active" data-color="#D62300" title="Rojo marca" style="background:#D62300;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#E68A00" title="Ámbar / Oferta" style="background:#E68A00;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#2A9D60" title="Verde fresco" style="background:#2A9D60;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#7B2CBF" title="Morado silvestre" style="background:#7B2CBF;"></button>
+                                        <button type="button" class="badge-color-dot" data-color="#1C1C20" title="Negro noche" style="background:#1C1C20;"></button>
+                                        <label class="badge-color-custom-btn" title="Color personalizado">
+                                            <input type="color" id="p-letrero-color-picker" value="#D62300" aria-label="Elegir color personalizado de etiqueta">
+                                            <i class="fas fa-eye-dropper" aria-hidden="true"></i>
+                                        </label>
+                                    </div>
+                                    <input type="hidden" id="p-color-acento" value="#D62300">
                                 </div>
                             </div>
 
-                            <div class="admin-price-preview" id="admin-price-preview" aria-live="polite">
-                                <div class="admin-price-preview-badge" id="admin-price-preview-badge" hidden></div>
-                                <div class="admin-price-preview-row">
-                                    <span class="admin-price-preview-label">Precio base</span>
-                                    <strong id="admin-price-before">$0</strong>
-                                </div>
-                                <div class="admin-price-preview-row is-final">
-                                    <span class="admin-price-preview-label">Precio en tienda</span>
-                                    <strong id="admin-price-after">$0</strong>
-                                </div>
-                                <p class="admin-price-preview-note" id="admin-price-preview-note">Sin descuento: se muestra el precio normal.</p>
+                            <!-- Texto del letrero -->
+                            <div class="form-group" id="adminLetreroTextWrap">
+                                <label for="p-letrero">Texto del letrero</label>
+                                <input type="text" id="p-letrero" maxlength="24" placeholder="Ej: NUEVO, ¡OFERTA!, FAVORITO">
                             </div>
-                        </details>
+
+                            <!-- Calculadora interactiva de descuento -->
+                            <div class="admin-discount-calculator-box" id="adminDiscountBox">
+                                <div class="admin-calc-header">
+                                    <span><i class="fas fa-calculator" aria-hidden="true"></i> Calculadora de Descuento</span>
+                                    <small>Ingresa el porcentaje o el precio final y el sistema calculará el valor real automáticamente.</small>
+                                </div>
+
+                                <div class="admin-calc-grid">
+                                    <div class="calc-input-group">
+                                        <label for="p-descuento">Porcentaje de descuento</label>
+                                        <div class="calc-input-wrap">
+                                            <input type="number" id="p-descuento" min="0" max="80" step="1" value="0" placeholder="0">
+                                            <span class="calc-suffix">%</span>
+                                        </div>
+                                        <div class="calc-quick-pills">
+                                            <button type="button" class="quick-pct-btn" data-pct="10">10%</button>
+                                            <button type="button" class="quick-pct-btn" data-pct="15">15%</button>
+                                            <button type="button" class="quick-pct-btn" data-pct="20">20%</button>
+                                            <button type="button" class="quick-pct-btn" data-pct="30">30%</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="calc-input-group">
+                                        <label for="p-precio-final-input">Precio con descuento (500 ml)</label>
+                                        <div class="calc-input-wrap">
+                                            <input type="number" id="p-precio-final-input" min="0" step="100" placeholder="6900">
+                                            <span class="calc-suffix">$</span>
+                                        </div>
+                                        <span class="calc-hint">Calcula el % de descuento al editar</span>
+                                    </div>
+                                </div>
+
+                                <!-- Resumen en vivo de la calculadora -->
+                                <div class="admin-calc-summary" id="adminCalcSummary">
+                                    <div class="calc-sum-col">
+                                        <span>Precio normal:</span>
+                                        <strong id="calcBasePrice">$0</strong>
+                                    </div>
+                                    <div class="calc-sum-operator" aria-hidden="true">&minus;</div>
+                                    <div class="calc-sum-col">
+                                        <span>Ahorro cliente:</span>
+                                        <strong id="calcSaveAmount" class="text-save">$0 (0%)</strong>
+                                    </div>
+                                    <div class="calc-sum-operator" aria-hidden="true">=</div>
+                                    <div class="calc-sum-col is-total">
+                                        <span>Precio en tienda:</span>
+                                        <strong id="calcFinalPrice">$0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
