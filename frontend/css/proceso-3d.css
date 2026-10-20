@@ -21,7 +21,7 @@
 /* ---------- Cabecera (deja libre la columna de la botella) ---------- */
 .p3d__head { padding-right: calc(var(--p3d-art) + 24px); margin-bottom: clamp(18px, 3.4vh, 26px); position: relative; z-index: 2; }
 .p3d__eyebrow { display: inline-block; font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--p3d-red); }
-.p3d__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(26px, 2.7vw, 36px); line-height: 1.06; letter-spacing: -.015em; margin: 6px 0 0; color: var(--p3d-ink); text-wrap: balance; }
+.p3d__title { font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: clamp(26px, 2.7vw, 36px); line-height: 1.06; letter-spacing: -.015em; margin: 6px 0 0; color: var(--p3d-ink); text-wrap: balance; }
 .p3d__sub { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 22px; row-gap: 6px; margin-top: 8px; }
 .p3d__lead { color: var(--p3d-muted); font-size: 15px; line-height: 1.45; margin: 0; }
 .p3d__more { display: inline-flex; align-items: center; gap: 7px; color: var(--p3d-red); font-weight: 800; font-size: 14px; text-decoration: none; border-bottom: 1.5px solid color-mix(in srgb, var(--rojo-marca) 35%, transparent); padding-bottom: 2px; transition: border-color .3s var(--p3d-ease); }

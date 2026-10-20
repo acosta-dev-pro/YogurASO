@@ -1,4 +1,4 @@
-/* Admin: amplio, claro, sin look de planilla */
+﻿/* Admin: amplio, claro, sin look de planilla */
 
 body.admin-page {
     background: #f4f4f6 !important;
@@ -60,9 +60,9 @@ body.admin-page .admin-header {
 }
 
 body.admin-page .admin-header h1 {
-    font-family: var(--font-ui);
-    font-size: 32px !important;
-    font-weight: 800;
+    font-family: var(--bp-font-title, 'Fredoka', sans-serif);
+    font-size: 30px !important;
+    font-weight: 500 !important;
     letter-spacing: -0.04em;
     color: #17171a !important;
     margin: 0;

@@ -1381,7 +1381,7 @@ span { color: inherit; -webkit-text-fill-color: inherit; }
 .admin-header h1 {
     font-family: var(--font-brand);
     font-size: clamp(20px, 2.5vw, 26px);
-    font-weight: 800;
+    font-weight: 500 !important;
     margin: 0;
     color: var(--text-main);
     letter-spacing: -0.02em;

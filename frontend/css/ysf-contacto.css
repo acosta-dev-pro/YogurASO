@@ -35,7 +35,7 @@
 
 /* Encabezado (#empaque) */
 .ysc .ysc-eyebrow{display:inline-block;font: 600 12px/1.2.2 var(--ysc-body);letter-spacing: 0.06em;text-transform:uppercase;color:var(--ysc-muted)}
-.ysc .ysc-title{margin:6px 0 6px;font:600 clamp(24px,2.35vw,31px)/1.08 "Fredoka", sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
+.ysc .ysc-title{margin:6px 0 6px;font:500 clamp(24px,2.35vw,31px)/1.08 "Fredoka", sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
 .ysc .ysc-lead{max-width:44ch;color:var(--ysc-muted);font-size:14.5px;line-height:1.5}
 
 /* Datos (llamadas de #empaque) */

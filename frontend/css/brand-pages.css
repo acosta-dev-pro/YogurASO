@@ -58,6 +58,7 @@ body .shop-kicker, body .admin-eyebrow,
 body .summary-line.total, body .admin-stat strong,
 body .profile-card h2, body .chip, body .cart-summary h3 {
     font-family: var(--bp-font-title) !important;
+    font-weight: 500 !important;
 }
 h1, h2, h3 { letter-spacing: -0.01em; color: var(--bp-ink); }
 
@@ -162,7 +163,7 @@ body.admin-page .admin-section { border-radius: var(--bp-radius-lg); box-shadow:
 }
 .productos-header h1, .cart-page-heading h1, .auth-title, .admin-header h1, body.admin-page .admin-header h1 {
     font-family: var(--bp-font-title) !important;
-    font-weight: 700;
+    font-weight: 500 !important;
     letter-spacing: -0.015em;
     color: var(--bp-ink) !important;
 }

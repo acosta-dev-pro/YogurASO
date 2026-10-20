@@ -173,7 +173,7 @@ body[data-flavor="mango"] {
 .hero-title {
     margin: 0;
     font-family: 'Fredoka', sans-serif;
-    font-weight: 550;
+    font-weight: 500;
     font-size: clamp(3.6rem, 5.8vw, 6.5rem);
     line-height: 0.88;
     letter-spacing: -0.035em;
@@ -573,9 +573,9 @@ body[data-flavor="mango"] {
 /* Título con estilo creativo proporcionado */
 .showcase-title {
     margin: 0;
-    font-family: 'Fredoka', 'Nunito Sans', sans-serif;
+    font-family: 'Fredoka', sans-serif;
     font-size: clamp(1.6rem, 2.2vw, 1.95rem);
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.14;
     letter-spacing: -0.015em;
     color: #1A1A1A;
