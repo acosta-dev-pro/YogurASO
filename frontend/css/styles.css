@@ -28,10 +28,10 @@
     --radius: 16px;
     --radius-sm: 12px;
     --header-h: 64px;
-    --font-ui: 'Nunito Sans', sans-serif;
-    --font-body: 'Nunito Sans', sans-serif;
-    --font-brand: 'Fredoka', sans-serif;
-    --font-display: 'Fredoka', sans-serif;
+    --font-ui: 'Quicksand', 'Nunito', sans-serif, sans-serif;
+    --font-body: 'Quicksand', 'Nunito', sans-serif, sans-serif;
+    --font-brand: 'Quicksand', 'Nunito', sans-serif, sans-serif;
+    --font-display: 'Quicksand', 'Nunito', sans-serif, sans-serif;
 }
 
 /* --- FUENTES LOCALES (fallback si no carga Google Fonts) --- */

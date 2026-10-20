@@ -21,14 +21,14 @@
     max-width: none;
     opacity: 1;
     color: var(--rojo-marca);
-    font: 600 12px/1.2.2 'Nunito Sans', sans-serif;
+    font: 600 12px/1.2.2 'Quicksand', 'Nunito', sans-serif, sans-serif;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 .productos-page-v3 .shop-hero h1 {
     margin: 8px 0;
     color: #171717;
-    font-family: 'Fredoka', sans-serif !important;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif !important;
     font-weight: 600;
     font-size: clamp(28px, 2.75vw, 35px);
     line-height: 1.08;
@@ -40,7 +40,7 @@
     max-width: 40ch;
     opacity: 1;
     color: #6A6259;
-    font: 400 14.5px/1.5 'Nunito Sans', sans-serif;
+    font: 400 14.5px/1.5 'Quicksand', 'Nunito', sans-serif, sans-serif;
     text-wrap: pretty;
 }
 
@@ -61,18 +61,18 @@
     border: 0;
     background: #F3F4F6;
     color: #374151;
-    font: 700 12.5px/1 'Nunito Sans', sans-serif;
-    font-family: 'Nunito Sans', sans-serif !important; /* brand-pages.css fuerza Fredoka con !important */
+    font: 700 12.5px/1 'Quicksand', 'Nunito', sans-serif, sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif !important; /* brand-pages.css fuerza Fredoka con !important */
     letter-spacing: .01em;
 }
 .productos-page-v3 .chip.is-on { background: #171717; color: #fff; }
 .productos-page-v3 #catalog-search,
 .productos-page-v3 #filtro-orden {
     min-height: 32px !important;
-    font: 600 12.5px 'Nunito Sans', sans-serif;
+    font: 600 12.5px 'Quicksand', 'Nunito', sans-serif, sans-serif;
 }
 .productos-page-v3 #catalog-search { min-width: 150px !important; }
-.productos-page-v3 .catalog-count { font: 600 12.5px 'Nunito Sans', sans-serif !important; }
+.productos-page-v3 .catalog-count { font: 600 12.5px 'Quicksand', 'Nunito', sans-serif, sans-serif !important; }
 .productos-page-v3 .productos-catalogo { padding-top: 46px; }
 
 @media (max-width: 720px) {

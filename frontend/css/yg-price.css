@@ -3,7 +3,7 @@
    Tipografía redondeada, artesanal, cálida y legible: Fredoka 700 en rojo de marca. */
 
 :root {
-    --yg-price-font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --yg-price-font: 'Quicksand', 'Nunito', sans-serif;
     --yg-price-weight: 700;
     --yg-price-size: 1.32rem;
     --yg-price-color: #121214;
@@ -36,7 +36,7 @@ html body .yg-price {
 }
 
 html body .yg-price s {
-    font-family: 'Nunito Sans', system-ui, sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif;
     margin-right: 2px;
     font-size: 0.74em;
     font-weight: 600;

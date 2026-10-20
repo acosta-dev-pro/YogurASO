@@ -220,7 +220,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     display: flex;
     align-items: center;
     justify-self: center;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-weight: 600;
 }
 
@@ -239,7 +239,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 }
 .site-header #nav-items li,
 .nav-item {
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-size: 14.5px;
     font-weight: 600;
     color: #ffffff;
@@ -251,7 +251,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     padding: 7px 16px;
     border-radius: var(--radius-pill);
     color: rgba(255, 255, 255, 0.88);
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-weight: 600;
     text-shadow: none;
     text-decoration: none;
@@ -390,7 +390,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;

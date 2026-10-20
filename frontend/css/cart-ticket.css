@@ -19,7 +19,7 @@
     overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
-    font-family: "Nunito Sans", var(--font-body), sans-serif !important;
+    font-family: 'Quicksand', 'Nunito', sans-serif, var(--font-body), sans-serif !important;
     font-size: 13px;
     color: #171717;
     z-index: 1600;
@@ -71,7 +71,7 @@
 
 .cart-ticket-title,
 .cart-ticket-sub {
-    font-family: "Nunito Sans", var(--font-body), sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, var(--font-body), sans-serif;
     font-synthesis: none;
     color: #171717;
 }
@@ -101,7 +101,7 @@
 .cart-sidebar.cart-ticket .btn-clear-cart,
 .cart-sidebar.cart-ticket .cart-select-all,
 .cart-sidebar.cart-ticket .cart-remove-selected {
-    font-family: "Nunito Sans", var(--font-body), sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, var(--font-body), sans-serif;
 }
 
 .cart-ticket-sub { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: #6B635C; }
@@ -276,12 +276,12 @@
 .cart-chip-step { display: inline-flex; align-items: center; height: 24px; background: transparent; border-radius: 0; padding: 0; }
 .cart-sidebar.cart-ticket .cart-chip-step .cart-qty-btn {
     width: 22px; height: 22px; border: none; border-radius: 0; background: transparent !important;
-    color: #171717 !important; font-family: "Nunito Sans", sans-serif; font-size: 14px; font-weight: 800;
+    color: #171717 !important; font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif; font-size: 14px; font-weight: 800;
     padding: 0; cursor: pointer; box-shadow: none !important;
 }
 .cart-sidebar.cart-ticket .cart-chip-step .cart-qty-btn:hover { color: var(--rojo-marca) !important; transform: none; background: transparent !important; }
 .cart-sidebar.cart-ticket .cart-item-qty {
-    min-width: 16px; text-align: center; font-family: "Nunito Sans", sans-serif; font-weight: 800; font-size: 13px; color: #171717;
+    min-width: 16px; text-align: center; font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif; font-weight: 800; font-size: 13px; color: #171717;
     font-variant-numeric: tabular-nums;
 }
 .cart-chip-price { font-size: 14px; font-weight: 800; color: #171717; font-variant-numeric: tabular-nums; }
@@ -302,7 +302,7 @@
 .cart-grand { padding-top: 4px; }
 .cart-grand span:first-child { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; }
 .cart-grand span:last-child {
-    font-family: "Nunito Sans", sans-serif !important;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif !important;
     font-size: 16px !important;
     font-weight: 800 !important;
     letter-spacing: 0 !important;
@@ -343,7 +343,7 @@
     animation: none !important;
     box-shadow: none !important;
     transform: none !important;
-    font-family: "Nunito Sans", sans-serif !important;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif !important;
 }
 .cart-sidebar.cart-ticket .checkout-btn,
 .cart-sidebar.cart-ticket .checkout-btn:hover,
@@ -402,7 +402,7 @@
     border-radius: 8px;
     font-size: 13px;
 }
-.cart-sidebar.cart-ticket .cart-empty-title { font-family: "Nunito Sans", sans-serif; font-weight: 800; font-size: 13px; margin: 0; }
+.cart-sidebar.cart-ticket .cart-empty-title { font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif; font-weight: 800; font-size: 13px; margin: 0; }
 .cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-text {
     margin: 0;
     font-size: 11px;
@@ -412,7 +412,7 @@
 .cart-sidebar.cart-ticket .cart-empty-cta {
     background: var(--rojo-marca);
     box-shadow: none;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-weight: 800;
     min-width: 0;
     width: auto;
@@ -452,7 +452,7 @@
 }
 .cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-icon svg { width: 34px; height: 34px; display: block; }
 .cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-title {
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-weight: 700;
     font-size: 16px;
     line-height: 1.25;
@@ -460,7 +460,7 @@
     margin: 0 0 6px;
 }
 .cart-sidebar.cart-ticket .cart-empty-state.is-compact .cart-empty-text {
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-weight: 400;
     font-size: 13px;
     line-height: 1.45;
@@ -478,7 +478,7 @@
     border-radius: 999px;
     background: var(--rojo-marca, #C3343E);
     color: #fff;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif;
     font-weight: 700;
     font-size: 13px;
     text-decoration: none;

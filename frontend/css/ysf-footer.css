@@ -10,7 +10,7 @@
   --ysf-red:var(--brand-red,var(--rojo-marca));
   --ysf-max:var(--page-max,1120px);
   --ysf-ease:cubic-bezier(.23,1,.32,1);
-  --ysf-body:"Nunito Sans",sans-serif;
+  --ysf-body:'Quicksand', 'Nunito', sans-serif,sans-serif;
   position:relative;z-index:1;
   margin-top:clamp(28px,4vw,48px);
   background:var(--ysf-bg);color:var(--ysf-w);

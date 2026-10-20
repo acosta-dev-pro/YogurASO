@@ -25,7 +25,7 @@
 /* ---------- Encabezado ---------- */
 .emp__head { text-align: center; }
 .emp__eyebrow { display: inline-block; font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--emp-red); }
-.emp__title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(24px, 2.35vw, 31px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 6px; color: var(--emp-ink); text-wrap: balance; }
+.emp__title { font-family: 'Quicksand', 'Nunito', sans-serif, sans-serif; font-weight: 600; font-size: clamp(24px, 2.35vw, 31px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 6px; color: var(--emp-ink); text-wrap: balance; }
 .emp .emp__lead { margin: 0 auto; color: var(--emp-muted); font-size: 14.5px; line-height: 1.5; max-width: min(640px, 100%); text-wrap: pretty; }
 
 /* ---------- Escenario: botella al centro + llamadas ---------- */
