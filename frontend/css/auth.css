@@ -17,8 +17,8 @@ body.ya-auth-page {
     --ya-gray: #F3F4F6;
     --ya-cream: #FFF8F4;
     --ya-ease: cubic-bezier(0.23, 1, 0.32, 1);
-    --ya-font: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --ya-font-title: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif, system-ui, sans-serif;
+    --ya-font: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ya-font-title: "Fredoka", "Nunito Sans", system-ui, sans-serif;
     background: var(--ya-cream) !important;
     color: var(--ya-text);
 }

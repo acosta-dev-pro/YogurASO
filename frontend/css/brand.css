@@ -45,12 +45,10 @@
     --radius-xl: 32px;
     --radius-pill: 999px;
 
-    --font-system: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
-    --font-display: var(--font-system);
-    --font-brand: var(--font-system);
-    --font-body: var(--font-system);
-    --font-ui: var(--font-system);
+    --font-display: 'Fredoka', sans-serif;
+    --font-brand: 'Fredoka', sans-serif;
+    --font-body: 'Nunito Sans', sans-serif;
+    --font-ui: 'Nunito Sans', sans-serif;
 
     /* Emil Kowalski motion */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);

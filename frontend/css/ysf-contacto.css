@@ -13,7 +13,7 @@
   --ysc-field:#fff;
   --ysc-max:var(--page-max,1120px);
   --ysc-ease:cubic-bezier(.23,1,.32,1);
-  --ysc-body:'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif,sans-serif;
+  --ysc-body: "Nunito Sans", sans-serif;
   position:relative;
   background:transparent;color:var(--ysc-ink);
   padding:clamp(44px,6vw,76px) 0 clamp(36px,5vw,60px);
@@ -35,7 +35,7 @@
 
 /* Encabezado (#empaque) */
 .ysc .ysc-eyebrow{display:inline-block;font: 600 12px/1.2.2 var(--ysc-body);letter-spacing: 0.06em;text-transform:uppercase;color:var(--ysc-muted)}
-.ysc .ysc-title{margin:6px 0 6px;font:600 clamp(24px,2.35vw,31px)/1.08 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif,sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
+.ysc .ysc-title{margin:6px 0 6px;font:600 clamp(24px,2.35vw,31px)/1.08 "Fredoka", sans-serif;letter-spacing:-.015em;color:var(--ysc-ink);text-wrap:balance}
 .ysc .ysc-lead{max-width:44ch;color:var(--ysc-muted);font-size:14.5px;line-height:1.5}
 
 /* Datos (llamadas de #empaque) */
@@ -99,7 +99,7 @@
     repeating-linear-gradient(90deg,transparent 0 31px,rgba(23,23,23,.04) 31px 32px),#FAF6F3;
 }
 .ysc-map .nt-ico-lg{width:30px;height:30px;color:var(--ysc-ink2)}
-.ysc-map .nt-embed-ph strong{font:600 17px/1.2 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif,sans-serif}
+.ysc-map .nt-embed-ph strong{font:600 17px/1.2 "Nunito Sans", sans-serif,sans-serif}
 .ysc-map .nt-btn{min-height:38px;padding:0 16px;border-radius:999px;font:800 13px/1 var(--ysc-body);cursor:pointer;transition:transform .3s var(--ysc-ease)}
 .ysc-map .nt-btn-solid{background:var(--ysc-ink);border:1px solid var(--ysc-ink);color:#fff}
 .ysc-map .nt-btn-ghost{background:#fff;border:1px solid rgba(23,23,23,.16);color:var(--ysc-ink)}

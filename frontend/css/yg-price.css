@@ -3,7 +3,7 @@
    Tipografía redondeada, artesanal, cálida y legible: Fredoka 700 en rojo de marca. */
 
 :root {
-    --yg-price-font: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --yg-price-font: 'Fredoka', sans-serif;
     --yg-price-weight: 700;
     --yg-price-size: 1.32rem;
     --yg-price-color: #121214;

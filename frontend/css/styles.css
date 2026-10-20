@@ -28,11 +28,10 @@
     --radius: 16px;
     --radius-sm: 12px;
     --header-h: 64px;
-    --font-system: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', Segoe UI, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-ui: var(--font-system);
-    --font-body: var(--font-system);
-    --font-brand: var(--font-system);
-    --font-display: var(--font-system);
+    --font-ui: 'Nunito Sans', sans-serif;
+    --font-body: 'Nunito Sans', sans-serif;
+    --font-brand: 'Fredoka', sans-serif;
+    --font-display: 'Fredoka', sans-serif;
 }
 
 /* --- FUENTES LOCALES (fallback si no carga Google Fonts) --- */
