@@ -64,6 +64,7 @@
         <nav class="admin-subnav" aria-label="Secciones del panel">
             <a href="#productos" class="admin-subnav-link is-on">Inventario</a>
             <a href="#usuarios" class="admin-subnav-link">Usuarios</a>
+            <a href="#preguntas" class="admin-subnav-link">Preguntas de Clientes <span class="admin-chip" id="admin-pending-q-chip" style="font-size: 10px; padding: 2px 7px; margin-left: 4px; display: none; background: #D62300; color: #fff;">0</span></a>
             <a href="#analitica" class="admin-subnav-link">Métricas y Visitas</a>
             <a href="#alertas" class="admin-subnav-link">Alertas de Stock</a>
         </nav>
@@ -149,6 +150,38 @@
                 </table>
             </div>
         </section>
+        <!-- PREGUNTAS DE CLIENTES -->
+        <section id="preguntas" class="admin-section" aria-label="Preguntas y respuestas a clientes">
+            <div class="admin-header">
+                <div>
+                    <h1>Preguntas de Clientes</h1>
+                    <p class="admin-subtitle" id="admin-questions-subtitle">Responde las dudas que los clientes dejan en la web para publicarlas oficialmente.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button type="button" class="btn btn-secondary" id="btn-reload-questions" title="Recargar"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                </div>
+            </div>
+
+            <div class="admin-stats">
+                <div class="admin-stat"><span>Total recibidas</span><strong id="stat-q-total">0</strong></div>
+                <div class="admin-stat"><span>Pendientes</span><strong id="stat-q-pending" style="color: #D62300;">0</strong></div>
+                <div class="admin-stat"><span>Respondidas</span><strong id="stat-q-answered" style="color: #2A9D60;">0</strong></div>
+            </div>
+
+            <div class="admin-toolbar admin-toolbar-pro">
+                <input type="search" id="admin-q-search" placeholder="Buscar en preguntas o autor..." class="admin-search-input">
+                <select id="admin-q-filter" class="admin-select" aria-label="Filtrar por estado">
+                    <option value="">Todas las preguntas</option>
+                    <option value="pending">Solo pendientes</option>
+                    <option value="approved">Solo respondidas</option>
+                </select>
+            </div>
+
+            <div class="admin-questions-list" id="admin-questions-list">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </section>
+
         <!-- MÉTRICAS Y VISITAS -->
         <section id="analitica" class="admin-section admin-analytics-section" aria-label="Métricas y visitas">
             <div class="admin-header">
@@ -156,8 +189,11 @@
                     <h1>Visitas y Rendimiento de Tienda</h1>
                     <p class="admin-subtitle">Métricas reales de visitantes, inspecciones en tarjetas de producto y pedidos por WhatsApp.</p>
                 </div>
-                <div class="admin-analytics-badge">
-                    Datos en tiempo real
+                <div class="admin-header-actions">
+                    <span class="admin-analytics-badge">Datos en tiempo real</span>
+                    <button type="button" class="btn btn-secondary" id="btn-reset-analytics" style="padding: 7px 12px; font-size: 12px; border-radius: 8px;">
+                        <i class="fas fa-undo"></i> Reiniciar métricas
+                    </button>
                 </div>
             </div>
 
@@ -185,48 +221,7 @@
             </div>
 
             <div class="admin-analytics-grid">
-                <article class="admin-analytics-card">
-                    <div class="admin-card-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="margin: 0;">Clics e inspecciones por producto</h3>
-                        <span class="admin-chip-role" id="analytics-products-count" style="font-size: 11px;">0 productos</span>
-                    </div>
-                    <div class="admin-flavor-bars" id="admin-flavor-bars">
-                        <!-- Se llena dinámicamente con los productos reales del catálogo -->
-                    </div>
-                </article>
-
-                <article class="admin-analytics-card">
-                    <h3>Dispositivos y origen de clientes</h3>
-                    <div class="admin-device-breakdown">
-                        <div class="admin-device-stat">
-                            <div class="device-icon ios"><i class="fab fa-apple"></i></div>
-                            <div>
-                                <strong id="device-ios-text">Apple iOS / iPhone (0%)</strong>
-                                <p id="device-ios-sub">0 visitas registradas</p>
-                            </div>
-                        </div>
-                        <div class="admin-device-stat">
-                            <div class="device-icon android"><i class="fab fa-android"></i></div>
-                            <div>
-                                <strong id="device-android-text">Android (0%)</strong>
-                                <p id="device-android-sub">0 visitas registradas</p>
-                            </div>
-                        </div>
-                        <div class="admin-device-stat">
-                            <div class="device-icon pc"><i class="fas fa-desktop"></i></div>
-                            <div>
-                                <strong id="device-desktop-text">Computador / Escritorio (0%)</strong>
-                                <p id="device-desktop-sub">0 visitas registradas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 24px; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.06); display: flex; justify-content: flex-end; gap: 8px;">
-                        <button type="button" class="btn-secondary" id="btn-reset-analytics" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;">
-                            <i class="fas fa-undo"></i> Reiniciar métricas
-                        </button>
-                    </div>
-                </article>
+                
             </div>
         </section>
 

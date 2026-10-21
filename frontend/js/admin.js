@@ -25,6 +25,7 @@ const categoriaMap = {
 
 let editandoId = null;
 let allAdminProducts = [];
+let allAdminQuestions = [];
 let guardando = false;
 let sortKey = 'id';
 let sortDir = 'asc';
@@ -631,7 +632,6 @@ function renderRealAnalytics(productos) {
     if (elConversion) elConversion.textContent = conversion + '%';
 
     renderFlavorAnalyticsBars(list, productStats, totalClicks);
-    renderDeviceBreakdown(metrics.devices, totalVisits);
 }
 
 function renderFlavorAnalyticsBars(productos, productStats, totalClicks) {
@@ -695,33 +695,6 @@ function renderFlavorAnalyticsBars(productos, productStats, totalClicks) {
     container.innerHTML = html;
 }
 
-function renderDeviceBreakdown(devices, totalVisits) {
-    const dev = devices || {};
-    const ios = Number(dev.ios) || 0;
-    const android = Number(dev.android) || 0;
-    const desktop = Number(dev.desktop) || 0;
-    const sum = (ios + android + desktop) || totalVisits || 1;
-
-    const iosPct = Math.round((ios / sum) * 100) || 0;
-    const androidPct = Math.round((android / sum) * 100) || 0;
-    const desktopPct = Math.round((desktop / sum) * 100) || 0;
-
-    const setDev = (type, pct, count) => {
-        const titleEl = document.getElementById('device-' + type + '-text');
-        const subEl = document.getElementById('device-' + type + '-sub');
-        if (titleEl) {
-            const label = type === 'ios' ? 'Apple iOS / iPhone' : type === 'android' ? 'Android' : 'Computador / Escritorio';
-            titleEl.textContent = label + ' (' + pct + '%)';
-        }
-        if (subEl) {
-            subEl.textContent = count + (count === 1 ? ' visita registrada' : ' visitas registradas');
-        }
-    };
-
-    setDev('ios', iosPct, ios);
-    setDev('android', androidPct, android);
-    setDev('desktop', desktopPct, desktop);
-}
 
 function populateCategoryFilter(productos) {
     const select = document.getElementById('admin-filter-cat');
@@ -1014,6 +987,7 @@ function renderUserRows(users) {
             }
             toast(resToggle.message || 'Usuario actualizado', 'success');
             await cargarTablaUsuarios();
+    await cargarTablaPreguntas();
         });
     });
 }
@@ -1161,6 +1135,258 @@ async function cargarTablaProductos() {
     renderRows(getVisibleProducts());
 }
 
+
+/* ==========================================================================
+   GESTIÓN DE PREGUNTAS DE CLIENTES
+   ========================================================================== */
+async function cargarTablaPreguntas() {
+    const listEl = document.getElementById('admin-questions-list');
+    if (!listEl) return;
+
+    try {
+        const sb = await import('./supabase-client.js').then((m) => m.obtenerSupabase()).catch(() => null);
+        if (sb) {
+            const { data, error } = await sb.from('faq_questions').select('*').order('created_at', { ascending: false });
+            if (!error && Array.isArray(data) && data.length) {
+                allAdminQuestions = data;
+            } else {
+                throw new Error(error?.message || 'Empty or table missing');
+            }
+        } else {
+            throw new Error('Supabase not ready');
+        }
+    } catch (_) {
+        const local = JSON.parse(localStorage.getItem('yog_local_interactions_v1') || '{}');
+        let questions = Array.isArray(local.questions) ? local.questions : [];
+        if (!questions.length) {
+            questions = [
+                {
+                    id: 'q-demo-1',
+                    author_name: 'María Alejandra',
+                    body: '¿Hacen envíos a domicilio en Neiva los fines de semana y qué costo tiene?',
+                    answer: '¡Hola María! Sí, realizamos entregas en Neiva los sábados y domingos en la mañana sin costo adicional por pedidos desde 3 botellas.',
+                    status: 'approved',
+                    created_at: new Date(Date.now() - 3600000 * 4).toISOString()
+                },
+                {
+                    id: 'q-demo-2',
+                    author_name: 'Carlos Gómez',
+                    body: '¿Cuál es la presentación más recomendada para familias o negocios de desayunos?',
+                    answer: '',
+                    status: 'pending',
+                    created_at: new Date(Date.now() - 3600000 * 2).toISOString()
+                },
+                {
+                    id: 'q-demo-3',
+                    author_name: 'Valentina R.',
+                    body: '¿El yogurt artesanal tiene conservantes artificiales o es 100% natural?',
+                    answer: '',
+                    status: 'pending',
+                    created_at: new Date(Date.now() - 3600000 * 1).toISOString()
+                }
+            ];
+            local.questions = questions;
+            try { localStorage.setItem('yog_local_interactions_v1', JSON.stringify(local)); } catch (err) {}
+        }
+        allAdminQuestions = questions;
+    }
+
+    updateQuestionStats();
+    renderAdminQuestions(getVisibleQuestions());
+}
+
+function updateQuestionStats() {
+    const total = allAdminQuestions.length;
+    const pending = allAdminQuestions.filter((q) => !q.answer || q.status === 'pending').length;
+    const answered = total - pending;
+
+    const tEl = document.getElementById('stat-q-total');
+    const pEl = document.getElementById('stat-q-pending');
+    const aEl = document.getElementById('stat-q-answered');
+    const chip = document.getElementById('admin-pending-q-chip');
+
+    if (tEl) tEl.textContent = String(total);
+    if (pEl) pEl.textContent = String(pending);
+    if (aEl) aEl.textContent = String(answered);
+
+    if (chip) {
+        chip.textContent = String(pending);
+        chip.style.display = pending > 0 ? 'inline-block' : 'none';
+    }
+}
+
+function getVisibleQuestions() {
+    const q = (document.getElementById('admin-q-search')?.value || '').trim().toLowerCase();
+    const filter = document.getElementById('admin-q-filter')?.value || '';
+
+    return allAdminQuestions.filter((item) => {
+        const matchQ = !q
+            || String(item.body || '').toLowerCase().includes(q)
+            || String(item.author_name || '').toLowerCase().includes(q)
+            || String(item.answer || '').toLowerCase().includes(q);
+
+        const isAnswered = Boolean(item.answer && item.status === 'approved');
+        const matchFilter = !filter
+            || (filter === 'pending' && !isAnswered)
+            || (filter === 'approved' && isAnswered);
+
+        return matchQ && matchFilter;
+    });
+}
+
+function renderAdminQuestions(questions) {
+    const host = document.getElementById('admin-questions-list');
+    if (!host) return;
+
+    if (!questions.length) {
+        host.innerHTML = '<div class="admin-sheet-empty" style="background:#fff; border-radius:16px; padding:32px; text-align:center;">No hay preguntas para mostrar con este filtro.</div>';
+        return;
+    }
+
+    host.innerHTML = questions.map((item) => {
+        const who = escapeHtml(item.author_name || 'Cliente anónimo');
+        const body = escapeHtml(item.body || '');
+        const hasAnswer = Boolean(item.answer);
+        const answer = escapeHtml(item.answer || '');
+        const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Reciente';
+
+        return `
+            <article class="admin-q-card ${hasAnswer ? 'is-answered' : 'is-pending'}" data-id="${item.id}">
+                <div class="admin-q-head">
+                    <span class="admin-q-author"><i class="fas fa-user-circle"></i> ${who}</span>
+                    <div class="admin-q-meta">
+                        <span class="admin-q-date"><i class="far fa-clock"></i> ${dateStr}</span>
+                        <span class="status-pill ${hasAnswer ? 'is-active' : ''}" style="${hasAnswer ? '' : 'background:#FEECE0; color:#D35400;'}">
+                            ${hasAnswer ? '<i class="fas fa-check-circle"></i> Respondida' : '<i class="fas fa-hourglass-half"></i> Pendiente'}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="admin-q-body">
+                    <strong>Pregunta:</strong> "${body}"
+                </div>
+
+                ${hasAnswer ? `
+                    <div class="admin-q-answer-published" id="q-answer-box-${item.id}">
+                        <strong><i class="fas fa-comment-dots"></i> Respuesta oficial publicada:</strong>
+                        <p>${answer}</p>
+                    </div>
+                ` : ''}
+
+                <div class="admin-q-reply-box">
+                    <label for="q-reply-${item.id}"><i class="fas fa-reply"></i> ${hasAnswer ? 'Editar respuesta oficial:' : 'Escribir respuesta oficial de YogurASO:'}</label>
+                    <textarea class="admin-q-textarea" id="q-reply-${item.id}" rows="2" placeholder="Escribe aquí la respuesta para el cliente...">${hasAnswer ? item.answer : ''}</textarea>
+                    
+                    <div class="admin-q-actions">
+                        <button type="button" class="btn btn-secondary btn-del-q" data-id="${item.id}" title="Eliminar pregunta" style="color: #C3343E;">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                        <button type="button" class="btn btn-primary btn-save-q-reply" data-id="${item.id}">
+                            <i class="fas fa-paper-plane"></i> ${hasAnswer ? 'Actualizar respuesta' : 'Responder y publicar'}
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join('');
+
+    host.querySelectorAll('.btn-save-q-reply').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const textarea = document.getElementById(`q-reply-${id}`);
+            const replyText = textarea?.value.trim();
+            if (!replyText) {
+                toast('Escribe una respuesta antes de guardar', 'warning');
+                textarea?.focus();
+                return;
+            }
+
+            btn.disabled = true;
+            await guardarRespuestaPregunta(id, replyText);
+            btn.disabled = false;
+        });
+    });
+
+    host.querySelectorAll('.btn-del-q').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const ok = confirmAction
+                ? await confirmAction({
+                    title: 'Eliminar pregunta',
+                    message: '¿Estás seguro de eliminar esta pregunta?',
+                    confirmText: 'Sí, eliminar',
+                    cancelText: 'Cancelar',
+                    danger: true
+                })
+                : window.confirm('¿Eliminar esta pregunta?');
+
+            if (!ok) return;
+            btn.disabled = true;
+            await eliminarPregunta(id);
+        });
+    });
+}
+
+async function guardarRespuestaPregunta(id, answer) {
+    const qIdx = allAdminQuestions.findIndex((q) => String(q.id) === String(id));
+    if (qIdx !== -1) {
+        allAdminQuestions[qIdx].answer = answer;
+        allAdminQuestions[qIdx].status = 'approved';
+        allAdminQuestions[qIdx].updated_at = new Date().toISOString();
+    }
+
+    try {
+        const sb = await import('./supabase-client.js').then((m) => m.obtenerSupabase()).catch(() => null);
+        if (sb) {
+            await sb.from('faq_questions').update({
+                answer,
+                status: 'approved'
+            }).eq('id', id);
+        }
+    } catch (_) {}
+
+    try {
+        const local = JSON.parse(localStorage.getItem('yog_local_interactions_v1') || '{}');
+        if (Array.isArray(local.questions)) {
+            const locIdx = local.questions.findIndex((q) => String(q.id) === String(id));
+            if (locIdx !== -1) {
+                local.questions[locIdx].answer = answer;
+                local.questions[locIdx].status = 'approved';
+            } else if (qIdx !== -1) {
+                local.questions.unshift(allAdminQuestions[qIdx]);
+            }
+            localStorage.setItem('yog_local_interactions_v1', JSON.stringify(local));
+        }
+    } catch (_) {}
+
+    toast('Respuesta publicada con éxito', 'success');
+    updateQuestionStats();
+    renderAdminQuestions(getVisibleQuestions());
+}
+
+async function eliminarPregunta(id) {
+    allAdminQuestions = allAdminQuestions.filter((q) => String(q.id) !== String(id));
+
+    try {
+        const sb = await import('./supabase-client.js').then((m) => m.obtenerSupabase()).catch(() => null);
+        if (sb) {
+            await sb.from('faq_questions').delete().eq('id', id);
+        }
+    } catch (_) {}
+
+    try {
+        const local = JSON.parse(localStorage.getItem('yog_local_interactions_v1') || '{}');
+        if (Array.isArray(local.questions)) {
+            local.questions = local.questions.filter((q) => String(q.id) !== String(id));
+            localStorage.setItem('yog_local_interactions_v1', JSON.stringify(local));
+        }
+    } catch (_) {}
+
+    toast('Pregunta eliminada', 'success');
+    updateQuestionStats();
+    renderAdminQuestions(getVisibleQuestions());
+}
+
 function setupAdminEvents() {
     const btnNuevo = document.getElementById('btn-nuevo-producto');
     const btnCerrar = document.getElementById('btn-cerrar-modal');
@@ -1187,6 +1413,9 @@ function setupAdminEvents() {
 
     document.getElementById('btn-reload-users')?.addEventListener('click', () => cargarTablaUsuarios());
     document.getElementById('admin-user-search')?.addEventListener('input', () => renderUserRows(getVisibleUsers()));
+    document.getElementById('btn-reload-questions')?.addEventListener('click', () => cargarTablaPreguntas());
+    document.getElementById('admin-q-search')?.addEventListener('input', () => renderAdminQuestions(getVisibleQuestions()));
+    document.getElementById('admin-q-filter')?.addEventListener('change', () => renderAdminQuestions(getVisibleQuestions()));
     document.getElementById('admin-filter-cat')?.addEventListener('change', () => renderRows(getVisibleProducts()));
     document.getElementById('admin-filter-status')?.addEventListener('change', () => renderRows(getVisibleProducts()));
     document.getElementById('btn-export-csv')?.addEventListener('click', () => exportProductsCsv(getVisibleProducts()));

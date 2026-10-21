@@ -190,15 +190,9 @@ button[data-ix-like="post"][aria-pressed="true"] svg path,
 .ix-spin[hidden] { display: none; }
 @keyframes ix-spin { to { transform: rotate(360deg); } }
 
-.ix-prod-count {
-  position: absolute;
-  right: -2px;
-  bottom: -4px;
-  min-width: 14px;
-  font-family: "Nunito", system-ui, sans-serif;
-  font-size: 12px; font-weight: 600;
-  color: #171717;
-  line-height: 1;
+.ix-prod-count,
+[data-ix-prod-count] {
+  display: none !important;
 }
 .hp-fav { position: absolute; }
 
@@ -217,4 +211,36 @@ button[data-ix-like="post"][aria-pressed="true"] svg path,
 @media (max-width: 760px) {
   #preguntas .faq-ask-toggle { font-size: 14px; }
   #preguntas .faq-ask-form button[type="submit"] { align-self: stretch; padding: 12px 14px; }
+}
+
+/* Preguntas desde el post Instagram */
+.insta-ask-prompt {
+  margin: 6px 0 14px;
+}
+.insta-ask-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--font-ui, 'Nunito Sans', sans-serif);
+  font-size: 0.88rem;
+  color: #55514D;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.16s ease;
+}
+.insta-ask-link i {
+  color: var(--rojo-marca, #D62300);
+  font-size: 14px;
+}
+.insta-ask-link span {
+  color: var(--rojo-marca, #D62300);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.insta-ask-link:hover span {
+  color: #A31B00;
 }

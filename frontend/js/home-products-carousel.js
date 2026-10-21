@@ -37,7 +37,10 @@ function badgeHtml(p, sinStock) {
     let label = String(p.letrero || '').trim();
     const off = Number(p.descuento || 0);
     if (!label && off > 0) label = `-${Math.round(off)}%`;
-    if (label) bits.push(`<span class="hp-badge">${escapeHtml(label)}</span>`);
+    if (label) {
+        const bg = p.color_acento || (off > 0 ? '#D62300' : (label.toUpperCase().includes('NUEVO') ? '#2A9D60' : '#D62300'));
+        bits.push(`<span class="hp-badge" style="--badge-bg: ${bg};">${escapeHtml(label)}</span>`);
+    }
     if (sinStock) bits.push('<span class="hp-badge hp-badge--out">Sin stock</span>');
     return bits.length ? `<div class="hp-card__badges">${bits.join('')}</div>` : '';
 }

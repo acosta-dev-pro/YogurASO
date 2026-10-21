@@ -181,16 +181,7 @@ function paintProductLike(id, state) {
     const on = Boolean(state?.liked);
     btn.classList.toggle('is-on', on);
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    let badge = btn.querySelector('[data-ix-prod-count]');
-    if (!badge) {
-      badge = document.createElement('span');
-      badge.className = 'ix-prod-count';
-      badge.dataset.ixProdCount = '';
-      btn.appendChild(badge);
-    }
-    const n = Number(state?.likes || 0);
-    badge.textContent = n > 0 ? String(n) : '';
-    badge.hidden = n < 1;
+    btn.querySelector('[data-ix-prod-count]')?.remove();
   });
 }
 
@@ -269,6 +260,17 @@ function wireAsk(vid) {
 }
 
 function wirePost(vid) {
+  const toAsk = () => {
+    const toggle = document.getElementById('faq-ask-toggle');
+    const form = document.getElementById('faq-ask-form');
+    if (form && form.hidden) toggle?.click();
+    document.getElementById('preguntas')?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      form?.querySelector('[name="body"]')?.focus();
+    }, 450);
+  };
+  document.getElementById('btn-insta-ask-icon')?.addEventListener('click', toAsk);
+  document.getElementById('link-insta-ask')?.addEventListener('click', toAsk);
   const likeBtn = document.querySelector('[data-ix-like="post"]');
   if (likeBtn) {
     likeBtn.addEventListener('click', async () => {

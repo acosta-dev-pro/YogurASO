@@ -33,7 +33,6 @@
     <link rel="stylesheet" href="css/home-v3.css">
     <link rel="stylesheet" href="css/ysf-footer.css">
     <link rel="stylesheet" href="css/ysf-contacto.css">
-    <link rel="stylesheet" href="css/post-comments.css">
     <link rel="stylesheet" href="css/proceso-3d.css">
     <link rel="stylesheet" href="css/collage-fruta.css">
     <link rel="stylesheet" href="css/trio-home.css">
@@ -190,9 +189,14 @@
                     <div class="insta-engagement-row">
                         <div class="insta-icons-left">
                             <button type="button" class="insta-btn-icon" data-ix-like="post" aria-pressed="false" aria-label="Me gusta"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 20.3s-7.3-4.4-9.2-9A5.2 5.2 0 0 1 12 6.1a5.2 5.2 0 0 1 9.2 5.2c-1.9 4.6-9.2 9-9.2 9Z"/></svg></button>
-                            <button type="button" class="insta-btn-icon" aria-label="Compartir"><i class="far fa-paper-plane"></i></button>
+                            <button type="button" class="insta-btn-icon" id="btn-insta-ask-icon" aria-label="Hacer una pregunta" title="Hacer una pregunta"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></button>
+                            <button type="button" class="insta-btn-icon" id="btn-insta-share" aria-label="Compartir"><i class="far fa-paper-plane"></i></button>
                         </div>
                         <span class="insta-likes-txt"><strong data-ix-post-count>0</strong> me gusta</span>
+                    </div>
+
+                    <div class="insta-ask-prompt">
+                        <button type="button" class="insta-ask-link" id="link-insta-ask"><i class="fas fa-question-circle" aria-hidden="true"></i> ¿Tienes preguntas sobre nuestro yogurt? <span>Pregúntanos aquí</span></button>
                     </div>
 
                     <!-- Botones de Acción: Rojo a la IZQUIERDA, Mayoristas a la DERECHA -->
@@ -788,6 +792,5 @@
     <script type="module" src="js/interactions.js"></script>
     <script src="js/ysf-footer.js" defer></script>
     <script src="js/ysf-contacto.js" defer></script>
-    <script type="module" src="js/post-comments.js"></script>
 </body>
 </html>
