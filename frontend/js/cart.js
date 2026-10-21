@@ -459,9 +459,9 @@
                 <div class="cart-chip-top">
                     <div class="cart-chip-lead">
                         ${shotHtml}
-                        <div>
-                        <div class="cart-chip-name">${escapeHtml(meta.name)}</div>
-                        <div class="cart-chip-meta">${escapeHtml(detail)}</div>
+                        <div class="cart-chip-info">
+                            <div class="cart-chip-name">${escapeHtml(meta.name)}</div>
+                            <div class="cart-chip-meta">${escapeHtml(detail)}</div>
                         </div>
                     </div>
                     <button type="button" class="cart-chip-x" data-action="remove" data-id="${escapeHtml(item.id)}" aria-label="Quitar ${escapeHtml(meta.name)}">×</button>
