@@ -46,12 +46,12 @@
     width: 100%;
     padding: var(--hdr-solid-pad-y) var(--hdr-gutter-r) var(--hdr-solid-pad-y) var(--hdr-gutter-l);
     min-height: 50px;
-    background: var(--brand-red, var(--rojo-marca, #C3343E));
+    background: var(--hero-bg, var(--brand-red, var(--rojo-marca, #C3343E)));
     -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 0;
-    box-shadow: 0 4px 20px rgba(195, 52, 62, 0.32);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--hero-bg, var(--rojo-marca, #C3343E)) 35%, transparent);
 }
 
 /* ---------- Logo con Listón / Bookmark Rojo (Estilo Guardado Instagram/Facebook) ---------- */
@@ -127,7 +127,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     left: 0; /* el enlace del logo ya está en el margen izquierdo; antes se sumaba dos veces */
     width: 120px;
     height: calc(66px + var(--hdr-solid-pad-y, 0px));
-    background: var(--brand-red, var(--rojo-marca));
+    background: var(--hero-bg, var(--brand-red, var(--rojo-marca)));
     /* Corte tipo Bookmark / Guardado de Instagram/Facebook */
     clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%);
     display: flex;
@@ -199,7 +199,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 /* Efecto de jalar al pasar cursor (hover) y clic (active) */
 .site-header.is-stuck .brand-badge-container:hover,
 .site-header--solid .brand-badge-container:hover {
-    background: var(--rojo-marca-hover);
+    background: var(--hero-floor, var(--rojo-marca-hover));
     /* se estira hacia abajo sin despegarse del borde superior (origin arriba, sin translateY) */
     transform: scaleY(1.08);
 }
@@ -640,7 +640,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
 @media screen and (min-width: 861px) {
     .site-header.is-stuck {
         --hdr-fg: #fff;
-        background: var(--brand-red, var(--rojo-marca, #C3343E));
+        background: var(--hero-bg, var(--brand-red, var(--rojo-marca, #C3343E)));
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
         border-bottom-color: transparent;

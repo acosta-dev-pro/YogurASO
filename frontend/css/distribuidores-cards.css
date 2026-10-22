@@ -78,3 +78,51 @@
 @media (max-width: 980px) {
   .distc__row { grid-template-columns: repeat(2, 200px); }
 }
+
+/* Nota distribuidor acomodada y sin distorsión */
+#distribuidores .dist-nota {
+  width: min(100% - 40px, 842px);
+  max-width: 842px;
+  margin: 20px auto 0;
+  padding: 22px 26px;
+  background: #F8F7F5;
+  border: 1px solid #ECE8E3;
+  border-radius: 12px;
+  text-align: left;
+  box-sizing: border-box;
+}
+#distribuidores .dist-nota__eyebrow {
+  margin: 0 0 6px;
+  font-family: 'Nunito Sans', sans-serif, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rojo-marca, #C3343E);
+  text-align: left;
+}
+#distribuidores .dist-nota .showcase-sublead {
+  margin: 0 0 8px;
+  font-family: 'Nunito Sans', sans-serif, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #4B4643;
+  text-align: left;
+}
+#distribuidores .dist-nota .showcase-sublead:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 980px) {
+  #distribuidores .dist-nota {
+    width: min(100% - 40px, 414px);
+    max-width: 414px;
+    padding: 18px 20px;
+  }
+}
+@media (max-width: 480px) {
+  #distribuidores .dist-nota {
+    width: calc(100% - 32px);
+    max-width: none;
+    padding: 16px 16px;
+  }
+}

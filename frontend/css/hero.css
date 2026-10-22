@@ -427,7 +427,7 @@ body[data-flavor="mango"] {
 .sec-showcase {
     position: relative;
     padding: clamp(80px, 11vh, 130px) clamp(20px, 4vw, 48px);
-    background: #FAF6F0; /* Fondo beige natural plano */
+    background: color-mix(in srgb, var(--hero-bg, #FAF6F0) 6%, #FAF6F0); transition: background-color var(--t-color, 0.38s) ease;
     color: #1A1A1A;
     display: flex;
     align-items: center;

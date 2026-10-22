@@ -389,12 +389,17 @@
         });
     }
 
-    /* ---------- Sistema de Scroll & Acompañamiento del Yogurt a Sección 2 ---------- */
+    /* ---------- Sistema de Scroll & Acompañamiento del Yogurt a Sección 2 y Sección 3 ---------- */
     var header = document.getElementById('siteHeader');
     var secShowcase = document.getElementById('nosotros');
     var showcaseRedBox = document.getElementById('showcaseRedBox');
     var showcaseBottleWrap = document.getElementById('showcaseBottleWrap');
     var showcaseShadow = showcaseBottleWrap ? showcaseBottleWrap.querySelector('.showcase-bottle-shadow') : null;
+
+    var secProceso = document.getElementById('proceso');
+    var procesoBottleWrap = document.getElementById('procesoBottleWrap');
+    var procesoBottleImg = document.getElementById('procesoBottleImg');
+    var procesoCard = secProceso ? secProceso.querySelector('.p3d__card') : null;
 
     // Crear elemento de la botella viajera fija
     var travelBottle = document.getElementById('heroTravelBottle');
@@ -417,7 +422,9 @@
     var winHeight = window.innerHeight;
     var heroDoc = null;
     var targetDoc = null;
+    var procesoDoc = null;
     var endScroll = 600;
+    var endScroll2 = 1200;
     var prefersReduced = false;
     var pageZoom = 1;
 
@@ -427,15 +434,18 @@
 
         var sY = window.scrollY || window.pageYOffset || 0;
         var sX = window.scrollX || window.pageXOffset || 0;
-        // html{zoom}: scrollY y getBoundingClientRect van en px visuales; el viajero
-        // se escribe en px CSS, así que solo se divide al escribirlo.
         var zoom = parseFloat(getComputedStyle(document.documentElement).zoom);
         if (!(zoom > 0) || !isFinite(zoom)) zoom = 1;
         pageZoom = zoom;
 
+        // Elementos que podrían no haber sido capturados al inicio
+        if (!secProceso) secProceso = document.getElementById('proceso');
+        if (!procesoBottleWrap) procesoBottleWrap = document.getElementById('procesoBottleWrap');
+        if (!procesoBottleImg) procesoBottleImg = document.getElementById('procesoBottleImg');
+        if (!procesoCard && secProceso) procesoCard = secProceso.querySelector('.p3d__card');
+
         var mainBottleEl = bottleMain ? bottleMain.querySelector('.bottle-img') : null;
         if (mainBottleEl) {
-            // Si estaba oculto por el viaje, mostrar brevemente para medir con exactitud
             var wasHidden = mainBottleEl.style.visibility === 'hidden';
             if (wasHidden) mainBottleEl.style.visibility = '';
             var r = mainBottleEl.getBoundingClientRect();
@@ -463,13 +473,34 @@
             };
         }
 
+        if (procesoBottleWrap) {
+            var wasProcHidden = procesoBottleWrap.style.visibility === 'hidden';
+            if (wasProcHidden) procesoBottleWrap.style.visibility = '';
+            var pr = procesoBottleWrap.getBoundingClientRect();
+            if (wasProcHidden) procesoBottleWrap.style.visibility = 'hidden';
+
+            procesoDoc = {
+                left: pr.left + sX,
+                top: pr.top + sY,
+                width: pr.width,
+                height: pr.height
+            };
+        }
+
         if (secShowcase && showcaseRedBox) {
             var secR = secShowcase.getBoundingClientRect();
             var secDocTop = secR.top + sY;
             var boxOffset = showcaseRedBox.offsetTop || 0;
             var boxH = showcaseRedBox.offsetHeight || 450;
-            // Scroll exacto donde el cuadro sólido queda centrado en la ventana
             endScroll = Math.max(180, (secDocTop + (boxOffset + boxH / 2) * zoom) - (winHeight / 2));
+        }
+
+        if (secProceso && procesoCard) {
+            var procR = secProceso.getBoundingClientRect();
+            var procDocTop = procR.top + sY;
+            var cardOffset = procesoCard.offsetTop || 0;
+            var cardH = procesoCard.offsetHeight || 300;
+            endScroll2 = Math.max(endScroll + 350, (procDocTop + (cardOffset + cardH / 2) * zoom) - (winHeight / 2));
         }
     }
 
@@ -497,50 +528,41 @@
                     }
                 }
 
-                // Animación de viaje y aterrizaje del producto
+                // Animación de viaje y aterrizaje del producto (Etapa 1: Hero -> Nosotros; Etapa 2: Nosotros -> Proceso)
                 if (!prefersReduced && heroDoc && targetDoc && endScroll > 0) {
-                    var p = Math.max(0, Math.min(1, sY / endScroll));
+                    var startScroll2 = endScroll + Math.min(160, Math.max(70, (endScroll2 - endScroll) * 0.20));
+                    if (startScroll2 >= endScroll2 - 60) {
+                        startScroll2 = endScroll + (endScroll2 - endScroll) * 0.18;
+                    }
 
-                    if (p <= 0.005) {
+                    if (sY <= 2) {
                         // 100% en el Hero
                         if (bottleMain) bottleMain.style.visibility = '';
                         if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
                         if (travelBottle) travelBottle.classList.remove('is-active');
                         if (showcaseShadow) showcaseShadow.style.opacity = '0';
-                    } else if (p >= 0.995) {
-                        // 100% aterrizado en la sección 2
-                        if (bottleMain) bottleMain.style.visibility = 'hidden';
-                        if (showcaseBottleWrap) {
-                            showcaseBottleWrap.style.visibility = '';
-                            showcaseBottleWrap.style.transform = 'translate3d(0, 0, 0)';
-                            showcaseBottleWrap.style.opacity = '1';
-                        }
-                        if (travelBottle) travelBottle.classList.remove('is-active');
-                        if (showcaseShadow) showcaseShadow.style.opacity = '1';
-                    } else {
-                        // Viajando con el usuario entre secciones
+                    } else if (sY < endScroll) {
+                        // Vuelo Etapa 1: de Hero hacia Nosotros
+                        var p1 = Math.max(0, Math.min(1, sY / endScroll));
                         if (bottleMain) bottleMain.style.visibility = 'hidden';
                         if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
 
-                        // Lineal con el scroll: va recta, sin subir y bajar ni ir de lado a saltos.
                         var heroCx = heroDoc.left + heroDoc.width / 2;
                         var heroCy = heroDoc.top + heroDoc.height / 2;
                         var tgtCx = targetDoc.left + targetDoc.width / 2;
                         var tgtCy = targetDoc.top + targetDoc.height / 2;
                         var curW = targetDoc.width;
                         var curH = targetDoc.height;
-                        var cx = heroCx + (tgtCx - heroCx) * p;
-                        var cy = heroCy + (tgtCy - heroCy) * p;
-                        // Un solo cambio de tamaño, siempre hacia el tamaño del cuadro.
+                        var cx = heroCx + (tgtCx - heroCx) * p1;
+                        var cy = heroCy + (tgtCy - heroCy) * p1;
                         var s0 = targetDoc.height > 0 ? heroDoc.height / targetDoc.height : 1;
-                        var sc = s0 + (1 - s0) * p;
+                        var sc = s0 + (1 - s0) * p1;
+                        var tilt = Math.sin(p1 * Math.PI) * -5.2;
 
-                        // Posición en pantalla (coordenadas viewport fijas)
                         var viewX = (cx - curW / 2 - sX) / pageZoom;
                         var viewY = (cy - curH / 2 - sY) / pageZoom;
-
-                        // Giro suave que vuelve a 0° al aterrizar
-                        var tilt = Math.sin(p * Math.PI) * -5.2;
 
                         var cssW = curW / pageZoom, cssH = curH / pageZoom;
                         if (travelBottle.dataset.w !== cssW.toFixed(1)) {
@@ -553,12 +575,69 @@
                         travelBottle.classList.add('is-active');
 
                         if (showcaseShadow) {
-                            showcaseShadow.style.opacity = (Math.max(0, (p - 0.75) / 0.25)).toFixed(2);
+                            showcaseShadow.style.opacity = (Math.max(0, (p1 - 0.75) / 0.25)).toFixed(2);
                         }
+                    } else if (sY >= endScroll && sY <= startScroll2) {
+                        // 100% descansando en Nosotros
+                        if (bottleMain) bottleMain.style.visibility = 'hidden';
+                        if (showcaseBottleWrap) {
+                            showcaseBottleWrap.style.visibility = '';
+                            showcaseBottleWrap.style.transform = 'translate3d(0, 0, 0)';
+                            showcaseBottleWrap.style.opacity = '1';
+                        }
+                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
+                        if (travelBottle) travelBottle.classList.remove('is-active');
+                        if (showcaseShadow) showcaseShadow.style.opacity = '1';
+                    } else if (sY > startScroll2 && sY < endScroll2) {
+                        // Vuelo Etapa 2: de Nosotros hacia Proceso
+                        var p2 = Math.max(0, Math.min(1, (sY - startScroll2) / (endScroll2 - startScroll2)));
+                        if (bottleMain) bottleMain.style.visibility = 'hidden';
+                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
+                        if (showcaseShadow) showcaseShadow.style.opacity = (Math.max(0, 1 - p2 * 3)).toFixed(2);
+
+                        if (procesoDoc) {
+                            var nosCx = targetDoc.left + targetDoc.width / 2;
+                            var nosCy = targetDoc.top + targetDoc.height / 2;
+                            var procCx = procesoDoc.left + procesoDoc.width / 2;
+                            var procCy = procesoDoc.top + procesoDoc.height / 2;
+                            var curW2 = procesoDoc.width;
+                            var curH2 = procesoDoc.height;
+                            var cx2 = nosCx + (procCx - nosCx) * p2;
+                            var cy2 = nosCy + (procCy - nosCy) * p2;
+                            var s1to2 = procesoDoc.height > 0 ? targetDoc.height / procesoDoc.height : 1;
+                            var sc2 = s1to2 + (1 - s1to2) * p2;
+                            var tilt2 = Math.sin(p2 * Math.PI) * 4.5;
+
+                            var viewX2 = (cx2 - curW2 / 2 - sX) / pageZoom;
+                            var viewY2 = (cy2 - curH2 / 2 - sY) / pageZoom;
+
+                            var cssW2 = curW2 / pageZoom, cssH2 = curH2 / pageZoom;
+                            if (travelBottle.dataset.w !== cssW2.toFixed(1)) {
+                                travelBottle.style.width = cssW2.toFixed(1) + 'px';
+                                travelBottle.style.height = cssH2.toFixed(1) + 'px';
+                                travelBottle.style.transformOrigin = '50% 50%';
+                                travelBottle.dataset.w = cssW2.toFixed(1);
+                            }
+                            travelBottle.style.transform = 'translate3d(' + viewX2.toFixed(2) + 'px, ' + viewY2.toFixed(2) + 'px, 0) rotate(' + tilt2.toFixed(2) + 'deg) scale(' + sc2.toFixed(4) + ')';
+                            travelBottle.classList.add('is-active');
+                        }
+                    } else {
+                        // sY >= endScroll2: 100% aterrizado en Proceso
+                        if (bottleMain) bottleMain.style.visibility = 'hidden';
+                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                        if (showcaseShadow) showcaseShadow.style.opacity = '0';
+                        if (procesoBottleWrap) {
+                            procesoBottleWrap.style.visibility = '';
+                            procesoBottleWrap.style.transform = 'translate3d(0, 0, 0)';
+                            procesoBottleWrap.style.opacity = '1';
+                        }
+                        if (travelBottle) travelBottle.classList.remove('is-active');
                     }
                 } else if (prefersReduced) {
                     if (bottleMain) bottleMain.style.visibility = '';
                     if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = '';
+                    if (procesoBottleWrap) procesoBottleWrap.style.visibility = '';
                     if (travelBottle) travelBottle.classList.remove('is-active');
                 }
 

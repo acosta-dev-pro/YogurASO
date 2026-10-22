@@ -3,14 +3,14 @@
    y el proceso contado en prosa (sin pasos numerados).
    ========================================================= */
 .p3d {
-    --p3d-red: var(--rojo-marca);
+    --p3d-red: var(--hero-bg, var(--rojo-marca));
     --p3d-ink: #171717;
     --p3d-muted: #6A6259;
     --p3d-ease: cubic-bezier(0.23, 1, 0.32, 1);
     --p3d-art: clamp(250px, 30%, 380px);   /* ancho reservado para la botella */
     --p3d-bh: clamp(330px, 54vh, 410px);   /* alto de la botella */
     position: relative;
-    background: #FFF8F4;
+    background: color-mix(in srgb, var(--hero-bg, #FFF8F4) 6%, #FFF8F4); transition: background-color var(--t-color, 0.38s) ease;
     color: var(--p3d-ink);
     padding: clamp(40px, 7.5vh, 60px) 0 clamp(32px, 5.5vh, 44px);
     overflow-x: clip;
@@ -37,7 +37,7 @@
     background: var(--p3d-red);
     border-radius: 16px;
     color: #fff;
-    box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 18px 40px -22px color-mix(in srgb, var(--rojo-marca-deep) 55%, transparent);
+    box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 18px 40px -22px color-mix(in srgb, var(--hero-floor, var(--rojo-marca-deep)) 55%, transparent);
 }
 .p3d__story { align-self: center; padding: clamp(26px, 4.4vh, 38px) clamp(26px, 3.4vw, 48px); max-width: 720px; }
 .p3d__story p { margin: 0; }
@@ -51,7 +51,7 @@
 .p3d__art { position: relative; min-height: 100%; }
 .p3d__glow { position: absolute; left: 50%; bottom: 0; width: 120%; height: 100%; transform: translateX(-50%); background: radial-gradient(52% 58% at 50% 62%, rgba(255,255,255,.16), rgba(255,255,255,0) 70%); pointer-events: none; border-radius: 0 16px 16px 0; }
 .p3d__contact { position: absolute; left: 50%; bottom: 14px; width: calc(var(--p3d-bh) * .42); height: 22px; margin-left: calc(var(--p3d-bh) * -.21); border-radius: 50%; background: radial-gradient(closest-side, rgba(90,0,10,.55), rgba(90,0,10,0)); filter: blur(2px); }
-.p3d__bottle { position: absolute; left: 50%; bottom: 20px; height: var(--p3d-bh); width: calc(var(--p3d-bh) * .577); margin-left: calc(var(--p3d-bh) * -.2885); z-index: 2; }
+.p3d__bottle { position: absolute; left: 50%; bottom: 20px; height: var(--p3d-bh); width: calc(var(--p3d-bh) * .577); margin-left: calc(var(--p3d-bh) * -.2885); z-index: 2;  will-change: transform, opacity; }
 .p3d__lift { width: 100%; height: 100%; transition: transform .6s var(--p3d-ease); }
 .p3d__bottle img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 22px 22px rgba(80,0,10,.32)) drop-shadow(0 4px 6px rgba(80,0,10,.22)); }
 .p3d__fruit { position: absolute; z-index: 3; height: auto; filter: drop-shadow(0 10px 12px rgba(80,0,10,.3)); pointer-events: none; }
