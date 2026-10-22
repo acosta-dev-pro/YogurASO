@@ -90,15 +90,22 @@
 
     function updateShowcaseFlavor(flavor) {
         if (!flavor) return;
+        var bSrc = src(flavor.slug, false);
+        var bAlt = 'Yogurt artesanal de ' + flavor.nombre + ', 500 ml';
         if (showcaseBottleImg) {
-            showcaseBottleImg.src = src(flavor.slug, false);
-            showcaseBottleImg.alt = 'Yogurt artesanal de ' + flavor.nombre + ', 500 ml';
+            showcaseBottleImg.src = bSrc;
+            showcaseBottleImg.alt = bAlt;
         }
         if (showcaseBottleReflect) {
-            showcaseBottleReflect.src = src(flavor.slug, false);
+            showcaseBottleReflect.src = bSrc;
         }
         if (travelBottleImg) {
-            travelBottleImg.src = src(flavor.slug, false);
+            travelBottleImg.src = bSrc;
+        }
+        if (!procesoBottleImg) procesoBottleImg = document.getElementById('procesoBottleImg');
+        if (procesoBottleImg) {
+            procesoBottleImg.src = bSrc;
+            procesoBottleImg.alt = bAlt;
         }
     }
 
@@ -631,6 +638,11 @@
                             procesoBottleWrap.style.visibility = '';
                             procesoBottleWrap.style.transform = 'translate3d(0, 0, 0)';
                             procesoBottleWrap.style.opacity = '1';
+                            if (!procesoBottleImg) procesoBottleImg = document.getElementById('procesoBottleImg');
+                            if (procesoBottleImg && FLAVORS[current]) {
+                                procesoBottleImg.src = src(FLAVORS[current].slug, false);
+                                procesoBottleImg.alt = 'Yogurt artesanal de ' + FLAVORS[current].nombre + ', 500 ml';
+                            }
                         }
                         if (travelBottle) travelBottle.classList.remove('is-active');
                     }

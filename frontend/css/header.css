@@ -54,7 +54,7 @@
     box-shadow: 0 4px 20px color-mix(in srgb, var(--hero-bg, var(--rojo-marca, #C3343E)) 35%, transparent);
 }
 
-/* ---------- Logo con Listón / Bookmark Rojo (Estilo Guardado Instagram/Facebook) ---------- */
+/* ---------- Logo y Header Recto (Sin listón ni salientes) ---------- */
 .site-header .brand-logo {
     position: relative;
     display: inline-flex;
@@ -69,103 +69,69 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    flex-direction: column;
-}
-
-/* En el Hero: Logo suelto transparente y limpio */
-.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge-container {
-    position: relative;
-}
-.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    width: clamp(112px, 9.2vw, 145px);
-    aspect-ratio: 3105 / 1119;
-    background: transparent;
-    border-radius: 0;
-    padding: 0;
-    box-shadow: none;
-    transition: transform 0.2s ease, width 0.28s ease;
-}
-.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge:hover {
-    transform: scale(1.03);
-}
-.site-header:not(.is-stuck):not(.site-header--solid) .brand-badge img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    display: block;
-    object-fit: contain;
-    transition: opacity 0.35s var(--ease-soft);
-}
-.site-header:not(.is-stuck):not(.site-header--solid) .logo-blanco,
-.site-header:not(.is-stuck):not(.site-header--solid) .logo-oscuro { opacity: 0; }
-.site-header:not(.is-stuck):not(.site-header--solid) .logo-rojo { opacity: 0; }
-body[data-hero-fg="light"] .site-header:not(.is-stuck):not(.site-header--solid) .logo-blanco { opacity: 1; }
-body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .logo-oscuro { opacity: 1; }
-.site-header:not(.is-stuck):not(.site-header--solid) .brand-pull-tab {
-    display: none;
-}
-
-/* En estado Pegado / Scroll y páginas interiores:
-   Listón rojo tipo Bookmark (toca borde superior e inferior del header y cuelga con corte de guardado) */
-.site-header.is-stuck .brand-logo,
-.site-header--solid .brand-logo {
-    align-self: stretch;
-    display: flex;
-    align-items: flex-start;
-}
-
-.site-header.is-stuck .brand-badge-container,
-.site-header--solid .brand-badge-container {
-    position: absolute;
-    /* Pegada al borde superior de la pantalla: el enlace del logo arranca debajo del
-       padding-top de la barra, así que se sube exactamente ese relleno (antes quedaba
-       un hueco de 4px en escritorio y 6px en móvil). Se alarga lo mismo para que la
-       punta y el logo queden donde estaban. */
-    top: calc(-1 * var(--hdr-solid-pad-y, 0px));
-    left: 0; /* el enlace del logo ya está en el margen izquierdo; antes se sumaba dos veces */
-    width: 120px;
-    height: calc(66px + var(--hdr-solid-pad-y, 0px));
-    background: var(--hero-bg, var(--brand-red, var(--rojo-marca)));
-    /* Corte tipo Bookmark / Guardado de Instagram/Facebook */
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 9px), 0 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: calc(5px + var(--hdr-solid-pad-y, 0px));
-    gap: 1px;
-    cursor: pointer;
-    z-index: 100;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.14)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
-    transform-origin: 50% 0%;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
-}
-
-.site-header.is-stuck .brand-badge,
-.site-header--solid .brand-badge {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 102px;
-    height: 36px;
     background: transparent;
     padding: 0;
     margin: 0;
 }
 
-.site-header.is-stuck .brand-badge img,
-.site-header--solid .brand-badge img {
-    position: absolute;
-    width: 102px;
-    height: 36px;
-    object-fit: contain;
-    transition: opacity 0.25s ease;
+/* En el Hero: Logo blanco/oscuro según fondo */
+.site-header .brand-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: clamp(110px, 9.2vw, 145px);
+    height: 38px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    transition: transform 0.2s ease, width 0.28s ease;
 }
+.site-header .brand-badge:hover {
+    transform: scale(1.03);
+}
+.site-header .brand-badge img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    transition: opacity 0.35s var(--ease-soft);
+}
+.site-header .logo-blanco,
+.site-header .logo-oscuro,
+.site-header .logo-rojo { opacity: 0; }
+body[data-hero-fg="light"] .site-header:not(.is-stuck):not(.site-header--solid) .logo-blanco { opacity: 1; }
+body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .logo-oscuro { opacity: 1; }
 
-/* El logo rojo desaparece y se muestra el logo blanco grande y nítido */
+/* En estado Pegado / Scroll y páginas interiores:
+   Logo blanco limpio, dentro de la barra recta sin nada que cuelgue */
+.site-header.is-stuck .brand-logo,
+.site-header--solid .brand-logo {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+}
+.site-header.is-stuck .brand-badge-container,
+.site-header--solid .brand-badge-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    background: transparent !important;
+    clip-path: none !important;
+    filter: none !important;
+    padding: 0 !important;
+    transform: none !important;
+}
+.site-header.is-stuck .brand-badge,
+.site-header--solid .brand-badge {
+    width: clamp(105px, 8.5vw, 132px);
+    height: 34px;
+}
 .site-header.is-stuck .logo-blanco,
 .site-header--solid .logo-blanco {
     opacity: 1 !important;
@@ -177,40 +143,9 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
     opacity: 0 !important;
 }
 
-/* Flechita blanca sutil en la tirita inferior del bookmark */
+/* Ocultar cualquier flecha o jalón */
 .brand-pull-tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-top: 2px;
-    pointer-events: none;
-}
-
-.brand-pull-tab .pull-tab-arrow {
-    width: 12px;
-    height: 12px;
-    color: #ffffff;
-    stroke-width: 3.2;
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-    pointer-events: none;
-}
-
-/* Efecto de jalar al pasar cursor (hover) y clic (active) */
-.site-header.is-stuck .brand-badge-container:hover,
-.site-header--solid .brand-badge-container:hover {
-    background: var(--hero-floor, var(--rojo-marca-hover));
-    /* se estira hacia abajo sin despegarse del borde superior (origin arriba, sin translateY) */
-    transform: scaleY(1.08);
-}
-.site-header.is-stuck .brand-badge-container:hover .pull-tab-arrow,
-.site-header--solid .brand-badge-container:hover .pull-tab-arrow {
-    transform: translateY(-2px);
-}
-.site-header.is-stuck .brand-badge-container:active,
-.site-header--solid .brand-badge-container:active {
-    transform: scaleY(1.2);
-    transition-duration: 0.06s;
+    display: none !important;
 }
 
 /* ---------- Menú Central ---------- */
@@ -531,12 +466,7 @@ body[data-hero-fg="dark"] .site-header:not(.is-stuck):not(.site-header--solid) .
         border-radius: 0;
     }
     .site-header .brand-badge { width: 110px; }
-    .site-header--solid .brand-badge-container,
-    .site-header.is-stuck .brand-badge-container {
-        width: 94px;
-        height: calc(56px + var(--hdr-solid-pad-y, 0px));
-        padding-top: calc(4px + var(--hdr-solid-pad-y, 0px));
-    }
+    .site-header--solid .brand-badge-container, .site-header.is-stuck .brand-badge-container { width: auto; height: auto; padding: 0; }
     .site-header--solid .brand-badge,
     .site-header.is-stuck .brand-badge { width: 82px; height: 28px; }
     .site-header--solid .brand-badge img,
