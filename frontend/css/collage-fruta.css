@@ -1,6 +1,5 @@
 ﻿/* =========================================================
-   COLLAGE "Fruta real, seleccionada del campo"
-   Mosaico de tiles rectangulares (radio 16px).
+   Paisaje "Neiva · Tello" (centrado) + trío debajo
    ========================================================= */
 .fcol {
     --fcol-red: var(--rojo-marca);
@@ -8,156 +7,107 @@
     --fcol-muted: #6A6259;
     --fcol-r: 16px;
     --fcol-ease: cubic-bezier(0.23, 1, 0.32, 1);
-    --fcol-row: clamp(176px, 25vh, 204px); /* alto de fila: compacto en laptops bajas */
-    --fcol-gap: 13px;
-    --fcol-pad: clamp(18px, 1.5vw, 22px);
+    --fcol-pad: clamp(18px, 1.5vw, 24px);
     background: #FFF8F4;
     color: var(--fcol-ink);
-    padding: clamp(40px, 7vh, 64px) 0;
-    overflow-x: clip; /* la fresa que sale de la esquina no genera scroll horizontal */
+    padding: clamp(40px, 7vh, 64px) 0 0;
+    overflow-x: clip;
     scroll-margin-top: 72px;
 }
-.fcol__wrap { width: min(1240px, 100% - 40px); margin: 0 auto; }
-/* Cabecera compacta: título en una línea y subtítulo al lado */
-.fcol__head { display: grid; grid-template-columns: auto minmax(0, 400px); justify-content: space-between; align-items: end; column-gap: 32px; margin-bottom: clamp(16px, 2.6vh, 22px); }
-.fcol__eyebrow { grid-column: 1 / -1; font-weight: 600; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fcol-red); }
-.fcol__title { 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.08; letter-spacing: -.015em; margin: 6px 0 0; color: var(--fcol-ink); }
-.fcol__lead { color: var(--fcol-muted); font-size: 14px; line-height: 1.45; margin: 0; padding-bottom: 2px; }
-
-/* Escritorio: 6 columnas x 2 filas */
-.fcol__grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(2, var(--fcol-row)); gap: var(--fcol-gap); }
-.fcol__tile { position: relative; overflow: hidden; border-radius: var(--fcol-r); background: #fff; min-height: 0; }
-.fcol__tile h3 { 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; line-height: 1.06; letter-spacing: -.01em; margin: 4px 0 0; }
-.fcol__tile p { font-size: 12.5px; line-height: 1.4; color: var(--fcol-muted); margin: 5px 0 0; }
-.fcol__k { display: block; 'Fredoka', sans-serif; font-weight: 600; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--fcol-red); }
+.fcol__wrap {
+    width: min(1100px, 100% - 40px);
+    margin: 0 auto;
+}
+.fcol__tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--fcol-r);
+    min-height: 0;
+}
+.fcol__k {
+    display: block;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--fcol-red);
+}
 .fcol__c { position: relative; z-index: 2; }
 
-/* Campo: foto (2 col x 2 filas, ~420px de alto máx.) */
-.fcol__campo { grid-column: 1 / span 2; grid-row: 1 / span 2; color: #fff; }
-.fcol__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 50%; }
-.fcol__campo::after { content: ''; position: absolute; inset: auto 0 0; height: 60%; background: linear-gradient(180deg, rgba(10,20,10,0), rgba(10,16,8,.74)); }
-.fcol__campo .fcol__c { position: absolute; left: var(--fcol-pad); right: var(--fcol-pad); bottom: var(--fcol-pad); }
+.fcol__campo {
+    color: #fff;
+    height: clamp(280px, 42vh, 420px);
+}
+.fcol__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 40% 50%;
+}
+.fcol__campo::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 58%;
+    background: linear-gradient(180deg, rgba(10,20,10,0), rgba(10,16,8,.74));
+}
+.fcol__campo .fcol__c {
+    position: absolute;
+    left: var(--fcol-pad);
+    right: var(--fcol-pad);
+    bottom: var(--fcol-pad);
+}
 .fcol__campo .fcol__k { color: rgba(255,255,255,.85); }
-.fcol__campo h3 { font-size: 26px; }
-.fcol__campo p { color: rgba(255,255,255,.86); max-width: 340px; }
-.fcol__badge { position: absolute; z-index: 2; top: 16px; right: 16px; width: 60px; height: 60px; }
+.fcol__campo h3 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: clamp(26px, 3.2vw, 36px);
+    line-height: 1.06;
+    letter-spacing: -.01em;
+    margin: 4px 0 0;
+}
+.fcol__campo p {
+    color: rgba(255,255,255,.86);
+    max-width: 420px;
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 6px 0 0;
+}
+.fcol__badge {
+    position: absolute;
+    z-index: 2;
+    top: 16px;
+    right: 16px;
+    width: 60px;
+    height: 60px;
+}
 
-/* 500 ml rojo con botella saliendo */
-.fcol__ml { grid-column: 3 / span 2; grid-row: 1; background: var(--fcol-red); color: #fff; overflow: visible; }
-.fcol__ml::before { content: ''; position: absolute; inset: 0; border-radius: var(--fcol-r); background: radial-gradient(circle at 92% 8%, rgba(255,255,255,.16) 0 22%, transparent 22.3%), radial-gradient(circle at 92% 8%, transparent 0 34%, rgba(255,255,255,.12) 34.3% 34.8%, transparent 35%); pointer-events: none; }
-.fcol__big { position: absolute; left: var(--fcol-pad); top: 10px; 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(52px, 4.4vw, 64px); line-height: 1; letter-spacing: -.04em; }
-.fcol__big small { font-size: .46em; letter-spacing: -.01em; margin-left: 5px; }
-.fcol__ml .fcol__c { position: absolute; left: var(--fcol-pad); bottom: var(--fcol-pad); width: min(210px, 54%); }
-.fcol__ml .fcol__k { color: #FFD5D2; }
-.fcol__ml p { color: rgba(255,255,255,.88); }
-/* Botella más grande que sale un poco por encima de la tarjeta (sin recortarse) */
-.fcol__bottle { position: absolute; z-index: 3; right: 6%; bottom: -16px; height: calc(var(--fcol-row) * 1.32); width: auto; transform: rotate(8deg); transform-origin: 50% 100%; filter: drop-shadow(0 20px 18px rgba(80,0,8,.36)); }
-
-/* Oscuro con check */
-.fcol__check { grid-column: 5; grid-row: 1; background: #1E1415; color: #fff; padding: var(--fcol-pad); display: flex; flex-direction: column; justify-content: space-between; }
-.fcol__check svg { width: 34px; height: 34px; }
-.fcol__check p { color: rgba(255,255,255,.68); font-size: 12px; }
-.fcol__check h3 { color: #fff; }
-
-/* Fruta real: fresa partida saliendo por la esquina */
-.fcol__fruta { grid-column: 6; grid-row: 1; background: #F9D9D7; overflow: visible; z-index: 3; }
-.fcol__fruta .fcol__k { position: absolute; left: var(--fcol-pad); top: var(--fcol-pad); 'Fredoka', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: .16em; color: var(--rojo-marca-deep); }
-/* Solo la fresa y la tarjeta (sin halo). Sale por abajo sin pasar el margen lateral de la página */
-.fcol__fruta img { position: absolute; z-index: 2; right: -4px; bottom: -20px; width: min(122px, 60%); height: auto; transform: rotate(-14deg); filter: drop-shadow(0 18px 14px color-mix(in srgb, var(--rojo-marca-deep) 32%, transparent)) drop-shadow(0 4px 4px color-mix(in srgb, var(--rojo-marca-deep) 18%, transparent)); }
-
-/* Cremoso: botella de mora con moras */
-.fcol__leche { grid-column: 3; grid-row: 2; background: #F7E7DF; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-.fcol__media { position: relative; overflow: hidden; border-radius: 12px; }
-.fcol__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.fcol__art { position: relative; flex: 1 1 auto; min-height: 84px; border-radius: 12px; background: radial-gradient(90% 120% at 50% 100%, #E9C9DD 0%, #F2DCE6 55%, #F7E7DF 100%); }
-.fcol__art-bottle { position: absolute; left: 50%; bottom: 3px; height: 94%; width: auto; transform: translateX(-50%) rotate(6deg); filter: drop-shadow(0 10px 10px rgba(70,10,50,.3)); }
-.fcol__art-fruit { position: absolute; left: calc(50% - 66px); bottom: -4px; width: 54px; height: auto; transform: rotate(-10deg); filter: drop-shadow(0 8px 8px rgba(40,0,30,.3)); }
-.fcol__leche .fcol__c { padding: 0 6px 4px; }
-.fcol__leche h3 { font-size: 16px; }
-.fcol__leche p { font-size: 12px; margin-top: 3px; }
-
-/* Tazón: texto + imagen rectangular + botella de fresa */
-.fcol__tazon { grid-column: 4 / span 2; grid-row: 2; display: grid; grid-template-columns: 1fr 1.25fr; gap: 12px; padding: 10px 10px 10px var(--fcol-pad); align-items: center; }
-.fcol__tazwrap { position: relative; height: 100%; min-height: 0; padding-left: 34px; display: flex; }
-.fcol__tazon .fcol__media { flex: 1; height: auto; min-height: 0; }
-.fcol__tazon .fcol__media img { position: absolute; inset: 0; }
-.fcol__tazbot { position: absolute; z-index: 2; left: 0; bottom: -2px; height: 80%; width: auto; transform: rotate(-7deg); transform-origin: 50% 100%; filter: drop-shadow(8px 14px 12px rgba(80,0,8,.32)) drop-shadow(0 3px 3px rgba(80,0,8,.18)); }
-
-/* Ruta Neiva -> Tello */
-.fcol__ruta { grid-column: 6; grid-row: 2; border: 1.5px solid rgba(23,23,23,.08); padding: var(--fcol-pad); }
-.fcol__ruta .fcol__c { max-width: 200px; }
-.fcol__ruta h3 { font-size: 17px; }
-.fcol__map { position: absolute; right: 4px; bottom: 2px; width: 96px; height: auto; }
-
-/* Entrada escalonada */
-.fcol.is-ready .fcol__tile { opacity: 0; transform: translate3d(0, 28px, 0); transition: opacity .8s var(--fcol-ease), transform .8s var(--fcol-ease); transition-delay: calc(var(--i, 0) * 80ms); }
-.fcol.is-ready .fcol__tile.is-in { opacity: 1; transform: none; }
+.fcol.is-ready .fcol__tile {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition: opacity .8s var(--fcol-ease), transform .8s var(--fcol-ease);
+}
+.fcol.is-ready .fcol__tile.is-in {
+    opacity: 1;
+    transform: none;
+}
 @media (hover: hover) {
-    .fcol__photo, .fcol__media img { transition: transform .9s var(--fcol-ease); }
-    .fcol__campo:hover .fcol__photo, .fcol__tile:hover .fcol__media img { transform: scale(1.04); }
+    .fcol__photo { transition: transform .9s var(--fcol-ease); }
+    .fcol__campo:hover .fcol__photo { transform: scale(1.04); }
 }
 
-/* Laptop estrecha / tablet: 4 columnas, 3 filas */
-@media (max-width: 1099px) {
-    .fcol__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: var(--fcol-row); }
-    .fcol__campo { grid-column: 1 / span 2; grid-row: 1 / span 2; }
-    .fcol__ml { grid-column: 3 / span 2; grid-row: 1; }
-    .fcol__check { grid-column: 3; grid-row: 2; }
-    .fcol__fruta { grid-column: 4; grid-row: 2; }
-    .fcol__leche { grid-column: 1; grid-row: 3; }
-    .fcol__tazon { grid-column: 2 / span 2; grid-row: 3; }
-    .fcol__ruta { grid-column: 4; grid-row: 3; }
-}
-/* Teléfono: mosaico de a dos. Solo el paisaje ocupa el ancho, y es bajo. */
 @media (max-width: 860px) {
-    .fcol { padding: 28px 0 10px; }
-    .fcol__wrap { width: min(1240px, 100% - 24px); }
-    .fcol__head { grid-template-columns: 1fr; margin-bottom: 12px; }
-    .fcol__title { font-size: 26px; line-height: 1.15; letter-spacing: 0; }
-    .fcol__lead { margin-top: 6px; font-size: 14px; line-height: 1.45; }
-    .fcol__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: auto; gap: 8px; }
-    .fcol__tile,
-    .fcol__campo, .fcol__ml, .fcol__check, .fcol__fruta, .fcol__leche, .fcol__tazon, .fcol__ruta {
-        grid-column: auto; grid-row: auto; min-height: 0; width: auto;
-    }
-    .fcol__tile h3 { font-size: 13px; }
-    .fcol__tile p { font-size: 11px; }
-    .fcol__campo { grid-column: 1 / -1; height: 136px; }
-    .fcol__ml { grid-column: span 2; }
-    .fcol__tazon { grid-column: span 2; }
-    .fcol__campo h3 { font-size: 18px; }
+    .fcol { padding: 28px 0 0; }
+    .fcol__wrap { width: min(1100px, 100% - 24px); }
+    .fcol__campo { height: 220px; }
+    .fcol__campo h3 { font-size: 22px; }
+    .fcol__campo p { font-size: 13px; }
     .fcol__badge { width: 44px; height: 44px; top: 8px; right: 8px; }
-    .fcol__ml { height: 124px; overflow: hidden; }
-    .fcol__big { font-size: 30px; top: 8px; left: 10px; }
-    .fcol__ml .fcol__c { left: 10px; right: 6px; bottom: 8px; width: auto; z-index: 4; }
-    .fcol__ml .fcol__k, .fcol__ml p { display: none; }
-    .fcol__bottle { height: 100px; right: -4px; bottom: -6px; }
-    .fcol__check { min-height: 0; padding: 8px; justify-content: flex-end; gap: 6px; }
-    .fcol__check svg { width: 22px; height: 22px; }
-    .fcol__fruta { min-height: 112px; overflow: hidden; }
-    .fcol__fruta .fcol__k { font-size: 8px; left: 8px; top: 8px; letter-spacing: .08em; }
-    .fcol__fruta img { width: 58px; right: -2px; bottom: -4px; }
-    .fcol__leche, .fcol__tazon { grid-column: span 2; margin-top: 26px; }
-    .fcol__leche { margin-right: 4px; padding: 10px; gap: 8px; min-height: 0; }
-    .fcol__art { flex: none; height: 118px; min-height: 0; }
-    .fcol__art-bottle { height: 108px; }
-    .fcol__art-fruit { width: 48px; left: 4px; }
-    .fcol__leche h3 { font-size: 15px; }
-    .fcol__tazon { display: flex; flex-direction: column; grid-template-columns: none; margin-left: 4px; padding: 12px; gap: 8px; min-height: 0; }
-    .fcol__tazon .fcol__c { padding: 0 2px; }
-    .fcol__tazon h3 { font-size: 16px; }
-    .fcol__tazon p { font-size: 12px; line-height: 1.35; }
-    .fcol__tazwrap { display: block; position: relative; width: 100%; min-height: 0; height: 148px; padding-left: 0; flex: none; }
-    .fcol__tazon .fcol__media { flex: none; width: 100%; min-width: 100%; min-height: 0; height: 148px; }
-    .fcol__tazon .fcol__media img { object-fit: cover; object-position: center 46%; }
-    .fcol__tazbot { height: 96px; left: -2px; bottom: -4px; }
-    .fcol__ruta { grid-column: 1 / -1; margin-top: 36px; min-height: 156px; padding: 18px 16px; }
-    .fcol__ruta .fcol__c { max-width: 58%; }
-    .fcol__ruta h3 { font-size: 20px; }
-    .fcol__ruta p { font-size: 13px; line-height: 1.4; }
-    .fcol__map { width: 132px; right: 6px; bottom: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .fcol.is-ready .fcol__tile { opacity: 1; transform: none; transition: none; }
-    .fcol__photo, .fcol__media img { transition: none !important; }
+    .fcol__photo { transition: none !important; }
 }

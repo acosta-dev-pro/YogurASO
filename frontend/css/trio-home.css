@@ -12,10 +12,10 @@
     background: #FFF8F4;       /* continúa el fondo del collage */
     padding: 0 0 clamp(40px, 7vh, 64px);
 }
-/* Pegado al collage: misma familia visual, separación corta */
-.fcol + .ytrio { margin-top: calc(clamp(22px, 3vh, 28px) - clamp(40px, 7vh, 64px)); position: relative; }
+/* Pegado al paisaje: misma familia visual, separación corta */
+.fcol + .ytrio { margin-top: var(--yt-gap); position: relative; }
 .ytrio__wrap {
-    width: min(1240px, 100% - 40px);   /* = .fcol__wrap */
+    width: min(1100px, 100% - 40px);   /* = .fcol__wrap */
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -69,8 +69,12 @@
 }
 
 /* ---------- 2. Cremoso: mismo contenedor rosado, botón a la derecha ---------- */
-.ytrio__card--cremoso { background: #FFF8F4; color: var(--ink, #171717); box-shadow: var(--shadow-md); }
-.ytrio__card--cremoso .ytrio__k { background: var(--brand-pink, #FFE4E8); color: var(--brand-red, var(--rojo-marca, #C3343E)); }
+.ytrio__card--cremoso {
+    background: color-mix(in srgb, var(--rojo-marca, #C3343E) 16%, #fff);
+    color: var(--ink, #171717);
+    box-shadow: var(--shadow-md);
+}
+.ytrio__card--cremoso .ytrio__k { background: #fff; color: var(--brand-red, var(--rojo-marca, #C3343E)); }
 .ytrio__card--cremoso h3 { color: var(--brand-red-deep, color-mix(in srgb, var(--rojo-marca, #C3343E) 82%, #000)); }
 .ytrio__card--cremoso p { color: #6B635C; opacity: 1; }
 .ytrio__card--cremoso .ytrio__cta { align-self: flex-end; }
@@ -142,7 +146,7 @@
 /* Teléfono: Llévalo arriba, y Cremoso con Propósito uno al lado del otro */
 @media (max-width: 860px) {
     .fcol + .ytrio { margin-top: 8px; }
-    .ytrio__wrap { grid-template-columns: 1fr 1fr; gap: 8px; width: min(1240px, 100% - 24px); }
+    .ytrio__wrap { grid-template-columns: 1fr 1fr; gap: 8px; width: min(1100px, 100% - 24px); }
     .ytrio__card { min-height: 0; padding: 12px; }
     .ytrio__card h3 { font-size: 16px; line-height: 1.15; }
     .ytrio__card p { font-size: 12px; }
