@@ -172,6 +172,15 @@ function initCarousel(products) {
         if (logical === active) return;
         active = logical;
         cards.forEach((c) => c.classList.toggle('is-active', Number(c.dataset.i) === logical));
+
+        // Sincronizar el tema y color de toda la página con el producto seleccionado en el centro
+        const prod = products[logical];
+        if (prod) {
+            const slug = matchFlavorSlug(prod) || prod.slug || '';
+            if (slug && window.YogurThemeReactor) {
+                window.YogurThemeReactor.applyFlavorTheme(slug, 'carousel');
+            }
+        }
     }
 
     function scrollToIndex(idx, smooth) {
@@ -432,6 +441,21 @@ function initCarousel(products) {
     }).observe(track);
 
     root.classList.add('is-ready');
+
+    // Sincronización con el sabor seleccionado en el Hero o navegación superior
+    document.addEventListener('yg:flavorchange', (e) => {
+        if (e.detail?.source === 'carousel') return;
+        const targetSlug = e.detail?.slug || e.detail?.flavor?.slug;
+        if (!targetSlug || !products.length) return;
+        const foundIdx = products.findIndex((p) => (matchFlavorSlug(p) || p.slug) === targetSlug);
+        if (foundIdx !== -1 && foundIdx !== active) {
+            const currentCenter = centerIndex();
+            const copy = Math.floor(currentCenter / n);
+            const targetCopyIndex = copy * n + foundIdx;
+            scrollToIndex(targetCopyIndex, true);
+            setActive(foundIdx);
+        }
+    });
 }
 
 async function boot() {

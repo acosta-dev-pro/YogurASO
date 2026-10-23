@@ -432,8 +432,8 @@ body .hp-card__name a {
 @media (max-width: 640px) {
     #main-content.hp-section,
     #productos.hp-section {
-        --hp-w: min(42vw, 168px);
-        --hp-media-h: calc(var(--hp-w) * 1.05);
+        --hp-w: clamp(230px, 68vw, 290px);
+        --hp-media-h: calc(var(--hp-w) * 0.95);
         --hp-panel-top: calc(var(--hp-media-h) * 0.42);
         --hp-gap: 10px;
     }

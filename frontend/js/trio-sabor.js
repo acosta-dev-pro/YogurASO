@@ -57,9 +57,17 @@
         card.dataset.sabor = flavor.slug;
         /* Pasteles: blanco sobre --hero-bg casi nunca pasa; default dark. */
         card.dataset.ink = 'light'; /* Juan: blanco como hero/carrusel */
-        if (!bottle) return;
-        bottle.src = base + flavor.slug + '-500ml.webp';
-        bottle.alt = flavor.alt || ('Yogurt artesanal de ' + flavor.nombre + ', 500 ml');
+        if (bottle) {
+            bottle.src = base + flavor.slug + '-500ml.webp';
+            bottle.alt = flavor.alt || ('Yogurt artesanal de ' + flavor.nombre + ', 500 ml');
+        }
+
+        /* Actualizar mano sosteniendo la botella en "Llévalo contigo" con el sabor correspondiente */
+        var hand = document.querySelector('.ytrio__hand');
+        if (hand) {
+            var ext = flavor.slug === 'fresa' ? 'webp' : 'png';
+            hand.src = 'assets/marketing/mano-botella-' + flavor.slug + '-cutout.' + ext;
+        }
     }
 
     function apply(flavor) {

@@ -251,12 +251,26 @@
     }
 
     function showModalAnnouncement(customAnc, onCloseCallback) {
+        var cfg = getAnunciosConfig();
         var anc = customAnc;
-        if (!anc) {
-            var ancs = getLocalAnnouncements();
-            anc = ancs.find(function (a) { return a.active && a.placement === 'modal'; });
+        if (!anc && cfg.letreroActivo) {
+            anc = {
+                id: 'letrero-principal',
+                title: cfg.letreroTitulo || 'Nuestra Cosecha & Pasión Artesanal',
+                message: cfg.letreroMensaje || '',
+                placement: 'modal',
+                media_type: cfg.letreroTipo || 'video',
+                media_url: cfg.letreroUrl || '',
+                has_audio: true,
+                video_muted: false,
+                action_label: cfg.letreroBtnTexto || 'Probar Sabores Artesanales',
+                action_url: cfg.letreroBtnUrl || '#productos',
+                badge_text: 'NOVEDAD',
+                tamano: cfg.letreroTamano || 'mediano',
+                active: true
+            };
         }
-        if (!anc) {
+        if (!anc || anc.active === false) {
             if (typeof onCloseCallback === 'function') onCloseCallback();
             return;
         }
@@ -267,23 +281,38 @@
         overlay.setAttribute('aria-modal', 'true');
         overlay.setAttribute('aria-label', anc.title || 'Anuncio YogurASO');
 
+        var maxW = '580px';
+        if (anc.tamano === 'compacto') maxW = '440px';
+        else if (anc.tamano === 'grande') maxW = '740px';
+
         var mediaHtml = '';
-        if (anc.media_type === 'video' && anc.media_url) {
-            var vidUrl = anc.media_url;
-            if (/^(assets\/|\.\.\/assets\/)/i.test(vidUrl) && inPages && !vidUrl.startsWith('../')) {
-                vidUrl = '../' + vidUrl;
-            }
+        var mediaUrl = anc.media_url || '';
+        if (/^(assets\/|\.\.\/assets\/)/i.test(mediaUrl) && inPages && !mediaUrl.startsWith('../')) {
+            mediaUrl = '../' + mediaUrl;
+        }
+
+        if (anc.media_type === 'video' && mediaUrl) {
             mediaHtml =
                 '<div class="nt-welcome-video-wrap">' +
-                    '<video src="' + esc(vidUrl) + '" controls playsinline preload="metadata" ' + (anc.video_muted ? 'muted' : '') + ' style="width:100%;"></video>' +
-                    (anc.has_audio ? '<span class="nt-video-audio-badge"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Audio disponible</span>' : '') +
+                    '<video src="' + esc(mediaUrl) + '" controls playsinline preload="metadata" style="width:100%;"></video>' +
+                    '<span class="nt-video-audio-badge"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Con audio</span>' +
                 '</div>';
-        } else if (anc.media_type === 'image' && anc.media_url) {
-            var imgUrl = anc.media_url;
-            if (/^(assets\/|\.\.\/assets\/)/i.test(imgUrl) && inPages && !imgUrl.startsWith('../')) {
-                imgUrl = '../' + imgUrl;
-            }
-            mediaHtml = '<img class="nt-welcome-img" src="' + esc(imgUrl) + '" alt="' + esc(anc.title) + '" loading="eager">';
+        } else if (anc.media_type === 'varias') {
+            var defaultImgs = [
+                (inPages ? '../' : '') + 'assets/marketing/tazon-yogurt-fresa.jpg',
+                (inPages ? '../' : '') + 'assets/marketing/pina-showcase.jpg',
+                (inPages ? '../' : '') + 'assets/marketing/paisaje-campo-yoguraso.jpg'
+            ];
+            mediaHtml =
+                '<div class="nt-welcome-gallery-wrap" style="position:relative; width:100%; overflow:hidden;">' +
+                    '<div class="nt-gallery-track" style="display:flex; transition:transform 0.3s ease;">' +
+                        defaultImgs.map(function(src) {
+                            return '<img src="' + esc(src) + '" style="width:100%; flex:0 0 100%; height:260px; object-fit:cover;">';
+                        }).join('') +
+                    '</div>' +
+                '</div>';
+        } else if (mediaUrl) {
+            mediaHtml = '<img class="nt-welcome-img" src="' + esc(mediaUrl) + '" alt="' + esc(anc.title) + '" loading="eager">';
         }
 
         var actionHtml = '';
@@ -292,7 +321,7 @@
         }
 
         overlay.innerHTML =
-            '<div class="nt-welcome-window">' +
+            '<div class="nt-welcome-window" style="max-width:' + maxW + ';">' +
                 '<button type="button" class="nt-welcome-close" data-act="close-welcome" aria-label="Cerrar anuncio">' +
                     '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
                 '</button>' +
@@ -359,6 +388,55 @@
         getAnnouncements: getLocalAnnouncements
     };
 
+        /* ---------------- Manejo de Configuración de Anuncios y Carrusel del Header ---------------- */
+    var CFG_ANUNCIOS_KEY = 'yog_anuncios_cfg_v1';
+
+    function getAnunciosConfig() {
+        try {
+            var raw = JSON.parse(localStorage.getItem(CFG_ANUNCIOS_KEY) || 'null');
+            if (raw) return raw;
+        } catch (_) {}
+        return {
+            letreroActivo: true,
+            letreroTipo: 'video',
+            letreroTamano: 'mediano',
+            letreroTitulo: 'Nuestra Cosecha & Pasión Artesanal',
+            letreroMensaje: 'Conoce en este video cómo transformamos leche fresca de las granjas del Huila en un yogurt artesanal ultra cremoso.',
+            letreroUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+            letreroBtnTexto: 'Probar Sabores Artesanales',
+            letreroBtnUrl: '#productos',
+            headerCarruselActivo: true,
+            headerMensajes: '🥛 Yogurt Artesanal 100% Natural • Tello & Neiva\n🛵 Domicilio sin costo en Neiva por pedidos desde 3 botellas\n🍓 Fruta real seleccionada del Huila • Sin conservantes\n✨ Presentación 500 ml & 1 Litro • Pide fácil por WhatsApp'
+        };
+    }
+
+    function initHeaderTicker() {
+        var cfg = getAnunciosConfig();
+        var ticker = document.getElementById('headerScrollTicker');
+        var track = document.getElementById('headerScrollTickerTrack');
+        if (!ticker || !track || !cfg.headerCarruselActivo) {
+            if (ticker) ticker.style.display = 'none';
+            return;
+        }
+
+        var lines = (cfg.headerMensajes || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        if (!lines.length) return;
+
+        track.innerHTML = lines.map(function (msg, idx) {
+            return '<span class="header-scroll-ticker-item ' + (idx === 0 ? 'is-active' : '') + '">' + esc(msg) + '</span>';
+        }).join('');
+
+        var items = track.querySelectorAll('.header-scroll-ticker-item');
+        if (items.length <= 1) return;
+
+        var curIdx = 0;
+        setInterval(function () {
+            items[curIdx].classList.remove('is-active');
+            curIdx = (curIdx + 1) % items.length;
+            items[curIdx].classList.add('is-active');
+        }, 3800);
+    }
+
     function init() {
         var c = getConsent();
         applyConsent(c);
@@ -368,6 +446,7 @@
 
         // 1. Renderizar Barra Superior si está activa
         renderTopBanner();
+        initHeaderTicker();
 
         // 2. Si no estamos en páginas del panel administrativo, mostrar anuncio modal activo
         if (!inPages || !/admin.html/i.test(location.pathname)) {
@@ -378,16 +457,21 @@
                 try { seenModal = !!sessionStorage.getItem('yog_anc_modal_' + modalAnc.id); } catch (e) {}
             }
 
-            if (modalAnc && !seenModal) {
+            var cfg = getAnunciosConfig();
+            var shouldShowModal = cfg.letreroActivo && !sessionStorage.getItem('yog_modal_seen');
+            if (shouldShowModal) {
                 setTimeout(function () {
-                    showModalAnnouncement(modalAnc, function () {
+                    showModalAnnouncement(null, function () {
+                        sessionStorage.setItem('yog_modal_seen', '1');
                         if (!c) {
-                            setTimeout(function () { openBanner(false); }, 350);
+                            setTimeout(function () { openBanner(false); }, 300);
                         }
                     });
-                }, 700);
-            } else if (!c) {
-                setTimeout(function () { openBanner(false); }, 1200);
+                }, 600);
+            }
+            // Las cookies SIEMPRE salen de forma visible e impecable si no han sido aceptadas
+            if (!c) {
+                setTimeout(function () { openBanner(false); }, shouldShowModal ? 2200 : 800);
             }
         }
     }

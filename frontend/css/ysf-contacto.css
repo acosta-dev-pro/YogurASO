@@ -69,7 +69,7 @@
 .ysc-field input:focus,.ysc-field textarea:focus{outline:none;border-color:var(--ysc-ink);box-shadow:0 0 0 1px var(--ysc-ink)}
 .ysc-field [aria-invalid="true"]{border-color:var(--ysc-ink2);border-style:dashed}
 .ysc-err{color:var(--ysc-ink2);font-size:12.5px;font-weight:800;line-height:1.35}
-.ysc-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:2px}
+.ysc-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 16px;margin-top:4px}.ysc-actions .ysc-note{margin-right:auto;order:-1}.ysc-submit{margin-left:auto}
 .ysc-submit{
   display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px 0 16px;
   border:0;border-radius:999px;background:var(--ysc-wa);color:#fff;

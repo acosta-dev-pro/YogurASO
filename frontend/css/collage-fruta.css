@@ -15,7 +15,7 @@
     scroll-margin-top: 72px;
 }
 .fcol__wrap {
-    width: min(1100px, 100% - 40px);
+    width: min(1240px, 100% - 40px);
     margin: 0 auto;
 }
 .fcol__tile {
@@ -101,7 +101,7 @@
 
 @media (max-width: 860px) {
     .fcol { padding: 28px 0 0; }
-    .fcol__wrap { width: min(1100px, 100% - 24px); }
+    .fcol__wrap { width: min(1240px, 100% - 24px); }
     .fcol__campo { height: 220px; }
     .fcol__campo h3 { font-size: 22px; }
     .fcol__campo p { font-size: 13px; }

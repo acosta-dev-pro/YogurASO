@@ -15,7 +15,7 @@
 /* Pegado al paisaje: misma familia visual, separación corta */
 .fcol + .ytrio { margin-top: var(--yt-gap); position: relative; }
 .ytrio__wrap {
-    width: min(1100px, 100% - 40px);   /* = .fcol__wrap */
+    width: min(1240px, 100% - 40px);   /* = .fcol__wrap */
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -167,4 +167,235 @@
     .ytrio__card--proposito .ys-pill__arrow { transition: none !important; }
     .ytrio__card--llevalo:hover .ytrio__hand { transform: none; }
     .ytrio__card--proposito:hover .ytrio__bottle { transform: rotate(4deg); }
+}
+
+
+/* ---------- Adaptación dinámica de fondos y colores de sabor ---------- */
+.ytrio {
+    background: var(--flavor-wash, #FFF8F4) !important;
+    transition: background-color 0.6s ease;
+}
+
+.ytrio__card--llevalo {
+    background: linear-gradient(155deg, var(--flavor-accent, var(--rojo-marca, #C3343E)) 0%, color-mix(in srgb, var(--flavor-accent, var(--rojo-marca, #C3343E)) 80%, #000) 100%) !important;
+    transition: background 0.6s ease;
+}
+
+.ytrio__card--cremoso {
+    background: var(--flavor-card-tint, #FFF1F3) !important;
+    border: 1px solid var(--flavor-border, rgba(195, 52, 62, 0.12));
+    transition: background 0.6s ease, border-color 0.6s ease;
+}
+
+.ytrio__card--cremoso .ytrio__k {
+    background: #FFFFFF !important;
+    color: var(--flavor-accent, #C3343E) !important;
+}
+
+.ytrio__card--cremoso h3 {
+    color: var(--flavor-accent, #C3343E) !important;
+}
+
+.ytrio__card--cremoso .ytrio__cta {
+    background: var(--flavor-accent, #C3343E) !important;
+    color: #FFFFFF !important;
+}
+
+/* Transición suave para la mano de cada sabor */
+.ytrio__hand {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.ytrio__hand.is-swapping {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+}
+
+/* =========================================================
+   CARRUSEL DE CARTAS LARGAS (Debajo de Llévalo Contigo)
+   ========================================================= */
+.ytrio__strip-wrap {
+    width: min(1240px, 100% - 40px);
+    margin: 24px auto 0;
+    position: relative;
+}
+
+.ytrio__strip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding: 0 4px;
+}
+
+.ytrio__strip-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(16px, 1.4vw, 20px);
+    font-weight: 600;
+    color: #17171A;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.ytrio__strip-title i {
+    color: var(--flavor-accent, #C3343E);
+}
+
+.ytrio__strip-hint {
+    font-size: 12.5px;
+    color: #7B756E;
+    font-weight: 500;
+}
+
+.ytrio__strip-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 6px 2px 18px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--flavor-accent, #C3343E) transparent;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
+}
+
+.ytrio__strip-track:active {
+    cursor: grabbing;
+}
+
+.ytrio__strip-track::-webkit-scrollbar {
+    height: 6px;
+}
+
+.ytrio__strip-track::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 999px;
+}
+
+.ytrio__strip-track::-webkit-scrollbar-thumb {
+    background: var(--flavor-accent, #C3343E);
+    border-radius: 999px;
+}
+
+.yt-long-card {
+    flex: 0 0 clamp(300px, 31vw, 380px);
+    scroll-snap-align: start;
+    background: #FFFFFF;
+    border: 1px solid var(--flavor-border, rgba(0, 0, 0, 0.08));
+    border-radius: 20px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.yt-long-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    border-color: var(--flavor-accent, #C3343E);
+}
+
+.yt-long-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.yt-long-card-tag {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--flavor-wash, #FFF2F4);
+    color: var(--flavor-accent, #C3343E);
+}
+
+.yt-long-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--flavor-wash, #FFF2F4);
+    color: var(--flavor-accent, #C3343E);
+    font-size: 16px;
+}
+
+.yt-long-card-body h4 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #17171A;
+    margin: 8px 0 6px;
+    line-height: 1.25;
+}
+
+.yt-long-card-body p {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #55524E;
+    margin: 0;
+}
+
+.yt-long-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--flavor-accent, #C3343E);
+}
+
+
+/* ---------- RESPONSIVE NATURAL & NO FORZADO ---------- */
+@media (max-width: 768px) {
+    .ytrio__wrap {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        width: calc(100% - 28px) !important;
+    }
+    .ytrio__card {
+        min-height: 200px !important;
+        padding: 20px 22px !important;
+    }
+    .ytrio__card h3 {
+        font-size: 21px !important;
+    }
+    .ytrio__card p {
+        font-size: 14px !important;
+    }
+    .ytrio__card--llevalo .ytrio__body {
+        max-width: 66% !important;
+    }
+    .ytrio__hand {
+        width: clamp(140px, 42vw, 220px) !important;
+        right: -10px !important;
+        bottom: -15px !important;
+    }
+    .ytrio__card--proposito .ytrio__body {
+        max-width: 68% !important;
+    }
+    .ytrio__stage {
+        width: clamp(120px, 36vw, 180px) !important;
+        right: 0 !important;
+    }
+    .yt-long-card {
+        flex: 0 0 clamp(280px, 82vw, 340px) !important;
+        padding: 18px 20px !important;
+    }
+    .ytrio__strip-wrap {
+        width: calc(100% - 28px) !important;
+    }
 }

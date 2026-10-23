@@ -1885,6 +1885,23 @@ function setupAdminEvents() {
         abrirModal('Editar producto', { isEdit: true });
     });
 
+        document.getElementById('form-cfg-anuncios')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        guardarConfiguracionAnuncios();
+    });
+    document.getElementById('btn-guardar-cfg-anuncios')?.addEventListener('click', () => {
+        guardarConfiguracionAnuncios();
+    });
+    document.getElementById('cfg-letrero-file')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            const input = document.getElementById('cfg-letrero-url');
+            if (input) input.value = url;
+            toast(`Archivo cargado: ${file.name}`, 'success');
+        }
+    });
+
     document.getElementById('btn-reload-users')?.addEventListener('click', () => cargarTablaUsuarios());
     document.getElementById('admin-user-search')?.addEventListener('input', () => renderUserRows(getVisibleUsers()));
         // ----------------------------------------------------
@@ -2122,23 +2139,87 @@ function setupAdminEvents() {
 }
 
 function setupAdminSubnav() {
-    const links = [...document.querySelectorAll('.admin-subnav-link')];
-    if (!links.length) return;
+    const btns = [...document.querySelectorAll('.admin-subnav-btn')];
+    const panes = [...document.querySelectorAll('.admin-tab-pane')];
+    if (!btns.length) return;
 
-    const sync = () => {
-        const hash = (window.location.hash || '#productos').toLowerCase();
-        links.forEach((a) => {
-            const href = (a.getAttribute('href') || '').toLowerCase();
-            a.classList.toggle('is-on', href === hash);
+    function selectTab(tabId) {
+        btns.forEach((btn) => {
+            btn.classList.toggle('is-on', btn.dataset.tab === tabId);
         });
+        panes.forEach((pane) => {
+            pane.classList.toggle('is-active', pane.id === tabId);
+        });
+    }
+
+    btns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            selectTab(btn.dataset.tab);
+        });
+    });
+}
+
+/* ==========================================================================
+   CONFIGURACIÓN BÁSICA DE ANUNCIOS Y CARRUSEL
+   ========================================================================== */
+const CFG_ANUNCIOS_KEY = 'yog_anuncios_cfg_v1';
+
+function cargarConfiguracionAnuncios() {
+    let cfg = null;
+    try {
+        cfg = JSON.parse(localStorage.getItem(CFG_ANUNCIOS_KEY) || 'null');
+    } catch (_) {}
+
+    if (!cfg) {
+        cfg = {
+            letreroActivo: true,
+            letreroTipo: 'video',
+            letreroTamano: 'mediano',
+            letreroTitulo: 'Nuestra Cosecha & Pasión Artesanal',
+            letreroMensaje: 'Conoce en este video cómo transformamos leche fresca de las granjas del Huila en un yogurt artesanal ultra cremoso.',
+            letreroUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+            letreroBtnTexto: 'Probar Sabores Artesanales',
+            letreroBtnUrl: '#productos',
+            headerCarruselActivo: true,
+            headerMensajes: '🥛 Yogurt Artesanal 100% Natural • Tello & Neiva\n🛵 Domicilio sin costo en Neiva por pedidos desde 3 botellas\n🍓 Fruta real seleccionada del Huila • Sin conservantes\n✨ Presentación 500 ml & 1 Litro • Pide fácil por WhatsApp'
+        };
+        try { localStorage.setItem(CFG_ANUNCIOS_KEY, JSON.stringify(cfg)); } catch (_) {}
+    }
+
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
+    const setChk = (id, val) => { const el = document.getElementById(id); if (el) el.checked = Boolean(val); };
+
+    setChk('cfg-letrero-activo', cfg.letreroActivo);
+    setVal('cfg-letrero-tipo', cfg.letreroTipo);
+    setVal('cfg-letrero-tamano', cfg.letreroTamano);
+    setVal('cfg-letrero-titulo', cfg.letreroTitulo);
+    setVal('cfg-letrero-mensaje', cfg.letreroMensaje);
+    setVal('cfg-letrero-url', cfg.letreroUrl);
+    setVal('cfg-letrero-btn-texto', cfg.letreroBtnTexto);
+    setVal('cfg-letrero-btn-url', cfg.letreroBtnUrl);
+    setChk('cfg-header-carrusel-activo', cfg.headerCarruselActivo);
+    setVal('cfg-header-mensajes', cfg.headerMensajes);
+}
+
+function guardarConfiguracionAnuncios() {
+    const cfg = {
+        letreroActivo: document.getElementById('cfg-letrero-activo')?.checked ?? true,
+        letreroTipo: document.getElementById('cfg-letrero-tipo')?.value || 'imagen',
+        letreroTamano: document.getElementById('cfg-letrero-tamano')?.value || 'mediano',
+        letreroTitulo: document.getElementById('cfg-letrero-titulo')?.value.trim() || '',
+        letreroMensaje: document.getElementById('cfg-letrero-mensaje')?.value.trim() || '',
+        letreroUrl: document.getElementById('cfg-letrero-url')?.value.trim() || '',
+        letreroBtnTexto: document.getElementById('cfg-letrero-btn-texto')?.value.trim() || '',
+        letreroBtnUrl: document.getElementById('cfg-letrero-btn-url')?.value.trim() || '',
+        headerCarruselActivo: document.getElementById('cfg-header-carrusel-activo')?.checked ?? true,
+        headerMensajes: document.getElementById('cfg-header-mensajes')?.value.trim() || ''
     };
 
-    links.forEach((a) => a.addEventListener('click', () => {
-        links.forEach((el) => el.classList.remove('is-on'));
-        a.classList.add('is-on');
-    }));
-    window.addEventListener('hashchange', sync);
-    sync();
+    try {
+        localStorage.setItem(CFG_ANUNCIOS_KEY, JSON.stringify(cfg));
+    } catch (_) {}
+
+    toast('Configuración de anuncios guardada y lista en la tienda', 'success');
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -2164,6 +2245,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarTablaProductos();
     await cargarTablaUsuarios();
     await cargarTablaPreguntas();
-    await cargarTablaAnuncios();
+    cargarConfiguracionAnuncios();
     window.Cart?.updateCounter();
 });
