@@ -1,4 +1,4 @@
-﻿/* Admin: amplio, claro, sin look de planilla */
+/* Admin: amplio, claro, sin look de planilla */
 
 body.admin-page {
     background: #f4f4f6 !important;
@@ -1800,4 +1800,456 @@ body.admin-page .admin-modal-studio .admin-modal-actions {
     align-items: center;
     gap: 8px;
     margin-top: 4px;
+}
+
+/* ==========================================================================
+   GESTIÓN DE ANUNCIOS Y PROMOCIONES (BANNER / VIDEO CON AUDIO / MODAL)
+   ========================================================================== */
+
+.admin-anuncios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+    margin-top: 18px;
+}
+
+.admin-anc-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(23, 23, 26, 0.08);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-anc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07);
+    border-color: rgba(23, 23, 26, 0.14);
+}
+
+.admin-anc-card.is-active {
+    border-top: 4px solid #2A9D60;
+}
+
+.admin-anc-card.is-inactive {
+    border-top: 4px solid #9A958E;
+    opacity: 0.78;
+}
+
+.admin-anc-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.admin-anc-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.anc-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.anc-tag-placement {
+    background: #EBF3FF;
+    color: #1A56DB;
+}
+
+.anc-tag-media-video {
+    background: #F4ECFB;
+    color: #7B2CBF;
+}
+
+.anc-tag-media-image {
+    background: #FFF4E5;
+    color: #B45309;
+}
+
+.anc-tag-media-text {
+    background: #F3F4F6;
+    color: #4B5563;
+}
+
+.anc-audio-badge {
+    background: #E8F8F0;
+    color: #15803D;
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+/* Switch Toggle Interactivo */
+.anc-toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    user-select: none;
+}
+
+.anc-toggle-input {
+    appearance: none;
+    width: 38px;
+    height: 22px;
+    background: #D1D5DB;
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+
+.anc-toggle-input::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.anc-toggle-input:checked {
+    background: #2A9D60;
+}
+
+.anc-toggle-input:checked::after {
+    transform: translateX(16px);
+}
+
+/* Media Preview en Tarjeta */
+.admin-anc-media-preview {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #17171A;
+    max-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.admin-anc-media-preview img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.admin-anc-media-preview video {
+    width: 100%;
+    max-height: 190px;
+    display: block;
+    background: #000;
+}
+
+.admin-anc-media-preview .anc-text-only-banner {
+    padding: 24px 16px;
+    background: linear-gradient(135deg, #FFF8F4 0%, #FEECE0 100%);
+    width: 100%;
+    text-align: center;
+    color: #6E260E;
+    font-weight: 600;
+}
+
+/* Card Body */
+.admin-anc-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.admin-anc-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #17171A;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.admin-anc-desc {
+    font-size: 13.5px;
+    color: #55524E;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.admin-anc-promo-badge {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: var(--rojo-marca, #D62300);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.admin-anc-action-preview {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #7B756E;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-anc-action-pill {
+    background: #F4F4F6;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 600;
+    color: #1F2937;
+}
+
+/* Card Footer */
+.admin-anc-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(23, 23, 26, 0.06);
+    margin-top: auto;
+}
+
+.admin-anc-date {
+    font-size: 11.5px;
+    color: #9A958E;
+}
+
+.admin-anc-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* Modal de Anuncio */
+.admin-modal-anuncio-box {
+    max-width: 980px !important;
+    width: 94vw;
+}
+
+.admin-anc-modal-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 28px;
+    margin-top: 16px;
+}
+
+@media (max-width: 860px) {
+    .admin-anc-modal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-anc-preview-col {
+    background: #FAF9F7;
+    border: 1px solid #E7E5E0;
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-preview-col-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #17171A;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-anc-live-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E0D8;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.anc-preview-banner-preview {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.anc-preview-badge {
+    align-self: flex-start;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #D62300;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.anc-preview-body h4 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #17171A;
+}
+
+.anc-preview-body p {
+    margin: 0;
+    font-size: 12.5px;
+    color: #555;
+    line-height: 1.4;
+}
+
+.anc-preview-media-box {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #17171A;
+    min-height: 120px;
+    max-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.anc-preview-media-box img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.anc-preview-media-box video {
+    width: 100%;
+    max-height: 160px;
+    display: block;
+}
+
+.anc-preview-footer {
+    padding-top: 6px;
+}
+
+.anc-preview-action-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    background: #17171A;
+    color: #FFF;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.anc-audio-info-tip {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #166534;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.anc-audio-info-tip i {
+    font-size: 15px;
+    color: #22C55E;
+    margin-top: 1px;
+}
+
+.admin-anc-form-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.anc-url-input-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.anc-url-input-wrap input {
+    flex: 1;
+}
+
+.anc-file-label {
+    white-space: nowrap;
+    cursor: pointer;
+    margin: 0 !important;
+}
+
+.anc-video-options-box {
+    background: #F7F5FE;
+    border: 1px solid #E4DAF8;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.anc-options-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6B21A8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.anc-checkbox-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.anc-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #374151;
+    cursor: pointer;
+}
+
+.anc-checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #7B2CBF;
+    cursor: pointer;
 }

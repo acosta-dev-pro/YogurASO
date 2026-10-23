@@ -159,32 +159,171 @@
         requestAnimationFrame(function () { requestAnimationFrame(function () { b.classList.add('is-in'); }); });
     }
 
-    /* ---------------- Ventana de Bienvenida Promocional (Estilo Aqua / Apple) ---------------- */
+    /* ---------------- Gestión Dinámica de Anuncios y Promociones (Banner & Modal con Video/Audio) ---------------- */
+    var ANUNCIOS_KEY = 'yog_anuncios_v1';
     var WELCOME_KEY = 'yog_welcome_seen';
 
-    function showWelcomeModal(onCloseCallback) {
+    function getLocalAnnouncements() {
+        try {
+            var raw = JSON.parse(localStorage.getItem(ANUNCIOS_KEY) || 'null');
+            if (Array.isArray(raw) && raw.length) return raw;
+        } catch (e) {}
+
+        // Semillas predeterminadas profesionales listas para demostración
+        var defaultAncs = [
+            {
+                id: 'anc-video-huila',
+                title: 'Nuestra Cosecha & Pasión Artesanal',
+                message: 'Conoce en este video cómo transformamos leche fresca de las granjas del Huila en un yogurt artesanal ultra cremoso.',
+                placement: 'modal',
+                media_type: 'video',
+                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                has_audio: true,
+                video_muted: false,
+                action_label: 'Probar Sabores Artesanales',
+                action_url: (inPages ? '' : 'pages/') + 'productos.html',
+                badge_text: 'VIDEO OFICIAL',
+                active: true,
+                created_at: new Date().toISOString()
+            },
+            {
+                id: 'anc-banner-domicilio',
+                title: '¡Lanzamiento Especial!',
+                message: 'Pide 3 botellas o más y disfruta de domicilio sin costo en Neiva.',
+                placement: 'banner',
+                media_type: 'none',
+                media_url: '',
+                has_audio: false,
+                video_muted: true,
+                action_label: 'Pedir por WhatsApp',
+                action_url: 'https://wa.me/573144882046?text=Hola%20YogurASO,%20quiero%20aprovechar%20el%20domicilio%20gratis',
+                badge_text: 'PROMO HOY',
+                active: true,
+                created_at: new Date().toISOString()
+            }
+        ];
+        try { localStorage.setItem(ANUNCIOS_KEY, JSON.stringify(defaultAncs)); } catch (e) {}
+        return defaultAncs;
+    }
+
+    function renderTopBanner() {
+        if (inPages && /admin.html/i.test(location.pathname)) return; // No saturar el panel admin
+        var ancs = getLocalAnnouncements();
+        var bannerAnc = ancs.find(function (a) { return a.active && a.placement === 'banner'; });
+        if (!bannerAnc) return;
+
+        var seenKey = 'yog_anc_banner_' + bannerAnc.id;
+        try { if (sessionStorage.getItem(seenKey)) return; } catch (e) {}
+
+        var old = document.querySelector('.nt-top-banner');
+        if (old) old.remove();
+
+        var bar = document.createElement('aside');
+        bar.className = 'nt-top-banner';
+        bar.setAttribute('role', 'region');
+        bar.setAttribute('aria-label', 'Aviso promocional');
+
+        var actionHtml = '';
+        if (bannerAnc.action_label && bannerAnc.action_url) {
+            actionHtml = '<a href="' + esc(bannerAnc.action_url) + '" class="nt-top-banner-btn">' + esc(bannerAnc.action_label) + ' →</a>';
+        }
+
+        bar.innerHTML =
+            '<div class="nt-top-banner-content">' +
+                (bannerAnc.badge_text ? '<span class="nt-top-banner-badge">' + esc(bannerAnc.badge_text) + '</span>' : '') +
+                '<div class="nt-top-banner-text">' +
+                    '<strong>' + esc(bannerAnc.title) + '</strong>' +
+                    '<span>' + esc(bannerAnc.message) + '</span>' +
+                '</div>' +
+                actionHtml +
+            '</div>' +
+            '<button type="button" class="nt-top-banner-close" aria-label="Cerrar aviso">' +
+                '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+            '</button>';
+
+        document.body.prepend(bar);
+
+        bar.querySelector('.nt-top-banner-close').addEventListener('click', function () {
+            try { sessionStorage.setItem(seenKey, 'true'); } catch (e) {}
+            bar.classList.add('is-hidden');
+            setTimeout(function () { bar.remove(); }, 200);
+        });
+    }
+
+    function showModalAnnouncement(customAnc, onCloseCallback) {
+        var anc = customAnc;
+        if (!anc) {
+            var ancs = getLocalAnnouncements();
+            anc = ancs.find(function (a) { return a.active && a.placement === 'modal'; });
+        }
+        if (!anc) {
+            if (typeof onCloseCallback === 'function') onCloseCallback();
+            return;
+        }
+
         var overlay = document.createElement('div');
         overlay.className = 'nt-welcome-overlay';
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-modal', 'true');
-        overlay.setAttribute('aria-label', 'Promoción de Bienvenida YogurASO');
+        overlay.setAttribute('aria-label', anc.title || 'Anuncio YogurASO');
 
-        var imagePath = (inPages ? '../' : '') + 'assets/marketing/tazon-yogurt-fresa.jpg';
-        var catalogLink = (inPages ? '' : 'pages/') + 'productos.html';
+        var mediaHtml = '';
+        if (anc.media_type === 'video' && anc.media_url) {
+            var vidUrl = anc.media_url;
+            if (/^(assets\/|\.\.\/assets\/)/i.test(vidUrl) && inPages && !vidUrl.startsWith('../')) {
+                vidUrl = '../' + vidUrl;
+            }
+            mediaHtml =
+                '<div class="nt-welcome-video-wrap">' +
+                    '<video src="' + esc(vidUrl) + '" controls playsinline preload="metadata" ' + (anc.video_muted ? 'muted' : '') + ' style="width:100%;"></video>' +
+                    (anc.has_audio ? '<span class="nt-video-audio-badge"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Audio disponible</span>' : '') +
+                '</div>';
+        } else if (anc.media_type === 'image' && anc.media_url) {
+            var imgUrl = anc.media_url;
+            if (/^(assets\/|\.\.\/assets\/)/i.test(imgUrl) && inPages && !imgUrl.startsWith('../')) {
+                imgUrl = '../' + imgUrl;
+            }
+            mediaHtml = '<img class="nt-welcome-img" src="' + esc(imgUrl) + '" alt="' + esc(anc.title) + '" loading="eager">';
+        }
+
+        var actionHtml = '';
+        if (anc.action_label && anc.action_url) {
+            actionHtml = '<a href="' + esc(anc.action_url) + '" class="nt-welcome-cta-btn">' + esc(anc.action_label) + ' <i class="fas fa-arrow-right" style="font-size:12px;"></i></a>';
+        }
 
         overlay.innerHTML =
             '<div class="nt-welcome-window">' +
-                '<button type="button" class="nt-welcome-close" data-act="close-welcome" aria-label="Cerrar publicidad">' +
+                '<button type="button" class="nt-welcome-close" data-act="close-welcome" aria-label="Cerrar anuncio">' +
                     '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
                 '</button>' +
                 '<div class="nt-welcome-content">' +
-                    '<img class="nt-welcome-img" src="' + imagePath + '" alt="Publicidad YogurASO" loading="eager">' +
+                    mediaHtml +
+                    '<div class="nt-welcome-info">' +
+                        '<div class="nt-welcome-info-header">' +
+                            (anc.badge_text ? '<span class="nt-welcome-tag">' + esc(anc.badge_text) + '</span>' : '') +
+                        '</div>' +
+                        '<h3 class="nt-welcome-title">' + esc(anc.title) + '</h3>' +
+                        '<p class="nt-welcome-desc">' + esc(anc.message) + '</p>' +
+                        '<div class="nt-welcome-actions">' +
+                            actionHtml +
+                            '<button type="button" class="nt-welcome-dismiss-btn" data-act="close-welcome">Cerrar</button>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
             '</div>';
 
         document.body.appendChild(overlay);
 
+        var vidElement = overlay.querySelector('video');
+        if (vidElement && anc.has_audio && !anc.video_muted) {
+            vidElement.volume = 0.9;
+        }
+
         function closeWelcome() {
+            if (vidElement) {
+                try { vidElement.pause(); } catch (e) {}
+            }
+            try { sessionStorage.setItem('yog_anc_modal_' + anc.id, 'true'); } catch (e) {}
             try { localStorage.setItem(WELCOME_KEY, 'true'); } catch (e) {}
             overlay.classList.remove('is-in');
             setTimeout(function () {
@@ -213,6 +352,13 @@
         });
     }
 
+    // Exponer API global
+    window.YogurNotice = {
+        showModalAnnouncement: showModalAnnouncement,
+        renderTopBanner: renderTopBanner,
+        getAnnouncements: getLocalAnnouncements
+    };
+
     function init() {
         var c = getConsent();
         applyConsent(c);
@@ -220,19 +366,29 @@
             a.addEventListener('click', function (e) { e.preventDefault(); openBanner(true); });
         });
 
-        var welcomeSeen = false;
-        try { welcomeSeen = !!localStorage.getItem(WELCOME_KEY); } catch (e) {}
+        // 1. Renderizar Barra Superior si está activa
+        renderTopBanner();
 
-        if (!welcomeSeen) {
-            setTimeout(function () {
-                showWelcomeModal(function () {
-                    if (!c) {
-                        setTimeout(function () { openBanner(false); }, 350);
-                    }
-                });
-            }, 600);
-        } else if (!c) {
-            setTimeout(function () { openBanner(false); }, 1200);
+        // 2. Si no estamos en páginas del panel administrativo, mostrar anuncio modal activo
+        if (!inPages || !/admin.html/i.test(location.pathname)) {
+            var ancs = getLocalAnnouncements();
+            var modalAnc = ancs.find(function (a) { return a.active && a.placement === 'modal'; });
+            var seenModal = false;
+            if (modalAnc) {
+                try { seenModal = !!sessionStorage.getItem('yog_anc_modal_' + modalAnc.id); } catch (e) {}
+            }
+
+            if (modalAnc && !seenModal) {
+                setTimeout(function () {
+                    showModalAnnouncement(modalAnc, function () {
+                        if (!c) {
+                            setTimeout(function () { openBanner(false); }, 350);
+                        }
+                    });
+                }, 700);
+            } else if (!c) {
+                setTimeout(function () { openBanner(false); }, 1200);
+            }
         }
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

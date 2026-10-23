@@ -1,3 +1,92 @@
+/* ---------- Barra Superior Promocional (Top Banner) ---------- */
+.nt-top-banner {
+    position: relative;
+    z-index: 1050;
+    width: 100%;
+    background: linear-gradient(90deg, #17171A 0%, #2A211D 100%);
+    color: #FFFFFF;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 13.5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.nt-top-banner.is-hidden {
+    display: none !important;
+}
+
+.nt-top-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+.nt-top-banner-badge {
+    background: var(--rojo-marca, #D62300);
+    color: #FFFFFF;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.nt-top-banner-text strong {
+    color: #FFFFFF;
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.nt-top-banner-text span {
+    color: #E5E7EB;
+}
+
+.nt-top-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+    color: #17171A;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+
+.nt-top-banner-btn:hover {
+    background: #FFE6EA;
+    color: var(--rojo-marca, #D62300);
+    transform: scale(1.03);
+}
+
+.nt-top-banner-close {
+    background: transparent;
+    border: none;
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 4px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    margin-left: 8px;
+    transition: color 0.15s ease;
+}
+
+.nt-top-banner-close:hover {
+    color: #FFFFFF;
+}
+
 /* ---------- Ventana de Bienvenida Promocional (Clásica limpia) ---------- */
 .nt-welcome-overlay {
     position: fixed;
@@ -19,10 +108,10 @@
 
 .nt-welcome-window {
     position: relative;
-    width: min(540px, calc(100vw - 32px));
+    width: min(580px, calc(100vw - 32px));
     background: #ffffff;
-    border-radius: 4px;
-    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.38);
+    border-radius: 18px;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.42);
     overflow: hidden;
     transform: scale(0.96);
     transition: transform 0.25s ease;
@@ -33,26 +122,26 @@
 
 .nt-welcome-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
+    top: 12px;
+    right: 12px;
+    z-index: 20;
     appearance: none;
     border: 0;
-    background: rgba(255, 255, 255, 0.90);
+    background: rgba(255, 255, 255, 0.92);
     cursor: pointer;
     color: #171717;
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 .nt-welcome-close:hover {
     background: #171717;
     color: #ffffff;
-    transform: scale(1.06);
+    transform: scale(1.08);
 }
 .nt-welcome-close:active {
     transform: scale(0.94);
@@ -62,14 +151,128 @@
     position: relative;
     width: 100%;
     display: block;
-    line-height: 0;
 }
+
 .nt-welcome-img {
     width: 100%;
     height: auto;
-    max-height: 80vh;
+    max-height: 52vh;
     display: block;
     object-fit: cover;
+}
+
+.nt-welcome-video-wrap {
+    position: relative;
+    width: 100%;
+    background: #000;
+    max-height: 52vh;
+    overflow: hidden;
+}
+
+.nt-welcome-video-wrap video {
+    width: 100%;
+    max-height: 52vh;
+    display: block;
+    object-fit: contain;
+}
+
+.nt-video-audio-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.72);
+    color: #FFF;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    pointer-events: none;
+}
+
+.nt-welcome-info {
+    padding: 22px 26px 24px;
+    text-align: left;
+}
+
+.nt-welcome-info-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.nt-welcome-tag {
+    background: var(--rojo-marca, #D62300);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.nt-welcome-title {
+    font-family: var(--bp-font-title, 'Fredoka', sans-serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: #17171A;
+    margin: 0 0 8px;
+    line-height: 1.25;
+}
+
+.nt-welcome-desc {
+    font-size: 14px;
+    color: #55524E;
+    line-height: 1.5;
+    margin: 0 0 18px;
+}
+
+.nt-welcome-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.nt-welcome-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--rojo-marca, #D62300);
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(214, 35, 0, 0.25);
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.nt-welcome-cta-btn:hover {
+    background: var(--rojo-marca-hover, #B81F00);
+    transform: translateY(-1px);
+    color: #FFFFFF !important;
+}
+
+.nt-welcome-dismiss-btn {
+    background: transparent;
+    border: none;
+    color: #7B756E;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: color 0.15s ease;
+}
+
+.nt-welcome-dismiss-btn:hover {
+    color: #17171A;
 }
 
 

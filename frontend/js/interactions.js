@@ -73,12 +73,30 @@ function statusLabel(status, mine) {
 }
 
 async function fetchQuestions(vid) {
-  if (!online()) {
-    return loadLocal().questions.slice().sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+  let sbRows = [];
+  if (online()) {
+    try {
+      const { data, error } = await supabase.rpc('list_faq_questions', { p_visitor_id: vid });
+      if (!error && Array.isArray(data)) sbRows = data;
+    } catch (_) {}
   }
-  const { data, error } = await supabase.rpc('list_faq_questions', { p_visitor_id: vid });
-  if (error) throw error;
-  return data || [];
+  const localRows = loadLocal().questions || [];
+  const map = new Map();
+  sbRows.forEach((q) => map.set(String(q.id), { ...q }));
+  localRows.forEach((q) => {
+    const key = String(q.id);
+    if (!map.has(key)) {
+      map.set(key, { ...q });
+    } else {
+      const cur = map.get(key);
+      if (q.mine) cur.mine = true;
+      if (q.answer && !cur.answer) {
+        cur.answer = q.answer;
+        cur.status = q.status || 'approved';
+      }
+    }
+  });
+  return Array.from(map.values()).sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 }
 
 async function fetchLike(type, id, vid) {
@@ -98,26 +116,39 @@ async function fetchLike(type, id, vid) {
 
 async function sendQuestion(name, body, vid) {
   const row = {
+    id: 'q-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
     visitor_id: vid,
     author_name: name || null,
     body,
+    answer: '',
     status: 'pending',
     created_at: stamp(),
     mine: true
   };
-  if (!online()) {
-    const bag = loadLocal();
-    bag.questions.unshift(row);
-    saveLocal(bag);
-    return row;
+
+  // Siempre guardamos en el almacenamiento local canónico para respuesta inmediata
+  const bag = loadLocal();
+  bag.questions = Array.isArray(bag.questions) ? bag.questions : [];
+  bag.questions.unshift(row);
+  saveLocal(bag);
+
+  // Si Supabase está disponible, enviamos también a la base de datos remota
+  if (online()) {
+    try {
+      const { data, error } = await supabase.from('faq_questions').insert({
+        visitor_id: vid,
+        author_name: name || null,
+        body,
+        status: 'pending'
+      }).select();
+      if (!error && Array.isArray(data) && data[0]?.id) {
+        row.id = data[0].id;
+        saveLocal(bag);
+      }
+    } catch (err) {
+      console.warn('[interactions] Aviso: Pregunta guardada localmente, Supabase no disponible:', err);
+    }
   }
-  const { error } = await supabase.from('faq_questions').insert({
-    visitor_id: vid,
-    author_name: name || null,
-    body,
-    status: 'pending'
-  });
-  if (error) throw error;
   return row;
 }
 
@@ -321,6 +352,13 @@ async function boot() {
   watchProducts(vid);
   try { paintQuestions(await fetchQuestions(vid)); } catch (_) {}
   try { paintPostLike(await fetchLike('post', POST_ID, vid)); } catch (_) { paintPostLike({ likes: 0, liked: false }); }
+
+  // Sincronizar en tiempo real cuando el administrador responda desde el panel
+  window.addEventListener('storage', (e) => {
+    if (e.key === LOCAL_KEY) {
+      fetchQuestions(vid).then(paintQuestions).catch(() => {});
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

@@ -1137,59 +1137,99 @@ async function cargarTablaProductos() {
 
 
 /* ==========================================================================
-   GESTIÓN DE PREGUNTAS DE CLIENTES
+   MÓDULO 4: GESTIÓN DE PREGUNTAS DE CLIENTES (FAQ EN VIVO)
+   ==========================================================================
+   Permite al administrador ver todas las dudas enviadas por visitantes
+   desde la tienda (formulario de preguntas o botón de Instagram), responderlas
+   oficialmente y publicarlas en tiempo real para todos los clientes.
+   Sincroniza con Supabase ('faq_questions') y con el almacenamiento canónico
+   local ('yog_ix_v1') para garantizar disponibilidad 100% resiliente.
    ========================================================================== */
+
+const STORAGE_IX_KEY = 'yog_ix_v1';
+const LEGACY_IX_KEY = 'yog_local_interactions_v1';
+
 async function cargarTablaPreguntas() {
     const listEl = document.getElementById('admin-questions-list');
     if (!listEl) return;
 
+    let sbQuestions = [];
+    // 1. Intentar consultar preguntas desde la base de datos Supabase
     try {
         const sb = await import('./supabase-client.js').then((m) => m.obtenerSupabase()).catch(() => null);
         if (sb) {
             const { data, error } = await sb.from('faq_questions').select('*').order('created_at', { ascending: false });
-            if (!error && Array.isArray(data) && data.length) {
-                allAdminQuestions = data;
-            } else {
-                throw new Error(error?.message || 'Empty or table missing');
+            if (!error && Array.isArray(data)) {
+                sbQuestions = data;
             }
+        }
+    } catch (_) {}
+
+    // 2. Leer preguntas del almacenamiento local canónico de la tienda ('yog_ix_v1')
+    let localQuestions = [];
+    try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_IX_KEY) || '{}');
+        if (Array.isArray(raw.questions)) localQuestions = raw.questions;
+    } catch (_) {}
+
+    // 3. Leer también del almacén legacy si existiera para no perder historial previo
+    try {
+        const rawLegacy = JSON.parse(localStorage.getItem(LEGACY_IX_KEY) || '{}');
+        if (Array.isArray(rawLegacy.questions)) {
+            localQuestions = [...localQuestions, ...rawLegacy.questions];
+        }
+    } catch (_) {}
+
+    // 4. Unir y deduplicar por ID (dando prioridad a la información más completa)
+    const map = new Map();
+    sbQuestions.forEach((q) => map.set(String(q.id), { ...q }));
+    localQuestions.forEach((q) => {
+        const key = String(q.id);
+        if (!map.has(key)) {
+            map.set(key, { ...q });
         } else {
-            throw new Error('Supabase not ready');
+            const cur = map.get(key);
+            if (q.answer && !cur.answer) {
+                cur.answer = q.answer;
+                cur.status = q.status || 'approved';
+            }
         }
-    } catch (_) {
-        const local = JSON.parse(localStorage.getItem('yog_local_interactions_v1') || '{}');
-        let questions = Array.isArray(local.questions) ? local.questions : [];
-        if (!questions.length) {
-            questions = [
-                {
-                    id: 'q-demo-1',
-                    author_name: 'María Alejandra',
-                    body: '¿Hacen envíos a domicilio en Neiva los fines de semana y qué costo tiene?',
-                    answer: '¡Hola María! Sí, realizamos entregas en Neiva los sábados y domingos en la mañana sin costo adicional por pedidos desde 3 botellas.',
-                    status: 'approved',
-                    created_at: new Date(Date.now() - 3600000 * 4).toISOString()
-                },
-                {
-                    id: 'q-demo-2',
-                    author_name: 'Carlos Gómez',
-                    body: '¿Cuál es la presentación más recomendada para familias o negocios de desayunos?',
-                    answer: '',
-                    status: 'pending',
-                    created_at: new Date(Date.now() - 3600000 * 2).toISOString()
-                },
-                {
-                    id: 'q-demo-3',
-                    author_name: 'Valentina R.',
-                    body: '¿El yogurt artesanal tiene conservantes artificiales o es 100% natural?',
-                    answer: '',
-                    status: 'pending',
-                    created_at: new Date(Date.now() - 3600000 * 1).toISOString()
-                }
-            ];
-            local.questions = questions;
-            try { localStorage.setItem('yog_local_interactions_v1', JSON.stringify(local)); } catch (err) {}
-        }
-        allAdminQuestions = questions;
+    });
+
+    let questions = Array.from(map.values());
+
+    // 5. Semillas demostrativas si no hay preguntas aún (para pruebas iniciales)
+    if (!questions.length) {
+        questions = [
+            {
+                id: 'q-demo-1',
+                author_name: 'María Alejandra',
+                body: '¿Hacen envíos a domicilio en Neiva los fines de semana y qué costo tiene?',
+                answer: '¡Hola María! Sí, realizamos entregas en Neiva los sábados y domingos en la mañana sin costo adicional por pedidos desde 3 botellas.',
+                status: 'approved',
+                created_at: new Date(Date.now() - 3600000 * 4).toISOString()
+            },
+            {
+                id: 'q-demo-2',
+                author_name: 'Carlos Gómez',
+                body: '¿Cuál es la presentación más recomendada para familias o negocios de desayunos?',
+                answer: '',
+                status: 'pending',
+                created_at: new Date(Date.now() - 3600000 * 2).toISOString()
+            },
+            {
+                id: 'q-demo-3',
+                author_name: 'Valentina R.',
+                body: '¿El yogurt artesanal tiene conservantes artificiales o es 100% natural?',
+                answer: '',
+                status: 'pending',
+                created_at: new Date(Date.now() - 3600000 * 1).toISOString()
+            }
+        ];
     }
+
+    questions.sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+    allAdminQuestions = questions;
 
     updateQuestionStats();
     renderAdminQuestions(getVisibleQuestions());
@@ -1246,7 +1286,7 @@ function renderAdminQuestions(questions) {
     host.innerHTML = questions.map((item) => {
         const who = escapeHtml(item.author_name || 'Cliente anónimo');
         const body = escapeHtml(item.body || '');
-        const hasAnswer = Boolean(item.answer);
+        const hasAnswer = Boolean(item.answer && item.status === 'approved');
         const answer = escapeHtml(item.answer || '');
         const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Reciente';
 
@@ -1263,12 +1303,12 @@ function renderAdminQuestions(questions) {
                 </div>
 
                 <div class="admin-q-body">
-                    <strong>Pregunta:</strong> "${body}"
+                    <strong>Pregunta del cliente:</strong> "${body}"
                 </div>
 
                 ${hasAnswer ? `
                     <div class="admin-q-answer-published" id="q-answer-box-${item.id}">
-                        <strong><i class="fas fa-comment-dots"></i> Respuesta oficial publicada:</strong>
+                        <strong><i class="fas fa-comment-dots"></i> Respuesta oficial publicada en la tienda:</strong>
                         <p>${answer}</p>
                     </div>
                 ` : ''}
@@ -1290,6 +1330,7 @@ function renderAdminQuestions(questions) {
         `;
     }).join('');
 
+    // Eventos para guardar respuesta
     host.querySelectorAll('.btn-save-q-reply').forEach((btn) => {
         btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
@@ -1307,6 +1348,7 @@ function renderAdminQuestions(questions) {
         });
     });
 
+    // Eventos para eliminar pregunta
     host.querySelectorAll('.btn-del-q').forEach((btn) => {
         btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
@@ -1328,6 +1370,7 @@ function renderAdminQuestions(questions) {
 }
 
 async function guardarRespuestaPregunta(id, answer) {
+    // 1. Actualizar estado en memoria
     const qIdx = allAdminQuestions.findIndex((q) => String(q.id) === String(id));
     if (qIdx !== -1) {
         allAdminQuestions[qIdx].answer = answer;
@@ -1335,6 +1378,7 @@ async function guardarRespuestaPregunta(id, answer) {
         allAdminQuestions[qIdx].updated_at = new Date().toISOString();
     }
 
+    // 2. Actualizar en Supabase si está disponible
     try {
         const sb = await import('./supabase-client.js').then((m) => m.obtenerSupabase()).catch(() => null);
         if (sb) {
@@ -1345,18 +1389,18 @@ async function guardarRespuestaPregunta(id, answer) {
         }
     } catch (_) {}
 
+    // 3. Actualizar en almacenamiento local canónico 'yog_ix_v1'
     try {
-        const local = JSON.parse(localStorage.getItem('yog_local_interactions_v1') || '{}');
-        if (Array.isArray(local.questions)) {
-            const locIdx = local.questions.findIndex((q) => String(q.id) === String(id));
-            if (locIdx !== -1) {
-                local.questions[locIdx].answer = answer;
-                local.questions[locIdx].status = 'approved';
-            } else if (qIdx !== -1) {
-                local.questions.unshift(allAdminQuestions[qIdx]);
-            }
-            localStorage.setItem('yog_local_interactions_v1', JSON.stringify(local));
+        const local = JSON.parse(localStorage.getItem(STORAGE_IX_KEY) || '{}');
+        local.questions = Array.isArray(local.questions) ? local.questions : [];
+        const locIdx = local.questions.findIndex((q) => String(q.id) === String(id));
+        if (locIdx !== -1) {
+            local.questions[locIdx].answer = answer;
+            local.questions[locIdx].status = 'approved';
+        } else if (qIdx !== -1) {
+            local.questions.unshift(allAdminQuestions[qIdx]);
         }
+        localStorage.setItem(STORAGE_IX_KEY, JSON.stringify(local));
     } catch (_) {}
 
     toast('Respuesta publicada con éxito', 'success');
@@ -1367,24 +1411,454 @@ async function guardarRespuestaPregunta(id, answer) {
 async function eliminarPregunta(id) {
     allAdminQuestions = allAdminQuestions.filter((q) => String(q.id) !== String(id));
 
+    // Eliminar en Supabase
     try {
         const sb = await import('./supabase-client.js').then((m) => m.obtenerSupabase()).catch(() => null);
-        if (sb) {
-            await sb.from('faq_questions').delete().eq('id', id);
-        }
+        if (sb) await sb.from('faq_questions').delete().eq('id', id);
     } catch (_) {}
 
+    // Eliminar en almacenamiento local canónico
     try {
-        const local = JSON.parse(localStorage.getItem('yog_local_interactions_v1') || '{}');
+        const local = JSON.parse(localStorage.getItem(STORAGE_IX_KEY) || '{}');
         if (Array.isArray(local.questions)) {
             local.questions = local.questions.filter((q) => String(q.id) !== String(id));
-            localStorage.setItem('yog_local_interactions_v1', JSON.stringify(local));
+            localStorage.setItem(STORAGE_IX_KEY, JSON.stringify(local));
         }
     } catch (_) {}
 
     toast('Pregunta eliminada', 'success');
     updateQuestionStats();
     renderAdminQuestions(getVisibleQuestions());
+}
+
+
+/* ==========================================================================
+   MÓDULO 5: GESTIÓN DE ANUNCIOS Y MULTIMEDIA (BANNER / VIDEO CON AUDIO / MODAL)
+   ==========================================================================
+   Permite al administrador crear, editar, pausar y eliminar anuncios
+   promocionales visibles para los clientes.
+   Soporta:
+   1) Videos con controles nativos de reproducción y audio regulable.
+   2) Imágenes publicitarias de alta resolución.
+   3) Anuncios de solo texto y promociones especiales.
+   4) Ubicación en Barra Superior Fija (Top Banner) o Ventana Modal Emergente.
+   ========================================================================== */
+
+const STORAGE_ANUNCIOS_KEY = 'yog_anuncios_v1';
+let allAdminAnuncios = [];
+let editandoAnuncioId = null;
+
+async function cargarTablaAnuncios() {
+    const grid = document.getElementById('admin-anuncios-grid');
+    if (!grid) return;
+
+    // Cargar anuncios de localStorage
+    let ancs = [];
+    try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_ANUNCIOS_KEY) || 'null');
+        if (Array.isArray(raw) && raw.length) ancs = raw;
+    } catch (_) {}
+
+    // Semillas demostrativas completas si está vacío
+    if (!ancs.length) {
+        ancs = [
+            {
+                id: 'anc-video-huila',
+                title: 'Nuestra Cosecha & Pasión Artesanal',
+                message: 'Conoce en este video cómo transformamos leche fresca de las granjas del Huila en un yogurt artesanal ultra cremoso.',
+                placement: 'modal',
+                media_type: 'video',
+                media_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                has_audio: true,
+                video_muted: false,
+                action_label: 'Probar Sabores Artesanales',
+                action_url: '#productos',
+                badge_text: 'VIDEO DESTACADO',
+                active: true,
+                created_at: new Date(Date.now() - 3600000 * 5).toISOString()
+            },
+            {
+                id: 'anc-banner-domicilio',
+                title: '¡Lanzamiento Especial!',
+                message: 'Pide 3 botellas o más y disfruta de domicilio sin costo adicional en Neiva.',
+                placement: 'banner',
+                media_type: 'none',
+                media_url: '',
+                has_audio: false,
+                video_muted: true,
+                action_label: 'Pedir por WhatsApp',
+                action_url: 'https://wa.me/573144882046?text=Hola%20YogurASO,%20quiero%20aprovechar%20el%20domicilio%20gratis',
+                badge_text: 'PROMO HOY',
+                active: true,
+                created_at: new Date(Date.now() - 3600000 * 24).toISOString()
+            }
+        ];
+        try { localStorage.setItem(STORAGE_ANUNCIOS_KEY, JSON.stringify(ancs)); } catch (_) {}
+    }
+
+    allAdminAnuncios = ancs;
+    updateAnunciosStats();
+    renderAdminAnuncios(getVisibleAnuncios());
+}
+
+function updateAnunciosStats() {
+    const total = allAdminAnuncios.length;
+    const activos = allAdminAnuncios.filter((a) => a.active !== false).length;
+    const conMedia = allAdminAnuncios.filter((a) => a.media_type === 'video' || a.media_type === 'image').length;
+
+    const tEl = document.getElementById('stat-anc-total');
+    const aEl = document.getElementById('stat-anc-active');
+    const mEl = document.getElementById('stat-anc-media');
+    const chip = document.getElementById('admin-active-announcements-chip');
+
+    if (tEl) tEl.textContent = String(total);
+    if (aEl) aEl.textContent = String(activos);
+    if (mEl) mEl.textContent = String(conMedia);
+
+    if (chip) {
+        chip.textContent = String(activos);
+        chip.style.display = activos > 0 ? 'inline-block' : 'none';
+    }
+}
+
+function getVisibleAnuncios() {
+    const q = (document.getElementById('admin-anc-search')?.value || '').trim().toLowerCase();
+    const placement = document.getElementById('admin-anc-filter-placement')?.value || '';
+    const type = document.getElementById('admin-anc-filter-type')?.value || '';
+    const status = document.getElementById('admin-anc-filter-status')?.value || '';
+
+    return allAdminAnuncios.filter((item) => {
+        const matchQ = !q
+            || String(item.title || '').toLowerCase().includes(q)
+            || String(item.message || '').toLowerCase().includes(q)
+            || String(item.badge_text || '').toLowerCase().includes(q);
+
+        const matchPlacement = !placement || item.placement === placement;
+        const matchType = !type || item.media_type === type;
+        const isActive = item.active !== false;
+        const matchStatus = !status
+            || (status === 'active' && isActive)
+            || (status === 'inactive' && !isActive);
+
+        return matchQ && matchPlacement && matchType && matchStatus;
+    });
+}
+
+function renderAdminAnuncios(anuncios) {
+    const grid = document.getElementById('admin-anuncios-grid');
+    if (!grid) return;
+
+    if (!anuncios.length) {
+        grid.innerHTML = '<div class="admin-sheet-empty" style="grid-column: 1 / -1; background:#fff; border-radius:18px; padding:40px; text-align:center;">No hay anuncios registrados con estos filtros. Haz clic en "Nuevo anuncio" para publicar uno.</div>';
+        return;
+    }
+
+    grid.innerHTML = anuncios.map((anc) => {
+        const title = escapeHtml(anc.title || 'Sin título');
+        const message = escapeHtml(anc.message || '');
+        const badge = escapeHtml(anc.badge_text || '');
+        const isActive = anc.active !== false;
+        const isVideo = anc.media_type === 'video';
+        const isImage = anc.media_type === 'image';
+        const placementLabel = anc.placement === 'banner' ? 'Barra Superior' : 'Modal Emergente';
+        const placementClass = anc.placement === 'banner' ? 'anc-tag-placement' : 'anc-tag-placement';
+
+        let mediaTypeLabel = 'Solo texto';
+        let mediaTagClass = 'anc-tag-media-text';
+        if (isVideo) {
+            mediaTypeLabel = 'Video';
+            mediaTagClass = 'anc-tag-media-video';
+        } else if (isImage) {
+            mediaTypeLabel = 'Imagen';
+            mediaTagClass = 'anc-tag-media-image';
+        }
+
+        // Renderizado del medio para preview
+        let mediaPreviewHtml = '';
+        if (isVideo && anc.media_url) {
+            mediaPreviewHtml = `
+                <div class="admin-anc-media-preview">
+                    <video src="${escapeHtml(imgSrc(anc.media_url))}" controls preload="metadata" ${anc.video_muted ? 'muted' : ''}></video>
+                </div>
+            `;
+        } else if (isImage && anc.media_url) {
+            mediaPreviewHtml = `
+                <div class="admin-anc-media-preview">
+                    <img src="${escapeHtml(imgSrc(anc.media_url))}" alt="${title}" loading="lazy">
+                </div>
+            `;
+        } else {
+            mediaPreviewHtml = `
+                <div class="admin-anc-media-preview">
+                    <div class="anc-text-only-banner">
+                        <i class="fas fa-bullhorn" style="font-size:24px; margin-bottom:6px; display:block; opacity:0.6;"></i>
+                        Anuncio en formato texto sin multimedia
+                    </div>
+                </div>
+            `;
+        }
+
+        const dateStr = anc.created_at ? new Date(anc.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) : 'Reciente';
+
+        return `
+            <article class="admin-anc-card ${isActive ? 'is-active' : 'is-inactive'}" data-id="${anc.id}">
+                <div class="admin-anc-card-header">
+                    <div class="admin-anc-tags">
+                        <span class="anc-tag-badge ${placementClass}">${placementLabel}</span>
+                        <span class="anc-tag-badge ${mediaTagClass}">${mediaTypeLabel}</span>
+                        ${isVideo && anc.has_audio ? '<span class="anc-audio-badge"><i class="fas fa-volume-up"></i> Con audio</span>' : ''}
+                    </div>
+
+                    <label class="anc-toggle-switch" title="${isActive ? 'Pausar anuncio' : 'Activar anuncio'}">
+                        <input type="checkbox" class="anc-toggle-input" data-id="${anc.id}" ${isActive ? 'checked' : ''}>
+                        <span>${isActive ? 'Activo' : 'Pausa'}</span>
+                    </label>
+                </div>
+
+                ${mediaPreviewHtml}
+
+                <div class="admin-anc-card-body">
+                    ${badge ? `<span class="admin-anc-promo-badge">${badge}</span>` : ''}
+                    <h3 class="admin-anc-title">${title}</h3>
+                    <p class="admin-anc-desc">${message}</p>
+
+                    ${anc.action_label ? `
+                        <div class="admin-anc-action-preview">
+                            <span>Botón de acción:</span>
+                            <span class="admin-anc-action-pill"><i class="fas fa-link"></i> ${escapeHtml(anc.action_label)}</span>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="admin-anc-card-footer">
+                    <span class="admin-anc-date"><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+                    <div class="admin-anc-buttons">
+                        <button type="button" class="btn btn-secondary btn-sm btn-edit-anc" data-id="${anc.id}" title="Editar anuncio">
+                            <i class="fas fa-pencil-alt"></i> Editar
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm btn-del-anc" data-id="${anc.id}" title="Eliminar anuncio" style="color: #C3343E;">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join('');
+
+    // Toggle de activación directa
+    grid.querySelectorAll('.anc-toggle-input').forEach((input) => {
+        input.addEventListener('change', () => {
+            const id = input.dataset.id;
+            toggleAnuncioActivo(id, input.checked);
+        });
+    });
+
+    // Editar anuncio
+    grid.querySelectorAll('.btn-edit-anc').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const anc = allAdminAnuncios.find((a) => String(a.id) === String(id));
+            if (!anc) return;
+            abrirModalAnuncio(true, anc);
+        });
+    });
+
+    // Eliminar anuncio
+    grid.querySelectorAll('.btn-del-anc').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            const ok = confirmAction
+                ? await confirmAction({
+                    title: 'Eliminar anuncio',
+                    message: '¿Estás seguro de eliminar este anuncio de la tienda?',
+                    confirmText: 'Sí, eliminar',
+                    cancelText: 'Cancelar',
+                    danger: true
+                })
+                : window.confirm('¿Eliminar este anuncio?');
+
+            if (!ok) return;
+            eliminarAnuncio(id);
+        });
+    });
+}
+
+function abrirModalAnuncio(isEdit = false, anc = null) {
+    const modal = document.getElementById('modal-anuncio');
+    const titleEl = document.getElementById('modal-anc-title');
+    const hintEl = document.getElementById('modal-anc-hint');
+    const eyebrowEl = document.getElementById('modal-anc-eyebrow');
+    if (!modal) return;
+
+    editandoAnuncioId = isEdit && anc ? anc.id : null;
+
+    if (titleEl) titleEl.textContent = isEdit ? 'Editar Anuncio' : 'Crear Nuevo Anuncio';
+    if (eyebrowEl) eyebrowEl.textContent = isEdit ? 'Edición de Promoción' : 'Alta de Promoción';
+    if (hintEl) {
+        hintEl.textContent = isEdit
+            ? 'Modifica los textos, el video con audio o imagen del anuncio seleccionado.'
+            : 'Configura un anuncio atractivo para captar clientes en la barra superior o en ventana emergente.';
+    }
+
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val ?? '';
+    };
+
+    if (isEdit && anc) {
+        setVal('anc-id', anc.id);
+        setVal('anc-titulo', anc.title || '');
+        setVal('anc-mensaje', anc.message || '');
+        setVal('anc-placement', anc.placement || 'modal');
+        setVal('anc-badge', anc.badge_text || '');
+        setVal('anc-media-type', anc.media_type || 'video');
+        setVal('anc-active', anc.active !== false ? 'true' : 'false');
+        setVal('anc-media-url', anc.media_url || '');
+        setVal('anc-action-label', anc.action_label || '');
+        setVal('anc-action-url', anc.action_url || '');
+
+        const chkAudio = document.getElementById('anc-has-audio');
+        if (chkAudio) chkAudio.checked = anc.has_audio !== false;
+
+        const chkMuted = document.getElementById('anc-video-muted');
+        if (chkMuted) chkMuted.checked = Boolean(anc.video_muted);
+    } else {
+        setVal('anc-id', '');
+        setVal('anc-titulo', '');
+        setVal('anc-mensaje', '');
+        setVal('anc-placement', 'modal');
+        setVal('anc-badge', 'NOVEDAD');
+        setVal('anc-media-type', 'video');
+        setVal('anc-active', 'true');
+        setVal('anc-media-url', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4');
+        setVal('anc-action-label', 'Conocer Sabores');
+        setVal('anc-action-url', '#productos');
+
+        const chkAudio = document.getElementById('anc-has-audio');
+        if (chkAudio) chkAudio.checked = true;
+
+        const chkMuted = document.getElementById('anc-video-muted');
+        if (chkMuted) chkMuted.checked = false;
+    }
+
+    syncAnuncioLivePreview();
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    setTimeout(() => { document.getElementById('anc-titulo')?.focus(); }, 40);
+}
+
+function cerrarModalAnuncio() {
+    const modal = document.getElementById('modal-anuncio');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+    }
+    document.body.classList.remove('modal-open');
+    editandoAnuncioId = null;
+
+    // Pausar video de preview si estuviera sonando
+    const vid = document.getElementById('ancLiveMediaContainer')?.querySelector('video');
+    if (vid) { try { vid.pause(); } catch (_) {} }
+}
+
+function syncAnuncioLivePreview() {
+    const title = document.getElementById('anc-titulo')?.value.trim() || 'Título del anuncio';
+    const message = document.getElementById('anc-mensaje')?.value.trim() || 'Mensaje o descripción del anuncio promocional...';
+    const badge = document.getElementById('anc-badge')?.value.trim();
+    const mediaType = document.getElementById('anc-media-type')?.value || 'video';
+    const mediaUrl = document.getElementById('anc-media-url')?.value.trim();
+    const hasAudio = document.getElementById('anc-has-audio')?.checked;
+    const isMuted = document.getElementById('anc-video-muted')?.checked;
+    const actionLabel = document.getElementById('anc-action-label')?.value.trim() || 'Ver promoción';
+
+    const tEl = document.getElementById('ancLiveTitle');
+    const mEl = document.getElementById('ancLiveMessage');
+    const bEl = document.getElementById('ancLiveBadge');
+    const aEl = document.getElementById('ancLiveActionBtn');
+    const mediaBox = document.getElementById('ancLiveMediaContainer');
+    const videoOptions = document.getElementById('ancVideoOptionsBox');
+    const audioTip = document.getElementById('ancAudioTip');
+
+    if (tEl) tEl.textContent = title;
+    if (mEl) mEl.textContent = message;
+    if (bEl) {
+        bEl.textContent = badge || 'OFERTA';
+        bEl.style.display = badge ? 'inline-block' : 'none';
+    }
+    if (aEl) aEl.textContent = actionLabel;
+
+    // Mostrar/ocultar opciones de video con audio
+    if (videoOptions) videoOptions.style.display = mediaType === 'video' ? 'flex' : 'none';
+    if (audioTip) audioTip.style.display = mediaType === 'video' ? 'flex' : 'none';
+
+    // Actualizar contenedor multimedia interactivo
+    if (mediaBox) {
+        if (mediaType === 'video' && mediaUrl) {
+            mediaBox.innerHTML = `
+                <video src="${imgSrc(mediaUrl)}" controls playsinline ${isMuted ? 'muted' : ''} style="width:100%; max-height:160px; background:#000; display:block;"></video>
+            `;
+            const vid = mediaBox.querySelector('video');
+            if (vid && hasAudio && !isMuted) vid.volume = 0.9;
+        } else if (mediaType === 'image' && mediaUrl) {
+            mediaBox.innerHTML = `<img src="${imgSrc(mediaUrl)}" alt="Vista previa" style="width:100%; height:160px; object-fit:cover; display:block;">`;
+        } else {
+            mediaBox.innerHTML = `
+                <div style="padding:28px 16px; text-align:center; color:#888; font-size:12.5px;">
+                    <i class="fas fa-align-left" style="font-size:20px; display:block; margin-bottom:4px; opacity:0.6;"></i>
+                    Solo texto (sin multimedia)
+                </div>
+            `;
+        }
+    }
+}
+
+function guardarAnuncio(payload) {
+    if (editandoAnuncioId) {
+        const idx = allAdminAnuncios.findIndex((a) => String(a.id) === String(editandoAnuncioId));
+        if (idx !== -1) {
+            allAdminAnuncios[idx] = { ...allAdminAnuncios[idx], ...payload, updated_at: new Date().toISOString() };
+        }
+    } else {
+        const nuevo = {
+            id: 'anc-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+            ...payload,
+            created_at: new Date().toISOString()
+        };
+        allAdminAnuncios.unshift(nuevo);
+    }
+
+    try {
+        localStorage.setItem(STORAGE_ANUNCIOS_KEY, JSON.stringify(allAdminAnuncios));
+    } catch (_) {}
+
+    toast(editandoAnuncioId ? 'Anuncio actualizado con éxito' : 'Anuncio publicado con éxito', 'success');
+    cerrarModalAnuncio();
+    updateAnunciosStats();
+    renderAdminAnuncios(getVisibleAnuncios());
+}
+
+function toggleAnuncioActivo(id, activo) {
+    const idx = allAdminAnuncios.findIndex((a) => String(a.id) === String(id));
+    if (idx !== -1) {
+        allAdminAnuncios[idx].active = Boolean(activo);
+        try {
+            localStorage.setItem(STORAGE_ANUNCIOS_KEY, JSON.stringify(allAdminAnuncios));
+        } catch (_) {}
+        toast(activo ? 'Anuncio activado en la tienda' : 'Anuncio pausado', 'success');
+        updateAnunciosStats();
+        renderAdminAnuncios(getVisibleAnuncios());
+    }
+}
+
+function eliminarAnuncio(id) {
+    allAdminAnuncios = allAdminAnuncios.filter((a) => String(a.id) !== String(id));
+    try {
+        localStorage.setItem(STORAGE_ANUNCIOS_KEY, JSON.stringify(allAdminAnuncios));
+    } catch (_) {}
+    toast('Anuncio eliminado', 'success');
+    updateAnunciosStats();
+    renderAdminAnuncios(getVisibleAnuncios());
 }
 
 function setupAdminEvents() {
@@ -1413,9 +1887,102 @@ function setupAdminEvents() {
 
     document.getElementById('btn-reload-users')?.addEventListener('click', () => cargarTablaUsuarios());
     document.getElementById('admin-user-search')?.addEventListener('input', () => renderUserRows(getVisibleUsers()));
+        // ----------------------------------------------------
+    // Conexión del Módulo de Preguntas y Anuncios
+    // ----------------------------------------------------
     document.getElementById('btn-reload-questions')?.addEventListener('click', () => cargarTablaPreguntas());
     document.getElementById('admin-q-search')?.addEventListener('input', () => renderAdminQuestions(getVisibleQuestions()));
     document.getElementById('admin-q-filter')?.addEventListener('change', () => renderAdminQuestions(getVisibleQuestions()));
+
+    // Escuchar preguntas enviadas por clientes desde otras pestañas o ventanas
+    window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_IX_KEY || e.key === LEGACY_IX_KEY) {
+            cargarTablaPreguntas();
+        }
+        if (e.key === STORAGE_ANUNCIOS_KEY) {
+            cargarTablaAnuncios();
+        }
+    });
+
+    // Módulo de Anuncios: Toolbar y Modales
+    document.getElementById('btn-nuevo-anuncio')?.addEventListener('click', () => {
+        abrirModalAnuncio(false);
+    });
+
+    document.getElementById('btn-cerrar-modal-anuncio')?.addEventListener('click', cerrarModalAnuncio);
+    document.getElementById('btn-cancelar-modal-anuncio')?.addEventListener('click', cerrarModalAnuncio);
+
+    document.getElementById('modal-anuncio')?.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('modal-anuncio')) cerrarModalAnuncio();
+    });
+
+    // Sincronización en vivo del modal de anuncios al escribir
+    ['anc-titulo', 'anc-mensaje', 'anc-badge', 'anc-media-url', 'anc-action-label'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('input', syncAnuncioLivePreview);
+    });
+
+    ['anc-placement', 'anc-media-type', 'anc-active', 'anc-has-audio', 'anc-video-muted'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('change', syncAnuncioLivePreview);
+    });
+
+    // Selector de archivo local para video / imagen de anuncio
+    document.getElementById('anc-file-picker')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const isVid = file.type.startsWith('video/');
+        const isImg = file.type.startsWith('image/');
+        if (isVid) {
+            document.getElementById('anc-media-type').value = 'video';
+        } else if (isImg) {
+            document.getElementById('anc-media-type').value = 'image';
+        }
+
+        const objectUrl = URL.createObjectURL(file);
+        document.getElementById('anc-media-url').value = objectUrl;
+        syncAnuncioLivePreview();
+        toast(`Archivo cargado: ${file.name}`, 'success');
+    });
+
+    // Guardar anuncio desde el formulario
+    document.getElementById('form-anuncio')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const titulo = document.getElementById('anc-titulo')?.value.trim();
+        const mensaje = document.getElementById('anc-mensaje')?.value.trim();
+
+        if (!titulo) {
+            toast('El título del anuncio es obligatorio', 'warning');
+            document.getElementById('anc-titulo')?.focus();
+            return;
+        }
+        if (!mensaje) {
+            toast('La descripción del anuncio es obligatoria', 'warning');
+            document.getElementById('anc-mensaje')?.focus();
+            return;
+        }
+
+        const payload = {
+            title: titulo,
+            message: mensaje,
+            placement: document.getElementById('anc-placement')?.value || 'modal',
+            badge_text: document.getElementById('anc-badge')?.value.trim() || '',
+            media_type: document.getElementById('anc-media-type')?.value || 'none',
+            active: document.getElementById('anc-active')?.value === 'true',
+            media_url: document.getElementById('anc-media-url')?.value.trim() || '',
+            has_audio: Boolean(document.getElementById('anc-has-audio')?.checked),
+            video_muted: Boolean(document.getElementById('anc-video-muted')?.checked),
+            action_label: document.getElementById('anc-action-label')?.value.trim() || '',
+            action_url: document.getElementById('anc-action-url')?.value.trim() || ''
+        };
+
+        guardarAnuncio(payload);
+    });
+
+    // Filtros de Anuncios en toolbar
+    document.getElementById('admin-anc-search')?.addEventListener('input', () => renderAdminAnuncios(getVisibleAnuncios()));
+    document.getElementById('admin-anc-filter-placement')?.addEventListener('change', () => renderAdminAnuncios(getVisibleAnuncios()));
+    document.getElementById('admin-anc-filter-type')?.addEventListener('change', () => renderAdminAnuncios(getVisibleAnuncios()));
+    document.getElementById('admin-anc-filter-status')?.addEventListener('change', () => renderAdminAnuncios(getVisibleAnuncios()));
+
     document.getElementById('admin-filter-cat')?.addEventListener('change', () => renderRows(getVisibleProducts()));
     document.getElementById('admin-filter-status')?.addEventListener('change', () => renderRows(getVisibleProducts()));
     document.getElementById('btn-export-csv')?.addEventListener('click', () => exportProductsCsv(getVisibleProducts()));
@@ -1596,5 +2163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupAdminEvents();
     await cargarTablaProductos();
     await cargarTablaUsuarios();
+    await cargarTablaPreguntas();
+    await cargarTablaAnuncios();
     window.Cart?.updateCounter();
 });
