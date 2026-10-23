@@ -1,8 +1,7 @@
 /**
- * theme-reactor.js — Motor de sincronización dinámica bidireccional de color.
- * Permite que toda la tienda (cabecero, sobre nosotros, proceso, propósito,
- * llévalo contigo, nuestros yogures y distribuidores) adapte su atmósfera
- * pastel y acentos al sabor seleccionado tanto desde el hero como desde el carrusel inferior.
+ * theme-reactor.js — Motor de colorimetría dinámico arraigado a dos variables centrales:
+ * --flavor-dark: Color fuerte/oscuro del sabor (acento, títulos, botones)
+ * --flavor-light: Color pastel/claro del sabor (tarjeta cremoso, kickers, tintes)
  */
 (function () {
     'use strict';
@@ -11,81 +10,65 @@
         'fresa': {
             slug: 'fresa',
             nombre: 'Fresa',
-            accent: '#C3343E',
-            heroBg: '#C3343E',
+            dark: '#C3343E',
+            light: '#F4CBCF',
             wash: '#FFF5F6',
-            cardTint: '#FDE8EA',
-            border: 'rgba(195, 52, 62, 0.20)',
             handImg: 'assets/marketing/mano-botella-fresa-cutout.webp'
         },
         'melocoton': {
             slug: 'melocoton',
             nombre: 'Melocotón',
-            accent: '#DD6827',
-            heroBg: '#DD6827',
+            dark: '#DD6827',
+            light: '#F7D4B4',
             wash: '#FFF6F0',
-            cardTint: '#FEECE0',
-            border: 'rgba(221, 104, 39, 0.20)',
             handImg: 'assets/marketing/mano-botella-melocoton-cutout.png'
         },
         'pina': {
             slug: 'pina',
             nombre: 'Piña',
-            accent: '#D89B00',
-            heroBg: '#E4A30F',
+            dark: '#E4A30F',
+            light: '#F5E6A6',
             wash: '#FFFDF2',
-            cardTint: '#FEF7D9',
-            border: 'rgba(228, 163, 15, 0.20)',
             handImg: 'assets/marketing/mano-botella-pina-cutout.png'
         },
         'mora': {
             slug: 'mora',
             nombre: 'Mora',
-            accent: '#82366B',
-            heroBg: '#82366B',
+            dark: '#82366B',
+            light: '#E6CEE3',
             wash: '#FAF5F9',
-            cardTint: '#F4E7F1',
-            border: 'rgba(130, 54, 107, 0.20)',
             handImg: 'assets/marketing/mano-botella-mora-cutout.png'
         },
         'guanabana': {
             slug: 'guanabana',
             nombre: 'Guanábana',
-            accent: '#3E8A25',
-            heroBg: '#488738',
+            dark: '#488738',
+            light: '#D4E8C9',
             wash: '#F5FAF3',
-            cardTint: '#EBF5E7',
-            border: 'rgba(72, 135, 56, 0.20)',
             handImg: 'assets/marketing/mano-botella-guanabana-cutout.png'
         },
         'mango': {
             slug: 'mango',
             nombre: 'Mango',
-            accent: '#ED8311',
-            heroBg: '#ED8311',
+            dark: '#ED8311',
+            light: '#F5DDB0',
             wash: '#FFF7ED',
-            cardTint: '#FEEDD7',
-            border: 'rgba(237, 131, 17, 0.20)',
             handImg: 'assets/marketing/mano-botella-mango-cutout.png'
         },
         'cafe': {
             slug: 'cafe',
             nombre: 'Café',
-            accent: '#663E31',
-            heroBg: '#663E31',
+            dark: '#663E31',
+            light: '#E5D3C4',
             wash: '#F9F6F4',
-            cardTint: '#EFE8E3',
-            border: 'rgba(102, 62, 49, 0.20)',
             handImg: 'assets/marketing/mano-botella-cafe-cutout.png'
         },
         'frutos-rojos': {
             slug: 'frutos-rojos',
             nombre: 'Frutos Rojos',
-            accent: '#B12C4E',
-            heroBg: '#B12C4E',
+            dark: '#B12C4E',
+            light: '#F2CBD4',
             wash: '#FDF5F7',
-            cardTint: '#FBE5EA',
-            border: 'rgba(177, 44, 78, 0.20)',
             handImg: 'assets/marketing/mano-botella-frutos-rojos-cutout.png'
         }
     };
@@ -101,12 +84,15 @@
         currentSlug = s;
 
         const root = document.documentElement;
-        // 1. Inyectar variables globales de color en :root
-        root.style.setProperty('--flavor-accent', theme.accent);
-        root.style.setProperty('--flavor-hero-bg', theme.heroBg);
+        // 1. Inyectar las dos variables centrales en :root
+        root.style.setProperty('--flavor-dark', theme.dark);
+        root.style.setProperty('--flavor-light', theme.light);
+
+        // Variables de compatibilidad
+        root.style.setProperty('--flavor-accent', theme.dark);
+        root.style.setProperty('--flavor-hero-bg', theme.dark);
+        root.style.setProperty('--flavor-card-tint', theme.light);
         root.style.setProperty('--flavor-wash', theme.wash);
-        root.style.setProperty('--flavor-card-tint', theme.cardTint);
-        root.style.setProperty('--flavor-border', theme.border);
         document.body.dataset.flavor = s;
 
         // 2. Actualizar imagen de la mano en "Llévalo contigo"
@@ -131,7 +117,7 @@
             procesoBottle.src = `assets/products/yoguraso-${s}-500ml.webp`;
         }
 
-        // 5. Notificar a otros módulos si no es un bucle
+        // 5. Notificar bidireccionalmente
         if (!isBroadcasting) {
             isBroadcasting = true;
             try {

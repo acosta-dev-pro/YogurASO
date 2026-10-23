@@ -189,54 +189,50 @@ button, input, select, textarea { font-family: inherit; }
 
 
 /* ==========================================================================
-   ATMÓSFERA Y TINTES DE COLOR DINÁMICOS POR SABOR SELECCIONADO
+   VARIABLES DE COLORIMETRÍA DINÁMICAS POR SABOR (DOS TONOS FUNDAMENTALES)
+   --flavor-dark: Color fuerte/oscuro del sabor (fondos de bloque, títulos, botones)
+   --flavor-light: Color pastel/claro del sabor (tarjeta cremoso, kickers, tintes suaves)
    ========================================================================== */
 :root {
-    --flavor-accent: #C3343E;
-    --flavor-hero-bg: #C3343E;
+    --flavor-dark: #C3343E;
+    --flavor-light: #F4CBCF;
+    --flavor-accent: var(--flavor-dark);
+    --flavor-hero-bg: var(--flavor-dark);
+    --flavor-card-tint: var(--flavor-light);
     --flavor-wash: #FFF5F6;
-    --flavor-card-tint: #FDE8EA;
-    --flavor-border: rgba(195, 52, 62, 0.20);
 }
 
-/* 1. Sobre nosotros */
-#nosotros,
-.nosotros-section {
-    background: var(--flavor-wash, #FFF8F4) !important;
-    transition: background-color 0.6s ease;
-}
-
-/* 2. Proceso responsable (Así lo hacemos) */
+/* 1. Proceso responsable (Así lo hacemos) */
 .p3d {
     background: var(--flavor-wash, #FFF8F4) !important;
     transition: background-color 0.6s ease;
 }
 .p3d__eyebrow {
-    color: var(--flavor-accent, #C3343E) !important;
+    color: var(--flavor-dark, #C3343E) !important;
 }
 .p3d__more {
-    color: var(--flavor-accent, #C3343E) !important;
+    color: var(--flavor-dark, #C3343E) !important;
 }
 
-/* 3. Paisaje / Fruta Real / Neiva Tello */
+/* 2. Paisaje / Fruta Real / Neiva Tello */
 .fcol {
     background: var(--flavor-wash, #FFF8F4) !important;
     transition: background-color 0.6s ease;
 }
 
-/* 4. Trío (Llévalo contigo, Cremoso, Propósito) */
+/* 3. Trío (Llévalo contigo, Cremoso, Propósito) */
 .ytrio {
     background: var(--flavor-wash, #FFF8F4) !important;
     transition: background-color 0.6s ease;
 }
 
-/* 5. Empaque */
+/* 4. Empaque */
 .emp {
     background: var(--flavor-wash, #FFF8F4) !important;
     transition: background-color 0.6s ease;
 }
 
-/* 6. Nuestros yogures */
+/* 5. Nuestros yogures (Sección y Tarjetas SIN marcos) */
 #productos.hp-section,
 .hp-section {
     background: var(--flavor-wash, #FFF8F4) !important;
@@ -244,19 +240,22 @@ button, input, select, textarea { font-family: inherit; }
 }
 .hp-pill.is-active,
 .hp-filter-pill.is-active {
-    background: var(--flavor-accent, #C3343E) !important;
+    background: var(--flavor-dark, #C3343E) !important;
     color: #FFFFFF !important;
 }
+/* Tarjetas de productos: NUNCA tienen marco, ni activas ni inactivas */
+.hp-card .hp-card__panel,
 .hp-card.is-active .hp-card__panel {
-    border: 2px solid var(--flavor-accent, #C3343E) !important;
+    border: none !important;
+    outline: none !important;
 }
 
-/* 7. Distribuidores (¿Quieres distribuir YogurASO?) */
+/* 6. Distribuidores (¿Quieres distribuir YogurASO?) */
 .v3-dist {
     background: var(--flavor-wash, #FFF8F4) !important;
     transition: background-color 0.6s ease;
 }
 .v3-dist .ys-pill {
-    background: var(--flavor-accent, #C3343E) !important;
+    background: var(--flavor-dark, #C3343E) !important;
     color: #FFFFFF !important;
 }

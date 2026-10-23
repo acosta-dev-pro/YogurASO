@@ -410,32 +410,7 @@
         };
     }
 
-    function initHeaderTicker() {
-        var cfg = getAnunciosConfig();
-        var ticker = document.getElementById('headerScrollTicker');
-        var track = document.getElementById('headerScrollTickerTrack');
-        if (!ticker || !track || !cfg.headerCarruselActivo) {
-            if (ticker) ticker.style.display = 'none';
-            return;
-        }
-
-        var lines = (cfg.headerMensajes || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-        if (!lines.length) return;
-
-        track.innerHTML = lines.map(function (msg, idx) {
-            return '<span class="header-scroll-ticker-item ' + (idx === 0 ? 'is-active' : '') + '">' + esc(msg) + '</span>';
-        }).join('');
-
-        var items = track.querySelectorAll('.header-scroll-ticker-item');
-        if (items.length <= 1) return;
-
-        var curIdx = 0;
-        setInterval(function () {
-            items[curIdx].classList.remove('is-active');
-            curIdx = (curIdx + 1) % items.length;
-            items[curIdx].classList.add('is-active');
-        }, 3800);
-    }
+    
 
     function init() {
         var c = getConsent();
@@ -446,7 +421,7 @@
 
         // 1. Renderizar Barra Superior si está activa
         renderTopBanner();
-        initHeaderTicker();
+        
 
         // 2. Si no estamos en páginas del panel administrativo, mostrar anuncio modal activo
         if (!inPages || !/admin.html/i.test(location.pathname)) {

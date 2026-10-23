@@ -2179,9 +2179,7 @@ function cargarConfiguracionAnuncios() {
             letreroMensaje: 'Conoce en este video cómo transformamos leche fresca de las granjas del Huila en un yogurt artesanal ultra cremoso.',
             letreroUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
             letreroBtnTexto: 'Probar Sabores Artesanales',
-            letreroBtnUrl: '#productos',
-            headerCarruselActivo: true,
-            headerMensajes: '🥛 Yogurt Artesanal 100% Natural • Tello & Neiva\n🛵 Domicilio sin costo en Neiva por pedidos desde 3 botellas\n🍓 Fruta real seleccionada del Huila • Sin conservantes\n✨ Presentación 500 ml & 1 Litro • Pide fácil por WhatsApp'
+            letreroBtnUrl: '#productos'
         };
         try { localStorage.setItem(CFG_ANUNCIOS_KEY, JSON.stringify(cfg)); } catch (_) {}
     }
@@ -2197,8 +2195,6 @@ function cargarConfiguracionAnuncios() {
     setVal('cfg-letrero-url', cfg.letreroUrl);
     setVal('cfg-letrero-btn-texto', cfg.letreroBtnTexto);
     setVal('cfg-letrero-btn-url', cfg.letreroBtnUrl);
-    setChk('cfg-header-carrusel-activo', cfg.headerCarruselActivo);
-    setVal('cfg-header-mensajes', cfg.headerMensajes);
 }
 
 function guardarConfiguracionAnuncios() {
@@ -2210,16 +2206,14 @@ function guardarConfiguracionAnuncios() {
         letreroMensaje: document.getElementById('cfg-letrero-mensaje')?.value.trim() || '',
         letreroUrl: document.getElementById('cfg-letrero-url')?.value.trim() || '',
         letreroBtnTexto: document.getElementById('cfg-letrero-btn-texto')?.value.trim() || '',
-        letreroBtnUrl: document.getElementById('cfg-letrero-btn-url')?.value.trim() || '',
-        headerCarruselActivo: document.getElementById('cfg-header-carrusel-activo')?.checked ?? true,
-        headerMensajes: document.getElementById('cfg-header-mensajes')?.value.trim() || ''
+        letreroBtnUrl: document.getElementById('cfg-letrero-btn-url')?.value.trim() || ''
     };
 
     try {
         localStorage.setItem(CFG_ANUNCIOS_KEY, JSON.stringify(cfg));
     } catch (_) {}
 
-    toast('Configuración de anuncios guardada y lista en la tienda', 'success');
+    toast('Configuración del letrero principal guardada con éxito', 'success');
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
