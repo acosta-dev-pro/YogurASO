@@ -1,7 +1,10 @@
 /**
- * hero.js — Aquí queda el carrusel grande de la portada.
- * Cambian el fondo y las botellas. El texto no se mueve.
- * Sabores: js/flavors.js. Colores: css/hero.css.
+ * hero.js — Carrusel físico 3D del Hero y Sistema de Vuelo Continuo por Scroll.
+ * 
+ * Funcionalidades clave:
+ * 1. Carrusel 3D robusto tolerante a clics ultrarrápidos (sin atascos en la mitad).
+ * 2. Vuelo continuo y sensible al scroll desde Hero -> Sobre nosotros -> Proceso responsable.
+ * 3. Sincronización bidireccional global con el carrusel inferior y el selector de sabores.
  */
 (function () {
     'use strict';
@@ -11,7 +14,6 @@
     if (!FLAVORS || !FLAVORS.length || !hero) return;
 
     var INTERVAL = 5500;
-    var EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
     var base = 'assets/products/yoguraso-';
     var MAIN_SIZES = '(max-width: 860px) 46vw, 23vw';
     var body = document.body;
@@ -33,7 +35,7 @@
     var current = 0, swapId = 0, isAnimating = false;
     var userPaused = reduce.matches, hidden = document.hidden, offscreen = false, focusHold = false;
 
-    /* ---------- Imágenes y Precarga Inmediata ---------- */
+    /* ---------- Precarga Inmediata de Imágenes ---------- */
     var cache = {};
     function load(slug, isMain) {
         var key = slug + (isMain ? ':m' : ':s');
@@ -49,7 +51,6 @@
         return cache[key];
     }
 
-    // Precargar inmediatamente los 8 sabores para eliminar cualquier latencia en cambios rápidos
     FLAVORS.forEach(function (f) {
         load(f.slug, true);
         load(f.slug, false);
@@ -124,153 +125,167 @@
         document.dispatchEvent(new CustomEvent('yg:flavorchange', { detail: { flavor: flavor, slug: flavor.slug, source: 'hero' } }));
     }
 
-    var lastStepTime = 0;
+    /* ==========================================================================
+       1. CARRUSEL 3D DEL HERO: GESTIÓN DE SLOTS Y RESISTENCIA A CLICS RÁPIDOS
+       ========================================================================== */
+    function resetSlotsToBaseline() {
+        cancelActiveAnims();
+        if (bottleMain) {
+            bottleMain.style.transform = '';
+            bottleMain.style.opacity = '';
+            bottleMain.style.filter = '';
+            bottleMain.style.left = '';
+            bottleMain.style.zIndex = '5';
+        }
+        if (bottleSecond) {
+            bottleSecond.style.transform = '';
+            bottleSecond.style.opacity = '';
+            bottleSecond.style.filter = '';
+            bottleSecond.style.left = '';
+            bottleSecond.style.zIndex = '2';
+        }
+        if (bottleLeft) {
+            bottleLeft.style.transform = '';
+            bottleLeft.style.opacity = '0';
+            bottleLeft.style.filter = '';
+            bottleLeft.style.left = '';
+            bottleLeft.style.zIndex = '2';
+        }
+    }
+
+    function commitSlotFlavors() {
+        var len = FLAVORS.length;
+        var fCur = FLAVORS[current];
+        var fNext = FLAVORS[(current + 1) % len];
+        var fPrev = FLAVORS[(current - 1 + len) % len];
+
+        fillSlot(bottleMain, fCur, true);
+        fillSlot(bottleSecond, fNext, false);
+        fillSlot(bottleLeft, fPrev, false);
+        resetSlotsToBaseline();
+    }
 
     function transitionStage(fromIndex, toIndex, dir, id) {
+        var len = FLAVORS.length;
         var fromF = FLAVORS[fromIndex];
         var toF = FLAVORS[toIndex];
-        var nextF = FLAVORS[(toIndex + 1) % FLAVORS.length];
-        var prevF = FLAVORS[(toIndex - 1 + FLAVORS.length) % FLAVORS.length];
+        var nextF = FLAVORS[(toIndex + 1) % len];
+        var prevF = FLAVORS[(toIndex - 1 + len) % len];
 
         var isForward = dir >= 0;
         var fast = reduce.matches;
 
-        // Cancelar inmediatamente cualquier animación activa previa
-        cancelActiveAnims();
+        resetSlotsToBaseline();
 
         if (fast) {
-            fillSlot(bottleMain, toF, true);
-            fillSlot(bottleSecond, nextF, false);
+            commitSlotFlavors();
             isAnimating = false;
             return;
         }
 
         var isMobile = window.innerWidth <= 860;
-        var ANIM_DURATION = 380;
-        var ANIM_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+        var ANIM_DURATION = 260; // Ágil y continuo, nunca se estanca
+        var ANIM_EASE = 'cubic-bezier(0.2, 0.9, 0.3, 1)';
 
         if (isMobile) {
-            var slide = 140;
-            function restMobile() {
-                if (bottleMain) { bottleMain.style.left = '50%'; bottleMain.style.opacity = '1'; bottleMain.style.zIndex = ''; }
-                if (bottleSecond) { bottleSecond.style.opacity = '0'; bottleSecond.style.left = '130%'; bottleSecond.style.zIndex = ''; }
-                if (bottleLeft) { bottleLeft.style.opacity = '0'; bottleLeft.style.left = '-30%'; bottleLeft.style.zIndex = ''; }
-            }
-            function finishMobile() {
-                if (id !== swapId) return;
-                cancelActiveAnims();
-                fillSlot(bottleMain, toF, true);
-                fillSlot(bottleSecond, nextF, false);
-                restMobile();
-                isAnimating = false;
-            }
-            var settled = false;
-            function once() { if (settled) return; settled = true; finishMobile(); }
+            var slide = 120;
             fillSlot(bottleMain, fromF, true);
-            var outgoing;
-            var incoming;
+            var outgoing, incoming;
+
             if (isForward) {
                 fillSlot(bottleSecond, toF, false);
-                if (bottleSecond) { bottleSecond.style.opacity = '1'; bottleSecond.style.left = '50%'; bottleSecond.style.zIndex = '6'; }
+                if (bottleSecond) { bottleSecond.style.opacity = '1'; bottleSecond.style.zIndex = '6'; }
                 outgoing = anim(bottleMain, [
                     { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 },
                     { transform: 'translateX(-50%) translate3d(-' + slide + 'px, 0, 0)', opacity: 0 }
-                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
                 incoming = anim(bottleSecond, [
-                    { transform: 'translateX(-50%) translate3d(' + slide + 'px, 0, 0)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(' + slide + 'px, 0, 0)', opacity: 0.8 },
                     { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 }
-                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
             } else {
                 fillSlot(bottleLeft, toF, false);
-                if (bottleLeft) { bottleLeft.style.opacity = '1'; bottleLeft.style.left = '50%'; bottleLeft.style.zIndex = '6'; }
+                if (bottleLeft) { bottleLeft.style.opacity = '1'; bottleLeft.style.zIndex = '6'; }
                 outgoing = anim(bottleMain, [
                     { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 },
                     { transform: 'translateX(-50%) translate3d(' + slide + 'px, 0, 0)', opacity: 0 }
-                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
                 incoming = anim(bottleLeft, [
-                    { transform: 'translateX(-50%) translate3d(-' + slide + 'px, 0, 0)', opacity: 1 },
+                    { transform: 'translateX(-50%) translate3d(-' + slide + 'px, 0, 0)', opacity: 0.8 },
                     { transform: 'translateX(-50%) translate3d(0, 0, 0)', opacity: 1 }
-                ], { duration: slide, easing: ANIM_EASE, fill: 'forwards' });
+                ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
             }
-            Promise.all([outgoing.finished, incoming.finished]).then(once).catch(once);
-            window.setTimeout(once, slide + 80);
+
+            Promise.all([outgoing.finished, incoming.finished]).then(function () {
+                if (id !== swapId) return;
+                commitSlotFlavors();
+                isAnimating = false;
+            }).catch(function () {});
             return;
         }
 
+        // ESCRITORIO: Carrusel de 3 botellas en hilera continua
         if (isForward) {
-            // El sabor saliente está en bottleMain
             fillSlot(bottleMain, fromF, true);
-            // El sabor entrante (toF) SIEMPRE se ubica explícitamente en bottleSecond para entrar al centro
             fillSlot(bottleSecond, toF, false);
-            // El siguiente sabor (nextF) entra por la derecha a través de bottleLeft
             fillSlot(bottleLeft, nextF, false);
+
             if (bottleLeft) {
                 bottleLeft.style.opacity = '1';
                 bottleLeft.style.left = 'clamp(740px, 88vw, 1440px)';
             }
 
-            // 1. Botella principal sale hacia atrás a la izquierda
+            // 1. Botella central pasa suavemente hacia la izquierda
             var a1 = anim(bottleMain, [
-                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 1, filter: 'blur(0px)' },
-                { transform: 'translateX(-50%) translate3d(-20vw, -18px, 0) scale(0.68) rotate(-4deg)', opacity: 0, filter: 'blur(2px)' }
-            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 1 },
+                { transform: 'translateX(-50%) translate3d(-18vw, -12px, 0) scale(0.72)', opacity: 0 }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
 
-            // 2. Botella secundaria (toF) avanza al centro y crece a protagonista
+            // 2. Botella derecha avanza suavemente hacia el centro como protagonista
             var a2 = anim(bottleSecond, [
-                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' },
-                { transform: 'translateX(-50%) translate3d(-25vw, 35px, 0) scale(1.61) rotate(0deg)', opacity: 1, filter: 'blur(0px)' }
-            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 0.92 },
+                { transform: 'translateX(-50%) translate3d(-24vw, 24px, 0) scale(1.42)', opacity: 1 }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
 
-            // 3. Nueva botella de fondo entra por la derecha
+            // 3. Siguiente botella de la hilera entra desde la derecha
             var a3 = anim(bottleLeft, [
-                { transform: 'translateX(-50%) translate3d(16vw, -15px, 0) scale(0.68) rotate(4deg)', opacity: 0, filter: 'blur(2px)' },
-                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' }
-            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+                { transform: 'translateX(-50%) translate3d(14vw, -10px, 0) scale(0.72)', opacity: 0 },
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 0.92 }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
 
             Promise.all([a1.finished, a2.finished, a3.finished]).then(function () {
                 if (id !== swapId) return;
-                cancelActiveAnims();
-                fillSlot(bottleMain, toF, true);
-                fillSlot(bottleSecond, nextF, false);
-                if (bottleLeft) {
-                    bottleLeft.style.opacity = '0';
-                    bottleLeft.style.left = 'clamp(260px, 36vw, 620px)';
-                }
+                commitSlotFlavors();
                 isAnimating = false;
             }).catch(function () {});
         } else {
-            // Atrás: el anterior entra desde la izquierda
+            // Retroceso: entra desde la izquierda
             fillSlot(bottleMain, fromF, true);
             fillSlot(bottleLeft, toF, false);
             fillSlot(bottleSecond, prevF, false);
+
             if (bottleLeft) {
                 bottleLeft.style.opacity = '1';
-                bottleLeft.style.left = 'clamp(260px, 36vw, 620px)';
             }
 
             var b1 = anim(bottleMain, [
-                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 1, filter: 'blur(0px)' },
-                { transform: 'translateX(-50%) translate3d(20vw, -18px, 0) scale(0.68) rotate(4deg)', opacity: 0, filter: 'blur(2px)' }
-            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 1 },
+                { transform: 'translateX(-50%) translate3d(18vw, -12px, 0) scale(0.72)', opacity: 0 }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
 
             var b2 = anim(bottleLeft, [
-                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' },
-                { transform: 'translateX(-50%) translate3d(25vw, 35px, 0) scale(1.61) rotate(0deg)', opacity: 1, filter: 'blur(0px)' }
-            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 0.92 },
+                { transform: 'translateX(-50%) translate3d(24vw, 24px, 0) scale(1.42)', opacity: 1 }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
 
             var b3 = anim(bottleSecond, [
-                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 0.92, filter: 'blur(0px)' },
-                { transform: 'translateX(-50%) translate3d(16vw, -15px, 0) scale(0.68) rotate(4deg)', opacity: 0, filter: 'blur(2px)' }
-            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'forwards' });
+                { transform: 'translateX(-50%) translate3d(-14vw, -10px, 0) scale(0.72)', opacity: 0 },
+                { transform: 'translateX(-50%) translate3d(0, 0, 0) scale(1)', opacity: 0.92 }
+            ], { duration: ANIM_DURATION, easing: ANIM_EASE, fill: 'none' });
 
             Promise.all([b1.finished, b2.finished, b3.finished]).then(function () {
                 if (id !== swapId) return;
-                cancelActiveAnims();
-                fillSlot(bottleMain, toF, true);
-                fillSlot(bottleSecond, nextF, false);
-                if (bottleLeft) {
-                    bottleLeft.style.opacity = '0';
-                }
+                commitSlotFlavors();
                 isAnimating = false;
             }).catch(function () {});
         }
@@ -285,39 +300,26 @@
         current = n;
         var flavor = FLAVORS[n];
         var id = ++swapId;
+
+        // Consolidar estado previo para evitar desfases o botellas atascadas en la cola
+        commitSlotFlavors();
         isAnimating = true;
 
-        var now = performance.now();
-        var isVeryFast = (now - lastStepTime) < 140;
-        lastStepTime = now;
-
-        // El fondo y el sabor se activan al mismo milisegundo exacto
+        // El fondo del sabor se activa inmediatamente junto a la botella
         setTheme(flavor);
 
-        if (isVeryFast) {
-            // A velocidad luz: sincronización instantánea sin colas ni desfasajes
-            cancelActiveAnims();
-            fillSlot(bottleMain, flavor, true);
-            var nextF = FLAVORS[(n + 1) % len];
-            fillSlot(bottleSecond, nextF, false);
-            if (bottleLeft) {
-                bottleLeft.style.opacity = '0';
-                bottleLeft.style.left = 'clamp(260px, 36vw, 620px)';
-            }
-            isAnimating = false;
-        } else {
-            transitionStage(prevIndex, n, dir, id);
-        }
+        transitionStage(prevIndex, n, dir, id);
 
         if (stage) stage.setAttribute('aria-label', flavor.nombre + '. Toca o usa las flechas para cambiar de sabor');
         if (live && opts && opts.announce) live.textContent = 'Sabor ' + flavor.nombre;
         restartTimer();
     }
+
     function step(d, announce) {
         show(current + d, { announce: announce, dir: d });
     }
 
-    /* ---------- Cambio automático cada ~5.5s ---------- */
+    /* ---------- Temporizador de cambio automático ---------- */
     var autoTimer = null;
     function held() { return userPaused || hidden || offscreen || focusHold; }
     function restartTimer() {
@@ -347,6 +349,7 @@
             restartTimer();
         }
     }
+
     if (pauseBtn) {
         pauseBtn.style.setProperty('--hero-interval', INTERVAL + 'ms');
         pauseBtn.addEventListener('click', function () { setUserPaused(!userPaused); });
@@ -357,6 +360,7 @@
     } else {
         restartTimer();
     }
+
     document.addEventListener('visibilitychange', function () { hidden = document.hidden; syncHold(); });
     if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (entries) {
@@ -366,7 +370,7 @@
     }
     if (reduce.addEventListener) reduce.addEventListener('change', function () { if (reduce.matches) setUserPaused(true); });
 
-    /* ---------- Teclado, toque y deslizamiento ---------- */
+    /* ---------- Interacciones: Clics y Teclado ---------- */
     if (stage) {
         stage.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowRight') step(1, true);
@@ -388,7 +392,7 @@
             if (x0 === null) return;
             var dx = e.clientX - x0, dy = e.clientY - y0;
             x0 = null;
-            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+            if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
                 swiped = true;
                 step(dx < 0 ? 1 : -1, true);
             }
@@ -400,7 +404,9 @@
         });
     }
 
-    /* ---------- Sistema de Scroll & Acompañamiento del Yogurt a Sección 2 y Sección 3 ---------- */
+    /* ==========================================================================
+       2. VUELO CONTINUO Y SENSIBLE AL SCROLL: HERO -> NOSOTROS -> PROCESO
+       ========================================================================== */
     var header = document.getElementById('siteHeader');
     var secShowcase = document.getElementById('nosotros');
     var showcaseRedBox = document.getElementById('showcaseRedBox');
@@ -412,7 +418,6 @@
     var procesoBottleImg = document.getElementById('procesoBottleImg');
     var procesoCard = secProceso ? secProceso.querySelector('.p3d__card') : null;
 
-    // Crear elemento de la botella viajera fija
     var travelBottle = document.getElementById('heroTravelBottle');
     var travelBottleImg = null;
     if (!travelBottle) {
@@ -434,8 +439,8 @@
     var heroDoc = null;
     var targetDoc = null;
     var procesoDoc = null;
-    var endScroll = 600;
-    var endScroll2 = 1200;
+    var endScroll = 500;
+    var endScroll2 = 1000;
     var prefersReduced = false;
     var pageZoom = 1;
 
@@ -449,12 +454,12 @@
         if (!(zoom > 0) || !isFinite(zoom)) zoom = 1;
         pageZoom = zoom;
 
-        // Elementos que podrían no haber sido capturados al inicio
         if (!secProceso) secProceso = document.getElementById('proceso');
         if (!procesoBottleWrap) procesoBottleWrap = document.getElementById('procesoBottleWrap');
         if (!procesoBottleImg) procesoBottleImg = document.getElementById('procesoBottleImg');
         if (!procesoCard && secProceso) procesoCard = secProceso.querySelector('.p3d__card');
 
+        // Medir la botella principal del Hero
         var mainBottleEl = bottleMain ? bottleMain.querySelector('.bottle-img') : null;
         if (mainBottleEl) {
             var wasHidden = mainBottleEl.style.visibility === 'hidden';
@@ -470,6 +475,7 @@
             };
         }
 
+        // Medir el contenedor de aterrizaje en Sobre nosotros
         if (showcaseBottleWrap) {
             var wasWrapHidden = showcaseBottleWrap.style.visibility === 'hidden';
             if (wasWrapHidden) showcaseBottleWrap.style.visibility = '';
@@ -484,6 +490,7 @@
             };
         }
 
+        // Medir el contenedor de aterrizaje en Proceso responsable
         if (procesoBottleWrap) {
             var wasProcHidden = procesoBottleWrap.style.visibility === 'hidden';
             if (wasProcHidden) procesoBottleWrap.style.visibility = '';
@@ -503,7 +510,7 @@
             var secDocTop = secR.top + sY;
             var boxOffset = showcaseRedBox.offsetTop || 0;
             var boxH = showcaseRedBox.offsetHeight || 450;
-            endScroll = Math.max(180, (secDocTop + (boxOffset + boxH / 2) * zoom) - (winHeight / 2));
+            endScroll = Math.max(160, (secDocTop + (boxOffset + boxH / 2) * zoom) - (winHeight / 2));
         }
 
         if (secProceso && procesoCard) {
@@ -511,7 +518,7 @@
             var procDocTop = procR.top + sY;
             var cardOffset = procesoCard.offsetTop || 0;
             var cardH = procesoCard.offsetHeight || 300;
-            endScroll2 = Math.max(endScroll + 350, (procDocTop + (cardOffset + cardH / 2) * zoom) - (winHeight / 2));
+            endScroll2 = Math.max(endScroll + 280, (procDocTop + (cardOffset + cardH / 2) * zoom) - (winHeight / 2));
         }
     }
 
@@ -522,138 +529,133 @@
                 var sY = window.scrollY || window.pageYOffset || 0;
                 var sX = window.scrollX || window.pageXOffset || 0;
 
-                // Barra sólida (header) apenas la página se mueve: cualquier scroll > 0
-                // la activa y vuelve a transparente solo en el tope (scrollY 0).
+                // Barra sólida (header) apenas la página se mueve: cualquier scroll > 0 la activa
                 if (header) {
                     header.classList.toggle('is-stuck', sY > 0);
                 }
 
                 // Pausar carrusel del hero cuando esté fuera de pantalla
-                var isOff = sY > 0;
+                var isOff = sY > 120;
                 if (offscreen !== isOff) {
                     offscreen = isOff;
-                    if (offscreen) {
-                        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
-                    } else {
-                        restartTimer();
-                    }
+                    syncHold();
                 }
 
-                // Animación de viaje y aterrizaje del producto (Etapa 1: Hero -> Nosotros; Etapa 2: Nosotros -> Proceso)
-                if (!prefersReduced && heroDoc && targetDoc && endScroll > 0) {
-                    var startScroll2 = endScroll + Math.min(160, Math.max(70, (endScroll2 - endScroll) * 0.20));
-                    if (startScroll2 >= endScroll2 - 60) {
-                        startScroll2 = endScroll + (endScroll2 - endScroll) * 0.18;
-                    }
-
-                    if (sY <= 2) {
-                        // 100% en el Hero
-                        if (bottleMain) bottleMain.style.visibility = '';
-                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
-                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
-                        if (travelBottle) travelBottle.classList.remove('is-active');
-                        if (showcaseShadow) showcaseShadow.style.opacity = '0';
-                    } else if (sY < endScroll) {
-                        // Vuelo Etapa 1: de Hero hacia Nosotros
-                        var p1 = Math.max(0, Math.min(1, sY / endScroll));
-                        if (bottleMain) bottleMain.style.visibility = 'hidden';
-                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
-                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
-
-                        var heroCx = heroDoc.left + heroDoc.width / 2;
-                        var heroCy = heroDoc.top + heroDoc.height / 2;
-                        var tgtCx = targetDoc.left + targetDoc.width / 2;
-                        var tgtCy = targetDoc.top + targetDoc.height / 2;
-                        var curW = targetDoc.width;
-                        var curH = targetDoc.height;
-                        var cx = heroCx + (tgtCx - heroCx) * p1;
-                        var cy = heroCy + (tgtCy - heroCy) * p1;
-                        var s0 = targetDoc.height > 0 ? heroDoc.height / targetDoc.height : 1;
-                        var sc = s0 + (1 - s0) * p1;
-                        var tilt = Math.sin(p1 * Math.PI) * -5.2;
-
-                        var viewX = (cx - curW / 2 - sX) / pageZoom;
-                        var viewY = (cy - curH / 2 - sY) / pageZoom;
-
-                        var cssW = curW / pageZoom, cssH = curH / pageZoom;
-                        if (travelBottle.dataset.w !== cssW.toFixed(1)) {
-                            travelBottle.style.width = cssW.toFixed(1) + 'px';
-                            travelBottle.style.height = cssH.toFixed(1) + 'px';
-                            travelBottle.style.transformOrigin = '50% 50%';
-                            travelBottle.dataset.w = cssW.toFixed(1);
-                        }
-                        travelBottle.style.transform = 'translate3d(' + viewX.toFixed(2) + 'px, ' + viewY.toFixed(2) + 'px, 0) rotate(' + tilt.toFixed(2) + 'deg) scale(' + sc.toFixed(4) + ')';
-                        travelBottle.classList.add('is-active');
-
-                        if (showcaseShadow) {
-                            showcaseShadow.style.opacity = (Math.max(0, (p1 - 0.75) / 0.25)).toFixed(2);
-                        }
-                    } else if (sY >= endScroll && sY <= startScroll2) {
-                        // 100% descansando en Nosotros
-                        if (bottleMain) bottleMain.style.visibility = 'hidden';
-                        if (showcaseBottleWrap) {
-                            showcaseBottleWrap.style.visibility = '';
-                            showcaseBottleWrap.style.transform = 'translate3d(0, 0, 0)';
-                            showcaseBottleWrap.style.opacity = '1';
-                        }
-                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
-                        if (travelBottle) travelBottle.classList.remove('is-active');
-                        if (showcaseShadow) showcaseShadow.style.opacity = '1';
-                    } else if (sY > startScroll2 && sY < endScroll2) {
-                        // Vuelo Etapa 2: de Nosotros hacia Proceso
-                        var p2 = Math.max(0, Math.min(1, (sY - startScroll2) / (endScroll2 - startScroll2)));
-                        if (bottleMain) bottleMain.style.visibility = 'hidden';
-                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
-                        if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
-                        if (showcaseShadow) showcaseShadow.style.opacity = (Math.max(0, 1 - p2 * 3)).toFixed(2);
-
-                        if (procesoDoc) {
-                            var nosCx = targetDoc.left + targetDoc.width / 2;
-                            var nosCy = targetDoc.top + targetDoc.height / 2;
-                            var procCx = procesoDoc.left + procesoDoc.width / 2;
-                            var procCy = procesoDoc.top + procesoDoc.height / 2;
-                            var curW2 = procesoDoc.width;
-                            var curH2 = procesoDoc.height;
-                            var cx2 = nosCx + (procCx - nosCx) * p2;
-                            var cy2 = nosCy + (procCy - nosCy) * p2;
-                            var s1to2 = procesoDoc.height > 0 ? targetDoc.height / procesoDoc.height : 1;
-                            var sc2 = s1to2 + (1 - s1to2) * p2;
-                            var tilt2 = Math.sin(p2 * Math.PI) * 4.5;
-
-                            var viewX2 = (cx2 - curW2 / 2 - sX) / pageZoom;
-                            var viewY2 = (cy2 - curH2 / 2 - sY) / pageZoom;
-
-                            var cssW2 = curW2 / pageZoom, cssH2 = curH2 / pageZoom;
-                            if (travelBottle.dataset.w !== cssW2.toFixed(1)) {
-                                travelBottle.style.width = cssW2.toFixed(1) + 'px';
-                                travelBottle.style.height = cssH2.toFixed(1) + 'px';
-                                travelBottle.style.transformOrigin = '50% 50%';
-                                travelBottle.dataset.w = cssW2.toFixed(1);
-                            }
-                            travelBottle.style.transform = 'translate3d(' + viewX2.toFixed(2) + 'px, ' + viewY2.toFixed(2) + 'px, 0) rotate(' + tilt2.toFixed(2) + 'deg) scale(' + sc2.toFixed(4) + ')';
-                            travelBottle.classList.add('is-active');
-                        }
-                    } else {
-                        // sY >= endScroll2: 100% aterrizado en Proceso
-                        if (bottleMain) bottleMain.style.visibility = 'hidden';
-                        if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
-                        if (showcaseShadow) showcaseShadow.style.opacity = '0';
-                        if (procesoBottleWrap) {
-                            procesoBottleWrap.style.visibility = '';
-                            procesoBottleWrap.style.transform = 'translate3d(0, 0, 0)';
-                            procesoBottleWrap.style.opacity = '1';
-                            if (!procesoBottleImg) procesoBottleImg = document.getElementById('procesoBottleImg');
-                            if (procesoBottleImg && FLAVORS[current]) {
-                                procesoBottleImg.src = src(FLAVORS[current].slug, false);
-                                procesoBottleImg.alt = 'Yogurt artesanal de ' + FLAVORS[current].nombre + ', 500 ml';
-                            }
-                        }
-                        if (travelBottle) travelBottle.classList.remove('is-active');
-                    }
-                } else if (prefersReduced) {
+                if (!heroDoc || !targetDoc || prefersReduced) {
                     if (bottleMain) bottleMain.style.visibility = '';
                     if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = '';
                     if (procesoBottleWrap) procesoBottleWrap.style.visibility = '';
+                    if (travelBottle) travelBottle.classList.remove('is-active');
+                    ticking = false;
+                    return;
+                }
+
+                var scroll1 = Math.max(140, endScroll);
+                var scroll2 = Math.max(scroll1 + 260, endScroll2);
+
+                if (sY <= 0) {
+                    // Reposo absoluto en el Hero
+                    if (bottleMain) bottleMain.style.visibility = '';
+                    if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                    if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
+                    if (travelBottle) travelBottle.classList.remove('is-active');
+                    if (showcaseShadow) showcaseShadow.style.opacity = '0';
+                } else if (sY < scroll1) {
+                    // ETAPA 1: VUELO DIRECTO Y SENSIBLE DESDE HERO HACIA SOBRE NOSOTROS
+                    // Reacciona inmediatamente con cada píxel de scroll (sY > 0)
+                    var p1 = Math.max(0, Math.min(1, sY / scroll1));
+
+                    if (bottleMain) bottleMain.style.visibility = 'hidden';
+                    if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                    if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
+
+                    var heroCx = heroDoc.left + heroDoc.width / 2;
+                    var heroCy = heroDoc.top + heroDoc.height / 2;
+                    var tgtCx = targetDoc.left + targetDoc.width / 2;
+                    var tgtCy = targetDoc.top + targetDoc.height / 2;
+
+                    var curW = targetDoc.width;
+                    var curH = targetDoc.height;
+
+                    // Trayectoria suave sin desvíos laterales a la izquierda
+                    var cx = heroCx + (tgtCx - heroCx) * p1;
+                    var cy = heroCy + (tgtCy - heroCy) * p1;
+
+                    var s0 = targetDoc.height > 0 ? heroDoc.height / targetDoc.height : 1.35;
+                    var sc = s0 + (1.0 - s0) * p1;
+
+                    var viewX = (cx - curW / 2 - sX) / pageZoom;
+                    var viewY = (cy - curH / 2 - sY) / pageZoom;
+                    var cssW = curW / pageZoom, cssH = curH / pageZoom;
+
+                    if (travelBottle.dataset.w !== cssW.toFixed(1)) {
+                        travelBottle.style.width = cssW.toFixed(1) + 'px';
+                        travelBottle.style.height = cssH.toFixed(1) + 'px';
+                        travelBottle.style.transformOrigin = '50% 50%';
+                        travelBottle.dataset.w = cssW.toFixed(1);
+                    }
+
+                    // Escala y posición limpias, sin rotaciones bruscas que descuadren la botella
+                    travelBottle.style.transform = 'translate3d(' + viewX.toFixed(2) + 'px, ' + viewY.toFixed(2) + 'px, 0) scale(' + sc.toFixed(4) + ')';
+                    travelBottle.classList.add('is-active');
+
+                    if (showcaseShadow) {
+                        showcaseShadow.style.opacity = (Math.max(0, (p1 - 0.70) / 0.30)).toFixed(2);
+                    }
+                } else if (sY < scroll2) {
+                    // ETAPA 2: VUELO CONTINUO DE SOBRE NOSOTROS HACIA PROCESO RESPONSABLE
+                    // Sin zonas muertas: la botella continúa su recorrido de inmediato hacia Proceso
+                    var p2 = Math.max(0, Math.min(1, (sY - scroll1) / (scroll2 - scroll1)));
+
+                    if (bottleMain) bottleMain.style.visibility = 'hidden';
+                    if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                    if (procesoBottleWrap) procesoBottleWrap.style.visibility = 'hidden';
+                    if (showcaseShadow) showcaseShadow.style.opacity = Math.max(0, (1 - p2 * 3)).toFixed(2);
+
+                    if (procesoDoc) {
+                        var nosCx = targetDoc.left + targetDoc.width / 2;
+                        var nosCy = targetDoc.top + targetDoc.height / 2;
+                        var procCx = procesoDoc.left + procesoDoc.width / 2;
+                        var procCy = procesoDoc.top + procesoDoc.height / 2;
+
+                        var curW2 = procesoDoc.width;
+                        var curH2 = procesoDoc.height;
+
+                        var cx2 = nosCx + (procCx - nosCx) * p2;
+                        var cy2 = nosCy + (procCy - nosCy) * p2;
+
+                        var s1to2 = procesoDoc.height > 0 ? targetDoc.height / procesoDoc.height : 1.0;
+                        var sc2 = s1to2 + (1.0 - s1to2) * p2;
+
+                        var viewX2 = (cx2 - curW2 / 2 - sX) / pageZoom;
+                        var viewY2 = (cy2 - curH2 / 2 - sY) / pageZoom;
+                        var cssW2 = curW2 / pageZoom, cssH2 = curH2 / pageZoom;
+
+                        if (travelBottle.dataset.w !== cssW2.toFixed(1)) {
+                            travelBottle.style.width = cssW2.toFixed(1) + 'px';
+                            travelBottle.style.height = cssH2.toFixed(1) + 'px';
+                            travelBottle.style.transformOrigin = '50% 50%';
+                            travelBottle.dataset.w = cssW2.toFixed(1);
+                        }
+
+                        travelBottle.style.transform = 'translate3d(' + viewX2.toFixed(2) + 'px, ' + viewY2.toFixed(2) + 'px, 0) scale(' + sc2.toFixed(4) + ')';
+                        travelBottle.classList.add('is-active');
+                    }
+                } else {
+                    // sY >= scroll2: 100% aterrizado en Proceso responsable
+                    if (bottleMain) bottleMain.style.visibility = 'hidden';
+                    if (showcaseBottleWrap) showcaseBottleWrap.style.visibility = 'hidden';
+                    if (showcaseShadow) showcaseShadow.style.opacity = '0';
+                    if (procesoBottleWrap) {
+                        procesoBottleWrap.style.visibility = '';
+                        procesoBottleWrap.style.transform = 'translate3d(0, 0, 0)';
+                        procesoBottleWrap.style.opacity = '1';
+                        if (!procesoBottleImg) procesoBottleImg = document.getElementById('procesoBottleImg');
+                        if (procesoBottleImg && FLAVORS[current]) {
+                            procesoBottleImg.src = src(FLAVORS[current].slug, false);
+                            procesoBottleImg.alt = 'Yogurt artesanal de ' + FLAVORS[current].nombre + ', 500 ml';
+                        }
+                    }
                     if (travelBottle) travelBottle.classList.remove('is-active');
                 }
 
@@ -673,7 +675,7 @@
     }, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    /* ---------- Precarga del resto de sabores cuando el navegador está libre ---------- */
+    /* ---------- Precarga Idle ---------- */
     function idle(fn, ms) {
         if (window.requestIdleCallback) window.requestIdleCallback(fn, { timeout: 2000 });
         else window.setTimeout(fn, ms);
@@ -689,32 +691,72 @@
         })();
     }
 
-    /* ---------- Arranque ---------- */
-    // Enlace directo a un sabor: index.html?sabor=mora
+    /* ---------- Sincronización Global de Sabor ---------- */
+    function setHeroFlavorBySlug(slug) {
+        if (!slug) return;
+        var s = String(slug).toLowerCase().trim();
+        var idx = -1;
+        for (var k = 0; k < FLAVORS.length; k++) {
+            if (FLAVORS[k].slug === s) {
+                idx = k;
+                break;
+            }
+        }
+        if (idx === -1) return;
+
+        current = idx;
+        commitSlotFlavors();
+
+        var flavor = FLAVORS[idx];
+        body.dataset.flavor = flavor.slug;
+        body.dataset.heroFg = 'light';
+        if (themeMeta) {
+            var c = getComputedStyle(body).getPropertyValue('--hero-bg').trim();
+            if (c) themeMeta.content = c;
+        }
+
+        updateShowcaseFlavor(flavor);
+        if (stage) stage.setAttribute('aria-label', flavor.nombre + '. Toca o usa las flechas para cambiar de sabor');
+        restartTimer();
+    }
+
+    document.addEventListener('yg:flavorchange', function (e) {
+        var detail = e.detail;
+        if (!detail || detail.source === 'hero') return;
+        var targetSlug = detail.slug || (detail.flavor && detail.flavor.slug);
+        if (targetSlug) {
+            setHeroFlavorBySlug(targetSlug);
+        }
+    });
+
+    window.YogurHero = {
+        setFlavor: setHeroFlavorBySlug,
+        show: show,
+        getFlavors: function () { return FLAVORS; },
+        getCurrent: function () { return FLAVORS[current]; }
+    };
+
+    /* ---------- Arranque Inicial ---------- */
     var start = 0;
     try {
         var q = new URLSearchParams(location.search).get('sabor');
         for (var n = 0; q && n < FLAVORS.length; n++) { if (FLAVORS[n].slug === q) { start = n; break; } }
-    } catch (err) { /* sin soporte: arranca en Fresa */ }
+    } catch (err) { /* arranque en Fresa */ }
 
+    current = start;
+    commitSlotFlavors();
     setTheme(FLAVORS[start]);
-    if (start !== 0) {
-        current = start;
-        var f0 = FLAVORS[start], f1 = FLAVORS[(start + 1) % FLAVORS.length];
-        fillSlot(bottleMain, f0, true);
-        fillSlot(bottleSecond, f1, false);
-        if (stage) stage.setAttribute('aria-label', f0.nombre + '. Toca o usa las flechas para cambiar de sabor');
-    }
+
     requestAnimationFrame(function () {
         hero.classList.remove('is-loading');
         measureHeroMetrics();
         onScroll();
-        // tras la entrada, las capas quedan libres para los fundidos
         setTimeout(function () {
             hero.classList.add('is-ready');
             measureHeroMetrics();
             onScroll();
         }, 1100);
     });
+
     if (document.readyState === 'complete') idle(warm, 600); else window.addEventListener('load', function () { idle(warm, 600); });
 })();
