@@ -27,31 +27,35 @@
 .hp-head .v3-title { margin: 10px 0 6px; }
 .hp-head .v3-lead { font-size: 0.94rem; margin-inline: auto; }
 
-/* Banda detrás del título: adaptada dinámicamente al color oscuro y kicker pastel del sabor activo */
+/* Banda detrás del título: sección con el color claro (pastel) y kicker con el color oscuro */
 #productos.hp-section > .hp-head,
 #main-content.hp-section > .hp-head {
     width: 100%;
     max-width: none;
     margin: 0 0 10px;
     padding: clamp(28px, 4vw, 44px) 20px clamp(22px, 3vw, 32px);
-    background: linear-gradient(135deg, var(--flavor-dark, #C3343E) 0%, color-mix(in srgb, var(--flavor-dark, #C3343E) 78%, #000) 100%) !important;
-    color: #fff;
+    background: var(--flavor-light, #F4CBCF) !important;
+    color: var(--ink, #171717) !important;
     transition: background 0.6s ease;
 }
 #productos.hp-section > .hp-head .v3-kicker,
 #main-content.hp-section > .hp-head .v3-kicker {
-    background: var(--flavor-light, rgba(255, 255, 255, 0.22)) !important;
-    color: var(--flavor-dark, #C3343E) !important;
+    background: var(--flavor-dark, #C3343E) !important;
+    color: #FFFFFF !important;
     font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 #productos.hp-section > .hp-head .v3-title,
-#main-content.hp-section > .hp-head .v3-title,
-#productos.hp-section > .hp-head .v3-lead,
-#main-content.hp-section > .hp-head .v3-lead {
-    color: #fff;
+#main-content.hp-section > .hp-head .v3-title {
+    color: var(--flavor-dark, #C3343E) !important;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
 }
 #productos.hp-section > .hp-head .v3-lead,
-#main-content.hp-section > .hp-head .v3-lead { opacity: 0.92; }
+#main-content.hp-section > .hp-head .v3-lead {
+    color: #4A423A !important;
+    opacity: 0.95;
+}
 
 /* ---------- carrusel ---------- */
 .hp-carousel {

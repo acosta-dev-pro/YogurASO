@@ -99,6 +99,10 @@
         if (showcaseBottleReflect) {
             showcaseBottleReflect.src = bSrc;
         }
+        if (!travelBottleImg) {
+            travelBottle = document.getElementById('heroTravelBottle');
+            if (travelBottle) travelBottleImg = travelBottle.querySelector('img');
+        }
         if (travelBottleImg) {
             travelBottleImg.src = bSrc;
         }
@@ -117,7 +121,7 @@
             if (c) themeMeta.content = c;
         }
         updateShowcaseFlavor(flavor);
-        document.dispatchEvent(new CustomEvent('yg:flavorchange', { detail: { flavor: flavor } }));
+        document.dispatchEvent(new CustomEvent('yg:flavorchange', { detail: { flavor: flavor, slug: flavor.slug, source: 'hero' } }));
     }
 
     var lastStepTime = 0;

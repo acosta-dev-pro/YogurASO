@@ -117,6 +117,18 @@
             procesoBottle.src = `assets/products/yoguraso-${s}-500ml.webp`;
         }
 
+        // 5. Actualizar botella en "Sobre nosotros"
+        const showcaseBottle = document.getElementById('showcaseBottleImg');
+        if (showcaseBottle) {
+            showcaseBottle.src = `assets/products/yoguraso-${s}-500ml.webp`;
+        }
+
+        // 6. Actualizar botella viajera en vuelo
+        const travelBottleImg = document.querySelector('#heroTravelBottle img');
+        if (travelBottleImg) {
+            travelBottleImg.src = `assets/products/yoguraso-${s}-500ml.webp`;
+        }
+
         // 5. Notificar bidireccionalmente
         if (!isBroadcasting) {
             isBroadcasting = true;
