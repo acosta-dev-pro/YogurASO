@@ -162,16 +162,21 @@ function initCarousel(products) {
 
     const total = () => cards.length;
     const leftFor = (idx) => m.first + idx * m.step + m.w / 2 - track.clientWidth / 2;
+    let isSyncingFromExternal = false;
+    let syncExternalTimer = 0;
+
     function centerIndex() {
         const c = track.scrollLeft + track.clientWidth / 2;
         const idx = Math.round((c - m.first - m.w / 2) / m.step);
         return Math.max(0, Math.min(total() - 1, idx));
     }
 
-    function setActive(logical) {
+    function setActive(logical, broadcast = true) {
         if (logical === active) return;
         active = logical;
         cards.forEach((c) => c.classList.toggle('is-active', Number(c.dataset.i) === logical));
+
+        if (!broadcast || isSyncingFromExternal) return;
 
         // Sincronizar el tema y color de toda la página con el producto seleccionado en el centro
         const prod = products[logical];
@@ -223,13 +228,18 @@ function initCarousel(products) {
     function onSettle() {
         targetIdx = null;
         normalize();
-        setActive(centerIndex() % n);
+        if (!isSyncingFromExternal) {
+            setActive(centerIndex() % n, true);
+        }
     }
     track.addEventListener('scroll', () => {
+        if (isSyncingFromExternal) return;
         if (!raf) {
             raf = requestAnimationFrame(() => {
                 raf = 0;
-                setActive(centerIndex() % n);
+                if (!isSyncingFromExternal) {
+                    setActive(centerIndex() % n, true);
+                }
             });
         }
         if (!hasScrollEnd) {
@@ -449,11 +459,17 @@ function initCarousel(products) {
         if (!targetSlug || !products.length) return;
         const foundIdx = products.findIndex((p) => (matchFlavorSlug(p) || p.slug) === targetSlug);
         if (foundIdx !== -1 && foundIdx !== active) {
+            isSyncingFromExternal = true;
+            clearTimeout(syncExternalTimer);
+            syncExternalTimer = setTimeout(() => {
+                isSyncingFromExternal = false;
+            }, 550);
+
             const currentCenter = centerIndex();
             const copy = Math.floor(currentCenter / n);
             const targetCopyIndex = copy * n + foundIdx;
-            scrollToIndex(targetCopyIndex, true);
-            setActive(foundIdx);
+            scrollToIndex(targetCopyIndex, !reduceMotion.matches);
+            setActive(foundIdx, false);
         }
     });
 }

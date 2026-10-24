@@ -88,11 +88,13 @@
         root.style.setProperty('--flavor-dark', theme.dark);
         root.style.setProperty('--flavor-light', theme.light);
 
-        // Variables de compatibilidad
+        // Variables de compatibilidad y variables de fondo maestro
         root.style.setProperty('--flavor-accent', theme.dark);
         root.style.setProperty('--flavor-hero-bg', theme.dark);
         root.style.setProperty('--flavor-card-tint', theme.light);
         root.style.setProperty('--flavor-wash', theme.wash);
+        root.style.setProperty('--hero-bg', theme.dark);
+        document.body.style.setProperty('--hero-bg', theme.dark);
         document.body.dataset.flavor = s;
 
         // 2. Actualizar imagen de la mano en "Llévalo contigo"
@@ -117,10 +119,14 @@
             procesoBottle.src = `assets/products/yoguraso-${s}-500ml.webp`;
         }
 
-        // 5. Actualizar botella en "Sobre nosotros"
+        // 5. Actualizar botella y reflejo en "Sobre nosotros"
         const showcaseBottle = document.getElementById('showcaseBottleImg');
         if (showcaseBottle) {
             showcaseBottle.src = `assets/products/yoguraso-${s}-500ml.webp`;
+        }
+        const showcaseReflect = document.getElementById('showcaseBottleReflect');
+        if (showcaseReflect) {
+            showcaseReflect.src = `assets/products/yoguraso-${s}-500ml.webp`;
         }
 
         // 6. Actualizar botella viajera en vuelo

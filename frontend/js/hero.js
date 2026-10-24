@@ -122,6 +122,9 @@
             if (c) themeMeta.content = c;
         }
         updateShowcaseFlavor(flavor);
+        if (window.YogurThemeReactor) {
+            window.YogurThemeReactor.applyFlavorTheme(flavor.slug, 'hero');
+        }
         document.dispatchEvent(new CustomEvent('yg:flavorchange', { detail: { flavor: flavor, slug: flavor.slug, source: 'hero' } }));
     }
 
@@ -220,7 +223,12 @@
                 if (id !== swapId) return;
                 commitSlotFlavors();
                 isAnimating = false;
-            }).catch(function () {});
+            }).catch(function () {
+                if (id === swapId) {
+                    commitSlotFlavors();
+                    isAnimating = false;
+                }
+            });
             return;
         }
 
@@ -257,7 +265,12 @@
                 if (id !== swapId) return;
                 commitSlotFlavors();
                 isAnimating = false;
-            }).catch(function () {});
+            }).catch(function () {
+                if (id === swapId) {
+                    commitSlotFlavors();
+                    isAnimating = false;
+                }
+            });
         } else {
             // Retroceso: entra desde la izquierda
             fillSlot(bottleMain, fromF, true);
@@ -287,7 +300,12 @@
                 if (id !== swapId) return;
                 commitSlotFlavors();
                 isAnimating = false;
-            }).catch(function () {});
+            }).catch(function () {
+                if (id === swapId) {
+                    commitSlotFlavors();
+                    isAnimating = false;
+                }
+            });
         }
     }
 
@@ -708,14 +726,7 @@
         commitSlotFlavors();
 
         var flavor = FLAVORS[idx];
-        body.dataset.flavor = flavor.slug;
-        body.dataset.heroFg = 'light';
-        if (themeMeta) {
-            var c = getComputedStyle(body).getPropertyValue('--hero-bg').trim();
-            if (c) themeMeta.content = c;
-        }
-
-        updateShowcaseFlavor(flavor);
+        setTheme(flavor);
         if (stage) stage.setAttribute('aria-label', flavor.nombre + '. Toca o usa las flechas para cambiar de sabor');
         restartTimer();
     }
